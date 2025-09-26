@@ -2,7 +2,7 @@ import React from 'react';
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-4 py-3 fixed top-0 left-0 right-0 z-50">
+    <header className="bg-white shadow-sm border-b border-gray-200 px-4 py-2.5 fixed top-0 left-0 right-0 z-50 h-14">
       <div className="flex items-center justify-between">
         {/* Left side - Home Icon */}
         <button
@@ -22,10 +22,10 @@ const Header: React.FC = () => {
 
         {/* Center - Brand/Title */}
         <div className="flex items-center">
-          <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center mr-2">
-            <span className="text-white font-bold text-sm">TA</span>
+          <div className="w-7 h-7 bg-primary-500 rounded-lg flex items-center justify-center mr-2">
+            <span className="text-white font-bold text-xs">TA</span>
           </div>
-          <h1 className="text-lg font-semibold text-gray-900">
+          <h1 className="text-base font-semibold text-gray-900">
             Teacher Assistant
           </h1>
         </div>

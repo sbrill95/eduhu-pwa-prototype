@@ -15,9 +15,11 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange, onNew
       {/* Fixed Header */}
       <Header />
 
-      {/* Main Content Area - with padding for fixed header and bottom tab bar */}
-      <main className="flex-1 pt-16 pb-20 overflow-y-auto">
-        {children}
+      {/* Main Content Area - full width mobile design */}
+      <main className="flex-1 pt-14 pb-16 overflow-y-auto">
+        <div className="w-full h-full">
+          {children}
+        </div>
       </main>
 
       {/* Fixed Bottom Tab Bar */}
