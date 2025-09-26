@@ -16,6 +16,9 @@
     }
   ],
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "OPENAI_API_KEY": "@openai_api_key",
+    "API_PREFIX": "/api",
+    "FRONTEND_URL": "https://your-frontend-domain.vercel.app"
   }
 }
