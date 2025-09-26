@@ -8,7 +8,7 @@ interface AuthContextType {
   error: Error | null;
   signOut: () => Promise<void>;
   sendMagicCode: (email: string) => Promise<void>;
-  signInWithMagicCode: (code: string) => Promise<void>;
+  signInWithMagicCode: (email: string, code: string) => Promise<void>;
 }
 
 // Create the auth context
@@ -41,10 +41,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const signInWithMagicCode = async (code: string) => {
+  const signInWithMagicCode = async (email: string, code: string) => {
     try {
       await db.auth.signInWithMagicCode({
-        email: '', // This will be handled by the magic code flow
+        email,
         code
       });
     } catch (err) {
