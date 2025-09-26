@@ -43,15 +43,20 @@ const Chat: React.FC = () => {
     try {
       // Build API request with conversation history
       const apiMessages: ApiChatMessage[] = [
-        ...messages.map(msg => ({
-          role: msg.type === 'user' ? 'user' as const : 'assistant' as const,
-          content: msg.content,
-        })),
+        ...messages
+          .filter(msg => msg.content && msg.content.trim().length > 0)
+          .map(msg => ({
+            role: msg.type === 'user' ? 'user' as const : 'assistant' as const,
+            content: msg.content.trim(),
+          })),
         {
           role: 'user' as const,
-          content: currentMessage,
+          content: currentMessage.trim(),
         },
       ];
+
+      // Debug logging
+      console.log('Sending messages to API:', apiMessages);
 
       // Send message to API
       const response = await sendMessage({ messages: apiMessages });

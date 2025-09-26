@@ -52,6 +52,7 @@ router.post(
       if (isDevelopment) {
         logDebug('Chat request received', {
           messageCount: chatRequest.messages.length,
+          messages: chatRequest.messages,
           model: chatRequest.model,
           temperature: chatRequest.temperature,
           max_tokens: chatRequest.max_tokens,
