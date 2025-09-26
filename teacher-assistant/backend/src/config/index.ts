@@ -12,6 +12,13 @@ const requiredEnvVars = [
   'API_PREFIX',
   'OPENAI_API_KEY',
 ];
+
+// Optional environment variables for Phase 3 InstantDB integration
+const optionalEnvVars = [
+  'INSTANTDB_APP_ID',
+  'INSTANTDB_ADMIN_TOKEN',
+];
+
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
@@ -27,6 +34,9 @@ export const config: EnvironmentVariables = {
   FRONTEND_URL: process.env.FRONTEND_URL!,
   API_PREFIX: process.env.API_PREFIX!,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
+  // Optional InstantDB configuration (Phase 3) - only add if present
+  ...(process.env.INSTANTDB_APP_ID && { INSTANTDB_APP_ID: process.env.INSTANTDB_APP_ID }),
+  ...(process.env.INSTANTDB_ADMIN_TOKEN && { INSTANTDB_ADMIN_TOKEN: process.env.INSTANTDB_ADMIN_TOKEN }),
 };
 
 // Environment helpers

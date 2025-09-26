@@ -38,8 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const result = await db.auth.sendMagicCode({ email });
       console.log('DEBUG: Magic code sent successfully', result);
     } catch (err) {
-      console.error('DEBUG: Error sending magic code:', err);
-      console.error('DEBUG: Error details:', JSON.stringify(err, null, 2));
+      console.error('Error sending magic code:', err);
       throw err;
     }
   };
@@ -50,8 +49,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const result = await db.auth.signInWithMagicCode(params);
       console.log('DEBUG: Sign in successful', result);
     } catch (err) {
-      console.error('DEBUG: Error signing in with magic code:', err);
-      console.error('DEBUG: Error details:', JSON.stringify(err, null, 2));
+      console.error('Error signing in with magic code:', err);
       throw err;
     }
   };

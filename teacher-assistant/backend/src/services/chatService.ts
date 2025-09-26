@@ -116,19 +116,26 @@ export class ChatService {
           return ChatService.createErrorResponse(
             'Invalid OpenAI API key',
             'openai_api',
-            'invalid_api_key'
+            'invalid_api_key',
+            'AI-Assistent ist momentan nicht verfügbar',
+            'Bitte kontaktieren Sie Ihren Administrator oder versuchen Sie es später erneut'
           );
         case 429:
           return ChatService.createErrorResponse(
             'OpenAI API rate limit exceeded',
             'openai_api',
-            'rate_limit_exceeded'
+            'rate_limit_exceeded',
+            'Zu viele Anfragen. Bitte warten Sie einen Moment.',
+            'Versuchen Sie es in ein paar Sekunden erneut',
+            30
           );
         case 400:
           return ChatService.createErrorResponse(
             'Invalid request to OpenAI API',
             'openai_api',
-            'invalid_request'
+            'invalid_request',
+            'Ihre Nachricht konnte nicht verarbeitet werden',
+            'Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut'
           );
         case 500:
         case 502:
@@ -136,13 +143,17 @@ export class ChatService {
           return ChatService.createErrorResponse(
             'OpenAI API service temporarily unavailable',
             'openai_api',
-            'service_unavailable'
+            'service_unavailable',
+            'Der AI-Service ist vorübergehend nicht verfügbar',
+            'Bitte versuchen Sie es in wenigen Minuten erneut'
           );
         default:
           return ChatService.createErrorResponse(
             `OpenAI API error: ${error.message}`,
             'openai_api',
-            'api_error'
+            'api_error',
+            'Ein unerwarteter Fehler ist aufgetreten',
+            'Bitte versuchen Sie es erneut oder kontaktieren Sie den Support'
           );
       }
     }
@@ -157,7 +168,9 @@ export class ChatService {
       return ChatService.createErrorResponse(
         'Network error connecting to OpenAI API',
         'openai_api',
-        'network_error'
+        'network_error',
+        'Verbindungsproblem zum AI-Service',
+        'Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut'
       );
     }
 
@@ -165,29 +178,43 @@ export class ChatService {
     return ChatService.createErrorResponse(
       'An unexpected error occurred while processing your request',
       'server_error',
-      'unknown_error'
+      'unknown_error',
+      'Ein unerwarteter Serverfehler ist aufgetreten',
+      'Bitte versuchen Sie es erneut oder kontaktieren Sie den Support'
     );
   }
 
   /**
    * Create a standardized error response
-   * @param message - Error message
+   * @param message - Technical error message
    * @param errorType - Type of error
    * @param errorCode - Specific error code
+   * @param userMessage - User-friendly message
+   * @param suggestedAction - Suggested action for the user
+   * @param retryAfter - Seconds to wait before retry (for rate limiting)
    * @returns ChatErrorResponse
    */
   private static createErrorResponse(
     message: string,
     errorType: 'validation' | 'openai_api' | 'rate_limit' | 'server_error',
-    errorCode: string
+    errorCode: string,
+    userMessage?: string,
+    suggestedAction?: string,
+    retryAfter?: number
   ): ChatErrorResponse {
-    return {
+    const response: ChatErrorResponse = {
       success: false,
       error: message,
       error_type: errorType,
       error_code: errorCode,
       timestamp: new Date().toISOString(),
     };
+
+    if (userMessage) response.user_message = userMessage;
+    if (suggestedAction) response.suggested_action = suggestedAction;
+    if (retryAfter) response.retry_after = retryAfter;
+
+    return response;
   }
 
   /**

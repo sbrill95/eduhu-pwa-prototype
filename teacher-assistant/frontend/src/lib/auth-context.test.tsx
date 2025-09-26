@@ -25,7 +25,7 @@ const TestComponent = () => {
       <div data-testid="loading">{isLoading.toString()}</div>
       <div data-testid="error">{error ? error.message : 'null'}</div>
       <button onClick={() => sendMagicCode('test@example.com')}>Send Magic Code</button>
-      <button onClick={() => signInWithMagicCode('123456')}>Sign In</button>
+      <button onClick={() => signInWithMagicCode({ email: '', code: '123456' })}>Sign In</button>
       <button onClick={signOut}>Sign Out</button>
     </div>
   )
@@ -169,6 +169,9 @@ describe('AuthContext', () => {
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error sending magic code:', mockError)
     })
 
+    // Wait a bit more to ensure promise is fully handled
+    await new Promise(resolve => setTimeout(resolve, 100))
+
     consoleErrorSpy.mockRestore()
   })
 
@@ -189,6 +192,9 @@ describe('AuthContext', () => {
     await waitFor(() => {
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error signing in with magic code:', mockError)
     })
+
+    // Wait a bit more to ensure promise is fully handled
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     consoleErrorSpy.mockRestore()
   })
@@ -226,6 +232,9 @@ describe('AuthContext', () => {
     await waitFor(() => {
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error signing out:', mockError)
     })
+
+    // Wait a bit more to ensure promise is fully handled
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     consoleErrorSpy.mockRestore()
   })

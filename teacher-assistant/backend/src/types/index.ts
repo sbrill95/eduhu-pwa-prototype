@@ -5,6 +5,9 @@ export interface EnvironmentVariables {
   FRONTEND_URL: string;
   API_PREFIX: string;
   OPENAI_API_KEY: string;
+  // Optional InstantDB configuration (Phase 3)
+  INSTANTDB_APP_ID?: string;
+  INSTANTDB_ADMIN_TOKEN?: string;
 }
 
 // API Response interfaces
@@ -80,4 +83,7 @@ export interface ChatResponse extends ApiResponse {
 export interface ChatErrorResponse extends ErrorResponse {
   error_type?: 'validation' | 'openai_api' | 'rate_limit' | 'server_error';
   error_code?: string;
+  user_message?: string; // User-friendly message for frontend display
+  suggested_action?: string; // Suggested action for the user
+  retry_after?: number; // For rate limiting - seconds to wait
 }

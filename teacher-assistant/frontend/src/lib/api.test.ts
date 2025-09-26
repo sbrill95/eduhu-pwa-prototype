@@ -32,7 +32,7 @@ describe('API Client', () => {
       const result = await apiClient.getHealth()
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://localhost:3001/api/health',
+        'http://localhost:8081/api/health',
         expect.objectContaining({
           headers: {
             'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ describe('API Client', () => {
       const result = await apiClient.sendChatMessage(chatRequest)
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://localhost:3001/api/chat',
+        'http://localhost:8081/api/chat',
         expect.objectContaining({
           method: 'POST',
           headers: {
@@ -109,11 +109,11 @@ describe('API Client', () => {
         statusText: 'Bad Request',
         text: async () => JSON.stringify({
           error: 'Validation failed',
-          message: 'Messages array cannot be empty'
+          user_message: 'Validation error: Messages array cannot be empty'
         }),
       })
 
-      await expect(apiClient.sendChatMessage(invalidRequest)).rejects.toThrow('Messages array cannot be empty')
+      await expect(apiClient.sendChatMessage(invalidRequest)).rejects.toThrow('Validation error')
     })
 
     it('should handle OpenAI API errors', async () => {
@@ -127,11 +127,11 @@ describe('API Client', () => {
         statusText: 'Bad Gateway',
         text: async () => JSON.stringify({
           error: 'OpenAI API Error',
-          message: 'OpenAI service temporarily unavailable'
+          user_message: 'Der AI-Service ist vorübergehend nicht verfügbar'
         }),
       })
 
-      await expect(apiClient.sendChatMessage(chatRequest)).rejects.toThrow('OpenAI service temporarily unavailable')
+      await expect(apiClient.sendChatMessage(chatRequest)).rejects.toThrow('Der AI-Service ist vorübergehend nicht verfügbar')
     })
 
     it('should handle rate limiting', async () => {
@@ -145,11 +145,11 @@ describe('API Client', () => {
         statusText: 'Too Many Requests',
         text: async () => JSON.stringify({
           error: 'Rate Limit Exceeded',
-          message: 'Too many requests. Please try again later.'
+          user_message: 'Zu viele Anfragen. Bitte warten Sie einen Moment.'
         }),
       })
 
-      await expect(apiClient.sendChatMessage(chatRequest)).rejects.toThrow('Too many requests. Please try again later.')
+      await expect(apiClient.sendChatMessage(chatRequest)).rejects.toThrow('Zu viele Anfragen. Bitte warten Sie einen Moment.')
     })
   })
 
@@ -183,7 +183,7 @@ describe('API Client', () => {
       const result = await apiClient.getChatModels()
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://localhost:3001/api/chat/models',
+        'http://localhost:8081/api/chat/models',
         expect.objectContaining({
           headers: {
             'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ describe('API Client', () => {
       const result = await apiClient.getChatHealth()
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://localhost:3001/api/chat/health',
+        'http://localhost:8081/api/chat/health',
         expect.objectContaining({
           headers: {
             'Content-Type': 'application/json',
@@ -293,7 +293,7 @@ describe('API Client', () => {
       await customClient.getHealth()
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://api.example.com/api/health',
+        'https://api.example.com/health',
         expect.any(Object)
       )
     })
@@ -312,7 +312,7 @@ describe('API Client', () => {
       await apiClient.sendChatMessage(chatRequest)
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://localhost:3001/api/chat',
+        'http://localhost:8081/api/chat',
         expect.objectContaining({
           headers: expect.objectContaining({
             'Content-Type': 'application/json',

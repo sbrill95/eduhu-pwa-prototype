@@ -1,36 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useChat } from '../../hooks/useApi';
+import type { ChatMessage as ApiChatMessage } from '../../lib/api';
+
+interface ChatMessage {
+  id: string;
+  type: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
 
 const Chat: React.FC = () => {
   const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const { sendMessage, loading, error, resetState } = useChat();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Placeholder chat messages
-  const messages = [
-    {
-      id: 1,
-      type: 'assistant' as const,
-      content: 'Hallo! Ich bin Ihr KI-Assistent. Wie kann ich Ihnen heute helfen?',
-      timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-    },
-    {
-      id: 2,
-      type: 'user' as const,
-      content: 'Können Sie mir bei der Erstellung eines Mathe-Quiz für die 7. Klasse helfen?',
-      timestamp: new Date(Date.now() - 1000 * 60 * 3), // 3 minutes ago
-    },
-    {
-      id: 3,
-      type: 'assistant' as const,
-      content: 'Gerne! Ich kann Ihnen dabei helfen, ein Mathe-Quiz für die 7. Klasse zu erstellen. Welches Thema soll das Quiz abdecken? Zum Beispiel:\n\n• Bruchrechnung\n• Prozentrechnung\n• Gleichungen\n• Geometrie\n• Statistik\n\nUnd wie viele Fragen sollen es werden?',
-      timestamp: new Date(Date.now() - 1000 * 60 * 2), // 2 minutes ago
-    },
-  ];
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim()) return;
-    // TODO: Implement message sending logic
-    console.log('Sending message:', message);
+    if (!message.trim() || loading) return;
+
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
+      type: 'user',
+      content: message.trim(),
+      timestamp: new Date(),
+    };
+
+    // Add user message to chat immediately
+    setMessages(prev => [...prev, userMessage]);
+    const currentMessage = message.trim();
     setMessage('');
+    resetState();
+
+    try {
+      // Build API request with conversation history
+      const apiMessages: ApiChatMessage[] = [
+        ...messages.map(msg => ({
+          role: msg.type === 'user' ? 'user' as const : 'assistant' as const,
+          content: msg.content,
+        })),
+        {
+          role: 'user' as const,
+          content: currentMessage,
+        },
+      ];
+
+      // Send message to API
+      const response = await sendMessage({ messages: apiMessages });
+
+      // Add assistant response to chat
+      const assistantMessage: ChatMessage = {
+        id: `assistant-${Date.now()}`,
+        type: 'assistant',
+        content: response.message,
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      // Error handling is managed by the useChat hook and will be displayed in the UI
+    }
+  };
+
+  const handleNewChat = () => {
+    setMessages([]);
+    resetState();
   };
 
   return (
@@ -61,15 +104,16 @@ const Chat: React.FC = () => {
           <div className="flex items-center space-x-2">
             <button
               type="button"
+              onClick={handleNewChat}
               className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
-              title="Chat-Verlauf löschen"
+              title="Neuer Chat"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                 />
               </svg>
             </button>
@@ -94,6 +138,44 @@ const Chat: React.FC = () => {
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 md:p-6">
+        {/* Empty State */}
+        {messages.length === 0 && !loading && (
+          <div className="flex flex-col items-center justify-center h-full text-center py-12">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Willkommen bei Ihrem KI-Assistenten!</h3>
+            <p className="text-gray-500 max-w-md">
+              Stellen Sie mir eine Frage oder bitten Sie um Hilfe bei Ihren Unterrichtsvorbereitungen, Arbeitsblättern oder anderen Lehrertätigkeiten.
+            </p>
+          </div>
+        )}
+
+        {/* Error Display */}
+        {error && (
+          <div className="flex justify-center mb-4">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 max-w-md">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <h4 className="text-sm font-medium text-red-800">Fehler beim Senden der Nachricht</h4>
+                  <p className="text-sm text-red-700 mt-1">{error}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Messages */}
         {messages.map((msg) => (
           <div key={msg.id} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl ${msg.type === 'user' ? 'order-2' : 'order-1'}`}>
@@ -118,19 +200,24 @@ const Chat: React.FC = () => {
           </div>
         ))}
 
-        {/* Typing Indicator (placeholder) */}
-        <div className="flex justify-start">
-          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
-            <span className="text-blue-600 font-medium text-xs">AI</span>
-          </div>
-          <div className="bg-white border border-gray-200 rounded-lg rounded-bl-sm shadow-sm px-4 py-3 max-w-xs">
-            <div className="flex space-x-1">
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+        {/* Typing Indicator */}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
+              <span className="text-blue-600 font-medium text-xs">AI</span>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-lg rounded-bl-sm shadow-sm px-4 py-3 max-w-xs">
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Scroll anchor */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Message Input */}
@@ -154,7 +241,7 @@ const Chat: React.FC = () => {
           </div>
           <button
             type="submit"
-            disabled={!message.trim()}
+            disabled={!message.trim() || loading}
             className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

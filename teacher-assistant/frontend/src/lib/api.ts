@@ -1,6 +1,6 @@
 // API client for backend communication
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (
-  import.meta.env.PROD ? '/api' : 'http://localhost:3001/api'
+  import.meta.env.PROD ? '/api' : 'http://localhost:8081/api'
 );
 
 export interface ChatMessage {
@@ -40,6 +40,14 @@ export interface HealthResponse {
   version: string;
 }
 
+export interface EnhancedError extends Error {
+  suggestedAction?: string;
+  retryAfter?: number;
+  status?: number;
+  errorType?: 'validation' | 'openai_api' | 'rate_limit' | 'server_error';
+  errorCode?: string;
+}
+
 class ApiClient {
   private baseUrl: string;
 
@@ -64,15 +72,41 @@ class ApiClient {
     if (!response.ok) {
       const errorText = await response.text();
       let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      let suggestedAction: string | undefined;
+      let retryAfter: number | undefined;
 
       try {
         const errorData = JSON.parse(errorText);
-        errorMessage = errorData.message || errorData.error || errorMessage;
+        // Use user_message for German UI, fallback to technical error message
+        errorMessage = errorData.user_message || errorData.error || errorData.message || errorMessage;
+        suggestedAction = errorData.suggested_action;
+        retryAfter = errorData.retry_after;
       } catch {
         // Use default error message if parsing fails
       }
 
-      throw new Error(errorMessage);
+      // Create enhanced error with additional context
+      const enhancedError = new Error(errorMessage) as Error & {
+        suggestedAction?: string;
+        retryAfter?: number;
+        status?: number;
+        errorType?: string;
+        errorCode?: string;
+      };
+
+      enhancedError.suggestedAction = suggestedAction;
+      enhancedError.retryAfter = retryAfter;
+      enhancedError.status = response.status;
+
+      try {
+        const errorData = JSON.parse(errorText);
+        enhancedError.errorType = errorData.error_type;
+        enhancedError.errorCode = errorData.error_code;
+      } catch {
+        // Ignore parsing errors for error metadata
+      }
+
+      throw enhancedError;
     }
 
     return response.json();
@@ -80,23 +114,23 @@ class ApiClient {
 
   // Health check
   async getHealth(): Promise<HealthResponse> {
-    return this.request<HealthResponse>('/api/health');
+    return this.request<HealthResponse>('/health');
   }
 
   // Chat endpoints
   async sendChatMessage(request: ChatRequest): Promise<ChatResponse> {
-    return this.request<ChatResponse>('/api/chat', {
+    return this.request<ChatResponse>('/chat', {
       method: 'POST',
       body: JSON.stringify(request),
     });
   }
 
   async getChatModels(): Promise<{ models: ChatModel[]; default: string }> {
-    return this.request<{ models: ChatModel[]; default: string }>('/api/chat/models');
+    return this.request<{ models: ChatModel[]; default: string }>('/chat/models');
   }
 
   async getChatHealth(): Promise<{ status: 'healthy' | 'unhealthy'; message?: string }> {
-    return this.request<{ status: 'healthy' | 'unhealthy'; message?: string }>('/api/chat/health');
+    return this.request<{ status: 'healthy' | 'unhealthy'; message?: string }>('/chat/health');
   }
 }
 

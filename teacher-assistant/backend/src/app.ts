@@ -9,12 +9,37 @@ import { ApiResponse } from './types';
 
 const app = express();
 
-// CORS configuration
+// CORS configuration - Support multiple origins for development and deployment
+const allowedOrigins = [
+  config.FRONTEND_URL, // Primary frontend URL from env
+  'http://localhost:3000', // Legacy frontend port
+  'http://localhost:5173', // Vite default port
+  'http://localhost:5174', // Alternative Vite port
+  'http://localhost:5175', // Current frontend port
+  'https://eduhu-pwa-prototype.vercel.app', // Vercel deployment
+  'https://teacher-assistant-pwa.vercel.app', // Alternative Vercel deployment
+];
+
 const corsOptions = {
-  origin: config.FRONTEND_URL,
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // In development, allow any localhost origin
+    if (isDevelopment && origin.startsWith('http://localhost')) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'), false);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
+  exposedHeaders: ['RateLimit-*'],
 };
 
 // Middleware setup

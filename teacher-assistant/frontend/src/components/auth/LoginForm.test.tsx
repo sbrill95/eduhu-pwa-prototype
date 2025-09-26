@@ -138,7 +138,10 @@ describe('LoginForm', () => {
     await user.click(signInButton)
 
     await waitFor(() => {
-      expect(mockSignInWithMagicCode).toHaveBeenCalledWith('123456')
+      expect(mockSignInWithMagicCode).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        code: '123456'
+      })
     })
   })
 
