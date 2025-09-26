@@ -8,7 +8,7 @@ interface AuthContextType {
   error: Error | null;
   signOut: () => Promise<void>;
   sendMagicCode: (email: string) => Promise<void>;
-  signInWithMagicCode: (email: string, code: string) => Promise<void>;
+  signInWithMagicCode: (params: { email: string; code: string }) => Promise<void>;
 }
 
 // Create the auth context
@@ -34,21 +34,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const sendMagicCode = async (email: string) => {
     try {
-      await db.auth.sendMagicCode({ email });
+      console.log('DEBUG: Sending magic code to email:', email);
+      const result = await db.auth.sendMagicCode({ email });
+      console.log('DEBUG: Magic code sent successfully', result);
     } catch (err) {
-      console.error('Error sending magic code:', err);
+      console.error('DEBUG: Error sending magic code:', err);
+      console.error('DEBUG: Error details:', JSON.stringify(err, null, 2));
       throw err;
     }
   };
 
-  const signInWithMagicCode = async (email: string, code: string) => {
+  const signInWithMagicCode = async (params: { email: string; code: string }) => {
     try {
-      await db.auth.signInWithMagicCode({
-        email,
-        code
-      });
+      console.log('DEBUG: Attempting to sign in with magic code', params);
+      const result = await db.auth.signInWithMagicCode(params);
+      console.log('DEBUG: Sign in successful', result);
     } catch (err) {
-      console.error('Error signing in with magic code:', err);
+      console.error('DEBUG: Error signing in with magic code:', err);
+      console.error('DEBUG: Error details:', JSON.stringify(err, null, 2));
       throw err;
     }
   };

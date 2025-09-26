@@ -55,7 +55,7 @@ export function LoginForm({ className = '' }: LoginFormProps) {
     setIsLoading(true);
 
     try {
-      await signInWithMagicCode(email, code);
+      await signInWithMagicCode({ email, code });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to sign in');
     } finally {
