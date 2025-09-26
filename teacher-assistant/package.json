@@ -1,0 +1,28 @@
+{
+  "name": "teacher-assistant",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
+    "install:browsers": "playwright install",
+    "test:all": "cd frontend && npm run test:run && cd ../backend && npm run test && cd .. && npm run test:e2e",
+    "dev:all": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "build:all": "cd frontend && npm run build && cd ../backend && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "concurrently": "^9.2.1",
+    "playwright": "^1.55.1"
+  }
+}

@@ -1,0 +1,161 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Code Quality Checks
+  quality:
+    runs-on: ubuntu-latest
+    name: Code Quality Checks
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Needed for Sonar
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci
+
+      # Frontend Quality Checks
+      - name: Frontend - ESLint
+        run: |
+          cd frontend
+          npm run lint
+
+      - name: Frontend - Prettier
+        run: |
+          cd frontend
+          npm run format:check
+
+      - name: Frontend - TypeScript
+        run: |
+          cd frontend
+          npm run build
+
+      # Backend Quality Checks
+      - name: Backend - TypeScript
+        run: |
+          cd backend
+          npm run build
+
+      # Run tests with coverage
+      - name: Frontend Tests with Coverage
+        run: |
+          cd frontend
+          npm run test:coverage
+
+      - name: Backend Tests with Coverage
+        run: |
+          cd backend
+          npm run test:ci
+
+      # Security scanning
+      - name: Run npm audit (Frontend)
+        run: |
+          cd frontend
+          npm audit --audit-level=high
+
+      - name: Run npm audit (Backend)
+        run: |
+          cd backend
+          npm audit --audit-level=high
+
+      # Dependency check
+      - name: Check for outdated dependencies (Frontend)
+        run: |
+          cd frontend
+          npm outdated || true
+
+      - name: Check for outdated dependencies (Backend)
+        run: |
+          cd backend
+          npm outdated || true
+
+  # Performance Testing
+  lighthouse:
+    runs-on: ubuntu-latest
+    name: Lighthouse Performance Test
+    needs: quality
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd frontend && npm ci
+          cd ../backend && npm ci
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.12.x
+
+      - name: Run Lighthouse CI
+        run: |
+          cd frontend
+          npx lhci autorun || true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  # Bundle Analysis
+  bundle-analysis:
+    runs-on: ubuntu-latest
+    name: Bundle Size Analysis
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Analyze bundle size
+        uses: github/webpack-bundle-analyzer@v4
+        with:
+          bundle_file: frontend/dist/assets/
+          compare_branch: main
