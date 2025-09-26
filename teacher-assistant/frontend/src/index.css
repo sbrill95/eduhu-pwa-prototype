@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Mobile-first responsive design optimizations */
+@layer base {
+  html {
+    @apply h-full;
+    /* Prevent zoom on inputs in iOS */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply h-full bg-gray-50;
+    /* Prevent text selection on mobile */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Allow text selection in input fields and content areas */
+  input, textarea, [contenteditable] {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  /* Smooth scrolling for mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@layer utilities {
+  /* Mobile-specific utilities */
+  .mobile-container {
+    @apply max-w-md mx-auto;
+  }
+
+  /* Safe area handling for mobile devices with notches */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

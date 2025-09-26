@@ -1,25 +1,27 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 import Header from './Header';
-import Navigation from './Navigation';
+import TabBar from './TabBar';
 
 interface LayoutProps {
   children?: React.ReactNode;
+  activeTab: 'home' | 'chat' | 'library';
+  onTabChange: (tab: 'home' | 'chat' | 'library') => void;
+  onNewChat?: () => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange, onNewChat }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
+      {/* Fixed Header */}
       <Header />
 
-      {/* Main Content Area */}
-      <main className="flex-1 pb-16 md:pb-0">
-        {children || <Outlet />}
+      {/* Main Content Area - with padding for fixed header and bottom tab bar */}
+      <main className="flex-1 pt-16 pb-20 overflow-y-auto">
+        {children}
       </main>
 
-      {/* Bottom Navigation (Mobile) / Side Navigation (Desktop) */}
-      <Navigation />
+      {/* Fixed Bottom Tab Bar */}
+      <TabBar activeTab={activeTab} onTabChange={onTabChange} onNewChat={onNewChat} />
     </div>
   );
 };
