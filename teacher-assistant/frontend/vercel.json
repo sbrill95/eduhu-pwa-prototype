@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "installCommand": "npm install",
+  "env": {
+    "VITE_INSTANTDB_APP_ID": "39f14e13-9afb-4222-be45-3d2c231be3a1"
+  }
+}
