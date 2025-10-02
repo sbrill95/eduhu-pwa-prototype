@@ -1,23 +1,245 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useChat } from '../hooks/useApi';
+import React, { useState, useRef, useEffect, Component, ErrorInfo, ReactNode } from 'react';
+import {
+  IonContent,
+  IonPage,
+  IonInput,
+  IonButton,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonText,
+  IonCard,
+  IonCardContent,
+  IonAlert,
+  IonSpinner,
+  IonButtons
+} from '@ionic/react';
+import {
+  sendOutline,
+  addOutline,
+  chatbubbleOutline,
+  bookOutline,
+  createOutline,
+  bulbOutline,
+  attachOutline,
+  closeCircleOutline,
+  sparklesOutline,
+  alertCircleOutline,
+  refreshOutline
+} from 'ionicons/icons';
+import { useChat } from '../hooks/useChat';
+import { useAuth } from '../lib/auth-context';
+import {
+  ProgressiveMessage,
+  AgentConfirmationMessage,
+  AgentProgressMessage,
+  AgentResultMessage
+} from './index';
+// Legacy modal components - no longer used in chat-integrated flow
+// import AgentConfirmationModal from './AgentConfirmationModal';
+// import AgentProgressBar from './AgentProgressBar';
 import type { ChatMessage as ApiChatMessage } from '../lib/api';
+import { apiClient } from '../lib/api';
+import { featureFlags } from '../lib/featureFlags';
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+class ChatErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Chat Error Boundary caught an error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '32px', textAlign: 'center' }}>
+          <IonCard style={{
+            margin: '16px 0',
+            backgroundColor: '#fef2f2',
+            borderLeft: '4px solid #ef4444'
+          }}>
+            <IonCardContent style={{ padding: '24px' }}>
+              <IonIcon
+                icon={alertCircleOutline}
+                style={{ fontSize: '48px', color: '#ef4444', marginBottom: '16px' }}
+              />
+              <h2 style={{ margin: '0 0 8px 0', fontSize: '20px', fontWeight: '600', color: '#dc2626' }}>
+                Chat-Fehler
+              </h2>
+              <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#991b1b', lineHeight: '1.4' }}>
+                Ein unerwarteter Fehler ist aufgetreten. Dies könnte durch eine Endlosschleife verursacht worden sein.
+              </p>
+              {this.state.error && (
+                <p style={{ margin: '0 0 16px 0', fontSize: '12px', color: '#991b1b', fontFamily: 'monospace' }}>
+                  Fehlerdetails: {this.state.error.message}
+                </p>
+              )}
+              <IonButton
+                color="danger"
+                onClick={() => {
+                  this.setState({ hasError: false, error: undefined });
+                  window.location.reload();
+                }}
+              >
+                <IonIcon icon={refreshOutline} slot="start" />
+                Seite neu laden
+              </IonButton>
+            </IonCardContent>
+          </IonCard>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
 }
 
 interface ChatViewProps {
+  sessionId?: string; // Optional: load specific session
   onNewChat?: () => void;
+  onSessionChange?: (sessionId: string | null) => void;
+  onTabChange?: (tab: 'home' | 'chat' | 'library') => void;
+  prefilledPrompt?: string | null; // Prefilled prompt from Home screen
+  onClearPrefill?: () => void; // Callback to clear prefilled prompt
 }
 
-const ChatView: React.FC<ChatViewProps> = ({ onNewChat }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+const ChatView: React.FC<ChatViewProps> = React.memo(({
+  sessionId,
+  onNewChat,
+  onSessionChange,
+  onTabChange,
+  prefilledPrompt,
+  onClearPrefill
+}) => {
   const [inputValue, setInputValue] = useState('');
-  const { sendMessage, loading, error, resetState } = useChat();
+  const [inputError, setInputError] = useState<string | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<Array<{id: string, filename: string, size: number, type: string, url?: string}>>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [lastMessageId, setLastMessageId] = useState<string | null>(null);
+
+  // Auth context
+  const { user } = useAuth();
+
+  // Character limit for messages
+  const MAX_CHAR_LIMIT = 400;
+
+  const {
+    messages,
+    currentSessionId,
+    loading,
+    error,
+    sendMessage,
+    newChat,
+    loadSession,
+
+    // Agent-related state and functions
+    pendingAgentConfirmation,
+    agentInProgress,
+    agentStatus,
+    confirmAgent,
+    cancelAgent,
+    handleAgentConfirmation,
+    clearAgentState,
+  } = useChat();
+
+  const validateFile = (file: File): string | null => {
+    // File type validation
+    const allowedTypes = [
+      'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
+      'application/msword', // DOC
+      'text/plain'
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      return 'Dateityp nicht unterstützt. Erlaubt: JPG, PNG, GIF, PDF, DOCX, DOC, TXT';
+    }
+
+    // File size validation (10MB limit)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      return 'Datei ist zu groß. Maximum: 10MB';
+    }
+
+    return null;
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    setUploadError(null);
+    setIsUploading(true);
+
+    const files = Array.from(e.target.files);
+
+    try {
+      for (const file of files) {
+        // Validate file
+        const validationError = validateFile(file);
+        if (validationError) {
+          setUploadError(validationError);
+          continue;
+        }
+
+        if (file.type.startsWith('image/')) {
+          // Handle images for vision API
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const fileData = {
+              id: `file-${Date.now()}-${Math.random()}`,
+              filename: file.name,
+              size: file.size,
+              type: file.type,
+              url: reader.result as string
+            };
+            setUploadedFiles(prev => [...prev, fileData]);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          // Handle documents for file upload API
+          const result = await apiClient.uploadFile(file);
+          const fileData = {
+            id: result.id || `file-${Date.now()}`,
+            filename: result.filename || file.name,
+            size: file.size,
+            type: file.type,
+            url: result.url
+          };
+          setUploadedFiles(prev => [...prev, fileData]);
+        }
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      setUploadError('Fehler beim Hochladen der Datei. Bitte versuchen Sie es erneut.');
+    } finally {
+      setIsUploading(false);
+      // Reset the input value to allow re-uploading the same file
+      if (e.target) {
+        e.target.value = '';
+      }
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -27,196 +249,934 @@ const ChatView: React.FC<ChatViewProps> = ({ onNewChat }) => {
     scrollToBottom();
   }, [messages]);
 
+  // Debug uploadedFiles state changes
+  useEffect(() => {
+    console.log('uploadedFiles state changed:', uploadedFiles.length, uploadedFiles);
+  }, [uploadedFiles]);
+
+  // Load specific session if provided
+  useEffect(() => {
+    if (sessionId && sessionId !== currentSessionId) {
+      loadSession(sessionId);
+      // Clear upload state when switching sessions
+      setUploadedFiles([]);
+      setUploadError(null);
+      setIsUploading(false);
+    }
+  }, [sessionId, currentSessionId]); // loadSession is stable (only depends on resetState), safe to omit
+
+  // Ensure clean state on component mount
+  useEffect(() => {
+    console.log('ChatView mounted - clearing upload state');
+    setUploadedFiles([]);
+    setUploadError(null);
+    setIsUploading(false);
+  }, []);
+
+  // Notify parent of session changes
+  useEffect(() => {
+    if (onSessionChange) {
+      onSessionChange(currentSessionId);
+    }
+  }, [currentSessionId]); // onSessionChange is stable useCallback in App.tsx, safe to omit
+
+  // Handle prefilled prompt from Home screen
+  useEffect(() => {
+    if (prefilledPrompt) {
+      console.log('Setting prefilled prompt:', prefilledPrompt);
+      setInputValue(prefilledPrompt);
+      // Focus the input field for better UX (on desktop)
+      // Note: Auto-focus might not work on mobile due to browser restrictions
+      setTimeout(() => {
+        const inputElement = document.querySelector('ion-input');
+        if (inputElement) {
+          inputElement.setFocus();
+        }
+      }, 100);
+    }
+  }, [prefilledPrompt]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim() || loading) return;
 
-    const userMessage: Message = {
-      id: `user-${Date.now()}`,
-      role: 'user',
-      content: inputValue.trim(),
-      timestamp: new Date(),
-    };
+    // Clear previous errors
+    setInputError(null);
 
-    // Add user message to chat immediately
-    setMessages(prev => [...prev, userMessage]);
-    const currentMessage = inputValue.trim();
+    console.log('Submit - Current uploadedFiles:', uploadedFiles.length);
+
+    // Validate input
+    const trimmedInput = inputValue.trim();
+
+    if (!trimmedInput) {
+      setInputError('Nachricht kann nicht leer sein');
+      return;
+    }
+
+    if (trimmedInput.length > MAX_CHAR_LIMIT) {
+      setInputError(`Nachricht ist zu lang (${trimmedInput.length}/${MAX_CHAR_LIMIT} Zeichen)`);
+      return;
+    }
+
+    if (loading) return;
+
+    const currentMessage = trimmedInput;
     setInputValue('');
-    resetState();
 
     try {
-      // Build API request with conversation history
+      let messageContent = currentMessage;
+      let imageData: string | undefined;
+
+      // Handle files and images
+      if (uploadedFiles.length > 0) {
+        const imageFiles = uploadedFiles.filter(f => f.type.startsWith('image/'));
+        const documentFiles = uploadedFiles.filter(f => !f.type.startsWith('image/'));
+
+        if (imageFiles.length > 0) {
+          // For images, keep text separate and pass image data separately
+          imageData = imageFiles[0].url; // Use first image for now
+          messageContent = currentMessage; // Keep original text, don't stringify with image data
+        } else if (documentFiles.length > 0) {
+          // For documents, use file IDs (these are small strings, safe for JSON)
+          const fileIds = documentFiles.map(f => f.id);
+          messageContent = JSON.stringify({
+            text: currentMessage,
+            fileIds: fileIds,
+            filenames: documentFiles.map(f => f.filename)
+          });
+        }
+      }
+
+      // Fresh session approach: Only send the new user message
+      // The useChat hook will build the fresh API request with system prompt + current session only
       const apiMessages: ApiChatMessage[] = [
-        ...messages.map(msg => ({
-          role: msg.role === 'user' ? 'user' as const : 'assistant' as const,
-          content: msg.content,
-        })),
         {
           role: 'user' as const,
-          content: currentMessage,
+          content: messageContent,
         },
       ];
 
-      // Send message to API
-      const response = await sendMessage({ messages: apiMessages });
+      // Send message (useChat will handle fresh session logic and persistence automatically)
+      await sendMessage(apiMessages, imageData);
 
-      // Add assistant response to chat
-      const assistantMessage: Message = {
-        id: `assistant-${Date.now()}`,
-        role: 'assistant',
-        content: response.message,
-        timestamp: new Date(),
-      };
+      // Reset upload state completely - IMMEDIATELY after successful send
+      console.log('Clearing uploadedFiles after successful send');
+      setUploadedFiles([]);
+      setUploadError(null);
+      setIsUploading(false);
 
-      setMessages(prev => [...prev, assistantMessage]);
+      // Reset file input to allow re-uploading same files
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+
+      // Clear prefilled prompt after successful send
+      if (onClearPrefill) {
+        onClearPrefill();
+      }
     } catch (error) {
       console.error('Failed to send message:', error);
-      // Error handling is managed by the useChat hook and will be displayed in the UI
+
+      // Provide more specific error messages in German
+      let errorMessage = 'Nachricht konnte nicht gesendet werden.';
+      if (error instanceof Error) {
+        if (error.message.includes('network')) {
+          errorMessage = 'Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.';
+        } else if (error.message.includes('timeout')) {
+          errorMessage = 'Zeitüberschreitung. Der Server antwortet nicht. Bitte versuchen Sie es erneut.';
+        } else if (error.message.includes('rate limit')) {
+          errorMessage = 'Zu viele Anfragen. Bitte warten Sie einen Moment und versuchen Sie es erneut.';
+        } else {
+          errorMessage = `Fehler: ${error.message}`;
+        }
+      }
+
+      setInputError(errorMessage);
+
+      // On error, keep files in upload state so user can retry
+      // Do NOT clear uploadedFiles on error
     }
   };
 
-  const handleNewChat = () => {
-    setMessages([]);
-    setInputValue('');
-    resetState();
-    if (onNewChat) {
-      onNewChat();
+  const handleNewChat = async () => {
+    try {
+      await newChat();
+      setInputValue('');
+
+      // Clear all upload state when starting new chat
+      setUploadedFiles([]);
+      setUploadError(null);
+      setIsUploading(false);
+
+      // Clear file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+
+      if (onNewChat) {
+        onNewChat();
+      }
+    } catch (error) {
+      console.error('Failed to start new chat:', error);
+      // Show user-friendly error for new chat failure
+      setInputError('Fehler beim Starten eines neuen Chats. Bitte versuchen Sie es erneut.');
     }
   };
 
   return (
-    <div className="flex flex-col h-full max-w-md mx-auto">
-      {/* Chat Header */}
-      <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-gray-900">KI-Assistent</h1>
-        <button
-          onClick={handleNewChat}
-          className="p-2 text-gray-500 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors"
-          aria-label="Neuer Chat"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div style={{ padding: '16px', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
         {/* Error Display */}
         {error && (
-          <div className="flex justify-center mb-4">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 max-w-md">
-              <div className="flex items-center">
-                <svg className="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div>
-                  <h4 className="text-sm font-medium text-red-800">Fehler beim Senden der Nachricht</h4>
-                  <p className="text-sm text-red-700 mt-1">{error}</p>
+          <IonCard style={{
+            margin: '16px 0',
+            backgroundColor: '#fef2f2',
+            borderLeft: '4px solid #ef4444'
+          }}>
+            <IonCardContent style={{ padding: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <IonIcon
+                  icon={alertCircleOutline}
+                  style={{ fontSize: '24px', color: '#ef4444' }}
+                />
+                <div style={{ flex: 1 }}>
+                  <h4 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '600', color: '#dc2626' }}>
+                    Fehler beim Senden
+                  </h4>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#991b1b', lineHeight: '1.4' }}>
+                    {typeof error === 'string' ? error : 'Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'}
+                  </p>
                 </div>
+                <IonButton
+                  fill="clear"
+                  size="small"
+                  color="medium"
+                  onClick={() => window.location.reload()}
+                  title="Neu laden"
+                >
+                  <IonIcon icon={refreshOutline} />
+                </IonButton>
               </div>
-            </div>
-          </div>
+            </IonCardContent>
+          </IonCard>
         )}
 
-        {messages.length === 0 && !loading ? (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Willkommen!</h2>
-            <p className="text-gray-600 text-sm mb-6">Fragen Sie mich alles über Unterrichtsmaterialien, Stundenplanungen oder pädagogische Ansätze.</p>
+        {/* Legacy modal components removed - now using chat-integrated agent messages */}
 
-            {/* Suggested prompts */}
-            <div className="space-y-2">
-              <button
+        {messages.length === 0 && !loading ? (
+          <div style={{ textAlign: 'center', padding: '32px 0', flex: 1 }}>
+            <IonIcon
+              icon={chatbubbleOutline}
+              style={{
+                fontSize: '64px',
+                color: 'var(--ion-color-primary)',
+                marginBottom: '16px',
+                opacity: 0.7
+              }}
+            />
+            <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#111827' }}>
+              {user?.email ? `Wollen wir loslegen, ${user.email.split('@')[0]}?` : 'Wollen wir starten?'}
+            </h2>
+            <IonText color="medium">
+              <p>Fragen Sie mich alles über Unterrichtsmaterialien, Stundenplanungen oder pädagogische Ansätze.</p>
+            </IonText>
+
+            {/* Suggested prompts - Gemini Orange Icons */}
+            <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <IonCard
+                button
                 onClick={() => setInputValue('Erstelle mir einen Stundenplan für Mathematik Klasse 7')}
-                className="w-full p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors"
+                style={{ borderLeft: '4px solid #FB6542' }}
               >
-                📚 Erstelle mir einen Stundenplan für Mathematik Klasse 7
-              </button>
-              <button
+                <IonCardContent style={{ padding: '12px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      minWidth: '40px',
+                      minHeight: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(251, 101, 66, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <IonIcon icon={bookOutline} style={{ fontSize: '20px', color: '#FB6542' }} />
+                    </div>
+                    <IonText>
+                      <p style={{ margin: 0, fontSize: '14px' }}>
+                        Erstelle mir einen Stundenplan für Mathematik Klasse 7
+                      </p>
+                    </IonText>
+                  </div>
+                </IonCardContent>
+              </IonCard>
+
+              <IonCard
+                button
                 onClick={() => setInputValue('Schlage mir Aktivitäten für den Deutschunterricht vor')}
-                className="w-full p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors"
+                style={{ borderLeft: '4px solid #FB6542' }}
               >
-                ✏️ Schlage mir Aktivitäten für den Deutschunterricht vor
-              </button>
-              <button
+                <IonCardContent style={{ padding: '12px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      minWidth: '40px',
+                      minHeight: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(251, 101, 66, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <IonIcon icon={createOutline} style={{ fontSize: '20px', color: '#FB6542' }} />
+                    </div>
+                    <IonText>
+                      <p style={{ margin: 0, fontSize: '14px' }}>
+                        Schlage mir Aktivitäten für den Deutschunterricht vor
+                      </p>
+                    </IonText>
+                  </div>
+                </IonCardContent>
+              </IonCard>
+
+              <IonCard
+                button
                 onClick={() => setInputValue('Wie kann ich schwierige Schüler motivieren?')}
-                className="w-full p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors"
+                style={{ borderLeft: '4px solid #FB6542' }}
               >
-                💡 Wie kann ich schwierige Schüler motivieren?
-              </button>
+                <IonCardContent style={{ padding: '12px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      minWidth: '40px',
+                      minHeight: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(251, 101, 66, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <IonIcon icon={bulbOutline} style={{ fontSize: '20px', color: '#FB6542' }} />
+                    </div>
+                    <IonText>
+                      <p style={{ margin: 0, fontSize: '14px' }}>
+                        Wie kann ich schwierige Schüler motivieren?
+                      </p>
+                    </IonText>
+                  </div>
+                </IonCardContent>
+              </IonCard>
+
+              <IonCard
+                button
+                onClick={() => setInputValue('Erstelle ein Bild von einem Löwen für den Biologie-Unterricht')}
+                style={{ borderLeft: '4px solid #FB6542' }}
+              >
+                <IonCardContent style={{ padding: '12px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      minWidth: '40px',
+                      minHeight: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(251, 101, 66, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <IonIcon icon={sparklesOutline} style={{ fontSize: '20px', color: '#FB6542' }} />
+                    </div>
+                    <IonText>
+                      <p style={{ margin: 0, fontSize: '14px' }}>
+                        Erstelle ein Bild von einem Löwen für den Biologie-Unterricht
+                      </p>
+                    </IonText>
+                  </div>
+                </IonCardContent>
+              </IonCard>
             </div>
           </div>
         ) : (
-          messages.map((message) => (
-            <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] rounded-lg p-3 ${
-                message.role === 'user'
-                  ? 'bg-primary-500 text-white'
-                  : 'bg-white border border-gray-200 text-gray-900'
-              }`}>
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                <span className={`text-xs mt-1 block ${
-                  message.role === 'user' ? 'text-primary-100' : 'text-gray-500'
-                }`}>
-                  {message.timestamp.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
-            </div>
-          ))
-        )}
+          <div style={{ flex: 1, marginBottom: '16px' }}>
+            {messages.map((message) => {
+              // TASK-003: NEW Interface - Check for agentSuggestion property (direct property, not JSON)
+              // This supports the simplified Gemini workflow where ChatGPT returns messages with agentSuggestion
+              if ('agentSuggestion' in message && (message as any).agentSuggestion) {
+                return (
+                  <div key={message.id} className="flex justify-start mb-3">
+                    <div className="max-w-[85%]">
+                      <AgentConfirmationMessage
+                        message={{
+                          content: message.content,
+                          agentSuggestion: (message as any).agentSuggestion
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              }
 
-        {loading && (
-          <div className="flex justify-start">
-            <div className="bg-white border border-gray-200 rounded-lg p-3 max-w-[80%]">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              // Parse message content to check for agent message types first (OLD Interface - JSON)
+              let parsedContent: any = null;
+              let isAgentMessage = false;
+              let agentMessageType: string | null = null;
+
+              try {
+                parsedContent = JSON.parse(message.content);
+                if (parsedContent.messageType) {
+                  isAgentMessage = true;
+                  agentMessageType = parsedContent.messageType;
+                }
+              } catch (e) {
+                // Not JSON, use regular message rendering
+              }
+
+              // Render agent message components directly (they have their own card styling)
+              if (isAgentMessage && parsedContent) {
+                switch (agentMessageType) {
+                  case 'agent-confirmation':
+                    return (
+                      <AgentConfirmationMessage
+                        key={message.id}
+                        message={{
+                          ...message,
+                          session_id: currentSessionId || '',
+                          user_id: user?.id || '',
+                          message_index: 0,
+                          timestamp: typeof message.timestamp === 'number' ? message.timestamp : message.timestamp.getTime(),
+                          messageType: 'agent-confirmation',
+                          agentId: parsedContent.agentId,
+                          agentName: parsedContent.agentName,
+                          agentIcon: parsedContent.agentIcon,
+                          agentColor: parsedContent.agentColor,
+                          estimatedTime: parsedContent.estimatedTime,
+                          creditsRequired: parsedContent.creditsRequired,
+                          context: parsedContent.context
+                        }}
+                        onConfirm={() => handleAgentConfirmation(parsedContent.agentId, true)}
+                        onCancel={() => handleAgentConfirmation(parsedContent.agentId, false)}
+                      />
+                    );
+                  case 'agent-progress':
+                    return (
+                      <AgentProgressMessage
+                        key={message.id}
+                        message={{
+                          ...message,
+                          session_id: currentSessionId || '',
+                          user_id: user?.id || '',
+                          message_index: 0,
+                          timestamp: typeof message.timestamp === 'number' ? message.timestamp : message.timestamp.getTime(),
+                          messageType: 'agent-progress',
+                          agentId: parsedContent.agentId,
+                          agentName: parsedContent.agentName,
+                          status: parsedContent.status,
+                          progress: parsedContent.progress,
+                          statusText: parsedContent.statusText
+                        }}
+                      />
+                    );
+                  case 'agent-result':
+                    return (
+                      <AgentResultMessage
+                        key={message.id}
+                        message={{
+                          id: message.id,
+                          content: message.content,
+                          agentResult: parsedContent.resultData
+                        }}
+                        onTabChange={onTabChange}
+                      />
+                    );
+                  default:
+                    // Fall through to regular message rendering
+                    break;
+                }
+              }
+
+              // Regular message rendering for non-agent messages
+              return (
+                <div
+                  key={message.id}
+                  className={`flex mb-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`
+                      max-w-[80%] px-4 py-3 rounded-2xl shadow-sm
+                      ${message.role === 'user'
+                        ? 'bg-primary text-white rounded-br-md'
+                        : 'bg-background-teal text-gray-900 rounded-bl-md'}
+                    `}
+                  >
+                    <div>
+                      {(() => {
+                        // Parse message content for files, images, agent results, and text
+                        let parsedContent: any = null;
+                        let hasImage = false;
+                        let hasFiles = false;
+                        let hasAgentResult = false;
+                        let imageData: string | undefined;
+                        let textContent = message.content;
+                        let fileAttachments: Array<{id: string, filename: string}> = [];
+                        let agentResult: any = null;
+                        let agentInfo: any = null;
+
+                        try {
+                          parsedContent = JSON.parse(message.content);
+                          if (parsedContent.text) {
+                            textContent = parsedContent.text;
+                          }
+                          // Handle image data (current format)
+                          if (parsedContent.image_data) {
+                            hasImage = true;
+                            imageData = parsedContent.image_data;
+                          }
+                          // Handle file attachments (document uploads)
+                          if (parsedContent.fileIds && parsedContent.filenames) {
+                            hasFiles = true;
+                            fileAttachments = parsedContent.fileIds.map((id: string, index: number) => ({
+                              id,
+                              filename: parsedContent.filenames[index] || `File ${index + 1}`
+                            }));
+                          }
+                          // Handle agent results
+                          if (parsedContent.agent_result) {
+                            hasAgentResult = true;
+                            agentResult = parsedContent.agent_result;
+                            agentInfo = parsedContent.agent_info;
+                          }
+                        } catch (e) {
+                          // Not JSON, use original content
+                        }
+
+                      return (
+                        <>
+                          {hasImage && imageData && (
+                            <div style={{ marginBottom: '8px' }}>
+                              <img
+                                src={imageData}
+                                alt="Uploaded image"
+                                style={{
+                                  maxWidth: '100%',
+                                  height: 'auto',
+                                  borderRadius: '8px',
+                                  border: '1px solid var(--ion-color-light-shade)'
+                                }}
+                              />
+                            </div>
+                          )}
+                          {hasFiles && fileAttachments.length > 0 && (
+                            <div style={{ marginBottom: '8px' }}>
+                              {fileAttachments.map((file, index) => (
+                                <div key={file.id || index} style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '8px',
+                                  padding: '6px 8px',
+                                  backgroundColor: message.role === 'user' ? 'rgba(255,255,255,0.2)' : 'var(--ion-color-light)',
+                                  borderRadius: '6px',
+                                  marginBottom: index < fileAttachments.length - 1 ? '4px' : '0'
+                                }}>
+                                  <IonIcon
+                                    icon={attachOutline}
+                                    style={{ fontSize: '16px', color: message.role === 'user' ? 'rgba(255,255,255,0.8)' : 'var(--ion-color-primary)' }}
+                                  />
+                                  <IonText
+                                    color={message.role === 'user' ? 'light' : 'dark'}
+                                    style={{ fontSize: '12px', fontWeight: '500' }}
+                                  >
+                                    {file.filename}
+                                  </IonText>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {hasAgentResult && agentResult && (
+                            <div style={{ marginBottom: '8px' }}>
+                              {agentResult.type === 'image' && agentResult.content && (
+                                <div style={{
+                                  border: '2px solid var(--ion-color-secondary)',
+                                  borderRadius: '12px',
+                                  overflow: 'hidden',
+                                  marginBottom: '8px'
+                                }}>
+                                  <div style={{
+                                    backgroundColor: 'var(--ion-color-secondary)',
+                                    color: 'white',
+                                    padding: '8px 12px',
+                                    fontSize: '12px',
+                                    fontWeight: '600',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px'
+                                  }}>
+                                    <IonIcon icon={sparklesOutline} style={{ fontSize: '16px' }} />
+                                    KI-generiertes Bild
+                                    {agentInfo?.credits_used && (
+                                      <span style={{ marginLeft: 'auto', fontSize: '11px', opacity: 0.9 }}>
+                                        {agentInfo.credits_used} Credit{agentInfo.credits_used !== 1 ? 's' : ''}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <img
+                                    src={agentResult.content}
+                                    alt="Agent generated image"
+                                    style={{
+                                      width: '100%',
+                                      height: 'auto',
+                                      display: 'block',
+                                      maxHeight: '300px',
+                                      objectFit: 'contain'
+                                    }}
+                                  />
+                                  {agentResult.metadata && agentResult.metadata.prompt && (
+                                    <div style={{
+                                      padding: '8px 12px',
+                                      backgroundColor: 'var(--ion-color-light)',
+                                      fontSize: '12px',
+                                      color: 'var(--ion-color-medium)',
+                                      borderTop: '1px solid var(--ion-color-light-shade)'
+                                    }}>
+                                      <strong>Prompt:</strong> {agentResult.metadata.prompt}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                              {agentResult.type === 'text' && (
+                                <div style={{
+                                  border: '1px solid var(--ion-color-primary)',
+                                  borderRadius: '8px',
+                                  padding: '12px',
+                                  backgroundColor: 'var(--ion-color-primary-tint)',
+                                  marginBottom: '8px'
+                                }}>
+                                  <div style={{
+                                    fontSize: '12px',
+                                    color: 'var(--ion-color-primary)',
+                                    fontWeight: '600',
+                                    marginBottom: '4px'
+                                  }}>
+                                    Agent-Ergebnis:
+                                  </div>
+                                  <div style={{ fontSize: '14px', color: 'var(--ion-color-dark)' }}>
+                                    {agentResult.content}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          <ProgressiveMessage
+                            content={textContent}
+                            isComplete={
+                              // User messages: always instant
+                              message.role === 'user' ||
+                              // Messages from database (existing): always instant
+                              !message.id.startsWith('temp-') ||
+                              // Already animated messages: instant
+                              lastMessageId === message.id ||
+                              // Not the latest message: instant
+                              message.id !== messages[messages.length - 1]?.id
+                            }
+                            role={message.role}
+                            onComplete={() => {
+                              if (message.role === 'assistant' && lastMessageId !== message.id) {
+                                setLastMessageId(message.id);
+                              }
+                            }}
+                          />
+                          <span
+                            className={`
+                              block mt-1 text-xs
+                              ${message.role === 'user' ? 'text-white opacity-80' : 'text-gray-600'}
+                            `}
+                          >
+                            {(() => {
+                              const now = new Date();
+                              const messageDate = new Date(message.timestamp);
+                              const diffInMs = now.getTime() - messageDate.getTime();
+                              const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+                              const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+                              const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+                              if (diffInMinutes < 1) {
+                                return 'gerade eben';
+                              } else if (diffInMinutes < 60) {
+                                return `vor ${diffInMinutes} Min${diffInMinutes > 1 ? '.' : '.'}`;
+                              } else if (diffInHours < 24) {
+                                if (diffInHours === 1) {
+                                  return 'vor 1 Stunde';
+                                } else {
+                                  return `vor ${diffInHours} Stunden`;
+                                }
+                              } else if (diffInDays === 1) {
+                                return 'gestern';
+                              } else if (diffInDays < 7) {
+                                return `vor ${diffInDays} Tag${diffInDays > 1 ? 'en' : ''}`;
+                              } else {
+                                // Older than a week - show date
+                                return messageDate.toLocaleDateString('de-DE', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: diffInDays > 365 ? 'numeric' : undefined
+                                });
+                              }
+                            })()}
+                          </span>
+                        </>
+                      );
+                      })()}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {loading && (
+              <div className="flex justify-start mb-3">
+                <div className="max-w-[80%] px-4 py-3 rounded-2xl rounded-bl-md shadow-sm bg-background-teal text-center">
+                  <IonSpinner name="dots" color="medium" />
+                  <p className="mt-2 text-xs text-gray-600">
+                    eduhu tippt...
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
+
+        {/* Input Area - Fixed at bottom with safe area padding */}
+        <div style={{
+          position: 'sticky',
+          bottom: 0,
+          backgroundColor: '#ffffff',
+          padding: '16px 16px 80px 16px',
+          borderTop: '1px solid var(--ion-color-light-shade)'
+        }}>
+          {/* Uploaded files preview - only show when files are uploaded and not yet sent */}
+          {uploadedFiles.length > 0 && !loading && (
+            <div style={{
+              marginBottom: '8px',
+              padding: '8px',
+              backgroundColor: '#f8f9fa',
+              borderRadius: '8px',
+              border: '1px solid var(--ion-color-light-shade)'
+            }}>
+              <div style={{ fontSize: '12px', color: 'var(--ion-color-medium)', marginBottom: '8px', fontWeight: '500' }}>
+                📎 Angehängte Dateien (werden mit der nächsten Nachricht gesendet):
+              </div>
+              {uploadedFiles.map((file, index) => (
+                <div key={file.id} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px',
+                  border: '1px solid var(--ion-color-light-shade)',
+                  borderRadius: '8px',
+                  marginBottom: '8px',
+                  backgroundColor: '#f8f9fa'
+                }}>
+                  {file.type.startsWith('image/') ? (
+                    <img
+                      src={file.url}
+                      alt={file.filename}
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        objectFit: 'cover',
+                        borderRadius: '4px'
+                      }}
+                    />
+                  ) : (
+                    <IonIcon
+                      icon={attachOutline}
+                      style={{ fontSize: '24px', color: 'var(--ion-color-primary)' }}
+                    />
+                  )}
+                  <div style={{ flex: 1 }}>
+                    <IonText style={{ fontSize: '14px', fontWeight: '500' }}>
+                      {file.filename}
+                    </IonText>
+                    <IonText color="medium" style={{ display: 'block', fontSize: '12px' }}>
+                      {(file.size / 1024).toFixed(1)} KB
+                    </IonText>
+                  </div>
+                  <IonButton
+                    fill="clear"
+                    size="small"
+                    onClick={() => setUploadedFiles(prev => prev.filter(f => f.id !== file.id))}
+                  >
+                    <IonIcon icon={closeCircleOutline} color="danger" />
+                  </IonButton>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Upload error display */}
+          {uploadError && (
+            <div style={{ marginBottom: '8px' }}>
+              <IonText color="danger" style={{ fontSize: '12px' }}>
+                {uploadError}
+              </IonText>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: '12px',
+              width: '100%'
+            }}>
+              {/* Attach Button */}
+              <button
+                type="button"
+                onClick={() => document.getElementById('file-input')?.click()}
+                disabled={loading || isUploading}
+                title="Datei anhängen"
+                style={{
+                  minWidth: '44px',
+                  minHeight: '44px',
+                  width: '48px',
+                  height: '48px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#f3f4f6',
+                  borderRadius: '12px',
+                  border: 'none',
+                  cursor: loading || isUploading ? 'not-allowed' : 'pointer',
+                  opacity: loading || isUploading ? 0.5 : 1,
+                  transition: 'all 200ms',
+                  flexShrink: 0
+                }}
+                onMouseEnter={(e) => !loading && !isUploading && (e.currentTarget.style.backgroundColor = '#e5e7eb')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+              >
+                {isUploading ? (
+                  <IonSpinner name="crescent" style={{ width: '20px', height: '20px' }} />
+                ) : (
+                  <IonIcon icon={attachOutline} style={{ fontSize: '20px', color: '#374151' }} />
+                )}
+              </button>
+
+              {/* Input Field */}
+              <div style={{
+                flex: 1,
+                backgroundColor: '#f3f4f6',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                minWidth: 0
+              }}>
+                <IonInput
+                  value={inputValue}
+                  onIonInput={(e) => {
+                    const newValue = e.detail.value!;
+                    setInputValue(newValue);
+                    // Clear error when user starts typing
+                    if (inputError) {
+                      setInputError(null);
+                    }
+                  }}
+                  placeholder="Nachricht schreiben..."
+                  disabled={loading}
+                  style={{
+                    '--padding-start': '16px',
+                    '--padding-end': '16px',
+                    '--padding-top': '12px',
+                    '--padding-bottom': '12px'
+                  }}
+                  maxlength={MAX_CHAR_LIMIT}
+                />
+              </div>
+
+              {/* Send Button - Gemini Style Orange */}
+              <button
+                type="submit"
+                disabled={!inputValue.trim() || loading || inputValue.trim().length > MAX_CHAR_LIMIT}
+                style={{
+                  minWidth: '44px',
+                  minHeight: '44px',
+                  width: '56px',
+                  height: '48px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: inputValue.trim() && !loading && inputValue.trim().length <= MAX_CHAR_LIMIT ? '#FB6542' : '#d1d5db',
+                  borderRadius: '12px',
+                  border: 'none',
+                  cursor: (!inputValue.trim() || loading || inputValue.trim().length > MAX_CHAR_LIMIT) ? 'not-allowed' : 'pointer',
+                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                  transition: 'all 200ms',
+                  flexShrink: 0
+                }}
+                onMouseEnter={(e) => inputValue.trim() && !loading && (e.currentTarget.style.opacity = '0.9')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+              >
+                <IonIcon icon={sendOutline} style={{ fontSize: '20px', color: '#ffffff' }} />
+              </button>
+            </div>
+          </form>
+
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            id="file-input"
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+            multiple
+            accept="image/*,.pdf,.doc,.docx,.txt"
+          />
+
+          {/* Character Counter and Error Messages */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: '8px',
+            fontSize: '12px'
+          }}>
+            <div>
+              {inputError && (
+                <IonText color="danger">
+                  <p style={{ margin: 0 }}>{inputError}</p>
+                </IonText>
+              )}
+            </div>
+            <IonText color={inputValue.length > MAX_CHAR_LIMIT ? 'danger' : 'medium'}>
+              <p style={{ margin: 0 }}>
+                {inputValue.length}/{MAX_CHAR_LIMIT}
+              </p>
+            </IonText>
+          </div>
+        </div>
 
         {/* Scroll anchor */}
         <div ref={messagesEndRef} />
-      </div>
 
-      {/* Input Area */}
-      <div className="bg-white border-t border-gray-200 p-4">
-        <form onSubmit={handleSubmit} className="flex space-x-3">
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Stellen Sie Ihre Frage..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm"
-              disabled={loading}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={!inputValue.trim() || loading}
-            className="px-4 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
-          </button>
-        </form>
+        {/* Floating Plus Button for New Chat */}
+        <button
+          onClick={handleNewChat}
+          className="fixed z-50 w-14 h-14 flex items-center justify-center rounded-full shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+          style={{
+            backgroundColor: '#FB6542',
+            bottom: 'calc(80px + 1rem)',
+            right: '1rem'
+          }}
+          title="Neuer Chat"
+        >
+          <IonIcon icon={addOutline} className="text-2xl text-white" />
+        </button>
       </div>
-    </div>
   );
-};
+});
 
 export default ChatView;
