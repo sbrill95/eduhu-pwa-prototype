@@ -54,6 +54,7 @@ interface NewAgentConfirmationMessageProps {
       };
     };
   };
+  sessionId?: string | null; // Add sessionId support
 }
 
 // OLD Interface (backward compatibility)
@@ -225,7 +226,7 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
   }
 
   // NEW Interface Rendering (TASK-001 - Gemini Design)
-  const { message } = props;
+  const { message, sessionId } = props;
 
   // If no agent suggestion, render as normal text message
   if (!message.agentSuggestion) {
@@ -239,12 +240,14 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
   const handleConfirm = () => {
     console.log('[AgentConfirmationMessage] User confirmed agent:', {
       agentType: message.agentSuggestion!.agentType,
-      prefillData: message.agentSuggestion!.prefillData
+      prefillData: message.agentSuggestion!.prefillData,
+      sessionId
     });
 
     openModal(
       message.agentSuggestion!.agentType,
-      message.agentSuggestion!.prefillData
+      message.agentSuggestion!.prefillData,
+      sessionId || null
     );
   };
 
@@ -273,13 +276,27 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
           </div>
         </div>
 
-        {/* Confirmation Button */}
-        <button
-          onClick={handleConfirm}
-          className="w-full bg-primary-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-primary-600 active:bg-primary-700 transition-colors duration-200 text-sm shadow-sm"
-        >
-          Ja, Bild erstellen ✨
-        </button>
+        {/* Action Buttons */}
+        <div className="flex gap-2">
+          {/* Confirm Button - Start Agent (PRIMARY - LEFT) */}
+          <button
+            onClick={handleConfirm}
+            className="flex-1 bg-primary-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-primary-600 active:bg-primary-700 transition-colors duration-200 text-sm shadow-sm"
+          >
+            Bild-Generierung starten ✨
+          </button>
+
+          {/* Cancel Button - Continue Chat (SECONDARY - RIGHT) */}
+          <button
+            onClick={() => {
+              console.log('[AgentConfirmationMessage] User cancelled agent, continuing chat');
+              // No action needed - user can just continue typing in chat
+            }}
+            className="flex-1 bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-xl hover:bg-gray-200 active:bg-gray-300 transition-colors duration-200 text-sm"
+          >
+            Weiter im Chat 💬
+          </button>
+        </div>
       </div>
     </div>
   );

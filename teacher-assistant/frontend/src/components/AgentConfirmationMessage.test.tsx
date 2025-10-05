@@ -47,7 +47,7 @@ describe('AgentConfirmationMessage (NEW Interface - TASK-001)', () => {
 
     // Should NOT render confirmation card
     expect(screen.queryByText('Bildgenerierung')).not.toBeInTheDocument();
-    expect(screen.queryByText('Ja, Bild erstellen ✨')).not.toBeInTheDocument();
+    expect(screen.queryByText('Bild-Generierung starten ✨')).not.toBeInTheDocument();
   });
 
   it('renders confirmation card with agentSuggestion', () => {
@@ -72,7 +72,7 @@ describe('AgentConfirmationMessage (NEW Interface - TASK-001)', () => {
 
     // Should render confirmation card
     expect(screen.getByText('Bildgenerierung')).toBeInTheDocument();
-    expect(screen.getByText('Ja, Bild erstellen ✨')).toBeInTheDocument();
+    expect(screen.getByText('Bild-Generierung starten ✨')).toBeInTheDocument();
   });
 
   it('displays reasoning text from agentSuggestion', () => {
@@ -111,15 +111,15 @@ describe('AgentConfirmationMessage (NEW Interface - TASK-001)', () => {
     render(<AgentConfirmationMessage message={message} />);
 
     // Click confirmation button
-    const confirmButton = screen.getByText('Ja, Bild erstellen ✨');
+    const confirmButton = screen.getByText('Bild-Generierung starten ✨');
     fireEvent.click(confirmButton);
 
-    // Should call openModal with agentType and prefillData
+    // Should call openModal with agentType, prefillData, and sessionId
     expect(mockOpenModal).toHaveBeenCalledTimes(1);
     expect(mockOpenModal).toHaveBeenCalledWith('image-generation', {
       theme: 'Satz des Pythagoras',
       learningGroup: 'Klasse 8a'
-    });
+    }, null); // sessionId is null when not provided
   });
 
   it('has correct Gemini styling (gradient, colors, rounded corners)', () => {
@@ -150,7 +150,7 @@ describe('AgentConfirmationMessage (NEW Interface - TASK-001)', () => {
     expect(whiteCard).toHaveClass('rounded-xl');
 
     // Check for orange button
-    const button = screen.getByText('Ja, Bild erstellen ✨');
+    const button = screen.getByText('Bild-Generierung starten ✨');
     expect(button).toHaveClass('bg-primary-500', 'text-white', 'rounded-xl');
   });
 
