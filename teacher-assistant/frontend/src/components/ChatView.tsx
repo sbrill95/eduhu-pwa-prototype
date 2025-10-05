@@ -30,11 +30,14 @@ import {
 } from 'ionicons/icons';
 import { useChat } from '../hooks/useChat';
 import { useAuth } from '../lib/auth-context';
+import { useChatSummary } from '../hooks/useChatSummary';
+import { useAgent } from '../lib/AgentContext';
 import {
   ProgressiveMessage,
   AgentConfirmationMessage,
   AgentProgressMessage,
-  AgentResultMessage
+  AgentResultMessage,
+  MaterialPreviewModal
 } from './index';
 // Legacy modal components - no longer used in chat-integrated flow
 // import AgentConfirmationModal from './AgentConfirmationModal';
@@ -115,7 +118,7 @@ interface ChatViewProps {
   sessionId?: string; // Optional: load specific session
   onNewChat?: () => void;
   onSessionChange?: (sessionId: string | null) => void;
-  onTabChange?: (tab: 'home' | 'chat' | 'library') => void;
+  onTabChange?: (tab: 'home' | 'generieren' | 'automatisieren' | 'profil') => void;
   prefilledPrompt?: string | null; // Prefilled prompt from Home screen
   onClearPrefill?: () => void; // Callback to clear prefilled prompt
 }
@@ -137,8 +140,15 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [lastMessageId, setLastMessageId] = useState<string | null>(null);
 
+  // TASK-009: State for image preview modal
+  const [showImagePreviewModal, setShowImagePreviewModal] = useState(false);
+  const [selectedImageMaterial, setSelectedImageMaterial] = useState<any>(null);
+
   // Auth context
   const { user } = useAuth();
+
+  // Agent context for modal-based workflow
+  const { openModal } = useAgent();
 
   // Character limit for messages
   const MAX_CHAR_LIMIT = 400;
@@ -161,6 +171,16 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
     handleAgentConfirmation,
     clearAgentState,
   } = useChat();
+
+  // Auto-generate chat summary
+  useChatSummary({
+    chatId: currentSessionId || '',
+    messages: messages.map(m => ({
+      role: m.role,
+      content: m.content
+    })),
+    enabled: !!currentSessionId && !!user
+  });
 
   const validateFile = (file: File): string | null => {
     // File type validation
@@ -295,6 +315,62 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
       }, 100);
     }
   }, [prefilledPrompt]);
+
+  // Profile extraction on chat unmount (TASK-016: Profile Redesign Auto-Extraction)
+  // Triggers when user leaves chat view with meaningful conversation
+  const hasExtractedRef = useRef(false);
+
+  useEffect(() => {
+    // Reset extraction flag when session changes
+    hasExtractedRef.current = false;
+
+    // Cleanup: Trigger extraction when component unmounts
+    return () => {
+      // Only extract if:
+      // 1. Not already extracted in this session
+      // 2. User is authenticated
+      // 3. Has active session
+      // 4. Has at least 2 messages (meaningful conversation)
+      if (
+        !hasExtractedRef.current &&
+        user?.id &&
+        currentSessionId &&
+        messages.length >= 2
+      ) {
+        hasExtractedRef.current = true;
+
+        // Extract profile characteristics in background
+        const extractProfile = async () => {
+          try {
+            console.log('[Profile Extraction] Triggering extraction on unmount', {
+              userId: user.id,
+              sessionId: currentSessionId,
+              messageCount: messages.length
+            });
+
+            // Convert messages to API format (first 10 for context)
+            const apiMessages = messages.slice(0, 10).map(m => ({
+              role: m.role,
+              content: m.content
+            }));
+
+            await apiClient.post('/profile/extract', {
+              userId: user.id,
+              messages: apiMessages
+            });
+
+            console.log('[Profile Extraction] Extraction successful');
+          } catch (error) {
+            // Log error but don't block UI or show error to user
+            console.error('[Profile Extraction] Failed:', error);
+          }
+        };
+
+        // Execute in background (non-blocking)
+        extractProfile();
+      }
+    };
+  }, [currentSessionId, user?.id, messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -472,7 +548,7 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                 opacity: 0.7
               }}
             />
-            <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#111827' }}>
+            <h2 className="text-2xl font-bold mb-2 text-gray-900">
               {user?.email ? `Wollen wir loslegen, ${user.email.split('@')[0]}?` : 'Wollen wir starten?'}
             </h2>
             <IonText color="medium">
@@ -480,134 +556,100 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
             </IonText>
 
             {/* Suggested prompts - Gemini Orange Icons */}
-            <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <IonCard
-                button
+            <div className="mt-6 flex flex-col gap-2">
+              <button
                 onClick={() => setInputValue('Erstelle mir einen Stundenplan für Mathematik Klasse 7')}
-                style={{ borderLeft: '4px solid #FB6542' }}
+                className="w-full text-left p-4 bg-white border-l-4 border-primary rounded-xl shadow-sm hover:shadow-md transition-all"
               >
-                <IonCardContent style={{ padding: '12px 16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      minWidth: '40px',
-                      minHeight: '40px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(251, 101, 66, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0
-                    }}>
-                      <IonIcon icon={bookOutline} style={{ fontSize: '20px', color: '#FB6542' }} />
-                    </div>
-                    <IonText>
-                      <p style={{ margin: 0, fontSize: '14px' }}>
-                        Erstelle mir einen Stundenplan für Mathematik Klasse 7
-                      </p>
-                    </IonText>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <IonIcon icon={bookOutline} className="text-xl text-primary" />
                   </div>
-                </IonCardContent>
-              </IonCard>
+                  <span className="text-base font-medium text-gray-900">
+                    Erstelle mir einen Stundenplan für Mathematik Klasse 7
+                  </span>
+                </div>
+              </button>
 
-              <IonCard
-                button
+              <button
                 onClick={() => setInputValue('Schlage mir Aktivitäten für den Deutschunterricht vor')}
-                style={{ borderLeft: '4px solid #FB6542' }}
+                className="w-full text-left p-4 bg-white border-l-4 border-primary rounded-xl shadow-sm hover:shadow-md transition-all"
               >
-                <IonCardContent style={{ padding: '12px 16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      minWidth: '40px',
-                      minHeight: '40px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(251, 101, 66, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0
-                    }}>
-                      <IonIcon icon={createOutline} style={{ fontSize: '20px', color: '#FB6542' }} />
-                    </div>
-                    <IonText>
-                      <p style={{ margin: 0, fontSize: '14px' }}>
-                        Schlage mir Aktivitäten für den Deutschunterricht vor
-                      </p>
-                    </IonText>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <IonIcon icon={createOutline} className="text-xl text-primary" />
                   </div>
-                </IonCardContent>
-              </IonCard>
+                  <span className="text-base font-medium text-gray-900">
+                    Schlage mir Aktivitäten für den Deutschunterricht vor
+                  </span>
+                </div>
+              </button>
 
-              <IonCard
-                button
+              <button
                 onClick={() => setInputValue('Wie kann ich schwierige Schüler motivieren?')}
-                style={{ borderLeft: '4px solid #FB6542' }}
+                className="w-full text-left p-4 bg-white border-l-4 border-primary rounded-xl shadow-sm hover:shadow-md transition-all"
               >
-                <IonCardContent style={{ padding: '12px 16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      minWidth: '40px',
-                      minHeight: '40px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(251, 101, 66, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0
-                    }}>
-                      <IonIcon icon={bulbOutline} style={{ fontSize: '20px', color: '#FB6542' }} />
-                    </div>
-                    <IonText>
-                      <p style={{ margin: 0, fontSize: '14px' }}>
-                        Wie kann ich schwierige Schüler motivieren?
-                      </p>
-                    </IonText>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <IonIcon icon={bulbOutline} className="text-xl text-primary" />
                   </div>
-                </IonCardContent>
-              </IonCard>
+                  <span className="text-base font-medium text-gray-900">
+                    Wie kann ich schwierige Schüler motivieren?
+                  </span>
+                </div>
+              </button>
 
-              <IonCard
-                button
+              <button
                 onClick={() => setInputValue('Erstelle ein Bild von einem Löwen für den Biologie-Unterricht')}
-                style={{ borderLeft: '4px solid #FB6542' }}
+                className="w-full text-left p-4 bg-white border-l-4 border-primary rounded-xl shadow-sm hover:shadow-md transition-all"
               >
-                <IonCardContent style={{ padding: '12px 16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      minWidth: '40px',
-                      minHeight: '40px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(251, 101, 66, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0
-                    }}>
-                      <IonIcon icon={sparklesOutline} style={{ fontSize: '20px', color: '#FB6542' }} />
-                    </div>
-                    <IonText>
-                      <p style={{ margin: 0, fontSize: '14px' }}>
-                        Erstelle ein Bild von einem Löwen für den Biologie-Unterricht
-                      </p>
-                    </IonText>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <IonIcon icon={sparklesOutline} className="text-xl text-primary" />
                   </div>
-                </IonCardContent>
-              </IonCard>
+                  <span className="text-base font-medium text-gray-900">
+                    Erstelle ein Bild von einem Löwen für den Biologie-Unterricht
+                  </span>
+                </div>
+              </button>
             </div>
           </div>
         ) : (
-          <div style={{ flex: 1, marginBottom: '16px' }}>
+          <div style={{ flex: 1, marginBottom: '16px', paddingTop: '80px', paddingBottom: '140px' }}>
             {messages.map((message) => {
-              // TASK-003: NEW Interface - Check for agentSuggestion property (direct property, not JSON)
+              // FIX-002: Check metadata FIRST for agentSuggestion (from InstantDB)
+              if (message.metadata) {
+                try {
+                  const metadata = typeof message.metadata === 'string'
+                    ? JSON.parse(message.metadata)
+                    : message.metadata;
+
+                  if (metadata.agentSuggestion) {
+                    console.log('[ChatView] Found agentSuggestion in metadata:', metadata.agentSuggestion);
+                    return (
+                      <div key={message.id} className="flex justify-start mb-3">
+                        <div className="max-w-[85%]">
+                          <AgentConfirmationMessage
+                            message={{
+                              content: message.content,
+                              agentSuggestion: metadata.agentSuggestion
+                            }}
+                            sessionId={currentSessionId}
+                          />
+                        </div>
+                      </div>
+                    );
+                  }
+                } catch (e) {
+                  console.error('[ChatView] Failed to parse metadata:', e);
+                  // Not JSON metadata, continue with regular rendering
+                }
+              }
+
+              // TASK-003: NEW Interface - Check for agentSuggestion property (direct property from local messages)
               // This supports the simplified Gemini workflow where ChatGPT returns messages with agentSuggestion
               if ('agentSuggestion' in message && (message as any).agentSuggestion) {
+                console.log('[ChatView] Found agentSuggestion in message property:', (message as any).agentSuggestion);
                 return (
                   <div key={message.id} className="flex justify-start mb-3">
                     <div className="max-w-[85%]">
@@ -616,6 +658,7 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                           content: message.content,
                           agentSuggestion: (message as any).agentSuggestion
                         }}
+                        sessionId={currentSessionId}
                       />
                     </div>
                   </div>
@@ -659,7 +702,27 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                           creditsRequired: parsedContent.creditsRequired,
                           context: parsedContent.context
                         }}
-                        onConfirm={() => handleAgentConfirmation(parsedContent.agentId, true)}
+                        onConfirm={() => {
+                          // BUG-001 FIX: Use openModal instead of executeAgent directly
+                          console.log('[ChatView] Agent confirmed, opening modal', {
+                            agentId: parsedContent.agentId,
+                            context: parsedContent.context
+                          });
+
+                          // Map agentId to agentType
+                          const agentTypeMap: Record<string, string> = {
+                            'image-generation': 'image-generation',
+                            'langgraph-image-generation': 'image-generation'
+                          };
+
+                          const agentType = agentTypeMap[parsedContent.agentId] || 'image-generation';
+
+                          // Open modal with prefill data from context
+                          openModal(agentType, {
+                            imageContent: parsedContent.context || '',
+                            imageStyle: 'realistic'
+                          }, currentSessionId || undefined);
+                        }}
                         onCancel={() => handleAgentConfirmation(parsedContent.agentId, false)}
                       />
                     );
@@ -710,9 +773,10 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                     className={`
                       max-w-[80%] px-4 py-3 rounded-2xl shadow-sm
                       ${message.role === 'user'
-                        ? 'bg-primary text-white rounded-br-md'
-                        : 'bg-background-teal text-gray-900 rounded-bl-md'}
+                        ? 'text-white rounded-br-md'
+                        : 'bg-white text-gray-900 rounded-bl-md border border-gray-200'}
                     `}
+                    style={message.role === 'user' ? { backgroundColor: '#FB6542' } : undefined}
                   >
                     <div>
                       {(() => {
@@ -727,48 +791,164 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                         let agentResult: any = null;
                         let agentInfo: any = null;
 
-                        try {
-                          parsedContent = JSON.parse(message.content);
-                          if (parsedContent.text) {
-                            textContent = parsedContent.text;
+                        // TASK-009: Check for metadata-based images (new format from backend) with click handler
+                        if ('metadata' in message && message.metadata) {
+                          console.log('[ChatView] Processing message with metadata:', {
+                            messageId: message.id,
+                            hasMetadata: true,
+                            metadataType: typeof message.metadata,
+                            rawMetadata: message.metadata
+                          });
+
+                          try {
+                            const metadata = typeof message.metadata === 'string'
+                              ? JSON.parse(message.metadata)
+                              : message.metadata;
+
+                            console.log('[ChatView] Parsed metadata:', metadata);
+
+                            if (metadata.type === 'image' && metadata.image_url) {
+                              console.log('[ChatView] ✅ IMAGE DETECTED:', {
+                                imageUrl: metadata.image_url,
+                                messageContent: message.content,
+                                libraryId: metadata.library_id
+                              });
+                              hasImage = true;
+                              imageData = metadata.image_url;
+                              // Use message.content as text (e.g., "Ich habe ein Bild für dich erstellt.")
+                              textContent = message.content;
+
+                              // TASK-009: Store library_id and metadata for click handler
+                              agentResult = {
+                                type: 'image',
+                                libraryId: metadata.library_id,
+                                imageUrl: metadata.image_url,
+                                description: metadata.description,
+                                imageStyle: metadata.image_style,
+                                title: metadata.title
+                              };
+                            } else {
+                              console.log('[ChatView] Metadata does NOT contain image:', {
+                                hasType: !!metadata.type,
+                                type: metadata.type,
+                                hasImageUrl: !!metadata.image_url
+                              });
+                            }
+                          } catch (e) {
+                            console.error('[ChatView] Failed to parse message metadata:', e);
                           }
-                          // Handle image data (current format)
-                          if (parsedContent.image_data) {
-                            hasImage = true;
-                            imageData = parsedContent.image_data;
+                        } else {
+                          // Debug: Log messages WITHOUT metadata
+                          if (message.role === 'assistant') {
+                            console.log('[ChatView] Assistant message WITHOUT metadata:', {
+                              messageId: message.id,
+                              content: message.content?.substring(0, 50) + '...'
+                            });
                           }
-                          // Handle file attachments (document uploads)
-                          if (parsedContent.fileIds && parsedContent.filenames) {
-                            hasFiles = true;
-                            fileAttachments = parsedContent.fileIds.map((id: string, index: number) => ({
-                              id,
-                              filename: parsedContent.filenames[index] || `File ${index + 1}`
-                            }));
+                        }
+
+                        // Fallback: Try parsing content as JSON for legacy format
+                        if (!hasImage && !hasFiles && !hasAgentResult) {
+                          try {
+                            parsedContent = JSON.parse(message.content);
+                            if (parsedContent.text) {
+                              textContent = parsedContent.text;
+                            }
+                            // Handle image data (current format)
+                            if (parsedContent.image_data) {
+                              hasImage = true;
+                              imageData = parsedContent.image_data;
+                            }
+                            // Handle file attachments (document uploads)
+                            if (parsedContent.fileIds && parsedContent.filenames) {
+                              hasFiles = true;
+                              fileAttachments = parsedContent.fileIds.map((id: string, index: number) => ({
+                                id,
+                                filename: parsedContent.filenames[index] || `File ${index + 1}`
+                              }));
+                            }
+                            // Handle agent results
+                            if (parsedContent.agent_result) {
+                              hasAgentResult = true;
+                              agentResult = parsedContent.agent_result;
+                              agentInfo = parsedContent.agent_info;
+                            }
+                          } catch (e) {
+                            // Not JSON, use original content
                           }
-                          // Handle agent results
-                          if (parsedContent.agent_result) {
-                            hasAgentResult = true;
-                            agentResult = parsedContent.agent_result;
-                            agentInfo = parsedContent.agent_info;
-                          }
-                        } catch (e) {
-                          // Not JSON, use original content
                         }
 
                       return (
                         <>
                           {hasImage && imageData && (
-                            <div style={{ marginBottom: '8px' }}>
+                            <div
+                              style={{
+                                marginBottom: '8px',
+                                cursor: agentResult?.libraryId ? 'pointer' : 'default',
+                                maxWidth: '300px'
+                              }}
+                              onClick={() => {
+                                // TASK-009: Open preview modal on click if library_id exists
+                                if (agentResult?.libraryId) {
+                                  console.log('[ChatView] Image clicked, opening preview modal', {
+                                    libraryId: agentResult.libraryId,
+                                    imageUrl: agentResult.imageUrl
+                                  });
+
+                                  // Create material object for MaterialPreviewModal
+                                  const material = {
+                                    id: agentResult.libraryId,
+                                    title: agentResult.title || 'Generiertes Bild',
+                                    description: agentResult.description || '',
+                                    type: 'image' as const,
+                                    source: 'agent-generated' as const,
+                                    created_at: Date.now(),
+                                    updated_at: Date.now(),
+                                    metadata: {
+                                      artifact_data: {
+                                        url: agentResult.imageUrl
+                                      },
+                                      prompt: agentResult.description,
+                                      image_style: agentResult.imageStyle
+                                    },
+                                    is_favorite: false
+                                  };
+
+                                  setSelectedImageMaterial(material);
+                                  setShowImagePreviewModal(true);
+                                }
+                              }}
+                            >
                               <img
                                 src={imageData}
-                                alt="Uploaded image"
+                                alt="Generated image"
                                 style={{
                                   maxWidth: '100%',
                                   height: 'auto',
                                   borderRadius: '8px',
-                                  border: '1px solid var(--ion-color-light-shade)'
+                                  border: '1px solid var(--ion-color-light-shade)',
+                                  transition: 'transform 0.2s',
                                 }}
+                                onMouseEnter={(e) => {
+                                  if (agentResult?.libraryId) {
+                                    e.currentTarget.style.transform = 'scale(1.02)';
+                                  }
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.transform = 'scale(1)';
+                                }}
+                                loading="lazy"
                               />
+                              {agentResult?.libraryId && (
+                                <div style={{
+                                  marginTop: '4px',
+                                  fontSize: '12px',
+                                  color: 'var(--ion-color-medium)',
+                                  textAlign: 'center'
+                                }}>
+                                  Klicken zum Vergrößern
+                                </div>
+                              )}
                             </div>
                           )}
                           {hasFiles && fileAttachments.length > 0 && (
@@ -939,7 +1119,7 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
 
             {loading && (
               <div className="flex justify-start mb-3">
-                <div className="max-w-[80%] px-4 py-3 rounded-2xl rounded-bl-md shadow-sm bg-background-teal text-center">
+                <div className="max-w-[80%] px-4 py-3 rounded-2xl rounded-bl-md shadow-sm bg-white border border-gray-200 text-center">
                   <IonSpinner name="dots" color="medium" />
                   <p className="mt-2 text-xs text-gray-600">
                     eduhu tippt...
@@ -950,13 +1130,16 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
           </div>
         )}
 
-        {/* Input Area - Fixed at bottom with safe area padding */}
+        {/* Input Area - Fixed at bottom above tab bar */}
         <div style={{
-          position: 'sticky',
-          bottom: 0,
+          position: 'fixed',
+          bottom: '60px',
+          left: 0,
+          right: 0,
           backgroundColor: '#ffffff',
-          padding: '16px 16px 80px 16px',
-          borderTop: '1px solid var(--ion-color-light-shade)'
+          padding: '16px',
+          borderTop: '1px solid var(--ion-color-light-shade)',
+          zIndex: 100
         }}>
           {/* Uploaded files preview - only show when files are uploaded and not yet sent */}
           {uploadedFiles.length > 0 && !loading && (
@@ -1038,7 +1221,7 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
               {/* Attach Button */}
               <button
                 type="button"
-                onClick={() => document.getElementById('file-input')?.click()}
+                onClick={() => fileInputRef.current?.click()}
                 disabled={loading || isUploading}
                 title="Datei anhängen"
                 style={{
@@ -1101,26 +1284,23 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
               <button
                 type="submit"
                 disabled={!inputValue.trim() || loading || inputValue.trim().length > MAX_CHAR_LIMIT}
+                className="min-w-[44px] min-h-[44px] w-14 h-12 flex items-center justify-center rounded-xl border-none shadow-sm transition-all flex-shrink-0"
                 style={{
-                  minWidth: '44px',
-                  minHeight: '44px',
-                  width: '56px',
-                  height: '48px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: inputValue.trim() && !loading && inputValue.trim().length <= MAX_CHAR_LIMIT ? '#FB6542' : '#d1d5db',
-                  borderRadius: '12px',
-                  border: 'none',
-                  cursor: (!inputValue.trim() || loading || inputValue.trim().length > MAX_CHAR_LIMIT) ? 'not-allowed' : 'pointer',
-                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                  transition: 'all 200ms',
-                  flexShrink: 0
+                  backgroundColor: inputValue.trim() && !loading && inputValue.trim().length <= MAX_CHAR_LIMIT
+                    ? '#FB6542'
+                    : '#f3f4f6',
+                  cursor: inputValue.trim() && !loading && inputValue.trim().length <= MAX_CHAR_LIMIT
+                    ? 'pointer'
+                    : 'not-allowed'
                 }}
-                onMouseEnter={(e) => inputValue.trim() && !loading && (e.currentTarget.style.opacity = '0.9')}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                <IonIcon icon={sendOutline} style={{ fontSize: '20px', color: '#ffffff' }} />
+                <IonIcon
+                  icon={sendOutline}
+                  style={{
+                    fontSize: '20px',
+                    color: inputValue.trim() && !loading && inputValue.trim().length <= MAX_CHAR_LIMIT ? '#ffffff' : '#9ca3af'
+                  }}
+                />
               </button>
             </div>
           </form>
@@ -1168,13 +1348,25 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
           className="fixed z-50 w-14 h-14 flex items-center justify-center rounded-full shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
           style={{
             backgroundColor: '#FB6542',
-            bottom: 'calc(80px + 1rem)',
+            bottom: 'calc(160px + 1rem)',
             right: '1rem'
           }}
           title="Neuer Chat"
         >
           <IonIcon icon={addOutline} className="text-2xl text-white" />
         </button>
+
+        {/* TASK-009: Image Preview Modal */}
+        {showImagePreviewModal && selectedImageMaterial && (
+          <MaterialPreviewModal
+            material={selectedImageMaterial}
+            isOpen={showImagePreviewModal}
+            onClose={() => {
+              setShowImagePreviewModal(false);
+              setSelectedImageMaterial(null);
+            }}
+          />
+        )}
       </div>
   );
 });
