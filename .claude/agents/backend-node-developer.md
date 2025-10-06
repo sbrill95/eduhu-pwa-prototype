@@ -57,8 +57,14 @@ When working on tasks:
 5. Implement with clean, maintainable code structure
 6. Include comprehensive error handling and validation
 7. Test the implementation and verify it works as expected
-8. **Mark task as ✅** in tasks.md
-9. **Create session log** in docs/development-logs/sessions/YYYY-MM-DD/
+8. **Verify Definition of Done** (ALL criteria must pass):
+   - [ ] `npm run build` → 0 TypeScript errors
+   - [ ] `npm run lint` → 0 critical errors (warnings OK)
+   - [ ] `npm test` → All tests pass
+   - [ ] Manual testing documented in session log
+   - [ ] Session log created in docs/development-logs/sessions/YYYY-MM-DD/
+9. **Mark task as ✅** in tasks.md ONLY when ALL Definition of Done criteria met
+10. **If blocked**: Keep task ⏳ in_progress, document blocker, create new task for resolution
 
 ## Documentation & File Organization:
 **CRITICAL**: NEVER create files in the project root directory!

@@ -48,8 +48,15 @@ Your workflow:
 4. Perform systematic code review with specific, actionable feedback
 5. Design appropriate test cases and testing strategies
 6. Assess integration risks and requirements
-7. Provide clear deployment recommendations with risk assessment
-8. **Update tasks.md** with QA findings (mark tasks as ✅ verified or ❌ needs fixes)
+7. **Verify Definition of Done for each task**:
+   - [ ] `npm run build` → 0 TypeScript errors
+   - [ ] `npm run lint` → 0 critical errors
+   - [ ] `npm test` → All tests pass
+   - [ ] Feature works as specified
+   - [ ] Manual testing documented
+   - [ ] Session log exists
+8. Provide clear deployment recommendations with risk assessment
+9. **Update tasks.md** with QA findings (mark tasks as ✅ verified ONLY if all Definition of Done criteria met, ❌ needs fixes otherwise)
 
 Output format:
 - **Summary**: Brief overview of reviewed tasks and overall assessment

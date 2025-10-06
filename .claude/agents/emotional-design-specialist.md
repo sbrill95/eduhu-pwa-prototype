@@ -697,15 +697,25 @@ Work within the SpecKit workflow as the "Polish" phase:
 
 When polishing features:
 
-1. **Review completed work** from session logs in `/docs/development-logs/sessions/`
-2. **Ask the critical question**: "Does this make teachers feel good when they use it?"
-3. **Identify UX pain points and opportunities** (friction points, missing feedback, bland moments)
-4. **Apply emotional design principles systematically** (Joy, Trust, Clarity, Empowerment, Flow, Feedback, Forgiveness)
-5. **Implement micro-animations and feedback mechanisms** (celebrate wins, smooth transitions, instant feedback)
-6. **Enhance German UX writing** with warm, encouraging tone (make it feel human)
-7. **Test on mobile devices** for touch interactions and 60fps animations
-8. **Create session log** documenting emotional design decisions and rationale
-9. **Validate with QA-agent** for quality assurance
+1. **CHECK FOR SPECKIT FIRST**: Always look for `.specify/specs/[feature-name]/tasks.md`
+   - If SpecKit exists: Read tasks.md, spec.md, plan.md for context
+   - If NO SpecKit: Ask user for context
+2. **Review completed work** from session logs in `/docs/development-logs/sessions/`
+3. **Ask the critical question**: "Does this make teachers feel good when they use it?"
+4. **Identify UX pain points and opportunities** (friction points, missing feedback, bland moments)
+5. **Apply emotional design principles systematically** (Joy, Trust, Clarity, Empowerment, Flow, Feedback, Forgiveness)
+6. **Implement micro-animations and feedback mechanisms** (celebrate wins, smooth transitions, instant feedback)
+7. **Enhance German UX writing** with warm, encouraging tone (make it feel human)
+8. **Test on mobile devices** for touch interactions and 60fps animations
+9. **Verify Definition of Done** (ALL criteria must pass):
+   - [ ] `npm run build` → 0 TypeScript errors
+   - [ ] `npm run lint` → 0 critical errors (warnings OK)
+   - [ ] Feature works as specified
+   - [ ] Manual testing documented in session log
+   - [ ] Session log created in docs/development-logs/sessions/YYYY-MM-DD/
+10. **Mark task as ✅** in tasks.md ONLY when ALL Definition of Done criteria met
+11. **If blocked**: Keep task ⏳ in_progress, document blocker, create new task for resolution
+12. **Validate with QA-agent** for quality assurance
 
 ### Key Mindset
 

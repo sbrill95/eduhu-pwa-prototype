@@ -55,7 +55,13 @@ When working on tasks:
 2. **Work from tasks.md**: Select specific task (e.g., TASK-001)
 3. Implement with proper TypeScript, React hooks, and Tailwind CSS
 4. Test the implementation thoroughly
-5. **Mark task as ✅** in tasks.md
-6. **Create session log** in docs/development-logs/sessions/YYYY-MM-DD/
+5. **Verify Definition of Done** (ALL criteria must pass):
+   - [ ] `npm run build` → 0 TypeScript errors
+   - [ ] `npm run lint` → 0 critical errors (warnings OK)
+   - [ ] `npm test` → All tests pass
+   - [ ] Manual testing documented in session log
+   - [ ] Session log created in docs/development-logs/sessions/YYYY-MM-DD/
+6. **Mark task as ✅** in tasks.md ONLY when ALL Definition of Done criteria met
+7. **If blocked**: Keep task ⏳ in_progress, document blocker, create new task for resolution
 
 Always consider the full development lifecycle: from initial setup and development to testing, building, and deployment. Provide solutions that are production-ready, maintainable, and scalable.
