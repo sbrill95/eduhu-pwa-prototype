@@ -43,7 +43,8 @@
       "Bash(git commit:*)",
       "Bash(cut:*)",
       "Bash(npm run lint)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(md5sum:*)"
     ],
     "deny": [],
     "ask": []

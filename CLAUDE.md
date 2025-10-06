@@ -37,6 +37,27 @@ Du arbeitest an einem Personalassistenten für Lehrkräfte. Es ist ein Chat-Inte
 - Dokumentations-Updates
 - Code-Cleanup ohne Logik-Änderungen
 
+## Definition of Done - VERPFLICHTEND
+
+### Task ist NUR complete wenn:
+
+1. **Build Clean**: `npm run build` → 0 TypeScript errors
+2. **Tests Pass**: `npm test` → all pass
+3. **Manual Test**: Feature funktioniert E2E (dokumentiert in session log)
+4. **Pre-Commit Pass**: `git commit` geht durch
+
+### Agent darf Task als ✅ markieren NUR wenn:
+- Alle 4 Kriterien erfüllt
+- Session log erstellt in `docs/development-logs/sessions/YYYY-MM-DD/`
+- Session log enthält: Build output, Test results, Manual verification
+
+### Wenn blockiert:
+- Task bleibt ⏳ in_progress
+- Blocker in session log dokumentieren
+- Neuen Task für Blocker erstellen
+
+**Siehe**: `.specify/templates/DEFINITION-OF-DONE.md` für vollständige Checkliste
+
 ## WICHTIG: Dateiablage-Regeln
 **NIEMALS Dateien im Root-Verzeichnis erstellen** (außer CLAUDE.md existiert bereits)
 
