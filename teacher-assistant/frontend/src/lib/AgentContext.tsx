@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 import { useAuth } from './auth-context';
 import { apiClient } from './api';
 import db from './instantdb';
+import type { ImageGenerationPrefillData } from './types';
 
 /**
  * Agent Execution State Interface
@@ -44,7 +45,11 @@ interface AgentContextValue {
   /** Current agent execution state */
   state: AgentExecutionState;
   /** Open the agent modal with optional prefilled data */
-  openModal: (agentType: string, prefillData?: any, sessionId?: string) => void;
+  openModal: (
+    agentType: 'image-generation' | 'worksheet' | 'lesson-plan',
+    prefillData?: ImageGenerationPrefillData | Record<string, unknown>,
+    sessionId?: string
+  ) => void;
   /** Close the agent modal and reset state */
   closeModal: () => void;
   /** Submit the form and start agent execution */

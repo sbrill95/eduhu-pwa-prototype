@@ -7,6 +7,7 @@ import { openaiClient } from '../config/openai';
 import { AgentParams, AgentResult, agentExecutionService } from '../services/agentService';
 import { Artifact as GeneratedArtifact } from '../schemas/instantdb';
 import { logInfo, logError, logWarn } from '../config/logger';
+import { ImageGenerationPrefillData } from '../../../shared/types';
 
 /**
  * Enhanced parameters for image generation
@@ -22,13 +23,7 @@ export interface LangGraphImageGenerationParams extends AgentParams {
   subject?: string;
 }
 
-/**
- * Gemini Form Input for Image Generation (Phase 3.2)
- */
-export interface ImageGenerationInput {
-  description: string;       // "Ein Diagramm zur Photosynthese mit beschrifteten Chloroplasten"
-  imageStyle: 'realistic' | 'cartoon' | 'illustrative' | 'abstract'; // Bildstil
-}
+// Note: ImageGenerationInput is now imported from shared types as ImageGenerationPrefillData
 
 /**
  * DALL-E 3 pricing configuration
@@ -125,7 +120,7 @@ export class LangGraphImageGenerationAgent {
       let descriptionForMetadata = imageParams.prompt; // Store original description
 
       // Check if this is Gemini form input (Phase 3.2)
-      const geminiInput = params as any as ImageGenerationInput;
+      const geminiInput = params as any as ImageGenerationPrefillData;
       if (geminiInput.description && geminiInput.imageStyle) {
         // Use new Gemini prompt builder
         logInfo(`Using Gemini prompt builder with description: "${geminiInput.description}", style: ${geminiInput.imageStyle}`);
@@ -493,7 +488,7 @@ Antworte NUR im folgenden JSON-Format:
    * Build pedagogically-enhanced prompt from Gemini form input (Phase 3.2)
    * Uses the CORRECT fields: description + imageStyle
    */
-  private buildImagePrompt(input: ImageGenerationInput): string {
+  private buildImagePrompt(input: ImageGenerationPrefillData): string {
     // Base prompt with user's description
     let prompt = `Create an educational image: ${input.description}\n\n`;
 
@@ -505,7 +500,7 @@ Antworte NUR im folgenden JSON-Format:
       abstract: 'abstract representation, conceptual, thought-provoking, symbolic'
     };
 
-    const styleDescription = stylePrompts[input.imageStyle];
+    const styleDescription = input.imageStyle ? stylePrompts[input.imageStyle] : stylePrompts.illustrative;
 
     prompt += `Style: ${styleDescription}\n\n`;
     prompt += `Requirements:\n`;

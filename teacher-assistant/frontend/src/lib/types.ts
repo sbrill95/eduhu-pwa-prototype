@@ -3,6 +3,17 @@
  * Data persistence and InstantDB integration
  */
 
+// Import and re-export shared types from backend
+export type {
+  ImageGenerationPrefillData,
+  AgentSuggestion,
+  AgentParams,
+  AgentResult as SharedAgentResult,
+  ApiResponse,
+  ChatMessage as SharedChatMessage,
+  ChatResponse as SharedChatResponse
+} from '@shared/types';
+
 export interface User {
   id: string;
   email: string;
@@ -189,14 +200,8 @@ export interface OnboardingStatus {
   onboardingCompletedAt?: number;
 }
 
-// API Response wrapper types
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message: string;
-  timestamp: string;
-}
-
+// API Response wrapper types (use shared ApiResponse from @shared/types)
+// Note: Shared ApiResponse has optional data/message, but backend wrapper is consistent
 export interface ErrorResponse {
   success: false;
   error: string;
@@ -352,12 +357,6 @@ export interface AgentResultMessage extends ChatMessage {
   };
 }
 
-// Image Generation Form Data
-export interface ImageGenerationFormData {
-  description: string;
-  imageStyle: 'realistic' | 'cartoon' | 'illustrative' | 'abstract';
-}
-
 // Prompt Suggestions for Home Screen
 export type PromptCategory =
   | 'quiz'
@@ -384,20 +383,12 @@ export interface PromptSuggestion {
 }
 
 /**
- * Backend prefill data structure for image generation
- * (Sent by ChatGPT agent detection when user requests an image)
- */
-export interface ImageGenerationPrefillData {
-  theme: string;           // What the image should show (e.g., "Satz des Pythagoras")
-  learningGroup?: string;  // Target audience (e.g., "Klasse 8a")
-}
-
-/**
  * Frontend form data structure for image generation (Gemini Design)
  * (Used by AgentFormView component)
  *
- * Note: AgentFormView maps backend prefill data to this structure:
- * - theme + learningGroup → description (e.g., "Satz des Pythagoras für Klasse 8a")
+ * Note: Frontend maps backend ImageGenerationPrefillData to this structure:
+ * - Backend sends: { description, imageStyle?, learningGroup?, subject? }
+ * - Frontend uses: { description, imageStyle }
  */
 export interface ImageGenerationFormData {
   description: string;        // Textarea - "Was soll das Bild zeigen?" - required

@@ -1,3 +1,26 @@
+// Import shared types - Single Source of Truth
+import type {
+  ApiResponse,
+  ChatMessage,
+  ChatResponse,
+  AgentSuggestion,
+  ImageGenerationPrefillData,
+  AgentParams,
+  AgentResult
+} from '../../../shared/types';
+
+// Re-export all shared types
+export * from '../../../shared/types';
+export type {
+  ApiResponse,
+  ChatMessage,
+  ChatResponse,
+  AgentSuggestion,
+  ImageGenerationPrefillData,
+  AgentParams,
+  AgentResult
+};
+
 // Environment variables interface
 export interface EnvironmentVariables {
   PORT: string;
@@ -8,15 +31,6 @@ export interface EnvironmentVariables {
   // Optional InstantDB configuration (Phase 3)
   INSTANTDB_APP_ID?: string;
   INSTANTDB_ADMIN_TOKEN?: string;
-}
-
-// API Response interfaces
-export interface ApiResponse<T = Record<string, unknown>> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  error?: string;
-  timestamp: string;
 }
 
 // OpenAI Error interface for better type safety
@@ -52,12 +66,7 @@ export interface ErrorResponse extends ApiResponse {
   error: string;
 }
 
-// OpenAI Chat types
-export interface ChatMessage {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-}
-
+// OpenAI Chat types - Backend specific
 export interface ChatRequest {
   messages: ChatMessage[];
   model?: string;
@@ -66,31 +75,7 @@ export interface ChatRequest {
   stream?: boolean;
 }
 
-export interface AgentSuggestion {
-  agentType: 'image-generation' | 'worksheet' | 'lesson-plan';
-  reasoning: string;
-  prefillData: {
-    theme: string;
-    learningGroup?: string | undefined;
-    subject?: string | undefined;
-    [key: string]: any;
-  };
-}
-
-export interface ChatResponse extends ApiResponse {
-  success: true;
-  data: {
-    message: string;
-    usage: {
-      prompt_tokens: number;
-      completion_tokens: number;
-      total_tokens: number;
-    };
-    model: string;
-    finish_reason: string;
-    agentSuggestion?: AgentSuggestion | undefined;
-  };
-}
+// Note: ChatMessage, AgentSuggestion, and ChatResponse are now imported from shared types
 
 export interface ChatErrorResponse extends ErrorResponse {
   error_type?: 'validation' | 'openai_api' | 'rate_limit' | 'server_error';

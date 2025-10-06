@@ -16,6 +16,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path mappings */
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["../shared/*"]
+    },
+
     /* Linting - Relaxed for production build */
     "strict": true,
     "noUnusedLocals": false,

@@ -3,7 +3,8 @@
  * Focus: Gemini Prompt Builder (Phase 3.2) + Auto-Tagging (TASK-018)
  */
 
-import { LangGraphImageGenerationAgent, ImageGenerationInput } from './langGraphImageGenerationAgent';
+import { LangGraphImageGenerationAgent } from './langGraphImageGenerationAgent';
+import { ImageGenerationPrefillData } from '../../../shared/types';
 import { openaiClient } from '../config/openai';
 import { agentExecutionService } from '../services/agentService';
 
@@ -42,7 +43,7 @@ describe('LangGraphImageGenerationAgent - buildPrompt', () => {
 
   describe('buildPrompt()', () => {
     it('should create basic prompt without DaZ or learning difficulties', () => {
-      const input: ImageGenerationInput = {
+      const input: ImageGenerationPrefillData = {
         description: 'Satz des Pythagoras',
         imageStyle: 'illustrative'
       };
@@ -61,7 +62,7 @@ describe('LangGraphImageGenerationAgent - buildPrompt', () => {
     });
 
     it('should include DaZ considerations when enabled', () => {
-      const input: ImageGenerationInput = {
+      const input: ImageGenerationPrefillData = {
         description: 'Bruchrechnen',
         imageStyle: 'illustrative'
       };
@@ -80,7 +81,7 @@ describe('LangGraphImageGenerationAgent - buildPrompt', () => {
     });
 
     it('should include learning difficulties considerations when enabled', () => {
-      const input: ImageGenerationInput = {
+      const input: ImageGenerationPrefillData = {
         description: 'Photosynthese',
         imageStyle: 'illustrative'
       };
@@ -99,11 +100,10 @@ describe('LangGraphImageGenerationAgent - buildPrompt', () => {
     });
 
     it('should include both DaZ and learning difficulties when both enabled', () => {
-      const input: ImageGenerationInput = {
-        theme: 'Wasserkreislauf',
-        learningGroup: 'Klasse 5c',
-        dazSupport: true,
-        learningDifficulties: true
+      const input: ImageGenerationPrefillData = {
+        description: 'Wasserkreislauf',
+        imageStyle: 'illustrative',
+        learningGroup: 'Klasse 5c'
       };
 
       const prompt = (agent as any).buildPrompt(input);
@@ -117,11 +117,10 @@ describe('LangGraphImageGenerationAgent - buildPrompt', () => {
     });
 
     it('should always include style guidelines', () => {
-      const input: ImageGenerationInput = {
-        theme: 'Test',
-        learningGroup: 'Klasse 10a',
-        dazSupport: false,
-        learningDifficulties: false
+      const input: ImageGenerationPrefillData = {
+        description: 'Test',
+        imageStyle: 'realistic',
+        learningGroup: 'Klasse 10a'
       };
 
       const prompt = (agent as any).buildPrompt(input);
@@ -132,12 +131,11 @@ describe('LangGraphImageGenerationAgent - buildPrompt', () => {
       expect(prompt).toContain('Format: Klar, professionell, lernförderlich');
     });
 
-    it('should handle special characters in theme correctly', () => {
-      const input: ImageGenerationInput = {
-        theme: 'Das "Goldene Zeitalter" & die Renaissance',
-        learningGroup: 'Klasse 9a',
-        dazSupport: false,
-        learningDifficulties: false
+    it('should handle special characters in description correctly', () => {
+      const input: ImageGenerationPrefillData = {
+        description: 'Das "Goldene Zeitalter" & die Renaissance',
+        imageStyle: 'illustrative',
+        learningGroup: 'Klasse 9a'
       };
 
       const prompt = (agent as any).buildPrompt(input);
@@ -154,11 +152,10 @@ describe('LangGraphImageGenerationAgent - buildPrompt', () => {
       ];
 
       inputs.forEach((partial) => {
-        const input: ImageGenerationInput = {
-          theme: 'Test',
-          learningGroup: partial.learningGroup,
-          dazSupport: false,
-          learningDifficulties: false
+        const input: ImageGenerationPrefillData = {
+          description: 'Test',
+          imageStyle: 'realistic',
+          learningGroup: partial.learningGroup
         };
 
         const prompt = (agent as any).buildPrompt(input);
@@ -229,11 +226,10 @@ describe('LangGraphImageGenerationAgent - buildPrompt', () => {
 
   describe('Prompt Output Validation', () => {
     it('should produce prompt with correct structure', () => {
-      const input: ImageGenerationInput = {
-        theme: 'Die Französische Revolution',
-        learningGroup: 'Klasse 9a',
-        dazSupport: true,
-        learningDifficulties: true
+      const input: ImageGenerationPrefillData = {
+        description: 'Die Französische Revolution',
+        imageStyle: 'illustrative',
+        learningGroup: 'Klasse 9a'
       };
 
       const prompt = (agent as any).buildPrompt(input);
@@ -247,11 +243,10 @@ describe('LangGraphImageGenerationAgent - buildPrompt', () => {
     });
 
     it('should produce prompt that is not too long for DALL-E', () => {
-      const input: ImageGenerationInput = {
-        theme: 'Ein sehr langes Thema mit vielen Details über Quantenphysik und ihre Auswirkungen auf die moderne Wissenschaft',
-        learningGroup: 'Klasse 12 Leistungskurs Physik',
-        dazSupport: true,
-        learningDifficulties: true
+      const input: ImageGenerationPrefillData = {
+        description: 'Ein sehr langes Thema mit vielen Details über Quantenphysik und ihre Auswirkungen auf die moderne Wissenschaft',
+        imageStyle: 'realistic',
+        learningGroup: 'Klasse 12 Leistungskurs Physik'
       };
 
       const prompt = (agent as any).buildPrompt(input);
@@ -315,7 +310,7 @@ describe('LangGraphImageGenerationAgent - Auto-Tagging (TASK-018)', () => {
     });
 
     it('should work with Gemini form input', async () => {
-      const geminiInput: ImageGenerationInput = {
+      const geminiInput: ImageGenerationPrefillData = {
         description: 'Eine Zeitleiste des Mittelalters mit wichtigen Ereignissen',
         imageStyle: 'illustrative'
       };

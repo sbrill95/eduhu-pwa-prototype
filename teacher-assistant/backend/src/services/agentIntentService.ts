@@ -1,4 +1,5 @@
 import { logInfo } from '../config/logger';
+import { ImageGenerationPrefillData } from '../../../shared/types';
 
 /**
  * Agent Intent Detection Service
@@ -11,12 +12,7 @@ export interface AgentIntent {
   agentType: 'image-generation' | 'worksheet' | 'lesson-plan';
   confidence: number; // 0.0 - 1.0
   reasoning: string;
-  prefillData: {
-    theme: string;
-    learningGroup?: string | undefined;
-    subject?: string | undefined;
-    [key: string]: any; // Allow additional agent-specific fields
-  };
+  prefillData: ImageGenerationPrefillData | Record<string, unknown>; // Use shared type
 }
 
 export class AgentIntentService {
@@ -35,9 +31,10 @@ export class AgentIntentService {
     // Try to detect image generation intent
     const imageIntent = this.detectImageGenerationIntent(lowerMessage, message, context);
     if (imageIntent) {
+      const prefillData = imageIntent.prefillData as ImageGenerationPrefillData;
       logInfo('Image generation intent detected', {
         confidence: imageIntent.confidence,
-        theme: imageIntent.prefillData.theme
+        description: prefillData.description
       });
       return imageIntent;
     }
@@ -115,8 +112,8 @@ export class AgentIntentService {
       return null;
     }
 
-    // Extract theme and learning group
-    const theme = this.extractTheme(originalMessage, lowerMessage);
+    // Extract description (formerly theme) and learning group
+    const description = this.extractTheme(originalMessage, lowerMessage);
     const learningGroup = this.extractLearningGroup(originalMessage, context);
     const subject = context?.subjects?.[0] || undefined;
 
@@ -125,12 +122,10 @@ export class AgentIntentService {
       confidence: 0.85,
       reasoning: 'Du hast nach einem Bild gefragt. Ich kann dir helfen, eines zu erstellen!',
       prefillData: {
-        theme,
+        description, // Use 'description' to match shared type
+        imageStyle: 'realistic',
         ...(learningGroup && { learningGroup }),
         ...(subject && { subject }),
-        prompt: theme, // Use theme as initial prompt
-        style: 'realistic',
-        aspectRatio: '1:1',
       },
     };
   }

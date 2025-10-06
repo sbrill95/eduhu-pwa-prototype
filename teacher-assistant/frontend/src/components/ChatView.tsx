@@ -791,7 +791,7 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                           });
 
                           // Map agentId to agentType
-                          const agentTypeMap: Record<string, string> = {
+                          const agentTypeMap: Record<string, 'image-generation' | 'worksheet' | 'lesson-plan'> = {
                             'image-generation': 'image-generation',
                             'langgraph-image-generation': 'image-generation'
                           };
@@ -799,7 +799,7 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                           const agentType = agentTypeMap[parsedContent.agentId] || 'image-generation';
 
                           // Open modal with prefill data from context
-                          openModal(agentType, {
+                          openModal(agentType as 'image-generation' | 'worksheet' | 'lesson-plan', {
                             imageContent: parsedContent.context || '',
                             imageStyle: 'realistic'
                           }, currentSessionId || undefined);

@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { IonButton, IonSpinner } from '@ionic/react';
 import { useAgent } from '../lib/AgentContext';
-import { ImageGenerationFormData } from '../lib/types';
+import { ImageGenerationFormData, ImageGenerationPrefillData } from '../lib/types';
 
 export const AgentFormView: React.FC = () => {
   const { state, closeModal, submitForm } = useAgent();
   const [submitting, setSubmitting] = useState(false);
 
-  // Initialize form with prefill data - Map backend fields to frontend fields
+  // Initialize form with prefill data from shared ImageGenerationPrefillData type
   const [formData, setFormData] = useState<ImageGenerationFormData>(() => {
     console.log('[AgentFormView] Initializing form with state.formData:', state.formData);
 
-    // Map backend fields (theme, learningGroup) to frontend form fields
-    const theme = state.formData.theme || '';
-    const learningGroup = state.formData.learningGroup || '';
+    // Cast to shared type for type safety
+    const prefillData = state.formData as Partial<ImageGenerationPrefillData>;
 
-    // Combine theme and learning group into description
-    // Check if theme already contains learningGroup to avoid duplication
-    let description = theme;
-    if (learningGroup && !theme.includes(learningGroup)) {
-      description = theme + ` für ${learningGroup}`;
+    // Get description and learningGroup from shared type
+    const description = prefillData.description || '';
+    const learningGroup = prefillData.learningGroup || '';
+
+    // Combine description and learning group if needed
+    let finalDescription = description;
+    if (learningGroup && !description.includes(learningGroup)) {
+      finalDescription = description + ` für ${learningGroup}`;
     }
 
     const initialData = {
-      description: description,
-      imageStyle: state.formData.imageStyle || 'realistic'
+      description: finalDescription,
+      imageStyle: (prefillData.imageStyle as ImageGenerationFormData['imageStyle']) || 'realistic'
     };
 
     console.log('[AgentFormView] Mapped to form data:', initialData);
@@ -35,27 +37,30 @@ export const AgentFormView: React.FC = () => {
   useEffect(() => {
     console.log('[AgentFormView] state.formData changed:', state.formData);
 
-    // Map backend fields (theme, learningGroup) to frontend form fields
-    const theme = state.formData.theme || '';
-    const learningGroup = state.formData.learningGroup || '';
+    // Cast to shared type for type safety
+    const prefillData = state.formData as Partial<ImageGenerationPrefillData>;
+
+    // Get description and learningGroup from shared type
+    const description = prefillData.description || '';
+    const learningGroup = prefillData.learningGroup || '';
 
     // Only update if we have actual data from backend
-    if (theme) {
-      // Check if theme already contains learningGroup to avoid duplication
-      let description = theme;
-      if (learningGroup && !theme.includes(learningGroup)) {
-        description = theme + ` für ${learningGroup}`;
+    if (description) {
+      // Check if description already contains learningGroup to avoid duplication
+      let finalDescription = description;
+      if (learningGroup && !description.includes(learningGroup)) {
+        finalDescription = description + ` für ${learningGroup}`;
       }
 
-      console.log('[AgentFormView] Updating form with mapped data:', { description });
+      console.log('[AgentFormView] Updating form with mapped data:', { finalDescription });
 
       setFormData(prev => ({
         ...prev,
-        description: description,
-        imageStyle: state.formData.imageStyle || prev.imageStyle
+        description: finalDescription,
+        imageStyle: (prefillData.imageStyle as ImageGenerationFormData['imageStyle']) || prev.imageStyle
       }));
     }
-  }, [state.formData.theme, state.formData.learningGroup, state.formData.imageStyle]);
+  }, [state.formData]);
 
   // Validation: description required, min 3 characters
   const isValidForm = formData.description.trim().length >= 3;

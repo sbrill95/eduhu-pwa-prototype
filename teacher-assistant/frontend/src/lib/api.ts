@@ -11,17 +11,17 @@ import type {
   AgentExecutionRequest,
   AgentExecutionResponse,
   AgentStatus,
-  AgentResult
+  AgentResult,
+  SharedChatMessage,
+  AgentSuggestion
 } from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (
   import.meta.env.PROD ? '/api' : 'http://localhost:3006/api'
 );
 
-export interface ChatMessage {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-}
+// Use shared ChatMessage type from backend
+export type ChatMessage = SharedChatMessage;
 
 export interface ChatRequest {
   messages: ChatMessage[];
@@ -31,6 +31,7 @@ export interface ChatRequest {
   image_data?: string;
 }
 
+// Frontend ChatResponse interface (combines shared response with frontend-specific needs)
 export interface ChatResponse {
   message: string;
   usage?: {
@@ -38,14 +39,7 @@ export interface ChatResponse {
     completion_tokens: number;
     total_tokens: number;
   };
-  agentSuggestion?: {
-    agentId: string;
-    agentName: string;
-    context: string;
-    estimatedTime?: string;
-    creditsRequired?: number;
-    [key: string]: any; // Allow additional agent-specific fields
-  };
+  agentSuggestion?: AgentSuggestion;
 }
 
 export interface ChatModel {

@@ -41,18 +41,14 @@ import { useAgent } from '../lib/AgentContext';
  * />
  */
 
+// Import shared types
+import type { AgentSuggestion } from '../lib/types';
+
 // NEW Interface (TASK-001 - Simplified)
 interface NewAgentConfirmationMessageProps {
   message: {
     content: string;
-    agentSuggestion?: {
-      agentType: 'image-generation';
-      reasoning: string;
-      prefillData: {
-        theme: string;
-        learningGroup?: string;
-      };
-    };
+    agentSuggestion?: AgentSuggestion;
   };
   sessionId?: string | null; // Add sessionId support
 }
