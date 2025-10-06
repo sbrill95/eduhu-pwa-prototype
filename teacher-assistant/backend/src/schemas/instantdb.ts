@@ -24,7 +24,7 @@ export const teacherAssistantSchema = i.schema({
       preferences: i.string().optional(), // JSON object for UI preferences
       created_at: i.number(),
       last_active: i.number(),
-      is_active: i.boolean().default(true),
+      is_active: i.boolean(),
     }),
 
     // Chat sessions - each new chat creates a session
@@ -32,9 +32,10 @@ export const teacherAssistantSchema = i.schema({
       title: i.string(), // Auto-generated title from first message or user-defined
       created_at: i.number(),
       updated_at: i.number(),
-      is_archived: i.boolean().default(false),
-      session_type: i.string().default('general'), // 'general', 'lesson_plan', 'quiz_creation', 'administrative'
+      is_archived: i.boolean(),
+      session_type: i.string(), // 'general', 'lesson_plan', 'quiz_creation', 'administrative'
       metadata: i.string().optional(), // JSON object for additional session context
+      tags: i.string().optional(), // JSON array of chat tags for categorization and search
     }),
 
     // Individual chat messages within sessions
@@ -45,23 +46,24 @@ export const teacherAssistantSchema = i.schema({
       token_usage: i.number().optional(), // For tracking OpenAI token consumption
       model_used: i.string().optional(), // Which OpenAI model was used
       processing_time: i.number().optional(), // Response time in milliseconds
-      is_edited: i.boolean().default(false),
+      is_edited: i.boolean(),
       edited_at: i.number().optional(),
       message_index: i.number(), // Order within the session
+      metadata: i.string().optional(), // JSON object for agent suggestions
     }),
 
     // Educational artifacts generated during chats (lesson plans, quizzes, etc.)
     artifacts: i.entity({
       title: i.string(),
-      type: i.string(), // 'lesson_plan', 'quiz', 'worksheet', 'template', 'resource'
+      type: i.string(), // 'lesson_plan', 'quiz', 'worksheet', 'template', 'resource', 'image'
       content: i.string(), // Markdown or structured content
       grade_level: i.string().optional(),
       subject: i.string().optional(),
       created_at: i.number(),
       updated_at: i.number(),
-      is_favorite: i.boolean().default(false),
+      is_favorite: i.boolean(),
       tags: i.string().optional(), // JSON array of tags
-      usage_count: i.number().default(0), // How many times accessed/reused
+      usage_count: i.number(), // How many times accessed/reused
     }),
 
     // Template library for reusable educational content
@@ -70,10 +72,10 @@ export const teacherAssistantSchema = i.schema({
       description: i.string(),
       category: i.string(), // 'lesson_plan', 'quiz', 'email', 'report', etc.
       template_content: i.string(), // Template structure with placeholders
-      is_public: i.boolean().default(false), // Whether other teachers can use it
+      is_public: i.boolean(), // Whether other teachers can use it
       created_at: i.number(),
       updated_at: i.number(),
-      usage_count: i.number().default(0),
+      usage_count: i.number(),
     }),
 
     // User feedback and ratings for continuous improvement
@@ -300,6 +302,7 @@ export type ChatSession = {
   is_archived: boolean;
   session_type: 'general' | 'lesson_plan' | 'quiz_creation' | 'administrative';
   metadata?: Record<string, any>; // Parsed from JSON
+  tags?: string[]; // Parsed from JSON - categorization tags for the chat
   owner: User;
   messages: Message[];
   generated_artifacts: Artifact[];
@@ -324,7 +327,7 @@ export type Message = {
 export type Artifact = {
   id: string;
   title: string;
-  type: 'lesson_plan' | 'quiz' | 'worksheet' | 'template' | 'resource';
+  type: 'lesson_plan' | 'quiz' | 'worksheet' | 'template' | 'resource' | 'image';
   content: string;
   grade_level?: string;
   subject?: string;
@@ -362,6 +365,19 @@ export type Feedback = {
   artifact?: Artifact;
 };
 
+export type ProfileCharacteristic = {
+  id: string;
+  user_id: string;
+  characteristic: string;
+  category: string;
+  count: number;
+  manually_added: boolean;
+  first_seen: number;
+  last_seen: number;
+  created_at: number;
+  updated_at: number;
+};
+
 /**
  * Helper functions for common InstantDB operations
  */
@@ -371,7 +387,7 @@ export const dbHelpers = {
     title: title || 'New Chat',
     created_at: Date.now(),
     updated_at: Date.now(),
-    is_archived: false,
+    is_archived: false, // Provide default value here instead of schema
     session_type: sessionType,
     owner: userId,
   }),
@@ -381,7 +397,7 @@ export const dbHelpers = {
     content,
     role,
     timestamp: Date.now(),
-    is_edited: false,
+    is_edited: false, // Provide default value here instead of schema
     message_index: messageIndex,
     session: sessionId,
     author: userId,
@@ -394,8 +410,8 @@ export const dbHelpers = {
     content,
     created_at: Date.now(),
     updated_at: Date.now(),
-    is_favorite: false,
-    usage_count: 0,
+    is_favorite: false, // Provide default value here instead of schema
+    usage_count: 0, // Provide default value here instead of schema
     source_session: sessionId,
     creator: userId,
   }),

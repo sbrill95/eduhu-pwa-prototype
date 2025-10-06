@@ -1,0 +1,1604 @@
+# Building Delightful Educational PWAs: A Comprehensive Implementation Guide
+
+Your Teacher Assistant app can deliver **Duolingo-level engagement** through modern PWA techniques. Research across successful PWAs—from Twitter's 65% increase in engagement to Pinterest's 843% boost in signups—reveals that **performance, emotional design, and offline-first architecture** are the foundations of app-like experiences on the web. This guide provides production-ready patterns for React/TypeScript PWAs with the Gemini Design Language, targeting 60fps animations on mobile devices and creating the delightful interactions that keep learners coming back.
+
+## PWA foundations that enable app-like experiences
+
+Modern PWAs achieve native-level performance through strategic service worker implementation and careful caching. **Vite with vite-plugin-pwa** offers the fastest path to production, generating optimized service workers with zero configuration while maintaining full TypeScript support.
+
+The core implementation starts with intelligent caching strategies. For your educational app, **Cache First handles static assets** (JavaScript bundles, CSS, images) providing instant repeat visits, while **Network First manages dynamic lesson content** ensuring students always receive updated material when online but can continue learning offline. Stale-While-Revalidate bridges these approaches for user profiles and avatars—displaying cached versions immediately while updating in the background.
+
+```typescript
+// vite.config.ts - Production-ready PWA setup
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api\.example\.com\/lessons/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-lessons',
+              expiration: { maxEntries: 50, maxAgeSeconds: 86400 },
+              networkTimeoutSeconds: 10
+            }
+          },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|webp)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images',
+              expiration: { maxEntries: 100, maxAgeSeconds: 2592000 }
+            }
+          },
+          {
+            urlPattern: /^https:\/\/api\.example\.com\/progress/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'user-progress',
+              networkTimeoutSeconds: 5
+            }
+          }
+        ]
+      },
+      manifest: {
+        name: 'EduLearn - Teacher Assistant',
+        short_name: 'EduLearn',
+        description: 'Interactive lessons with offline support',
+        theme_color: '#FB6542', // Gemini orange
+        background_color: '#FFFFFF',
+        display: 'standalone',
+        orientation: 'portrait-primary',
+        icons: [
+          {
+            src: '/icons/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: '/icons/maskable-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ],
+        shortcuts: [
+          {
+            name: "Today's Lesson",
+            url: '/today',
+            icons: [{ src: '/icons/lesson.png', sizes: '96x96' }]
+          }
+        ]
+      }
+    })
+  ]
+});
+```
+
+Background Sync ensures student progress never gets lost. When a learner completes a quiz offline, the response queues automatically and syncs when connectivity returns. **This eliminates the frustration of lost work**—critical for maintaining engagement in areas with unreliable connections.
+
+```typescript
+// hooks/useBackgroundSync.ts
+export const useBackgroundSync = () => {
+  const syncProgress = async (lessonId: string, answers: Answer[]) => {
+    if (!('serviceWorker' in navigator) || !('SyncManager' in window)) {
+      return await sendProgressToServer({ lessonId, answers });
+    }
+
+    await db.pendingSync.add({ 
+      lessonId, 
+      answers, 
+      timestamp: Date.now() 
+    });
+    
+    const registration = await navigator.serviceWorker.ready;
+    await registration.sync.register('sync-progress');
+  };
+  
+  return { syncProgress };
+};
+```
+
+Storage decisions shape offline capabilities. **IndexedDB through Dexie.js** handles structured lesson data with elegant React hooks integration, while the Cache API manages static resources. For your educational app, this means lessons, student progress, and quiz results persist locally with ~50MB storage on iOS and significantly more on Android.
+
+```typescript
+// db.ts - Type-safe IndexedDB with Dexie
+import Dexie, { Table } from 'dexie';
+
+interface Lesson {
+  id: string;
+  title: string;
+  content: string;
+  progress: number;
+  completed: boolean;
+  lastAccessed: Date;
+}
+
+class EduLearnDB extends Dexie {
+  lessons!: Table<Lesson>;
+
+  constructor() {
+    super('EduLearnDB');
+    this.version(1).stores({
+      lessons: 'id, title, completed, lastAccessed'
+    });
+  }
+}
+
+export const db = new EduLearnDB();
+
+// hooks/useLessons.ts
+import { useLiveQuery } from 'dexie-react-hooks';
+
+export const useLessons = () => {
+  const lessons = useLiveQuery(
+    () => db.lessons
+      .where('completed').equals(0)
+      .sortBy('lastAccessed')
+  );
+
+  const updateProgress = async (id: string, progress: number) => {
+    return await db.lessons.update(id, { 
+      progress,
+      completed: progress >= 100,
+      lastAccessed: new Date()
+    });
+  };
+
+  return { lessons, updateProgress };
+};
+```
+
+Installation prompts require careful timing. Research shows **acceptance rates of 20-30% when shown after 2+ visits or 30+ seconds of engagement**, compared to single-digit acceptance for immediate prompts. Context matters even more—prompt after completing a lesson or achieving a milestone when value is clearest.
+
+```typescript
+// hooks/useInstallPrompt.ts
+export const useInstallPrompt = () => {
+  const [promptEvent, setPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setPromptEvent(e as BeforeInstallPromptEvent);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const promptInstall = useCallback(async () => {
+    if (!promptEvent) return null;
+    
+    await promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
+    
+    if (outcome === 'accepted') {
+      gtag('event', 'pwa_installed');
+    }
+    
+    setPromptEvent(null);
+    setIsInstallable(false);
+    
+    return outcome;
+  }, [promptEvent]);
+
+  return { isInstallable, promptInstall };
+};
+
+// Show after engagement
+const InstallBanner = () => {
+  const { isInstallable, promptInstall } = useInstallPrompt();
+  const [showBanner, setShowBanner] = useState(false);
+
+  useEffect(() => {
+    if (!isInstallable) return;
+    
+    const visits = parseInt(localStorage.getItem('visit-count') || '0');
+    localStorage.setItem('visit-count', (visits + 1).toString());
+    
+    if (visits >= 2) {
+      setTimeout(() => setShowBanner(true), 30000);
+    }
+  }, [isInstallable]);
+
+  // Banner component...
+};
+```
+
+## Mobile-first interactions that feel native
+
+Touch gestures transform static content into engaging experiences. **@use-gesture/react combined with react-spring** provides the modern standard for gesture handling—lightweight at 15KB, updating outside React's render cycle for silky-smooth interactions at 60fps.
+
+Swipeable cards, the signature interaction of Duolingo and similar educational apps, emerge from careful velocity detection and spring physics. **When a student swipes a flashcard, the card should follow their finger with zero lag**, then animate smoothly to either dismiss or return based on velocity.
+
+```typescript
+// components/SwipeableCard.tsx
+import { useSpring, animated } from '@react-spring/web';
+import { useDrag } from '@use-gesture/react';
+
+interface SwipeableCardProps {
+  onSwipeLeft?: () => void;
+  onSwipeRight?: () => void;
+  children: React.ReactNode;
+}
+
+export const SwipeableCard: React.FC<SwipeableCardProps> = ({
+  onSwipeLeft,
+  onSwipeRight,
+  children
+}) => {
+  const [{ x, rotate }, api] = useSpring(() => ({ 
+    x: 0, 
+    rotate: 0 
+  }));
+  
+  const bind = useDrag(({ 
+    down, 
+    movement: [mx], 
+    velocity: [vx],
+    direction: [xDir] 
+  }) => {
+    const trigger = Math.abs(vx) > 0.2; // Fast swipe
+    const isLeft = xDir < 0;
+    
+    if (!down && trigger) {
+      if (isLeft && onSwipeLeft) {
+        onSwipeLeft();
+      } else if (!isLeft && onSwipeRight) {
+        onSwipeRight();
+      }
+    }
+    
+    api.start({
+      x: down ? mx : trigger ? xDir * 400 : 0,
+      rotate: down ? mx / 10 : 0,
+      immediate: down
+    });
+  }, {
+    axis: 'x',
+    bounds: { left: -400, right: 400 },
+    rubberband: true
+  });
+
+  return (
+    <animated.div 
+      {...bind()} 
+      style={{ 
+        x, 
+        rotate,
+        touchAction: 'none',
+        cursor: 'grab'
+      }}
+      className="swipeable-card"
+    >
+      {children}
+    </animated.div>
+  );
+};
+```
+
+Haptic feedback creates the tactile dimension that separates good from great mobile experiences. The Vibration API works on Android and Chrome with simple patterns—**50ms for button taps, 100ms for confirmations, patterned vibrations for errors**. iOS requires iOS 18+ workarounds, but when available, haptic feedback increases perceived responsiveness.
+
+```typescript
+// hooks/useHaptic.ts
+export const useHaptic = () => {
+  const vibrate = useCallback((pattern: number | number[]) => {
+    if (!('vibrate' in navigator)) return false;
+    
+    try {
+      navigator.vibrate(pattern);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }, []);
+
+  const tap = () => vibrate(10);
+  const success = () => vibrate([50, 50, 100]);
+  const error = () => vibrate([100, 50, 100, 50, 100]);
+  
+  return { vibrate, tap, success, error };
+};
+
+// Usage in answer button
+const AnswerButton = ({ onAnswer, correct }) => {
+  const { tap, success, error } = useHaptic();
+  
+  const handleClick = () => {
+    tap(); // Immediate feedback on press
+    onAnswer();
+    
+    setTimeout(() => {
+      correct ? success() : error();
+    }, 300);
+  };
+
+  return <button onTouchStart={tap} onClick={handleClick}>Submit</button>;
+};
+```
+
+Safe area handling prevents content from hiding behind notches and rounded corners. **Modern iOS devices require `viewport-fit=cover` combined with CSS env() variables** to respect safe areas. Android handles this more gracefully, but explicit padding ensures universal compatibility.
+
+```css
+/* Global safe area setup */
+:root {
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+}
+
+.app-header {
+  background: #FB6542; /* Gemini orange */
+  padding-top: max(16px, var(--safe-area-inset-top));
+  padding-left: max(16px, var(--safe-area-inset-left));
+  padding-right: max(16px, var(--safe-area-inset-right));
+}
+
+.app-content {
+  padding-bottom: max(16px, var(--safe-area-inset-bottom));
+}
+
+/* Bottom navigation with safe area */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #D3E4E6; /* Gemini teal */
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+```
+
+Bottom sheets and drawers provide the modern navigation pattern that mobile users expect. **React-spring-bottom-sheet offers accessible, performant sheets with snap points** for different heights, drag-to-dismiss, and keyboard navigation. For educational apps, bottom sheets work perfectly for quiz results, achievement celebrations, and settings.
+
+```typescript
+// components/ResultsSheet.tsx
+import { BottomSheet } from 'react-spring-bottom-sheet';
+import 'react-spring-bottom-sheet/dist/style.css';
+
+export const ResultsSheet = ({ isOpen, score, onClose }) => {
+  return (
+    <BottomSheet
+      open={isOpen}
+      onDismiss={onClose}
+      snapPoints={({ maxHeight }) => [
+        maxHeight * 0.6,  // Default height
+        maxHeight * 0.95  // Expanded
+      ]}
+      header={
+        <div className="results-header">
+          <h2>Quiz Complete!</h2>
+        </div>
+      }
+    >
+      <div className="results-content">
+        <div className="score-display">
+          <span className="score">{score}</span>
+          <span className="total">/10</span>
+        </div>
+        
+        <ProgressRing percentage={(score / 10) * 100} />
+        
+        {score >= 8 && (
+          <Confetti /* Celebrate high scores */ />
+        )}
+      </div>
+    </BottomSheet>
+  );
+};
+```
+
+Pull-to-refresh requires custom implementation for iOS PWAs in standalone mode, where native pull-to-refresh gets disabled. **Track touch events, calculate pull distance, trigger refresh at threshold** with spring physics for natural feel.
+
+```typescript
+// hooks/usePullRefresh.ts
+export const usePullRefresh = ({
+  onRefresh,
+  triggerThreshold = 100,
+  maxPullDown = 150,
+}: {
+  onRefresh: () => Promise<void>;
+  triggerThreshold?: number;
+  maxPullDown?: number;
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [pullDistance, setPullDistance] = useState(0);
+  
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    let startY = 0;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      if (container.scrollTop === 0) {
+        startY = e.touches[0].clientY;
+      }
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (startY === 0) return;
+      
+      const currentY = e.touches[0].clientY;
+      const dy = Math.min(currentY - startY, maxPullDown);
+      
+      if (dy > 0) {
+        e.preventDefault();
+        setPullDistance(dy);
+        container.style.transform = `translateY(${dy}px)`;
+      }
+    };
+    
+    const handleTouchEnd = async () => {
+      if (pullDistance > triggerThreshold) {
+        setIsRefreshing(true);
+        await onRefresh();
+        setIsRefreshing(false);
+      }
+      
+      container.style.transition = 'transform 0.3s ease-in-out';
+      container.style.transform = 'translateY(0)';
+      
+      setTimeout(() => {
+        container.style.transition = '';
+        setPullDistance(0);
+        startY = 0;
+      }, 300);
+    };
+    
+    container.addEventListener('touchstart', handleTouchStart);
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd);
+    
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [pullDistance, triggerThreshold, maxPullDown, onRefresh]);
+  
+  return { containerRef, isRefreshing, pullDistance };
+};
+```
+
+## Animations that maintain 60fps
+
+Animation performance separates polished from sluggish experiences. **Only `transform` and `opacity` properties achieve 60fps reliably** because they're compositor-only, processed on the GPU without triggering layout or paint. Every other property—width, height, top, left, margin—forces expensive recalculations that drop frames on low-end devices.
+
+The `will-change` property optimizes animations but requires discipline. **Add it ~200ms before animation starts, remove it after completion**. Applying will-change to many elements simultaneously wastes memory and defeats its purpose.
+
+```typescript
+// hooks/useWillChange.ts
+export const useWillChange = (property: string, isAnimating: boolean) => {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    
+    if (isAnimating) {
+      ref.current.style.willChange = property;
+    } else {
+      // Remove after animation completes
+      setTimeout(() => {
+        if (ref.current) ref.current.style.willChange = 'auto';
+      }, 300);
+    }
+  }, [property, isAnimating]);
+
+  return ref;
+};
+
+// Usage in animated card
+const AnimatedLessonCard = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  const cardRef = useWillChange('transform', isHovered);
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="lesson-card transition-transform hover:scale-105"
+    >
+      Content
+    </div>
+  );
+};
+```
+
+**Framer Motion optimized with LazyMotion** reduces bundle size from 34KB to 4.6KB—critical for mobile performance. The `m` components combined with lazy-loaded features provide the full animation capabilities while loading only what's needed.
+
+```typescript
+// features.ts
+import { domAnimation } from "framer-motion";
+export default domAnimation;
+
+// App.tsx
+import { LazyMotion } from "framer-motion";
+import * as m from "framer-motion/m";
+
+const loadFeatures = () => import("./features").then(res => res.default);
+
+export const LessonProgress = ({ progress }) => {
+  const shouldReduceMotion = useReducedMotion();
+  
+  return (
+    <LazyMotion features={loadFeatures} strict>
+      <m.div
+        className="progress-bar"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: progress / 100 }}
+        transition={{
+          duration: shouldReduceMotion ? 0.01 : 0.8,
+          ease: [0.4, 0, 0.2, 1]
+        }}
+        style={{
+          transformOrigin: 'left',
+          background: 'linear-gradient(90deg, #FB6542, #FFBB00)',
+          height: '8px',
+          borderRadius: '4px'
+        }}
+      />
+    </LazyMotion>
+  );
+};
+```
+
+The FLIP technique (First, Last, Invert, Play) enables smooth layout animations without performance penalties. **Measure element positions before and after state changes, then use transform to fake the animation**. This transforms expensive layout animations into GPU-accelerated transforms.
+
+```typescript
+// utils/flip.ts
+export const flipElement = (element: HTMLElement, changeFunction: () => void) => {
+  // First - record initial position
+  const first = element.getBoundingClientRect();
+  
+  // Execute the DOM change
+  changeFunction();
+  
+  // Last - record final position
+  const last = element.getBoundingClientRect();
+  
+  // Invert - calculate deltas
+  const deltaX = first.left - last.left;
+  const deltaY = first.top - last.top;
+  const deltaW = first.width / last.width;
+  const deltaH = first.height / last.height;
+  
+  // Play - animate to natural position
+  element.animate([
+    {
+      transformOrigin: 'top left',
+      transform: `translate(${deltaX}px, ${deltaY}px) scale(${deltaW}, ${deltaH})`
+    },
+    {
+      transformOrigin: 'top left',
+      transform: 'none'
+    }
+  ], {
+    duration: 300,
+    easing: 'cubic-bezier(0,0,0.32,1)',
+    fill: 'both'
+  });
+};
+
+// Usage in lesson grid reordering
+const handleReorder = () => {
+  const cards = document.querySelectorAll('.lesson-card');
+  cards.forEach(card => {
+    flipElement(card as HTMLElement, () => {
+      // Perform reordering in DOM
+      reorderLessons();
+    });
+  });
+};
+```
+
+RequestAnimationFrame ensures animations sync with display refresh rates. For scroll-based effects like parallax or progress indicators, **RAF prevents excessive repaints** by batching updates to one per frame.
+
+```typescript
+// hooks/useRAF.ts
+export const useRAF = (callback: () => void, enabled: boolean = true) => {
+  const requestRef = useRef<number>();
+  
+  useEffect(() => {
+    if (!enabled) return;
+    
+    const animate = () => {
+      callback();
+      requestRef.current = requestAnimationFrame(animate);
+    };
+    
+    requestRef.current = requestAnimationFrame(animate);
+    
+    return () => {
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+    };
+  }, [callback, enabled]);
+};
+
+// Scroll progress indicator
+const ScrollProgress = () => {
+  const [progress, setProgress] = useState(0);
+  
+  useRAF(() => {
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const newProgress = (window.scrollY / scrollHeight) * 100;
+    setProgress(Math.min(newProgress, 100));
+  });
+  
+  return (
+    <div 
+      style={{ 
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '4px',
+        background: '#D3E4E6',
+        zIndex: 9999
+      }}
+    >
+      <div
+        style={{
+          transform: `scaleX(${progress / 100})`,
+          transformOrigin: 'left',
+          width: '100%',
+          height: '100%',
+          background: '#FB6542',
+          transition: 'none'
+        }}
+      />
+    </div>
+  );
+};
+```
+
+Device performance detection enables adaptive experiences. **Detect CPU cores and memory to adjust animation complexity** on low-end devices—simpler transitions, fewer particles, shorter durations.
+
+```typescript
+// utils/performance.ts
+export const getDevicePerformanceClass = () => {
+  const cpuCount = navigator.hardwareConcurrency || 4;
+  const memory = (navigator as any).deviceMemory || 4; // GB
+  
+  if (cpuCount >= 8 && memory >= 6) return 'high';
+  if (cpuCount >= 4 && memory >= 4) return 'medium';
+  return 'low';
+};
+
+// Adaptive animation config
+const performanceClass = getDevicePerformanceClass();
+
+export const animationConfig = {
+  duration: performanceClass === 'low' ? 200 : 400,
+  particleCount: performanceClass === 'low' ? 10 : 50,
+  enableComplexAnimations: performanceClass !== 'low'
+};
+
+// Usage in celebration component
+const CelebrationConfetti = () => {
+  const shouldShow = animationConfig.enableComplexAnimations;
+  
+  if (!shouldShow) {
+    return <SimpleCheckmark />;
+  }
+  
+  return <ComplexConfetti particleCount={animationConfig.particleCount} />;
+};
+```
+
+## Native-feeling interactions and UI patterns
+
+Skeleton screens outperform spinners by 15-30% in perceived performance. **Show content structure while loading** so users understand what's coming, reducing perceived wait time.
+
+```typescript
+// components/LessonSkeleton.tsx
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
+export const LessonSkeleton = () => (
+  <div className="lesson-card">
+    <Skeleton height={200} borderRadius={16} />
+    <div style={{ padding: 16 }}>
+      <Skeleton height={24} width="70%" />
+      <Skeleton height={16} width="90%" style={{ marginTop: 8 }} />
+      <Skeleton height={16} width="60%" />
+    </div>
+  </div>
+);
+
+// Usage
+const LessonList = () => {
+  const { lessons, isLoading } = useLessons();
+  
+  if (isLoading) {
+    return (
+      <>
+        <LessonSkeleton />
+        <LessonSkeleton />
+        <LessonSkeleton />
+      </>
+    );
+  }
+  
+  return lessons.map(lesson => <LessonCard key={lesson.id} lesson={lesson} />);
+};
+```
+
+Optimistic UI updates create the illusion of instant responses. **Show the result immediately, then rollback on error**. React 19's useOptimistic hook simplifies this pattern, but TanStack Query provides production-ready optimistic updates for earlier React versions.
+
+```typescript
+// hooks/useOptimisticProgress.ts
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+export const useOptimisticProgress = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ lessonId, progress }) => {
+      return await api.updateProgress(lessonId, progress);
+    },
+    
+    onMutate: async ({ lessonId, progress }) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['lessons'] });
+      
+      // Snapshot current value
+      const previousLessons = queryClient.getQueryData(['lessons']);
+      
+      // Optimistically update
+      queryClient.setQueryData(['lessons'], (old: Lesson[]) =>
+        old.map(lesson =>
+          lesson.id === lessonId
+            ? { ...lesson, progress, completed: progress >= 100 }
+            : lesson
+        )
+      );
+      
+      return { previousLessons };
+    },
+    
+    onError: (err, variables, context) => {
+      // Rollback on error
+      queryClient.setQueryData(['lessons'], context?.previousLessons);
+      toast.error('Failed to save progress. Please try again.');
+    },
+    
+    onSettled: () => {
+      // Refetch to ensure sync
+      queryClient.invalidateQueries({ queryKey: ['lessons'] });
+    }
+  });
+};
+```
+
+Micro-interactions provide immediate tactile feedback. **Button press should scale to 0.95 within 100ms**—any delay feels sluggish. Toggle switches animate in 200-300ms with physics-based easing for natural feel.
+
+```typescript
+// components/MicroInteractions.tsx
+import { motion } from 'framer-motion';
+
+export const TapButton = ({ children, onClick }) => {
+  const { tap } = useHaptic();
+  
+  return (
+    <motion.button
+      whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.1 }}
+      onTouchStart={tap}
+      onClick={onClick}
+      style={{
+        background: 'linear-gradient(135deg, #FB6542, #FFBB00)',
+        color: 'white',
+        padding: '16px 32px',
+        borderRadius: '12px',
+        border: 'none',
+        fontSize: '18px',
+        fontWeight: 600,
+        cursor: 'pointer'
+      }}
+    >
+      {children}
+    </motion.button>
+  );
+};
+
+export const ToggleSwitch = ({ checked, onChange }) => {
+  return (
+    <motion.div
+      className="toggle-switch"
+      onClick={onChange}
+      animate={{ backgroundColor: checked ? '#FB6542' : '#D3E4E6' }}
+      transition={{ duration: 0.2 }}
+      style={{
+        width: 60,
+        height: 32,
+        borderRadius: 16,
+        padding: 4,
+        cursor: 'pointer'
+      }}
+    >
+      <motion.div
+        className="toggle-handle"
+        animate={{ x: checked ? 28 : 0 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+        style={{
+          width: 24,
+          height: 24,
+          borderRadius: 12,
+          backgroundColor: 'white'
+        }}
+      />
+    </motion.div>
+  );
+};
+```
+
+Toast notifications require careful library selection. **Sonner provides the best modern experience** at ~5KB with swipe-to-dismiss, stacking, and promise API—perfect for educational apps showing success messages after completing lessons.
+
+```typescript
+// Setup in App.tsx
+import { Toaster, toast } from 'sonner';
+
+export const App = () => (
+  <>
+    <Toaster 
+      position="top-center"
+      theme="light"
+      toastOptions={{
+        style: {
+          background: 'white',
+          color: '#333',
+          border: '1px solid #D3E4E6'
+        },
+        className: 'toast',
+        duration: 3000
+      }}
+    />
+    <YourApp />
+  </>
+);
+
+// Usage in lesson completion
+const handleLessonComplete = async () => {
+  toast.promise(
+    submitLessonResults(),
+    {
+      loading: 'Saving your progress...',
+      success: (data) => `Great job! You earned ${data.xp} XP`,
+      error: 'Failed to save progress'
+    }
+  );
+};
+
+// Custom styled toasts
+const showAchievement = (achievement) => {
+  toast.custom((t) => (
+    <div className="achievement-toast">
+      <span className="achievement-icon">🏆</span>
+      <div>
+        <h3>{achievement.title}</h3>
+        <p>{achievement.description}</p>
+      </div>
+    </div>
+  ));
+};
+```
+
+Chat interfaces with typing indicators create the conversational feel of AI tutoring. **Debounce typing events to maximum once per 2 seconds** to reduce server load while maintaining real-time feel.
+
+```typescript
+// components/ChatInterface.tsx
+const TypingIndicator = () => (
+  <div className="typing-indicator">
+    {[0, 1, 2].map(i => (
+      <motion.span
+        key={i}
+        className="dot"
+        animate={{ y: [0, -10, 0] }}
+        transition={{ 
+          duration: 0.6, 
+          repeat: Infinity, 
+          delay: i * 0.1 
+        }}
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: 4,
+          background: '#FB6542',
+          display: 'inline-block',
+          margin: '0 2px'
+        }}
+      />
+    ))}
+  </div>
+);
+
+const ChatMessage = ({ message, isUser }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className={`message ${isUser ? 'user' : 'assistant'}`}
+    style={{
+      background: isUser ? '#FB6542' : '#D3E4E6',
+      color: isUser ? 'white' : '#333',
+      padding: '12px 16px',
+      borderRadius: 16,
+      maxWidth: '70%',
+      alignSelf: isUser ? 'flex-end' : 'flex-start'
+    }}
+  >
+    {message.text}
+  </motion.div>
+);
+```
+
+Progress visualization drives engagement through streaks, completion bars, and achievement badges. **Duolingo's flame icon with day count** creates powerful loss aversion—students return daily to maintain streaks.
+
+```typescript
+// components/StreakCounter.tsx
+export const StreakCounter = ({ days }) => {
+  return (
+    <motion.div
+      className="streak-container"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ type: 'spring', stiffness: 500 }}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '12px 20px',
+        background: 'linear-gradient(135deg, #FFBB00, #FB6542)',
+        borderRadius: 24,
+        boxShadow: '0 4px 16px rgba(251, 101, 66, 0.3)'
+      }}
+    >
+      <motion.span
+        animate={{ rotate: [0, -10, 10, -10, 0] }}
+        transition={{ repeat: Infinity, duration: 2 }}
+        style={{ fontSize: 32 }}
+      >
+        🔥
+      </motion.span>
+      <div>
+        <div style={{ fontSize: 24, fontWeight: 700, color: 'white' }}>
+          {days}
+        </div>
+        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.9)' }}>
+          day streak
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Circular progress for lesson completion
+export const ProgressRing = ({ percentage }) => {
+  const circumference = 2 * Math.PI * 45;
+  const offset = circumference - (percentage / 100) * circumference;
+  
+  return (
+    <svg width="100" height="100" viewBox="0 0 100 100">
+      <circle
+        cx="50"
+        cy="50"
+        r="45"
+        fill="none"
+        stroke="#D3E4E6"
+        strokeWidth="8"
+      />
+      <motion.circle
+        cx="50"
+        cy="50"
+        r="45"
+        fill="none"
+        stroke="#FB6542"
+        strokeWidth="8"
+        strokeLinecap="round"
+        initial={{ strokeDashoffset: circumference }}
+        animate={{ strokeDashoffset: offset }}
+        transition={{ duration: 1, ease: 'easeOut' }}
+        style={{
+          strokeDasharray: circumference,
+          transform: 'rotate(-90deg)',
+          transformOrigin: '50% 50%'
+        }}
+      />
+      <text
+        x="50"
+        y="50"
+        textAnchor="middle"
+        dy="7"
+        fontSize="20"
+        fontWeight="700"
+        fill="#333"
+      >
+        {Math.round(percentage)}%
+      </text>
+    </svg>
+  );
+};
+```
+
+## Learning from successful PWAs
+
+Pinterest's PWA transformation demonstrates the business value of performance optimization. **843% increase in signups, 103% increase in weekly active users**—achieved through aggressive code-splitting, reducing JavaScript from 650KB to 150KB per route. Their route-based splitting ensures students only download lesson content when needed.
+
+Twitter Lite's virtualized lists enabled smooth scrolling through thousands of tweets at 60fps. **For educational apps with long lesson lists, virtualization is essential**—render only visible items, dramatically reducing DOM nodes and memory usage.
+
+Starbucks PWA proved offline-first ordering works in production. **Their GraphQL implementation with layered caching** provides the blueprint for educational apps—lessons cached offline, customizations work without network, sync when connection returns.
+
+Uber's PWA targets 2G networks with a 50KB core bundle using Preact. **For emerging markets, extreme optimization matters**—server-side rendering provides instant content, code-splitting defers non-critical features, every kilobyte counts.
+
+Duolingo's success comes from immediate feedback, physics-based animations, and emotional design. **Celebrate every small win**—points pop in with bounce animation, correct answers trigger confetti, streaks create habit loops. The character animations (Duo owl) create empathy and personality that generic UIs lack.
+
+## React 18 concurrent features and TypeScript patterns
+
+React 18's useTransition enables non-blocking updates during heavy renders. **Wrap state updates that trigger expensive re-renders** to keep the UI responsive while processing in background.
+
+```typescript
+// components/SearchableLessons.tsx
+import { useState, useTransition } from 'react';
+
+export const SearchableLessons = ({ lessons }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredLessons, setFilteredLessons] = useState(lessons);
+  const [isPending, startTransition] = useTransition();
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    
+    // Mark expensive filter as non-urgent
+    startTransition(() => {
+      const filtered = lessons.filter(lesson =>
+        lesson.title.toLowerCase().includes(term.toLowerCase()) ||
+        lesson.content.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredLessons(filtered);
+    });
+  };
+
+  return (
+    <>
+      <input
+        type="search"
+        value={searchTerm}
+        onChange={(e) => handleSearch(e.target.value)}
+        placeholder="Search lessons..."
+        style={{ opacity: isPending ? 0.6 : 1 }}
+      />
+      {isPending && <div className="searching-indicator">Searching...</div>}
+      <LessonList lessons={filteredLessons} />
+    </>
+  );
+};
+```
+
+TypeScript service worker types require WebWorker lib in tsconfig. **Type-safe service workers prevent runtime errors** in critical offline functionality.
+
+```typescript
+// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "WebWorker"],
+    "types": ["vite/client", "vite-plugin-pwa/client"]
+  }
+}
+
+// service-worker.ts
+/// <reference lib="webworker" />
+
+declare const self: ServiceWorkerGlobalScope;
+
+interface CacheStrategy {
+  cacheName: string;
+  maxAgeSeconds: number;
+}
+
+const CACHE_NAME = 'edulearn-v1';
+const LESSON_CACHE: CacheStrategy = {
+  cacheName: 'lessons',
+  maxAgeSeconds: 86400
+};
+
+self.addEventListener('install', (event: ExtendableEvent) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll([
+        '/',
+        '/index.html',
+        '/styles.css',
+        '/app.js'
+      ]);
+    })
+  );
+});
+
+self.addEventListener('fetch', (event: FetchEvent) => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
+});
+```
+
+State management for offline-first apps requires careful selection. **TanStack Query dominates for server state** with built-in offline support, while Zustand handles client state elegantly at 1KB.
+
+```typescript
+// config/queryClient.ts
+import { QueryClient } from '@tanstack/react-query';
+import { persistQueryClient } from '@tanstack/react-query-persist-client';
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      networkMode: 'offlineFirst', // Critical for PWAs
+      retry: 2,
+    },
+    mutations: {
+      networkMode: 'offlineFirst',
+    },
+  },
+});
+
+// Persist query cache to IndexedDB
+const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+});
+
+persistQueryClient({
+  queryClient,
+  persister,
+  maxAge: 1000 * 60 * 60 * 24, // 24 hours
+});
+
+// App.tsx
+import { QueryClientProvider } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+
+export const App = () => (
+  <PersistQueryClientProvider
+    client={queryClient}
+    persistOptions={{ persister }}
+  >
+    <YourApp />
+  </PersistQueryClientProvider>
+);
+```
+
+Zustand provides lightweight client state management with built-in persistence.
+
+```typescript
+// stores/userStore.ts
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+interface UserState {
+  currentLesson: string | null;
+  preferences: {
+    theme: 'light' | 'dark';
+    reducedMotion: boolean;
+  };
+  setCurrentLesson: (id: string) => void;
+  updatePreferences: (prefs: Partial<UserState['preferences']>) => void;
+}
+
+export const useUserStore = create<UserState>()(
+  persist(
+    (set) => ({
+      currentLesson: null,
+      preferences: {
+        theme: 'light',
+        reducedMotion: false
+      },
+      setCurrentLesson: (id) => set({ currentLesson: id }),
+      updatePreferences: (prefs) =>
+        set((state) => ({
+          preferences: { ...state.preferences, ...prefs }
+        }))
+    }),
+    {
+      name: 'user-storage',
+    }
+  )
+);
+```
+
+Compound components provide flexible, composable mobile UI. **Context API shares state implicitly** between components without prop drilling.
+
+```typescript
+// components/Accordion.tsx
+import { createContext, useContext, useState } from 'react';
+
+const AccordionContext = createContext<{
+  openItem: string | null;
+  setOpenItem: (id: string | null) => void;
+} | null>(null);
+
+export const Accordion = ({ children }) => {
+  const [openItem, setOpenItem] = useState<string | null>(null);
+  
+  return (
+    <AccordionContext.Provider value={{ openItem, setOpenItem }}>
+      <div className="accordion">{children}</div>
+    </AccordionContext.Provider>
+  );
+};
+
+export const AccordionItem = ({ id, children }) => {
+  const context = useContext(AccordionContext);
+  if (!context) throw new Error('AccordionItem must be used within Accordion');
+  
+  const { openItem, setOpenItem } = context;
+  const isOpen = openItem === id;
+  
+  return (
+    <div className="accordion-item">
+      {children}
+    </div>
+  );
+};
+
+export const AccordionTrigger = ({ id, children }) => {
+  const { openItem, setOpenItem } = useContext(AccordionContext)!;
+  const isOpen = openItem === id;
+  
+  return (
+    <button
+      onClick={() => setOpenItem(isOpen ? null : id)}
+      className="accordion-trigger"
+    >
+      {children}
+      <motion.span
+        animate={{ rotate: isOpen ? 180 : 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        ▼
+      </motion.span>
+    </button>
+  );
+};
+
+export const AccordionContent = ({ id, children }) => {
+  const { openItem } = useContext(AccordionContext)!;
+  const isOpen = openItem === id;
+  
+  return (
+    <motion.div
+      initial={false}
+      animate={{
+        height: isOpen ? 'auto' : 0,
+        opacity: isOpen ? 1 : 0
+      }}
+      transition={{ duration: 0.3 }}
+      style={{ overflow: 'hidden' }}
+    >
+      <div className="accordion-content">{children}</div>
+    </motion.div>
+  );
+};
+
+// Usage
+<Accordion>
+  <AccordionItem id="lesson1">
+    <AccordionTrigger id="lesson1">
+      Introduction to React
+    </AccordionTrigger>
+    <AccordionContent id="lesson1">
+      Learn the basics of React components...
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+## Testing, accessibility, and platform considerations
+
+Lighthouse audits provide comprehensive PWA health checks. **Target scores above 85 for performance** and 100 for PWA category. Key metrics include Time to Interactive under 3.8s on mobile, First Contentful Paint under 1.8s.
+
+```bash
+# Run Lighthouse from CLI
+npm install -g lighthouse
+lighthouse https://your-app.com --view
+
+# With budget enforcement
+lighthouse https://your-app.com --budget-path=budget.json
+```
+
+```json
+// budget.json - Performance budget
+[
+  {
+    "path": "/*",
+    "timings": [
+      {
+        "metric": "interactive",
+        "budget": 3800
+      },
+      {
+        "metric": "first-contentful-paint",
+        "budget": 1800
+      }
+    ],
+    "resourceSizes": [
+      {
+        "resourceType": "script",
+        "budget": 170
+      },
+      {
+        "resourceType": "total",
+        "budget": 300
+      }
+    ]
+  }
+]
+```
+
+Playwright provides best-in-class mobile testing with device emulation and touch gestures.
+
+```typescript
+// tests/lesson-card.spec.ts
+import { test, expect, devices } from '@playwright/test';
+
+test.use({
+  ...devices['iPhone 13'],
+  hasTouch: true
+});
+
+test('swipe lesson card', async ({ page }) => {
+  await page.goto('/lessons');
+  
+  const card = page.locator('.lesson-card').first();
+  const box = await card.boundingBox();
+  
+  if (!box) throw new Error('Card not found');
+  
+  // Swipe left
+  await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+  await page.touchscreen.swipe(
+    { x: box.x + box.width - 10, y: box.y + box.height / 2 },
+    { x: box.x + 10, y: box.y + box.height / 2 }
+  );
+  
+  await expect(card).not.toBeVisible();
+});
+
+test('lesson completion flow', async ({ page }) => {
+  await page.goto('/lesson/1');
+  
+  // Answer questions
+  await page.locator('[data-testid="answer-1"]').click();
+  await page.locator('[data-testid="submit"]').click();
+  
+  // Check for success animation
+  await expect(page.locator('[data-testid="success-animation"]')).toBeVisible();
+  
+  // Verify progress saved
+  await expect(page.locator('[data-testid="progress"]')).toHaveText('100%');
+});
+```
+
+Accessibility requires respecting user preferences. **prefers-reduced-motion eliminates problematic animations** for users with vestibular disorders.
+
+```typescript
+// hooks/useReducedMotion.ts
+export const useReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  return prefersReducedMotion;
+};
+
+// Apply throughout app
+const LessonTransition = ({ children }) => {
+  const shouldReduceMotion = useReducedMotion();
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ 
+        duration: shouldReduceMotion ? 0.01 : 0.3 
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+```
+
+Touch targets must meet WCAG 2.1 Level AA standards. **Minimum 44x44 CSS pixels** ensures buttons are tappable without frustration.
+
+```css
+/* Touch target sizing */
+.lesson-button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+/* Expand hit area for small icons */
+.icon-button {
+  position: relative;
+  padding: 8px;
+}
+
+.icon-button::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  bottom: -12px;
+  left: -12px;
+}
+```
+
+iOS PWA limitations require workarounds. **Push notifications only work if added to home screen** (iOS 16.4+), storage may clear after 7 days of inactivity, and no automatic install prompts exist. Request persistent storage and provide clear iOS installation instructions.
+
+```typescript
+// utils/installation.ts
+export const isIOS = () => {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+};
+
+export const isInStandaloneMode = () => {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         (window.navigator as any).standalone === true;
+};
+
+// Request persistent storage (iOS 15.2+)
+export const requestPersistentStorage = async () => {
+  if (navigator.storage && navigator.storage.persist) {
+    const granted = await navigator.storage.persist();
+    if (granted) {
+      console.log('Storage will not be cleared');
+    }
+  }
+};
+
+// Monitor storage quota
+export const checkStorageQuota = async () => {
+  if (navigator.storage && navigator.storage.estimate) {
+    const estimate = await navigator.storage.estimate();
+    const percentUsed = (estimate.usage! / estimate.quota!) * 100;
+    console.log(`Using ${percentUsed.toFixed(2)}% of storage`);
+    
+    if (percentUsed > 80) {
+      // Warn user or clear old data
+      toast.warning('Storage almost full. Consider clearing old lessons.');
+    }
+  }
+};
+```
+
+Android Trusted Web Activities enable Play Store distribution. **Bubblewrap CLI simplifies TWA creation** from your PWA—generates APK, handles Digital Asset Links verification, provides full-screen experience without browser UI.
+
+```bash
+# Install Bubblewrap
+npm install -g @bubblewrap/cli
+
+# Initialize TWA project
+bubblewrap init --manifest=https://your-pwa.com/manifest.json
+
+# Build APK
+bubblewrap build
+
+# Generate signing key
+keytool -genkey -v -keystore edulearn.keystore -alias edulearn -keyalg RSA -keysize 2048 -validity 10000
+```
+
+Desktop PWAs with Window Controls Overlay create native-feeling title bars. **Content extends into title bar area** for apps like Spotify and VS Code.
+
+```json
+// manifest.json
+{
+  "display_override": ["window-controls-overlay"],
+  "theme_color": "#FB6542"
+}
+```
+
+```css
+/* Title bar with draggable area */
+.title-bar {
+  position: fixed;
+  top: 0;
+  left: env(titlebar-area-x, 0);
+  width: env(titlebar-area-width, 100%);
+  height: env(titlebar-area-height, 40px);
+  background: #FB6542;
+  app-region: drag;
+  z-index: 9999;
+}
+
+.title-bar button {
+  app-region: no-drag; /* Buttons remain clickable */
+}
+```
+
+## Production-ready tech stack for 2024-2025
+
+Your Teacher Assistant PWA should use this modern, proven stack:
+
+**Core Framework**
+- React 18.3+ with TypeScript 5+
+- Vite 5+ with vite-plugin-pwa for blazing fast builds
+
+**State Management**
+- TanStack Query v5 for server state (lessons, progress, analytics)
+- Zustand v4 for client state (UI preferences, current lesson)
+- Network mode: offlineFirst with persistent cache
+
+**Animations**
+- Framer Motion with LazyMotion (4.6KB optimized)
+- React Spring for physics-based interactions
+- CSS transforms for simple transitions
+
+**UI Components**
+- Shadcn/ui for accessible, customizable components
+- React-spring-bottom-sheet for mobile drawers
+- Sonner for toast notifications
+- React-loading-skeleton for loading states
+
+**Touch \u0026 Gestures**
+- @use-gesture/react for swipe, drag, pinch
+- Native Vibration API with graceful fallbacks
+
+**Testing**
+- Playwright for E2E with mobile device emulation
+- React Testing Library for component tests
+- Lighthouse CI for performance regression testing
+
+**Offline \u0026 Storage**
+- Dexie.js for IndexedDB with React hooks
+- Workbox for service worker generation
+- Cache API for static assets
+
+This stack delivers native-feeling experiences while maintaining excellent performance on low-end devices. Every library selected balances bundle size, developer experience, and production reliability.
+
+## Key implementation recommendations
+
+**Performance must be obsessive.** Measure with Lighthouse continuously, enforce performance budgets in CI, test on real low-end Android devices. Every animation should maintain 60fps, every interaction should feel instant. Use transform and opacity exclusively for animations, lazy load everything non-critical, implement route-based code splitting.
+
+**Offline-first is non-negotiable for educational apps.** Students learn in classrooms with spotty WiFi, on buses, in rural areas. Cache lessons aggressively, queue progress updates with background sync, provide clear offline indicators. Never lose student work due to connectivity issues.
+
+**Emotional design multiplies engagement.** Celebrate every small win with confetti, maintain streak counters to create habit loops, use physics-based animations that feel playful. The Gemini Design Language colors (orange #FB6542, yellow #FFBB00, teal #D3E4E6) should create energy and warmth throughout the interface.
+
+**Mobile-first means touch-first.** Every interaction should feel natural on touchscreens—swipe cards for navigation, pull-to-refresh for updates, bottom sheets for actions, haptic feedback for tactile response. Test extensively on real devices, respect safe areas, ensure 44px minimum touch targets.
+
+**Accessibility cannot be an afterthought.** Implement prefers-reduced-motion from day one, maintain logical focus order, provide clear labels for screen readers, ensure sufficient color contrast. Accessibility improvements benefit all users, not just those with disabilities.
+
+The path to a Duolingo-level educational PWA requires combining technical excellence with emotional design. Modern web platform capabilities—service workers, advanced caching, device APIs—enable experiences that rival native apps. The research shows this clearly: Pinterest achieved 843% increase in signups, Twitter saw 65% more engagement, Starbucks doubled daily active users. These results come from relentless focus on performance, thoughtful offline strategies, and animations that delight.
+
+Your Teacher Assistant app can deliver these same results. Start with the proven tech stack outlined here, implement offline-first from the beginning, obsess over 60fps animations, and infuse personality through micro-interactions and celebrations. The web platform is ready. The patterns are proven. Build something students love to use.

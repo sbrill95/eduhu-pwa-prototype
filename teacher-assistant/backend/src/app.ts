@@ -6,8 +6,18 @@ import { errorHandler } from './middleware/errorHandler';
 import { generalLimiter } from './middleware/rateLimiter';
 import routes from './routes';
 import { ApiResponse } from './types';
+import { initializeInstantDB } from './services/instantdbService';
+import { logInfo, logWarn } from './config/logger';
 
 const app = express();
+
+// Initialize InstantDB on startup
+const instantDBInitialized = initializeInstantDB();
+if (!instantDBInitialized) {
+  logWarn('InstantDB initialization failed - features requiring database will be unavailable');
+} else {
+  logInfo('InstantDB initialized successfully');
+}
 
 // CORS configuration - Support multiple origins for development and deployment
 const allowedOrigins = [

@@ -1,0 +1,639 @@
+
+Running 8 tests using 1 worker
+
+[2m[WebServer] [22m[2m18:39:32[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [33mwarning: [33mDuplicate key "minHeight" in object literal[33m
+[2m[WebServer] [22m301 |            zIndex: 9999,
+[2m[WebServer] [22m302 |            minHeight: '100vh',
+[2m[WebServer] [22m303 |            minHeight: '100dvh',
+[2m[WebServer] [22m    |            ^
+[2m[WebServer] [22m304 |            maxHeight: '100vh',
+[2m[WebServer] [22m305 |            maxHeight: '100dvh'
+[2m[WebServer] [22m[39m
+[2m[WebServer] [22m  Plugin: [35mvite:esbuild[39m
+[2m[WebServer] [22m  File: [36mC:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/src/components/ProfileView.tsx[39m
+[2m[WebServer] [22m[2m18:39:32[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [33mwarning: [33mDuplicate key "maxHeight" in object literal[33m
+[2m[WebServer] [22m303 |            minHeight: '100dvh',
+[2m[WebServer] [22m304 |            maxHeight: '100vh',
+[2m[WebServer] [22m305 |            maxHeight: '100dvh'
+[2m[WebServer] [22m    |            ^
+[2m[WebServer] [22m306 |          }}>
+[2m[WebServer] [22m307 |          
+[2m[WebServer] [22m[39m
+[2m[WebServer] [22m  Plugin: [35mvite:esbuild[39m
+[2m[WebServer] [22m  File: [36mC:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/src/components/ProfileView.tsx[39m
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-001: Chat Creation Test ===
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+Auth check: Chat=0, Home=0, Profile=0
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  1 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:110:3 › Bug Verification Suite - 2025-10-06 › BUG-001: Chat creation works (POST /api/chat) (4.9s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-001: Chat Creation Test ===
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+Auth check: Chat=0, Home=0, Profile=0
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  2 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:110:3 › Bug Verification Suite - 2025-10-06 › BUG-001: Chat creation works (POST /api/chat) (retry #1) (4.8s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-002: Library Title Duplication Test ===
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+Auth check: Chat=0, Home=0, Profile=0
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  3 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:177:3 › Bug Verification Suite - 2025-10-06 › BUG-002: Library does not show title twice (5.5s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-002: Library Title Duplication Test ===
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+Auth check: Chat=0, Home=0, Profile=0
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  4 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:177:3 › Bug Verification Suite - 2025-10-06 › BUG-002: Library does not show title twice (retry #1) (5.0s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-003: Library Summaries Test ===
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+Auth check: Chat=0, Home=0, Profile=0
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  5 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:229:3 › Bug Verification Suite - 2025-10-06 › BUG-003: Library shows summaries correctly (4.8s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-003: Library Summaries Test ===
+[info] api: => page.goto started []
+[info] api: <= page.goto failed []
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  6 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:229:3 › Bug Verification Suite - 2025-10-06 › BUG-003: Library shows summaries correctly (retry #1) (39.1s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-004: Unknown Agent Errors Test ===
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+Auth check: Chat=0, Home=0, Profile=0
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  7 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:275:3 › Bug Verification Suite - 2025-10-06 › BUG-004: No "unknown agent" errors in console (13.2s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-004: Unknown Agent Errors Test ===
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+Auth check: Chat=0, Home=0, Profile=0
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  8 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:275:3 › Bug Verification Suite - 2025-10-06 › BUG-004: No "unknown agent" errors in console (retry #1) (4.5s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-005: Agents Available Endpoint Test ===
+Endpoint status: 200
+Response data: {
+  "success": true,
+  "data": {
+    "agents": [
+      {
+        "id": "langgraph-image-generation",
+        "name": "Bild-Generierung",
+        "description": "Erstellt hochwertige Bilder für den Unterricht",
+        "type": "image-generation",
+        "available": true
+      }
+    ]
+  }
+}
+✅ BUG-005: PASS - Endpoint returns agents
+
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+  ✓  9 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:319:3 › Bug Verification Suite - 2025-10-06 › BUG-005: /agents/available endpoint returns data (892ms)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-006: Prompt Suggestions Test ===
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+Auth check: Chat=0, Home=0, Profile=0
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  10 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:348:3 › Bug Verification Suite - 2025-10-06 › BUG-006: No prompt suggestion errors in console (4.4s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== BUG-006: Prompt Suggestions Test ===
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+Auth check: Chat=0, Home=0, Profile=0
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  11 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:348:3 › Bug Verification Suite - 2025-10-06 › BUG-006: No prompt suggestion errors in console (retry #1) (5.2s)
+
+=== BUG-007: File Upload Endpoint Test ===
+Endpoint status: 400
+✅ BUG-007: PASS - File upload endpoint exists
+
+  ✓  12 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:379:3 › Bug Verification Suite - 2025-10-06 › BUG-007: File upload endpoint exists (79ms)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+=== GENERATING QA REPORT ===
+
+QA REPORT:
+{
+  "date": "2025-10-06T16:41:27.918Z",
+  "bugs_tested": 7,
+  "test_results": {
+    "BUG-001": "Chat creation works",
+    "BUG-002": "No duplicate titles in library",
+    "BUG-003": "Library shows summaries",
+    "BUG-004": "No unknown agent errors",
+    "BUG-005": "/agents/available returns data",
+    "BUG-006": "No prompt suggestion errors",
+    "BUG-007": "File upload endpoint exists"
+  },
+  "screenshots_captured": 0,
+  "screenshot_directory": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\qa-screenshots\\2025-10-06"
+}
+
+✅ Report saved to: C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\qa-reports\bug-verification-2025-10-06.json
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+  ✓  13 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:402:3 › Bug Verification Suite - 2025-10-06 › Summary: Generate QA Report (797ms)
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+
+
+  1) [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:110:3 › Bug Verification Suite - 2025-10-06 › BUG-001: Chat creation works (POST /api/chat) 
+
+    Error: Test authentication failed - no tabs found
+
+      102 |
+      103 |   if (chatTab === 0 && homeTab === 0 && profileTab === 0) {
+    > 104 |     throw new Error('Test authentication failed - no tabs found');
+          |           ^
+      105 |   }
+      106 | }
+      107 |
+        at waitForAuth (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:104:11)
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:120:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Test authentication failed - no tabs found
+
+      102 |
+      103 |   if (chatTab === 0 && homeTab === 0 && profileTab === 0) {
+    > 104 |     throw new Error('Test authentication failed - no tabs found');
+          |           ^
+      105 |   }
+      106 | }
+      107 |
+        at waitForAuth (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:104:11)
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:120:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-01936-eation-works-POST-api-chat--Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:177:3 › Bug Verification Suite - 2025-10-06 › BUG-002: Library does not show title twice 
+
+    Error: Test authentication failed - no tabs found
+
+      102 |
+      103 |   if (chatTab === 0 && homeTab === 0 && profileTab === 0) {
+    > 104 |     throw new Error('Test authentication failed - no tabs found');
+          |           ^
+      105 |   }
+      106 | }
+      107 |
+        at waitForAuth (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:104:11)
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:184:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Test authentication failed - no tabs found
+
+      102 |
+      103 |   if (chatTab === 0 && homeTab === 0 && profileTab === 0) {
+    > 104 |     throw new Error('Test authentication failed - no tabs found');
+          |           ^
+      105 |   }
+      106 | }
+      107 |
+        at waitForAuth (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:104:11)
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:184:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-63911-y-does-not-show-title-twice-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:229:3 › Bug Verification Suite - 2025-10-06 › BUG-003: Library shows summaries correctly 
+
+    Error: Test authentication failed - no tabs found
+
+      102 |
+      103 |   if (chatTab === 0 && homeTab === 0 && profileTab === 0) {
+    > 104 |     throw new Error('Test authentication failed - no tabs found');
+          |           ^
+      105 |   }
+      106 | }
+      107 |
+        at waitForAuth (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:104:11)
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:235:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d9a7a-y-shows-summaries-correctly-Desktop-Chrome---Chat-Agent-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d9a7a-y-shows-summaries-correctly-Desktop-Chrome---Chat-Agent-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-d9a7a-y-shows-summaries-correctly-Desktop-Chrome---Chat-Agent-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d9a7a-y-shows-summaries-correctly-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-d9a7a-y-shows-summaries-correctly-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: page.goto: Timeout 30000ms exceeded.
+    Call log:
+    [2m  - navigating to "http://localhost:5173/", waiting until "load"[22m
+
+
+      232 |     setupConsoleMonitoring(page);
+      233 |     await setupTestAuth(page);
+    > 234 |
+          | ^
+      235 |     await page.goto(FRONTEND_URL);
+      236 |     await waitForAuth(page);
+      237 |
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:234:16
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d9a7a-y-shows-summaries-correctly-Desktop-Chrome---Chat-Agent-Testing-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-d9a7a-y-shows-summaries-correctly-Desktop-Chrome---Chat-Agent-Testing-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d9a7a-y-shows-summaries-correctly-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-d9a7a-y-shows-summaries-correctly-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:275:3 › Bug Verification Suite - 2025-10-06 › BUG-004: No "unknown agent" errors in console 
+
+    Error: Test authentication failed - no tabs found
+
+      102 |
+      103 |   if (chatTab === 0 && homeTab === 0 && profileTab === 0) {
+    > 104 |     throw new Error('Test authentication failed - no tabs found');
+          |           ^
+      105 |   }
+      106 | }
+      107 |
+        at waitForAuth (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:104:11)
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:281:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Test authentication failed - no tabs found
+
+      102 |
+      103 |   if (chatTab === 0 && homeTab === 0 && profileTab === 0) {
+    > 104 |     throw new Error('Test authentication failed - no tabs found');
+          |           ^
+      105 |   }
+      106 | }
+      107 |
+        at waitForAuth (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:104:11)
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:281:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-09c1b-own-agent-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:348:3 › Bug Verification Suite - 2025-10-06 › BUG-006: No prompt suggestion errors in console 
+
+    Error: Test authentication failed - no tabs found
+
+      102 |
+      103 |   if (chatTab === 0 && homeTab === 0 && profileTab === 0) {
+    > 104 |     throw new Error('Test authentication failed - no tabs found');
+          |           ^
+      105 |   }
+      106 | }
+      107 |
+        at waitForAuth (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:104:11)
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:354:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: Test authentication failed - no tabs found
+
+      102 |
+      103 |   if (chatTab === 0 && homeTab === 0 && profileTab === 0) {
+    > 104 |     throw new Error('Test authentication failed - no tabs found');
+          |           ^
+      105 |   }
+      106 | }
+      107 |
+        at waitForAuth (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:104:11)
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-verification-2025-10-06.spec.ts:354:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-verification-2025-10-0-d2b70-uggestion-errors-in-console-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:110:3 › Bug Verification Suite - 2025-10-06 › BUG-001: Chat creation works (POST /api/chat) 
+    [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:177:3 › Bug Verification Suite - 2025-10-06 › BUG-002: Library does not show title twice 
+    [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:229:3 › Bug Verification Suite - 2025-10-06 › BUG-003: Library shows summaries correctly 
+    [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:275:3 › Bug Verification Suite - 2025-10-06 › BUG-004: No "unknown agent" errors in console 
+    [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-verification-2025-10-06.spec.ts:348:3 › Bug Verification Suite - 2025-10-06 › BUG-006: No prompt suggestion errors in console 
+  3 passed (2.0m)

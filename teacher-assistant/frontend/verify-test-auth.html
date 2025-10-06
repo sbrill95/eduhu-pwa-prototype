@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Auth Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .status {
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        .warning { border-left: 4px solid #f59e0b; }
+        .info { border-left: 4px solid #3b82f6; }
+        h1 { color: #1f2937; }
+        pre {
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <h1>🔐 Test Auth Verification</h1>
+
+    <div class="status info">
+        <h2>Environment Check</h2>
+        <p><strong>VITE_TEST_MODE:</strong> <code id="testMode">Checking...</code></p>
+        <p><strong>Expected:</strong> <code>true</code> for test mode to be active</p>
+    </div>
+
+    <div class="status info">
+        <h2>Instructions</h2>
+        <ol>
+            <li>Start the dev server with: <code>npm run dev</code></li>
+            <li>Set <code>VITE_TEST_MODE=true</code> in your environment or .env file</li>
+            <li>Check the browser console for test mode warnings</li>
+            <li>Verify that you're automatically logged in as <code>s.brill@eduhu.de</code></li>
+        </ol>
+    </div>
+
+    <div class="status warning">
+        <h2>⚠️ Security Warning</h2>
+        <p>Test mode bypasses authentication. This should <strong>NEVER</strong> be enabled in production!</p>
+        <p>Always ensure <code>VITE_TEST_MODE=false</code> in production environments.</p>
+    </div>
+
+    <div class="status info">
+        <h2>Test Checklist</h2>
+        <ul>
+            <li>✅ Test auth module created: <code>src/lib/test-auth.ts</code></li>
+            <li>✅ Auth context updated: <code>src/lib/auth-context.tsx</code></li>
+            <li>✅ Test environment file: <code>.env.test</code></li>
+            <li>✅ Playwright config updated: <code>playwright.config.ts</code></li>
+        </ul>
+    </div>
+
+    <script>
+        // Check if we can access import.meta.env (this won't work in static HTML)
+        const testMode = 'Check the console in your React app';
+        document.getElementById('testMode').textContent = testMode;
+
+        // Log instructions
+        console.log('%c🧪 Test Auth Verification', 'font-size: 20px; font-weight: bold; color: #3b82f6;');
+        console.log('%cTo verify test auth is working:', 'font-weight: bold;');
+        console.log('1. Check that VITE_TEST_MODE=true in your environment');
+        console.log('2. Look for red warning banners in the console');
+        console.log('3. Verify auto-login with test user: s.brill@eduhu.de');
+    </script>
+</body>
+</html>

@@ -32,3 +32,29 @@ export function slugify(text: string): string {
     .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
     .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
 }
+
+/**
+ * Returns dynamic Tailwind font size class based on text length
+ *
+ * Used for chat summaries to ensure readability across different summary lengths
+ *
+ * @param text - The text to evaluate
+ * @returns Tailwind font size class
+ *
+ * @example
+ * getDynamicFontSize('Kurz') // Returns 'text-sm'
+ * getDynamicFontSize('Mittellang Text') // Returns 'text-xs'
+ * getDynamicFontSize('Sehr langer Text hier') // Returns 'text-xs'
+ */
+export function getDynamicFontSize(text: string): string {
+  const length = text.length;
+
+  // Short text (≤10 chars): text-sm (14px)
+  if (length <= 10) return 'text-sm';
+
+  // Medium text (11-15 chars): text-xs (12px)
+  if (length <= 15) return 'text-xs';
+
+  // Long text (16-20 chars): text-xs (12px) - minimum readable size
+  return 'text-xs';
+}

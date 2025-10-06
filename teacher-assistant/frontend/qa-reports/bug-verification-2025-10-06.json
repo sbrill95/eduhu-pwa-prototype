@@ -1,0 +1,15 @@
+{
+  "date": "2025-10-06T16:56:58.288Z",
+  "bugs_tested": 7,
+  "test_results": {
+    "BUG-001": "Chat creation works",
+    "BUG-002": "No duplicate titles in library",
+    "BUG-003": "Library shows summaries",
+    "BUG-004": "No unknown agent errors",
+    "BUG-005": "/agents/available returns data",
+    "BUG-006": "No prompt suggestion errors",
+    "BUG-007": "File upload endpoint exists"
+  },
+  "screenshots_captured": 0,
+  "screenshot_directory": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\qa-screenshots\\2025-10-06"
+}

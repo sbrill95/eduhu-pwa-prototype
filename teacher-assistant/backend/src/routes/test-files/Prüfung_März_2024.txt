@@ -1,0 +1,9 @@
+Dies ist ein Test-Dokument für den File-Upload mit deutschen Umlauten.
+Dateiname: Prüfung_März_2024.txt
+
+Prüfungsinhalt:
+- Thema: Frühjahrsüberprüfung
+- Größe: 10 Seiten
+- Lösungsschlüssel verfügbar
+
+Test für Umlaut-Unterstützung in Dateinamen: ä, ö, ü, ß

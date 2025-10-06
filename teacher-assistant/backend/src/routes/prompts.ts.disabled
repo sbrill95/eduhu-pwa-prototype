@@ -1,0 +1,175 @@
+/**
+ * Prompts API Routes
+ *
+ * API endpoints for generating personalized prompt suggestions
+ * Part of the Home Screen Redesign feature
+ */
+
+import express, { Request, Response } from 'express';
+import { promptService } from '../services/promptService';
+import { GeneratePromptsRequest } from '../types';
+import { logError, logInfo } from '../config/logger';
+
+const router = express.Router();
+
+/**
+ * POST /api/prompts/generate-suggestions
+ *
+ * Generate personalized prompt suggestions for the current user
+ *
+ * Request Body:
+ * - limit?: number (default: 6) - Number of suggestions to return
+ * - excludeIds?: string[] - Template IDs to exclude from suggestions
+ * - seed?: string - Seed for reproducible randomization (default: current date)
+ *
+ * Response:
+ * - suggestions: PromptSuggestion[] - Array of personalized suggestions
+ * - generatedAt: string - ISO timestamp when suggestions were generated
+ * - seed: string - Seed used for randomization
+ *
+ * Error Responses:
+ * - 401: Unauthorized (user not authenticated)
+ * - 500: Internal server error
+ */
+router.post('/generate-suggestions', async (req: Request, res: Response) => {
+  try {
+    // In production, this would come from auth middleware
+    // For now, we'll accept userId from request body or use a default
+    const userId = (req as any).user?.id || req.body.userId || 'default-user';
+
+    const { limit, excludeIds, seed } = req.body;
+
+    // Validate request parameters
+    if (limit && (typeof limit !== 'number' || limit < 1 || limit > 20)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Ungültiger limit Parameter. Erlaubt sind Werte zwischen 1 und 20.',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    if (excludeIds && !Array.isArray(excludeIds)) {
+      return res.status(400).json({
+        success: false,
+        error: 'excludeIds muss ein Array sein.',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    if (seed && typeof seed !== 'string') {
+      return res.status(400).json({
+        success: false,
+        error: 'seed muss ein String sein.',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Build request object
+    const generateRequest: GeneratePromptsRequest = {
+      userId,
+      limit: limit || 6,
+      excludeIds: excludeIds || [],
+      seed: seed || new Date().toISOString().split('T')[0]
+    };
+
+    logInfo('Generating prompt suggestions', {
+      userId,
+      limit: generateRequest.limit,
+      excludeIdsCount: generateRequest.excludeIds?.length || 0
+    });
+
+    // Generate suggestions
+    const suggestions = await promptService.generateSuggestions(generateRequest);
+
+    // Return response
+    return res.status(200).json({
+      success: true,
+      data: {
+        suggestions,
+        generatedAt: new Date().toISOString(),
+        seed: generateRequest.seed
+      },
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    logError('Error generating prompt suggestions', error as Error, {
+      userId: (req as any).user?.id || req.body.userId,
+      endpoint: '/generate-suggestions'
+    });
+
+    return res.status(500).json({
+      success: false,
+      error: 'Fehler beim Generieren der Vorschläge. Bitte versuchen Sie es später erneut.',
+      details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * GET /api/prompts/templates
+ *
+ * Get all available prompt templates (for debugging/testing)
+ *
+ * Response:
+ * - templates: PromptTemplate[] - Array of all templates
+ * - count: number - Total number of templates
+ */
+router.get('/templates', async (req: Request, res: Response) => {
+  try {
+    const { PROMPT_TEMPLATES } = await import('../data/promptTemplates');
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        templates: PROMPT_TEMPLATES,
+        count: PROMPT_TEMPLATES.length
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    logError('Error fetching templates', error as Error);
+
+    return res.status(500).json({
+      success: false,
+      error: 'Fehler beim Laden der Templates.',
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * GET /api/prompts/categories
+ *
+ * Get all available prompt categories
+ *
+ * Response:
+ * - categories: string[] - Array of category names
+ * - count: number - Total number of categories
+ */
+router.get('/categories', async (req: Request, res: Response) => {
+  try {
+    const { getAllCategories } = await import('../data/promptTemplates');
+    const categories = getAllCategories();
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        categories,
+        count: categories.length
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    logError('Error fetching categories', error as Error);
+
+    return res.status(500).json({
+      success: false,
+      error: 'Fehler beim Laden der Kategorien.',
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+export default router;

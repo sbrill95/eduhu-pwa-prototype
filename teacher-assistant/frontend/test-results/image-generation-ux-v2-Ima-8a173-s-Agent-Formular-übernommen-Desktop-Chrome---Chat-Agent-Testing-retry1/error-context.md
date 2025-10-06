@@ -1,0 +1,55 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e11]:
+            - paragraph [ref=e14]: Erstelle ein Bild vom Satz des Pythagoras für Klasse 8a
+            - generic [ref=e15]: vor 21 Stunden
+          - generic [ref=e18]:
+            - paragraph [ref=e19]: Ich kann gerne ein Bild vom Satz des Pythagoras für deine Klasse 8a erstellen. Welche speziellen Details möchtest du im Bild haben? Soll es ein Diagramm mit einem rechtwinkligen Dreieck sein, das die Beziehung zwischen den Katheten und der Hypotenuse zeigt, oder benötigst du zusätzliche Erklärungen oder Beispiele? Bitte teile mir deine Wünsche mit!
+            - generic [ref=e20]:
+              - generic [ref=e21]:
+                - img [ref=e23]:
+                  - img [ref=e25]
+                - generic [ref=e27]:
+                  - heading "Bildgenerierung" [level=4] [ref=e28]
+                  - paragraph [ref=e29]: Du hast nach einem Bild gefragt. Ich kann dir helfen, eines zu erstellen!
+              - generic [ref=e30]:
+                - button "Bild-Generierung starten" [ref=e31]: Bild-Generierung starten ✨
+                - button "Weiter im Chat" [ref=e32]: Weiter im Chat 💬
+        - generic [ref=e33]:
+          - generic [ref=e35]:
+            - button "Datei anhängen" [ref=e36] [cursor=pointer]:
+              - img [ref=e37] [cursor=pointer]:
+                - img [ref=e39] [cursor=pointer]
+            - textbox [ref=e45]
+            - button [disabled] [ref=e46]:
+              - img [ref=e47]:
+                - img [ref=e49]
+          - paragraph [ref=e53]: 0/400
+        - button "Neuer Chat" [ref=e54]:
+          - img [ref=e55]:
+            - img [ref=e57]
+    - button [ref=e59] [cursor=pointer]:
+      - img [ref=e60] [cursor=pointer]:
+        - img [ref=e62] [cursor=pointer]
+    - generic [ref=e65]:
+      - button "Home" [ref=e66] [cursor=pointer]:
+        - img [ref=e67] [cursor=pointer]:
+          - img [ref=e69] [cursor=pointer]
+        - generic [ref=e72] [cursor=pointer]: Home
+      - button "Chat" [active] [ref=e73] [cursor=pointer]:
+        - img [ref=e74] [cursor=pointer]:
+          - img [ref=e76] [cursor=pointer]
+        - generic [ref=e78] [cursor=pointer]: Chat
+      - button "Bibliothek" [ref=e79] [cursor=pointer]:
+        - img [ref=e80] [cursor=pointer]:
+          - img [ref=e82] [cursor=pointer]
+        - generic [ref=e84] [cursor=pointer]: Bibliothek
+  - button [ref=e85] [cursor=pointer]:
+    - img [ref=e86] [cursor=pointer]
+```

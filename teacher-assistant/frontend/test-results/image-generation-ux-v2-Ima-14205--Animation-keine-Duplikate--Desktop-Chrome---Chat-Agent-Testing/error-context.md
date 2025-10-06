@@ -1,0 +1,65 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - img [ref=e9]:
+            - img [ref=e11]
+          - heading "Wollen wir loslegen, s.brill?" [level=2] [ref=e13]
+          - paragraph [ref=e15]: Fragen Sie mich alles über Unterrichtsmaterialien, Stundenplanungen oder pädagogische Ansätze.
+          - generic [ref=e16]:
+            - button "Erstelle mir einen Stundenplan für Mathematik Klasse 7" [ref=e17]:
+              - generic [ref=e18]:
+                - img [ref=e20]:
+                  - img [ref=e22]
+                - generic [ref=e24]: Erstelle mir einen Stundenplan für Mathematik Klasse 7
+            - button "Schlage mir Aktivitäten für den Deutschunterricht vor" [ref=e25]:
+              - generic [ref=e26]:
+                - img [ref=e28]:
+                  - img [ref=e30]
+                - generic [ref=e33]: Schlage mir Aktivitäten für den Deutschunterricht vor
+            - button "Wie kann ich schwierige Schüler motivieren?" [ref=e34]:
+              - generic [ref=e35]:
+                - img [ref=e37]:
+                  - img [ref=e39]
+                - generic [ref=e42]: Wie kann ich schwierige Schüler motivieren?
+            - button "Erstelle ein Bild von einem Löwen für den Biologie-Unterricht" [ref=e43]:
+              - generic [ref=e44]:
+                - img [ref=e46]:
+                  - img [ref=e48]
+                - generic [ref=e50]: Erstelle ein Bild von einem Löwen für den Biologie-Unterricht
+        - generic [ref=e51]:
+          - generic [ref=e53]:
+            - button "Datei anhängen" [ref=e54] [cursor=pointer]:
+              - img [ref=e55] [cursor=pointer]:
+                - img [ref=e57] [cursor=pointer]
+            - textbox [ref=e63]
+            - button [disabled] [ref=e64]:
+              - img [ref=e65]:
+                - img [ref=e67]
+          - paragraph [ref=e71]: 0/400
+        - button "Neuer Chat" [ref=e72]:
+          - img [ref=e73]:
+            - img [ref=e75]
+    - button [ref=e77] [cursor=pointer]:
+      - img [ref=e78] [cursor=pointer]:
+        - img [ref=e80] [cursor=pointer]
+    - generic [ref=e83]:
+      - button "Home" [ref=e84] [cursor=pointer]:
+        - img [ref=e85] [cursor=pointer]:
+          - img [ref=e87] [cursor=pointer]
+        - generic [ref=e90] [cursor=pointer]: Home
+      - button "Chat" [active] [ref=e91] [cursor=pointer]:
+        - img [ref=e92] [cursor=pointer]:
+          - img [ref=e94] [cursor=pointer]
+        - generic [ref=e96] [cursor=pointer]: Chat
+      - button "Bibliothek" [ref=e97] [cursor=pointer]:
+        - img [ref=e98] [cursor=pointer]:
+          - img [ref=e100] [cursor=pointer]
+        - generic [ref=e102] [cursor=pointer]: Bibliothek
+  - button [ref=e103] [cursor=pointer]:
+    - img [ref=e104] [cursor=pointer]
+```

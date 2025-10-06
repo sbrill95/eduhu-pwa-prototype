@@ -1,0 +1,9 @@
+Test-Dokument: Lösung_für_Aufgabe.txt
+
+Deutsche Umlaute im Dateinamen:
+- ä (a-Umlaut)
+- ö (o-Umlaut)
+- ü (u-Umlaut)
+- ß (Eszett)
+
+Dieser Test prüft die korrekte Übertragung und Speicherung von deutschen Sonderzeichen in Dateinamen.

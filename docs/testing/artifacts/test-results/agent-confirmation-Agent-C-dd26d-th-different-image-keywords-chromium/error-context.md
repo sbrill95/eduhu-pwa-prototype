@@ -1,0 +1,70 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "eduhu" [ref=e8]
+          - generic [ref=e9]: Einrichtung
+        - button "Überspringen" [ref=e11] [cursor=pointer]:
+          - generic [ref=e12] [cursor=pointer]:
+            - generic:
+              - img:
+                - generic:
+                  - img
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e16]: Schritt 1 von 4
+          - generic [ref=e18]: 25% abgeschlossen
+        - progressbar [ref=e19]
+        - generic [ref=e25]:
+          - generic [ref=e27] [cursor=pointer]:
+            - generic: "1"
+          - generic [ref=e29] [cursor=pointer]:
+            - generic: "2"
+          - generic [ref=e31] [cursor=pointer]:
+            - generic: "3"
+          - generic [ref=e33] [cursor=pointer]:
+            - generic: "4"
+    - generic [ref=e38]:
+      - img [ref=e40]:
+        - img [ref=e42]
+      - heading "Willkommen bei eduhu.app!" [level=1] [ref=e45]
+      - paragraph [ref=e46]: Ihr persönlicher KI-Assistent für den Lehralltag. Lassen Sie uns Ihre Erfahrung personalisieren.
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - img [ref=e50]:
+            - img [ref=e52]
+          - generic [ref=e54]: Personalisierte Unterstützung
+        - generic [ref=e55]:
+          - img [ref=e57]:
+            - img [ref=e59]
+          - generic [ref=e61]: Passende Materialien
+        - generic [ref=e62]:
+          - img [ref=e64]:
+            - img [ref=e66]
+          - generic [ref=e68]: KI-gestützte Planung
+    - generic [ref=e71]:
+      - generic:
+        - button "Zurück" [disabled]:
+          - generic:
+            - generic:
+              - img:
+                - generic:
+                  - img
+            - generic: Zurück
+      - button "Überspringen" [ref=e73] [cursor=pointer]:
+        - generic [ref=e74] [cursor=pointer]:
+          - generic: Überspringen
+      - button "Weiter" [ref=e76] [cursor=pointer]:
+        - generic [ref=e77] [cursor=pointer]:
+          - generic: Weiter
+          - generic:
+            - img:
+              - generic:
+                - img
+  - button [ref=e78] [cursor=pointer]:
+    - img [ref=e79] [cursor=pointer]
+```

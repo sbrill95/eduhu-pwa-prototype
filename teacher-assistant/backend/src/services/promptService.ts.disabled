@@ -1,0 +1,362 @@
+/**
+ * Prompt Service
+ *
+ * Service for generating personalized prompt suggestions for teachers.
+ * Part of the Home Screen Redesign feature.
+ *
+ * This service:
+ * - Fetches user profile data from InstantDB
+ * - Applies weighted random template selection
+ * - Fills template placeholders with personalized data
+ * - Returns suggestions for the home screen
+ */
+
+import { PROMPT_TEMPLATES } from '../data/promptTemplates';
+import {
+  GeneratePromptsRequest,
+  PromptSuggestion,
+  PromptTemplate
+} from '../types';
+import { TeacherProfileService, ManualContextService, isInstantDBAvailable } from './instantdbService';
+import { logError, logInfo } from '../config/logger';
+
+export class PromptService {
+  /**
+   * Generate personalized prompt suggestions for a user
+   */
+  async generateSuggestions(req: GeneratePromptsRequest): Promise<PromptSuggestion[]> {
+    const { userId, limit = 6, excludeIds = [], seed } = req;
+
+    try {
+      // 1. Fetch user profile (always returns data, never null)
+      const profile = await this.getUserProfile(userId);
+
+      // 2. Fetch manual context (optional enhancement)
+      const contextItems = await this.getManualContext(userId);
+
+      // 3. Filter templates based on profile
+      const eligibleTemplates = PROMPT_TEMPLATES.filter(template => {
+        // Exclude recently used templates
+        if (excludeIds.includes(template.id)) {
+          return false;
+        }
+
+        // Check if user has required context
+        return template.requiresContext.every(key => {
+          if (key === 'fach') return profile.subjects && profile.subjects.length > 0;
+          if (key === 'klassenstufe') return profile.grades && profile.grades.length > 0;
+          if (key === 'schultyp') return !!profile.school_type;
+          return true;
+        });
+      });
+
+      if (eligibleTemplates.length === 0) {
+        // Return generic templates if no eligible templates found
+        logInfo('No eligible templates found for user, using fallback', { userId });
+        return this.getFallbackSuggestions(limit);
+      }
+
+      // 4. Weighted random selection with seed
+      const currentDate: string = new Date().toISOString().split('T')[0] as string;
+      const dateSeed: string = seed !== undefined ? seed : currentDate;
+      const selectedTemplates = this.selectTemplates(eligibleTemplates, limit, dateSeed);
+
+      // 5. Fill templates with user data
+      const suggestions: PromptSuggestion[] = selectedTemplates.map(template =>
+        this.fillTemplate(template, profile, contextItems)
+      );
+
+      logInfo('Generated prompt suggestions', {
+        userId,
+        count: suggestions.length,
+        seed: dateSeed
+      });
+
+      return suggestions;
+    } catch (error) {
+      logError('Failed to generate prompt suggestions', error as Error, { userId });
+      throw error;
+    }
+  }
+
+  /**
+   * Fetch user profile from InstantDB with timeout protection
+   */
+  private async getUserProfile(userId: string, retries = 2): Promise<any> {
+    if (!isInstantDBAvailable()) {
+      // Return mock profile for development
+      logInfo('InstantDB not available, using mock profile', { userId });
+      return this.getFallbackProfile();
+    }
+
+    // Retry loop for resilience
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        // Add timeout wrapper (5 seconds)
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('User profile query timeout')), 5000);
+        });
+
+        const profilePromise = TeacherProfileService.getTeacherProfile(userId);
+        const profile = await Promise.race([profilePromise, timeoutPromise]) as any;
+
+        if (profile) {
+          return {
+            subjects: profile.subjects,
+            grades: profile.grades,
+            school_type: profile.school_type,
+            teaching_methods: profile.teaching_methods,
+            topics: profile.topics,
+            challenges: profile.challenges
+          };
+        }
+
+        // Profile is null but no error - log and return fallback
+        logInfo(`No profile found for user ${userId} (attempt ${attempt + 1}), using fallback data`, { userId });
+        return this.getFallbackProfile();
+
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        logError(`Profile fetch attempt ${attempt + 1}/${retries + 1} failed`, error as Error, { userId });
+
+        if (attempt === retries) {
+          // All retries exhausted
+          logInfo('All retries exhausted, using fallback profile', { userId });
+          return this.getFallbackProfile();
+        }
+
+        // Wait before retry (exponential backoff: 1s, 2s, 4s...)
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      }
+    }
+
+    // Fallback (should never reach here, but TypeScript needs it)
+    return this.getFallbackProfile();
+  }
+
+  /**
+   * Get fallback profile when user profile is unavailable
+   */
+  private getFallbackProfile() {
+    return {
+      subjects: ['Mathematik'],
+      grades: ['7'],
+      school_type: 'Gymnasium',
+      teaching_methods: ['Gruppenarbeit'],
+      topics: ['Bruchrechnung'],
+      challenges: []
+    };
+  }
+
+  /**
+   * Fetch manual context items (optional)
+   */
+  private async getManualContext(userId: string): Promise<any[]> {
+    if (!isInstantDBAvailable()) {
+      return [];
+    }
+
+    try {
+      const contextItems = await ManualContextService.getActiveManualContext(userId);
+      return contextItems || [];
+    } catch (error) {
+      logError('Failed to fetch manual context', error as Error, { userId });
+      return [];
+    }
+  }
+
+  /**
+   * Weighted random template selection with seeded shuffle
+   */
+  private selectTemplates(
+    templates: PromptTemplate[],
+    limit: number,
+    seed: string
+  ): PromptTemplate[] {
+    // Seeded shuffle for reproducibility (same seed = same order)
+    const shuffled = this.seededShuffle([...templates], seed);
+
+    // Sort by weight (descending) to prioritize higher weight templates
+    const sortedByWeight = shuffled.sort((a, b) => b.weight - a.weight);
+
+    // Select top N templates
+    const selected = sortedByWeight.slice(0, Math.min(limit, shuffled.length));
+
+    return selected;
+  }
+
+  /**
+   * Fill template placeholders with user data
+   */
+  private fillTemplate(
+    template: PromptTemplate,
+    profile: any,
+    contextItems: any[]
+  ): PromptSuggestion {
+    let filledPrompt = template.promptTemplate;
+    let filledTitle = template.title;
+    let filledDescription = template.description;
+
+    // Select primary subject and grade from profile
+    const primarySubject: string = profile.subjects?.[0] || 'Mathematik';
+    const primaryGrade: string = profile.grades?.[0] || '7';
+    const schoolType: string = profile.school_type || 'Gymnasium';
+
+    // Get a random topic for the subject
+    const topic: string = this.getRandomTopic(primarySubject, profile.topics);
+
+    // Define replacements
+    const replacements: Record<string, string> = {
+      '{{fach}}': primarySubject,
+      '{{klassenstufe}}': primaryGrade,
+      '{{schultyp}}': schoolType,
+      '{{topic}}': topic
+    };
+
+    // Replace all placeholders
+    for (const [placeholder, value] of Object.entries(replacements)) {
+      const regex = new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g');
+      filledPrompt = filledPrompt.replace(regex, value);
+      filledTitle = filledTitle.replace(regex, value);
+      filledDescription = filledDescription.replace(regex, value);
+    }
+
+    // Generate unique ID
+    const uniqueId = `${template.id}-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+
+    return {
+      id: uniqueId,
+      title: filledTitle,
+      description: filledDescription,
+      prompt: filledPrompt,
+      category: template.category,
+      icon: template.icon,
+      color: template.color,
+      estimatedTime: template.estimatedTime,
+      metadata: {
+        templateId: template.id,
+        personalized: true
+      }
+    };
+  }
+
+  /**
+   * Get a random topic based on subject (fallback)
+   */
+  private getRandomTopic(subject: string = 'Mathematik', userTopics?: string[]): string {
+    // Use user topics if available
+    if (userTopics && userTopics.length > 0) {
+      const randomIndex = Math.floor(Math.random() * userTopics.length);
+      const topic = userTopics[randomIndex];
+      return topic ?? 'Allgemeine Themen';
+    }
+
+    // Default topics by subject
+    const topicsBySubject: Record<string, string[]> = {
+      'Mathematik': ['Bruchrechnung', 'Geometrie', 'Algebra', 'Prozentrechnung', 'Gleichungen'],
+      'Deutsch': ['Grammatik', 'Aufsatz schreiben', 'Literaturanalyse', 'Rechtschreibung', 'Textverständnis'],
+      'Englisch': ['Present Perfect', 'Vokabeln', 'Textverständnis', 'Grammatik', 'Sprechen'],
+      'Biologie': ['Zellbiologie', 'Ökosysteme', 'Genetik', 'Evolution', 'Fotosynthese'],
+      'Physik': ['Mechanik', 'Elektrizität', 'Optik', 'Energie', 'Magnetismus'],
+      'Chemie': ['Atombau', 'Chemische Reaktionen', 'Periodensystem', 'Säuren und Basen'],
+      'Geschichte': ['Mittelalter', 'Industrialisierung', 'Weimarer Republik', 'Kalter Krieg'],
+      'Geographie': ['Klimazonen', 'Plattentektonik', 'Bevölkerung', 'Globalisierung'],
+      'Kunst': ['Farbenlehre', 'Perspektive', 'Kunstgeschichte', 'Bildkomposition'],
+      'Musik': ['Notenlesen', 'Rhythmus', 'Musikgeschichte', 'Instrumente'],
+      'Sport': ['Ausdauer', 'Koordination', 'Teamwork', 'Sportarten'],
+    };
+
+    const subjectTopics = topicsBySubject[subject] || topicsBySubject['Mathematik'] || [];
+    if (subjectTopics.length === 0) {
+      return 'Allgemeine Themen';
+    }
+    const randomIndex = Math.floor(Math.random() * subjectTopics.length);
+    const topic = subjectTopics[randomIndex];
+    return topic || 'Allgemeine Themen';
+  }
+
+  /**
+   * Seeded shuffle for reproducibility
+   * Same seed will always produce the same order
+   */
+  private seededShuffle<T>(array: T[], seed: string): T[] {
+    const arr = [...array];
+    let currentIndex = arr.length;
+    let randomIndex: number;
+
+    // Simple hash function for seed
+    const hashCode = (str: string): number => {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0; // Convert to 32-bit integer
+      }
+      return Math.abs(hash);
+    };
+
+    let seedValue = hashCode(seed);
+
+    // Seeded random generator (Linear Congruential Generator)
+    const seededRandom = (): number => {
+      seedValue = (seedValue * 9301 + 49297) % 233280;
+      return seedValue / 233280;
+    };
+
+    // Fisher-Yates shuffle with seeded random
+    while (currentIndex > 0) {
+      randomIndex = Math.floor(seededRandom() * currentIndex);
+      currentIndex--;
+      // Swap elements (with explicit non-null assertions for strict typing)
+      const temp = arr[currentIndex]!;
+      arr[currentIndex] = arr[randomIndex]!;
+      arr[randomIndex] = temp;
+    }
+
+    return arr;
+  }
+
+  /**
+   * Get fallback suggestions when no profile data is available
+   */
+  private getFallbackSuggestions(limit: number): PromptSuggestion[] {
+    const fallbackTemplates = PROMPT_TEMPLATES
+      .filter(t => t.requiresContext.length === 0)
+      .slice(0, limit);
+
+    if (fallbackTemplates.length === 0) {
+      // Use generic templates with placeholder data
+      return PROMPT_TEMPLATES.slice(0, limit).map(template => ({
+        id: `${template.id}-fallback-${Date.now()}`,
+        title: template.title.replace(/{{.*?}}/g, '...'),
+        description: template.description.replace(/{{.*?}}/g, '...'),
+        prompt: template.promptTemplate.replace(/{{.*?}}/g, '...'),
+        category: template.category,
+        icon: template.icon,
+        color: template.color,
+        estimatedTime: template.estimatedTime,
+        metadata: {
+          templateId: template.id,
+          personalized: false
+        }
+      }));
+    }
+
+    return fallbackTemplates.map(template => ({
+      id: `${template.id}-${Date.now()}`,
+      title: template.title,
+      description: template.description,
+      prompt: template.promptTemplate,
+      category: template.category,
+      icon: template.icon,
+      color: template.color,
+      estimatedTime: template.estimatedTime,
+      metadata: {
+        templateId: template.id,
+        personalized: false
+      }
+    }));
+  }
+}
+
+// Export singleton instance
+export const promptService = new PromptService();

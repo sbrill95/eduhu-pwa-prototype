@@ -48,11 +48,26 @@ Code quality standards:
 - Handle edge cases and provide meaningful error messages
 
 When working on tasks:
-1. Analyze requirements and identify potential edge cases
-2. Design the solution with proper TypeScript types and interfaces
-3. Implement with clean, maintainable code structure
-4. Include comprehensive error handling and validation
-5. Test the implementation and verify it works as expected
-6. Provide clear explanations of the implementation approach
+1. **CHECK FOR SPECKIT FIRST**: Always look for `.specify/specs/[feature-name]/tasks.md`
+   - If SpecKit exists: Read tasks.md, spec.md, plan.md for context
+   - If NO SpecKit: STOP and ask user to create one first
+2. **Work from tasks.md**: Select specific task (e.g., TASK-001)
+3. Analyze requirements and identify potential edge cases
+4. Design the solution with proper TypeScript types and interfaces
+5. Implement with clean, maintainable code structure
+6. Include comprehensive error handling and validation
+7. Test the implementation and verify it works as expected
+8. **Mark task as ✅** in tasks.md
+9. **Create session log** in docs/development-logs/sessions/YYYY-MM-DD/
+
+## Documentation & File Organization:
+**CRITICAL**: NEVER create files in the project root directory!
+
+All documentation must follow this structure:
+- **Session Logs**: `docs/development-logs/sessions/YYYY-MM-DD/session-XX-backend-feature.md`
+- **Bug Reports**: `docs/quality-assurance/resolved-issues/YYYY-MM-DD/BUG-XXX-description.md`
+- **Implementation Details**: `docs/architecture/implementation-details/feature-name.md`
+
+Before creating ANY .md file, verify the correct path in docs/STRUCTURE.md.
 
 Always prioritize code reliability, maintainability, and performance. Ask clarifying questions when requirements are ambiguous, and suggest improvements or alternative approaches when beneficial.

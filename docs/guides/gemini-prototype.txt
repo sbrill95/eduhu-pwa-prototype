@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eduhu App Demo - Dashboard Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #D3E4E6;
+        }
+        .iphone-mockup {
+            width: 375px;
+            height: 812px;
+            background-color: #f9f9f9;
+            border: 14px solid #111;
+            border-radius: 68px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .screen-content {
+            background-color: white;
+            width: 100%;
+            height: 100%;
+            border-radius: 54px;
+            display: flex;
+            flex-direction: column;
+        }
+        .tab-bar {
+            border-top: 1px solid #e5e7eb;
+        }
+        .tab-button.active svg,
+        .tab-button.active span {
+            color: #FB6542;
+        }
+        .chat-bubble-bot {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .chat-bubble-user {
+            background-color: #FB6542;
+            color: white;
+        }
+        .scrollable-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background-color: #d1d5db;
+            border-radius: 20px;
+        }
+        
+        .profile-header {
+            position: relative;
+            background-color: #d3e4e6; /* Turquoise background */
+            overflow: hidden;
+        }
+        #profile-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+       
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 2.5px solid rgba(255,255,255,0.6);
+            border-bottom-color: #fff;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .tag-ai::before {
+            content: '✨';
+            margin-right: 4px;
+            font-size: 10px;
+        }
+        /* Toggle Switch */
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 40px;
+          height: 24px;
+        }
+        .switch input { 
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          transition: .4s;
+          border-radius: 34px;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 16px;
+          width: 16px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+        }
+        input:checked + .slider {
+          background-color: #FB6542;
+        }
+        input:checked + .slider:before {
+          transform: translateX(16px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center py-8">
+
+    <div class="iphone-mockup">
+        <div class="screen-content">
+            <!-- Main Content Area: Views will be toggled here -->
+            <main class="flex-grow flex flex-col overflow-hidden">
+
+                <!-- View 1: Dashboard / Home View -->
+                <div id="dashboard-view" class="flex flex-col h-full">
+                    <div class="flex-shrink-0">
+                        <header class="p-4 pt-6 flex justify-between items-start">
+                            <div>
+                                <h1 class="text-3xl font-bold" style="color: #FB6542;">Hallo Michelle!</h1>
+                                <p class="text-gray-500 mt-1">Dein KI-Assistent ist bereit.</p>
+                            </div>
+                            <button data-target="profile-view" class="tab-button w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: #FB6542;">
+                                <div class="flex gap-0.5">
+                                   <div class="w-1 h-1 bg-white rounded-full"></div>
+                                   <div class="w-1 h-1 bg-white rounded-full"></div>
+                                </div>
+                            </button>
+                        </header>
+                        <div class="px-4 mt-2 mb-2">
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">Donnerstag</p>
+                                        <p class="text-2xl font-bold text-gray-800">09. Okt</p>
+                                    </div>
+                                    <svg class="w-6 h-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M-4.5 12h22.5" /></svg>
+                                </div>
+                                 <div class="mt-4 space-y-2 border-t border-gray-200 pt-3">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-12 text-xs font-semibold text-gray-600">08:30</span>
+                                        <div class="w-1 h-1 rounded-full bg-gray-400"></div>
+                                        <span class="text-sm text-gray-800">Klasse 8a, Mathematik</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-12 text-xs font-semibold text-gray-600">10:15</span>
+                                        <div class="w-1 h-1 rounded-full bg-gray-400"></div>
+                                        <span class="text-sm text-gray-800">Klasse 10c, Englisch</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="chat-history" class="flex-grow p-4 pt-2 space-y-4 overflow-y-auto scrollable-content">
+                        <!-- Chat messages dynamically added here -->
+                    </div>
+                    <form id="chat-form" class="p-4 pt-2 border-t border-gray-200 flex items-center gap-2 flex-shrink-0">
+                        <input id="chat-input" type="text" placeholder="Deine Nachricht..." class="flex-grow w-full px-4 py-3 text-base bg-gray-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FB6542]" autocomplete="off">
+                        <button type="submit" style="background-color: #FB6542;" class="text-white rounded-xl p-3 flex items-center justify-center h-12 w-12 hover:opacity-90 transition-opacity">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- View 2: Generate -->
+                <div id="generate-view" class="hidden h-full flex-col">
+                    <div class="p-6 pb-2 flex-shrink-0">
+                        <h1 class="text-3xl font-bold" style="color: #FB6542;">Generieren</h1>
+                        <p class="text-gray-500 mt-1">Maßgeschneidertes Arbeitsmaterial in Minuten.</p>
+                    </div>
+                    <div class="flex flex-col flex-grow overflow-y-auto px-6 py-4 scrollable-content">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Thema</label>
+                                <input id="generate-topic-input" type="text" value="Satz des Pythagoras" class="w-full text-base bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none mt-1 focus:ring-2 focus:ring-[#FB6542]">
+                            </div>
+                             <div>
+                                <label class="text-sm font-medium text-gray-500">Lerngruppe</label>
+                                <select id="generate-class-select" class="w-full text-base bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none mt-1 focus:ring-2 focus:ring-[#FB6542] appearance-none" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: .65em auto;">
+                                    <option>Klasse 8a</option>
+                                    <option>Klasse 10c</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Differenzierung</label>
+                                <div class="mt-2 space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-700">DaZ-Unterstützung</span>
+                                        <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-700">Lernschwierigkeiten</span>
+                                        <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="generate-result-content" class="hidden h-full flex flex-col"></div>
+                    <div class="p-6 pt-2 flex-shrink-0">
+                        <button id="generate-btn" style="background-color: #FB6542;" class="w-full text-white text-base font-bold py-4 rounded-xl flex items-center justify-center gap-2">
+                            Idee entfalten ✨
+                        </button>
+                    </div>
+                </div>
+
+                <!-- View 3: Automate -->
+                <div id="proactive-view" class="hidden h-full flex-col p-6">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-3xl font-bold" style="color: #FB6542;">Automatisieren</h1>
+                        <p class="text-gray-500 mt-1 mb-4">Dein Assistent für wiederkehrende Aufgaben.</p>
+                    </div>
+                     <div class="space-y-3 flex-grow overflow-y-auto scrollable-content">
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                            <h3 class="font-bold text-gray-800">Wochen-Update für Eltern</h3>
+                            <p class="text-sm text-gray-500 mt-1">Fasse die Lerninhalte der Woche zusammen und erstelle eine E-Mail-Vorlage.</p>
+                        </div>
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                            <h3 class="font-bold text-gray-800">Vokabelliste aus Lektion</h3>
+                            <p class="text-sm text-gray-500 mt-1">Extrahiere die wichtigsten Vokabeln aus deiner Englisch-Stunde.</p>
+                        </div>
+                         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                            <h3 class="font-bold text-gray-800">Feedback zusammenfassen</h3>
+                            <p class="text-sm text-gray-500 mt-1">Analysiere die Reflexionen der letzten 3 Stunden und erkenne Muster.</p>
+                        </div>
+                    </div>
+                    <div class="pt-4 flex-shrink-0">
+                        <button id="automate-all-btn" class="w-full text-white text-base font-bold py-4 rounded-xl flex items-center justify-center gap-2" style="background-color: #FB6542;">
+                            Alle Automatisierungen starten ✨
+                        </button>
+                    </div>
+                    <div id="workflow-result-content" class="hidden h-full flex flex-col"></div>
+                </div>
+
+                <!-- View 4: Profile -->
+                <div id="profile-view" class="hidden flex-col h-full">
+                    <div class="p-6 pb-2 flex-shrink-0">
+                         <h1 class="text-3xl font-bold" style="color: #FB6542;">Dein Profil</h1>
+                        <p class="text-gray-500 mt-1">Passe an, wie eduhu dich unterstützt.</p>
+                    </div>
+                    <div class="flex-grow flex flex-col overflow-hidden">
+                        <div class="profile-header h-64 w-full flex flex-col items-center justify-center text-center p-6 relative flex-shrink-0">
+                             <canvas id="profile-canvas"></canvas>
+                             <div class="z-10">
+                                <p class="text-gray-700 text-sm font-medium">DEIN PROFIL-SYNC</p>
+                                <p id="profile-score" class="text-gray-800 text-7xl font-bold">60%</p>
+                                <p id="profile-status" class="text-gray-600">eduhu kennt dich gut</p>
+                            </div>
+                        </div>
+                        <div class="p-6 flex-grow overflow-y-auto scrollable-content">
+                             <p class="text-center text-gray-500 text-sm -mt-2">Je mehr du mit eduhu interagierst, desto besser werden die Vorschläge.</p>
+                            <div class="w-full mt-6">
+                                <h2 class="font-bold text-gray-700">Gelernte Merkmale</h2>
+                                <div id="learned-tags" class="flex flex-wrap gap-2 mt-2">
+                                    <!-- Tags will be injected by JS -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="add-skill-container" class="p-6 pt-2 flex-shrink-0">
+                            <form id="add-skill-form" class="hidden w-full flex gap-2">
+                                <input id="new-skill-input" type="text" placeholder="Neues Merkmal..." class="flex-grow w-full px-4 py-3 text-base bg-gray-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FB6542]">
+                                <button type="submit" style="background-color: #FB6542;" class="text-white rounded-xl p-3 flex items-center justify-center h-12 w-12 flex-shrink-0 hover:opacity-90 transition-opacity">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+                                </button>
+                            </form>
+                             <button id="add-skill-btn" class="w-full text-white text-base font-bold py-4 rounded-xl" style="background-color: #FB6542;">
+                                Merkmal hinzufügen +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <footer class="mt-auto tab-bar h-20 flex justify-around items-center">
+                 <button data-target="dashboard-view" class="tab-button active flex flex-col items-center gap-1 text-gray-400 text-center w-1/4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                    <span class="text-xs font-medium">Home</span>
+                </button>
+                <button data-target="generate-view" class="tab-button flex flex-col items-center gap-1 text-gray-400 text-center w-1/4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                    <span class="text-xs font-medium">Generieren</span>
+                </button>
+                 <button data-target="proactive-view" class="tab-button flex flex-col items-center gap-1 text-gray-400 text-center w-1/4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    <span class="text-xs font-medium">Automatisieren</span>
+                </button>
+                 <button data-target="profile-view" class="tab-button flex flex-col items-center gap-1 text-gray-400 text-center w-1/4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    <span class="text-xs font-medium">Profil</span>
+                </button>
+            </footer>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- State & Elements ---
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const views = document.querySelectorAll('main > div');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatHistory = document.getElementById('chat-history');
+    const profileHeader = document.querySelector('.profile-header');
+    const profileCanvas = document.getElementById('profile-canvas');
+    const profileScoreEl = document.getElementById('profile-score');
+    const profileStatusEl = document.getElementById('profile-status');
+    const learnedTagsEl = document.getElementById('learned-tags');
+    const addSkillBtn = document.getElementById('add-skill-btn');
+    const addSkillForm = document.getElementById('add-skill-form');
+    const newSkillInput = document.getElementById('new-skill-input');
+    const generateBtn = document.getElementById('generate-btn');
+    const generateInitialContent = document.getElementById('generate-initial-content');
+    const generateResultContent = document.getElementById('generate-result-content');
+    const automateAllBtn = document.getElementById('automate-all-btn');
+    const generateTopicInput = document.getElementById('generate-topic-input');
+    const generateClassSelect = document.getElementById('generate-class-select');
+
+    let syncScore = 60;
+    let learnedData = [
+        { id: 1, text: 'Mathematik', value: 15, type: 'ai' },
+        { id: 2, text: 'Englisch', value: 15, type: 'ai' },
+        { id: 3, text: 'Bevorzugt SOL', value: 15, type: 'ai' },
+        { id: 4, text: 'Nutzt Gruppenarbeit', value: 15, type: 'ai' },
+    ];
+    let animationFrameId;
+
+    // --- Navigation Logic ---
+    const switchView = (targetId) => {
+        tabButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.target === targetId);
+        });
+        views.forEach(view => {
+            view.style.display = view.id === targetId ? 'flex' : 'none';
+        });
+
+        if (targetId === 'profile-view') {
+            startProfileAnimation();
+        } else {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        }
+    }
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (button.dataset.target) {
+                switchView(button.dataset.target);
+            }
+        });
+    });
+    
+    // --- Profile Canvas Animation ---
+    const ctx = profileCanvas.getContext('2d');
+    let particles = [];
+    const fixedHue = 12;
+
+    function setupCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        profileCanvas.width = profileHeader.clientWidth * dpr;
+        profileCanvas.height = profileHeader.clientHeight * dpr;
+        ctx.scale(dpr, dpr);
+    }
+    
+    class Particle {
+        constructor(x, y, radius, color, velocity) {
+            this.x = x; this.y = y; this.radius = radius; this.color = color;
+            this.velocity = velocity; this.opacity = 0; this.isFadingOut = false;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = `hsla(${this.color.h}, ${this.color.s}%, ${this.color.l}%, ${this.opacity})`;
+            ctx.fill();
+            ctx.closePath();
+        }
+        update() {
+            if(this.isFadingOut) this.opacity -= 0.02;
+            else if (this.opacity < 1) this.opacity += 0.02;
+            this.x += this.velocity.x; this.y += this.velocity.y;
+            this.draw();
+        }
+    }
+    
+    function manageParticles(score) {
+        const targetParticleCount = 10 + Math.floor(score * 1.3);
+        const diff = targetParticleCount - particles.length;
+        const centerX = profileHeader.clientWidth / 2;
+        const centerY = profileHeader.clientHeight / 2;
+
+        if (diff > 0) {
+            for (let i = 0; i < diff; i++) {
+                 const radius = Math.random() * 1.5 + 2.5;
+                 const angle = Math.random() * Math.PI * 2;
+                 const minRingRadius = centerX * 0.7;
+                 const maxRingRadius = centerX * 1.2;
+                 const ringRadius = Math.random() * (maxRingRadius - minRingRadius) + minRingRadius;
+                 const x = centerX + Math.cos(angle) * ringRadius;
+                 const y = centerY + Math.sin(angle) * ringRadius;
+                 const velocity = { x: (Math.random() - 0.5) * 0.1, y: (Math.random() - 0.5) * 0.1 };
+                 particles.push(new Particle(x, y, radius, { h: fixedHue, s: 96, l: 62 }, velocity));
+            }
+        } else if (diff < 0) {
+            for(let i = 0; i < Math.abs(diff); i++) {
+                if (particles.length > 0) {
+                    const indexToRemove = Math.floor(Math.random() * particles.length);
+                    particles[indexToRemove].isFadingOut = true;
+                }
+            }
+        }
+    }
+
+    function connectParticles(score) {
+        const connectionDistance = 50 + score * 0.6;
+        for (let a = 0; a < particles.length; a++) {
+            for (let b = a; b < particles.length; b++) {
+                const dx = particles[a].x - particles[b].x;
+                const dy = particles[a].y - particles[b].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < connectionDistance) {
+                    const opacity = (1 - (distance / connectionDistance)) * particles[a].opacity * particles[b].opacity;
+                    ctx.strokeStyle = `hsla(${fixedHue}, 96%, 62%, ${opacity * 0.5})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[a].x, particles[a].y);
+                    ctx.lineTo(particles[b].x, particles[b].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function animateCanvas() {
+        ctx.clearRect(0, 0, profileCanvas.width, profileCanvas.height);
+        manageParticles(syncScore);
+        particles.forEach(p => p.update());
+        particles = particles.filter(p => p.opacity > 0);
+        if (particles.length > 1) connectParticles(syncScore);
+        animationFrameId = requestAnimationFrame(animateCanvas);
+    }
+    
+    function updateScoreDisplay() {
+        profileScoreEl.textContent = `${Math.round(syncScore)}%`;
+        if (syncScore > 85) profileStatusEl.textContent = "Perfekt synchronisiert";
+        else if (syncScore > 60) profileStatusEl.textContent = "eduhu kennt dich gut";
+        else if (syncScore > 30) profileStatusEl.textContent = "Lernt dich kennen";
+        else profileStatusEl.textContent = "Am Anfang der Reise";
+    }
+
+    const startProfileAnimation = () => {
+        updateScoreDisplay();
+        renderTags();
+        if(animationFrameId) cancelAnimationFrame(animationFrameId);
+        setupCanvas();
+        particles = [];
+        animateCanvas();
+    };
+    
+    const renderTags = () => {
+        learnedTagsEl.innerHTML = '';
+        learnedData.forEach(tag => {
+            const isAI = tag.type === 'ai';
+            const tagEl = document.createElement('div');
+            tagEl.className = `text-sm font-medium px-3 py-1.5 rounded-full flex items-center gap-2 ${isAI ? 'tag-ai bg-orange-50 text-orange-700' : 'bg-gray-100 text-gray-700'}`;
+            tagEl.innerHTML = `<span>${tag.text}</span><button data-id="${tag.id}" class="remove-tag-btn w-4 h-4 bg-gray-300 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-500 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>`;
+            learnedTagsEl.appendChild(tagEl);
+        });
+        
+        document.querySelectorAll('.remove-tag-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const tagId = parseInt(e.currentTarget.dataset.id);
+                const tagToRemove = learnedData.find(t => t.id === tagId);
+                if (tagToRemove) {
+                    syncScore -= tagToRemove.value;
+                    if(syncScore < 0) syncScore = 0;
+                    learnedData = learnedData.filter(t => t.id !== tagId);
+                    updateScoreDisplay();
+                    renderTags();
+                }
+            });
+        });
+    };
+    
+    addSkillBtn.addEventListener('click', () => {
+        addSkillBtn.style.display = 'none';
+        addSkillForm.style.display = 'flex';
+        newSkillInput.focus();
+    });
+
+    addSkillForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newSkill = newSkillInput.value.trim();
+        if (newSkill !== "") {
+            const newId = learnedData.length > 0 ? Math.max(...learnedData.map(d => d.id)) + 1 : 1;
+            const newValue = 10;
+            learnedData.push({ id: newId, text: newSkill, value: newValue, type: 'manual' });
+            syncScore += newValue;
+            if (syncScore > 100) syncScore = 100;
+            updateScoreDisplay();
+            renderTags();
+        }
+        newSkillInput.value = '';
+        addSkillForm.style.display = 'none';
+        addSkillBtn.style.display = 'block';
+    });
+
+    // --- Chat Logic ---
+    const addMessage = (sender, content) => {
+        const bubbleSide = sender === 'user' ? 'justify-end' : 'justify-start';
+        const bubbleClass = sender === 'user' ? 'chat-bubble-user rounded-br-none' : 'chat-bubble-bot rounded-bl-none';
+        const messageHTML = `<div class="flex ${bubbleSide}"><div class="${bubbleClass} p-3 rounded-2xl max-w-xs">${content}</div></div>`;
+        chatHistory.innerHTML += messageHTML;
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    };
+
+    const populateGenerateView = (topic, className) => {
+        generateTopicInput.value = topic;
+        
+        let optionExists = false;
+        for (let i = 0; i < generateClassSelect.options.length; i++) {
+            if (generateClassSelect.options[i].value === className) {
+                optionExists = true;
+                break;
+            }
+        }
+        if (!optionExists) {
+            const newOption = new Option(className, className, true, true);
+            generateClassSelect.add(newOption, 0);
+        }
+        generateClassSelect.value = className;
+    };
+    
+    const initializeApp = () => {
+        updateScoreDisplay();
+        renderTags();
+        setTimeout(() => {
+            const proactiveContent = `<p class="font-bold text-sm" style="color: #FB6542;">eduhu</p><p>Hallo Michelle! Ich habe einen Blick auf deinen Tag geworfen und ein paar Ideen vorbereitet. Wollen wir loslegen?</p><div class="space-y-2 mt-2"><button class="start-plan-proactive w-full text-left p-2 rounded-lg bg-white hover:bg-gray-200 font-semibold text-sm text-gray-700" data-class="Klasse 8a" data-topic="Satz des Pythagoras">Planung Mathe starten →</button><button class="start-plan-proactive w-full text-left p-2 rounded-lg bg-white hover:bg-gray-200 font-semibold text-sm text-gray-700" data-class="Klasse 10c" data-topic="Analyzing a Shakespearean Sonnet">Planung Englisch starten →</button></div>`;
+            addMessage('bot', proactiveContent);
+            addProactiveButtonListeners();
+        }, 1000);
+    };
+
+    function addProactiveButtonListeners() {
+        document.querySelectorAll('.start-plan-proactive').forEach(button => {
+            button.replaceWith(button.cloneNode(true));
+        });
+        document.querySelectorAll('.start-plan-proactive').forEach(button => {
+             button.addEventListener('click', () => {
+                const topic = button.dataset.topic;
+                const className = button.dataset.class;
+                populateGenerateView(topic, className);
+                switchView('generate-view');
+            });
+        });
+    }
+
+    chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const userInput = chatInput.value.trim();
+        if (!userInput) return;
+        addMessage('user', userInput);
+        chatInput.value = '';
+        setTimeout(() => {
+             let botResponse = `<p class="font-bold text-sm" style="color: #FB6542;">eduhu</p>`;
+            if (userInput.toLowerCase().includes('kurvendiskussion')) {
+                botResponse += `<p>Super, 'Kurvendiskussion' ist ein wichtiges Thema. Sollen wir dafür eine Planung erstellen?</p><button class="start-plan-proactive mt-2 w-full text-left p-2 rounded-lg bg-white hover:bg-gray-200 font-semibold text-sm text-gray-700" data-class="Oberstufe" data-topic="Kurvendiskussion">Planung starten →</button>`;
+            } else {
+                 botResponse += `<p>Das ist eine gute Idee! Ich kann dir dabei helfen. Womit sollen wir anfangen?</p>`;
+            }
+            addMessage('bot', botResponse);
+            addProactiveButtonListeners();
+        }, 1000);
+    });
+
+    const resetView = (initialContent, resultContent, button, buttonText) => {
+        resultContent.style.display = 'none';
+        resultContent.innerHTML = '';
+        initialContent.style.display = 'flex';
+        if(button) {
+            button.disabled = false;
+            button.innerHTML = buttonText;
+        }
+    };
+
+    generateBtn.addEventListener('click', () => {
+        generateBtn.innerHTML = '<span class="loader"></span>';
+        generateBtn.disabled = true;
+        setTimeout(() => {
+            generateInitialContent.style.display = 'none';
+            generateResultContent.style.display = 'flex';
+            generateResultContent.innerHTML = `<div class="p-4 bg-gray-50 border border-gray-200 rounded-lg flex-grow overflow-y-auto"><h3>Vorschlag: Die Dampfmaschine</h3><p>Ein interaktiver Einstieg, bei dem Schüler:innen ein einfaches Modell einer Dampfmaschine virtuell zusammensetzen.</p></div><button id="reset-generate-btn" class="w-full text-gray-700 font-bold py-4 rounded-xl mt-auto border border-gray-300">Neue Idee erstellen</button>`;
+            document.getElementById('reset-generate-btn').addEventListener('click', () => resetView(generateInitialContent, generateResultContent, generateBtn, 'Idee entfalten ✨'));
+        }, 1500);
+    });
+    
+    automateAllBtn.addEventListener('click', () => {
+        const originalText = automateAllBtn.innerHTML;
+        automateAllBtn.innerHTML = '<span class="loader"></span>';
+        automateAllBtn.disabled = true;
+        setTimeout(() => {
+            alert('Alle Automatisierungen wurden im Hintergrund gestartet!');
+            automateAllBtn.innerHTML = originalText;
+            automateAllBtn.disabled = false;
+        }, 1500);
+    });
+
+    initializeApp();
+});
+</script>
+
+</body>
+</html>
+

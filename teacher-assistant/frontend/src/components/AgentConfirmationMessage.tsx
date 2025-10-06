@@ -170,7 +170,7 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
               lineHeight: '1.4'
             }}
           >
-            Ich kann Ihnen dabei helfen! Möchten Sie den {message.agentName} starten?
+            Ich kann dir dabei helfen! Möchtest du den {message.agentName} starten?
           </p>
 
           <div
@@ -247,7 +247,7 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
     openModal(
       message.agentSuggestion!.agentType,
       message.agentSuggestion!.prefillData,
-      sessionId || null
+      sessionId || undefined
     );
   };
 
@@ -281,7 +281,9 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
           {/* Confirm Button - Start Agent (PRIMARY - LEFT) */}
           <button
             onClick={handleConfirm}
-            className="flex-1 bg-primary-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-primary-600 active:bg-primary-700 transition-colors duration-200 text-sm shadow-sm"
+            className="flex-1 min-h-[48px] font-bold py-3 px-4 rounded-xl hover:opacity-90 active:opacity-80 transition-opacity duration-200 text-base shadow-md"
+            style={{ fontSize: '16px', fontWeight: '700', backgroundColor: '#FB6542', color: '#FFFFFF' }}
+            aria-label="Bild-Generierung starten"
           >
             Bild-Generierung starten ✨
           </button>
@@ -292,7 +294,9 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
               console.log('[AgentConfirmationMessage] User cancelled agent, continuing chat');
               // No action needed - user can just continue typing in chat
             }}
-            className="flex-1 bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-xl hover:bg-gray-200 active:bg-gray-300 transition-colors duration-200 text-sm"
+            className="flex-1 min-h-[48px] bg-gray-100 text-gray-700 font-semibold py-3 px-4 rounded-xl hover:bg-gray-200 active:bg-gray-300 transition-colors duration-200 text-base"
+            style={{ fontSize: '16px', fontWeight: '600' }}
+            aria-label="Weiter im Chat"
           >
             Weiter im Chat 💬
           </button>

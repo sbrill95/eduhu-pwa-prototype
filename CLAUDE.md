@@ -8,13 +8,49 @@ Du arbeitest an einem Personalassistenten für Lehrkräfte. Es ist ein Chat-Inte
 - **Backend**: Node.js + Express + TypeScript + OpenAI
 - **Database**: InstantDB für Auth, Storage und Real-time Features
 
-## Arbeitsweise
-1. **IMMER zuerst** `/docs/todo.md` checken für deine spezifischen Tasks
-2. **Nach jeder Arbeit** `/docs/agent-logs.md` updaten mit:
-   - Was wurde implementiert
-   - Welche Dateien erstellt/geändert
-   - Nächste Schritte oder Blocker
-3. **Bei Problemen** in `/docs/bug-tracking.md` dokumentieren
+## Arbeitsweise - SpecKit VERPFLICHTEND
+
+### Für ALLE Aufgaben (Features, Bugs, Refactoring):
+1. **IMMER zuerst** SpecKit prüfen: `.specify/specs/[feature-name]/`
+   - Wenn SpecKit existiert: `tasks.md` öffnen für konkrete Aufgaben
+   - Wenn KEIN SpecKit: **STOPP** - Frage User ob SpecKit erstellt werden soll
+2. **Tasks aus tasks.md abarbeiten**:
+   - Einen Task nehmen (z.B. TASK-001)
+   - `spec.md` und `plan.md` für Kontext lesen
+   - Task implementieren
+   - Task in `tasks.md` als ✅ markieren
+3. **Nach jeder Arbeit** Session-Log erstellen:
+   - **Ort**: `/docs/development-logs/sessions/YYYY-MM-DD/session-XX-taskname.md`
+   - **Inhalt**: Welcher Task, was implementiert, Dateien geändert, Tests
+4. **Bei Problemen** in `/docs/quality-assurance/bug-tracking.md` dokumentieren
+
+### SpecKit-Struktur (IMMER diese Dateien):
+```
+.specify/specs/[feature-name]/
+├── spec.md     # WAS & WARUM (Requirements, User Stories)
+├── plan.md     # WIE technisch (Architecture, Components)
+└── tasks.md    # Konkrete Aufgaben mit Checkboxen
+```
+
+### Ausnahmen (nur mit User-Freigabe):
+- Kritische Hotfixes (< 15 Minuten Arbeit)
+- Dokumentations-Updates
+- Code-Cleanup ohne Logik-Änderungen
+
+## WICHTIG: Dateiablage-Regeln
+**NIEMALS Dateien im Root-Verzeichnis erstellen** (außer CLAUDE.md existiert bereits)
+
+### Wo dokumentiere ich was?
+- **Bug-Reports**: `docs/quality-assurance/resolved-issues/YYYY-MM-DD/`
+- **QA-Reports**: `docs/quality-assurance/verification-reports/YYYY-MM-DD/`
+- **Session-Logs**: `docs/development-logs/sessions/YYYY-MM-DD/`
+- **Test-Reports**: `docs/testing/test-reports/YYYY-MM-DD/`
+- **Implementation Details**: `docs/architecture/implementation-details/`
+
+### Session-Log Namenskonvention:
+`session-XX-feature-name.md` (z.B. `session-01-image-generation-fix.md`)
+
+**Bei jedem Create/Write von .md Dateien**: Prüfe ZUERST den richtigen Pfad gemäß docs/STRUCTURE.md!
 
 ## Code Standards
 - **TypeScript everywhere** - keine .js files

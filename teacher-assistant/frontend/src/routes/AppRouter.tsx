@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '../lib/auth-context';
 import { ProtectedRoute } from '../components';
-import { Layout } from '../components/Layout';
+// import { Layout } from '../components/Layout'; // DISABLED: Layout component was deleted, this file is unused anyway
 import Home from '../pages/Home';
 import Chat from '../pages/Chat';
 import Library from '../pages/Library';
@@ -26,11 +26,8 @@ const AppRouter: React.FC = () => {
     <AuthProvider>
       <Router>
         <ProtectedRoute>
-          <Layout
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-            onNewChat={handleNewChat}
-          >
+          {/* Layout component disabled - this file is unused */}
+          <div>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/chat" element={<Chat />} />
@@ -38,7 +35,7 @@ const AppRouter: React.FC = () => {
               {/* Redirect unknown routes to home */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </Layout>
+          </div>
         </ProtectedRoute>
       </Router>
     </AuthProvider>

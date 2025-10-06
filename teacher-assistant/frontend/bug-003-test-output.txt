@@ -1,0 +1,246 @@
+
+Running 2 tests using 1 worker
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+🚨 CRITICAL TEST: BUG-003 Page Reload Persistence 🚨
+
+Step 1: Navigate to http://localhost:5174
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+Step 2: Navigate to Chat tab
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+Step 3: Send message: "Erstelle ein Bild zur Photosynthese"
+[info] api: => locator.fill started []
+[info] api: <= locator.fill failed []
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  1 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-003-page-reload-persistence.spec.ts:15:3 › BUG-003: Agent Confirmation Message Reload Persistence › CRITICAL: Agent Confirmation Message persists after F5 reload (25.1s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+🚨 CRITICAL TEST: BUG-003 Page Reload Persistence 🚨
+
+Step 1: Navigate to http://localhost:5174
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+Step 2: Navigate to Chat tab
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+Step 3: Send message: "Erstelle ein Bild zur Photosynthese"
+[info] api: => locator.fill started []
+[info] api: <= locator.fill failed []
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  2 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-003-page-reload-persistence.spec.ts:15:3 › BUG-003: Agent Confirmation Message Reload Persistence › CRITICAL: Agent Confirmation Message persists after F5 reload (retry #1) (24.6s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+🔍 ADDITIONAL TEST: Verify metadata is stored in InstantDB
+
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill failed []
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  3 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-003-page-reload-persistence.spec.ts:110:3 › BUG-003: Agent Confirmation Message Reload Persistence › Additional: Verify metadata is in InstantDB (23.2s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+🔍 ADDITIONAL TEST: Verify metadata is stored in InstantDB
+
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill failed []
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  4 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-003-page-reload-persistence.spec.ts:110:3 › BUG-003: Agent Confirmation Message Reload Persistence › Additional: Verify metadata is in InstantDB (retry #1) (25.0s)
+
+
+  1) [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-003-page-reload-persistence.spec.ts:15:3 › BUG-003: Agent Confirmation Message Reload Persistence › CRITICAL: Agent Confirmation Message persists after F5 reload 
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('textarea[placeholder*="Nachricht"]').first()[22m
+
+
+      33 |     console.log('Step 3: Send message: "Erstelle ein Bild zur Photosynthese"');
+      34 |     const inputField = page.locator('textarea[placeholder*="Nachricht"]').first();
+    > 35 |     await inputField.fill('Erstelle ein Bild zur Photosynthese');
+         |                      ^
+      36 |
+      37 |     const sendButton = page.locator('button[type="submit"]').first();
+      38 |     await sendButton.click();
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-003-page-reload-persistence.spec.ts:35:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('textarea[placeholder*="Nachricht"]').first()[22m
+
+
+      33 |     console.log('Step 3: Send message: "Erstelle ein Bild zur Photosynthese"');
+      34 |     const inputField = page.locator('textarea[placeholder*="Nachricht"]').first();
+    > 35 |     await inputField.fill('Erstelle ein Bild zur Photosynthese');
+         |                      ^
+      36 |
+      37 |     const sendButton = page.locator('button[type="submit"]').first();
+      38 |     await sendButton.click();
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-003-page-reload-persistence.spec.ts:35:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-003-page-reload-persis-41ee5-ge-persists-after-F5-reload-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-003-page-reload-persistence.spec.ts:110:3 › BUG-003: Agent Confirmation Message Reload Persistence › Additional: Verify metadata is in InstantDB 
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('textarea[placeholder*="Nachricht"]').first()[22m
+
+
+      121 |
+      122 |     const inputField = page.locator('textarea[placeholder*="Nachricht"]').first();
+    > 123 |     await inputField.fill('Erstelle ein Arbeitsblatt zur Photosynthese');
+          |                      ^
+      124 |
+      125 |     const sendButton = page.locator('button[type="submit"]').first();
+      126 |     await sendButton.click();
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-003-page-reload-persistence.spec.ts:123:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('textarea[placeholder*="Nachricht"]').first()[22m
+
+
+      121 |
+      122 |     const inputField = page.locator('textarea[placeholder*="Nachricht"]').first();
+    > 123 |     await inputField.fill('Erstelle ein Arbeitsblatt zur Photosynthese');
+          |                      ^
+      124 |
+      125 |     const sendButton = page.locator('button[type="submit"]').first();
+      126 |     await sendButton.click();
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-003-page-reload-persistence.spec.ts:123:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-003-page-reload-persis-25eef-fy-metadata-is-in-InstantDB-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-003-page-reload-persistence.spec.ts:15:3 › BUG-003: Agent Confirmation Message Reload Persistence › CRITICAL: Agent Confirmation Message persists after F5 reload 
+    [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-003-page-reload-persistence.spec.ts:110:3 › BUG-003: Agent Confirmation Message Reload Persistence › Additional: Verify metadata is in InstantDB 

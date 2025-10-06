@@ -38,4 +38,24 @@ When working with InstantDB:
 - Handle offline scenarios and connection states gracefully
 - Structure database queries efficiently to minimize data transfer
 
+## Documentation & File Organization:
+**CRITICAL**: NEVER create files in the project root directory!
+
+All documentation must follow this structure:
+- **Session Logs**: `docs/development-logs/sessions/YYYY-MM-DD/session-XX-frontend-feature.md`
+- **Bug Reports**: `docs/quality-assurance/resolved-issues/YYYY-MM-DD/BUG-XXX-description.md`
+- **Test Reports**: `docs/testing/test-reports/YYYY-MM-DD/test-feature-name.md`
+
+Before creating ANY .md file, verify the correct path in docs/STRUCTURE.md.
+
+When working on tasks:
+1. **CHECK FOR SPECKIT FIRST**: Always look for `.specify/specs/[feature-name]/tasks.md`
+   - If SpecKit exists: Read tasks.md, spec.md, plan.md for context
+   - If NO SpecKit: STOP and ask user to create one first
+2. **Work from tasks.md**: Select specific task (e.g., TASK-001)
+3. Implement with proper TypeScript, React hooks, and Tailwind CSS
+4. Test the implementation thoroughly
+5. **Mark task as ✅** in tasks.md
+6. **Create session log** in docs/development-logs/sessions/YYYY-MM-DD/
+
 Always consider the full development lifecycle: from initial setup and development to testing, building, and deployment. Provide solutions that are production-ready, maintainable, and scalable.

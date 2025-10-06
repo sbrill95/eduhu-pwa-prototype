@@ -45,3 +45,6 @@ server.on('error', (error: Error & { code?: string }) => {
 });
 
 export default server;
+
+// trigger restart
+

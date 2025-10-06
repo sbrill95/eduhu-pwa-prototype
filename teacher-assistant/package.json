@@ -14,7 +14,11 @@
     "install:browsers": "playwright install",
     "test:all": "cd frontend && npm run test:run && cd ../backend && npm run test && cd .. && npm run test:e2e",
     "dev:all": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
-    "build:all": "cd frontend && npm run build && cd ../backend && npm run build"
+    "build:all": "cd frontend && npm run build && cd ../backend && npm run build",
+    "prepare": "husky",
+    "pre-commit": "npm run typecheck && npm run lint",
+    "typecheck": "cd frontend && npm run build -- --mode development && cd ../backend && npm run type-check",
+    "lint": "cd frontend && npm run lint && cd ../backend && npm run lint"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +27,7 @@
   "devDependencies": {
     "@playwright/test": "^1.55.1",
     "concurrently": "^9.2.1",
+    "husky": "^9.1.7",
     "playwright": "^1.55.1"
   }
 }

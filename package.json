@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "playwright": "^1.55.1",
+    "puppeteer": "^24.22.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.1"
+  },
+  "scripts": {
+    "prepare": "husky"
+  }
+}

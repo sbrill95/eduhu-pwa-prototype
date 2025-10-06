@@ -1,47 +1,562 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind CSS v4 Import - REQUIRED for Tailwind to work */
+@import "tailwindcss";
 
-/* Mobile-first responsive design optimizations */
-@layer base {
-  html {
-    @apply h-full;
-    /* Prevent zoom on inputs in iOS */
-    -webkit-text-size-adjust: 100%;
-  }
+/* Import Inter Font from Google Fonts - Gemini Design Language */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-  body {
-    @apply h-full bg-gray-50;
-    /* Prevent text selection on mobile */
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-  }
+/* Ionic Variables and theming - UPDATED TO GEMINI DESIGN LANGUAGE */
+:root {
+  /* === GEMINI DESIGN SYSTEM - Phase 3.1 === */
+  /* Primary (Orange) - #FB6542 */
+  --ion-color-primary: #FB6542;
+  --ion-color-primary-rgb: 251, 101, 66;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #c53727;
+  --ion-color-primary-tint: #f99866;
 
-  /* Allow text selection in input fields and content areas */
-  input, textarea, [contenteditable] {
-    -webkit-user-select: text;
-    user-select: text;
-  }
+  /* Gemini Design Tokens */
+  --color-primary: #FB6542;
+  --color-primary-light: #f99866;
+  --color-primary-dark: #c53727;
+  --color-secondary: #FFBB00;
+  --color-background-teal: #D3E4E6;
+  --color-background-gray: #f3f4f6;
 
-  /* Smooth scrolling for mobile */
-  * {
-    -webkit-overflow-scrolling: touch;
-  }
+  /* Professional spacing variables */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* Typography scale */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+
+  /* Border radius scale */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+
+  /* Shadow scale */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Secondary (Yellow) - #FFBB00 - Gemini Design */
+  --ion-color-secondary: #FFBB00;
+  --ion-color-secondary-rgb: 255, 187, 0;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #e69500;
+  --ion-color-secondary-tint: #ffc520;
+
+  /* Tab bar styling */
+  --ion-tab-bar-background: #ffffff;
+  --ion-tab-bar-color: #9ca3af;
+  --ion-tab-bar-color-selected: var(--ion-color-primary);
+
+  /* Mobile optimizations */
+  --ion-safe-area-top: env(safe-area-inset-top);
+  --ion-safe-area-right: env(safe-area-inset-right);
+  --ion-safe-area-bottom: env(safe-area-inset-bottom);
+  --ion-safe-area-left: env(safe-area-inset-left);
 }
 
-@layer utilities {
-  /* Mobile-specific utilities */
-  .mobile-container {
-    @apply max-w-md mx-auto;
+/* Mobile-optimized body styling - Inter Font (Gemini Design) */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+}
+
+/* Image control system - prevent oversized images */
+img {
+  max-width: none !important; /* Override default max-width: 100% */
+  height: auto;
+  object-fit: contain;
+}
+
+/* Specific image size classes for controlled sizing */
+.img-xs { width: 16px; height: 16px; }
+.img-sm { width: 24px; height: 24px; }
+.img-md { width: 32px; height: 32px; }
+.img-lg { width: 48px; height: 48px; }
+.img-xl { width: 64px; height: 64px; }
+
+/* Logo specific sizing */
+.logo-header { width: 24px; height: 24px; object-fit: contain; }
+.logo-small { width: 32px; height: 32px; object-fit: contain; }
+.logo-medium { width: 48px; height: 48px; object-fit: contain; }
+.logo-large { width: 64px; height: 64px; object-fit: contain; }
+
+/* Tab bar overlay styles for permanent bottom navigation */
+.tab-bar-overlay {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1) !important;
+  background: var(--ion-tab-bar-background) !important;
+}
+
+/* Content padding to account for fixed tab bar */
+.content-with-tabs {
+  padding-bottom: 60px !important;
+}
+
+/* Icon sizing for consistent mobile experience */
+.tab-icon {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Enhanced mobile-first responsive design utilities */
+@media (max-width: 768px) {
+  /* Ensure minimum touch target size (44px) */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
   }
 
-  /* Safe area handling for mobile devices with notches */
-  .safe-top {
+  /* Hide scrollbars but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Improved tap targets for mobile */
+  button, .btn, .button, ion-button {
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent zoom on input focus */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  textarea,
+  select,
+  ion-input,
+  ion-textarea {
+    font-size: 16px;
+  }
+
+  /* Professional mobile spacing */
+  .mobile-container {
+    padding: 16px;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .mobile-card {
+    margin: 8px 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Safe area support for newer mobile devices */
+  .safe-area-top {
     padding-top: env(safe-area-inset-top);
   }
 
-  .safe-bottom {
+  .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Responsive text sizing */
+  .text-responsive-sm { font-size: 14px; line-height: 1.4; }
+  .text-responsive-base { font-size: 16px; line-height: 1.5; }
+  .text-responsive-lg { font-size: 18px; line-height: 1.6; }
+  .text-responsive-xl { font-size: 20px; line-height: 1.7; }
+
+  /* Modal content adjustments for mobile */
+  .modal-content {
+    margin: 8px !important;
+    max-height: 95vh !important;
+    border-radius: 16px !important;
+  }
+}
+
+/* Tablet and desktop responsive improvements */
+@media (min-width: 769px) {
+  .modal-content {
+    max-width: 500px !important;
+    margin: 24px !important;
+  }
+
+  .desktop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+}
+
+/* Smooth animations for better user experience */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes celebration {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.05) rotate(2deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(-2deg);
+  }
+}
+
+/* Animation utility classes */
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.animate-celebration {
+  animation: celebration 0.6s ease-in-out;
+}
+
+/* Professional spacing system */
+.space-xs { gap: 4px; }
+.space-sm { gap: 8px; }
+.space-md { gap: 16px; }
+.space-lg { gap: 24px; }
+.space-xl { gap: 32px; }
+.space-2xl { gap: 48px; }
+
+/* Padding system */
+.p-xs { padding: 4px; }
+.p-sm { padding: 8px; }
+.p-md { padding: 16px; }
+.p-lg { padding: 24px; }
+.p-xl { padding: 32px; }
+
+/* Margin system */
+.m-xs { margin: 4px; }
+.m-sm { margin: 8px; }
+.m-md { margin: 16px; }
+.m-lg { margin: 24px; }
+.m-xl { margin: 32px; }
+
+/* Z-index management system */
+.z-dropdown { z-index: 1000; }
+.z-modal { z-index: 1100; }
+.z-popover { z-index: 1200; }
+.z-tooltip { z-index: 1300; }
+.z-toast { z-index: 1400; }
+.z-overlay { z-index: 1500; }
+
+/* Modal and overlay fixes */
+.modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  z-index: var(--z-modal, 1100) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  backdrop-filter: blur(2px) !important;
+  animation: fadeIn 0.2s ease-out !important;
+}
+
+.modal-content {
+  position: relative !important;
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  margin: 16px !important;
+  animation: slideInUp 0.3s ease-out !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+}
+
+/* Prevent body scroll when modals are open */
+body.modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
+/* Enhanced modal animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Ionic Modal overrides for proper z-index */
+ion-modal {
+  --z-index: 1100 !important;
+}
+
+ion-modal .modal-wrapper {
+  z-index: 1100 !important;
+}
+
+/* Toast positioning above everything */
+ion-toast {
+  --z-index: 1400 !important;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus styles for better accessibility */
+.focus-ring:focus {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+/* Loading skeleton animation */
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: skeleton-loading 1.2s ease-in-out infinite;
+}
+
+/* Agent Confirmation Modal - ULTRA AGGRESSIVE FIX for missing buttons */
+ion-modal.agent-confirmation-modal {
+  --width: min(420px, 90vw) !important;
+  --height: auto !important;
+  --max-height: 90vh !important;
+  --border-radius: 20px !important;
+  z-index: 10000 !important;
+}
+
+/* Ensure modal content is properly visible */
+ion-modal.agent-confirmation-modal ion-content {
+  --overflow: visible !important;
+  --max-height: none !important;
+  overflow: visible !important;
+}
+
+/* ULTRA CRITICAL: Ensure buttons are ALWAYS visible and clickable */
+.agent-modal-buttons,
+.CRITICAL-BUTTONS-CONTAINER {
+  display: flex !important;
+  gap: 12px !important;
+  margin-top: 20px !important;
+  min-height: 80px !important;
+  z-index: 100000 !important;
+  position: relative !important;
+  width: 100% !important;
+  background: rgba(255, 0, 0, 0.1) !important; /* Debug red background */
+  border: 3px solid red !important; /* Debug border */
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+.agent-modal-buttons ion-button,
+.CRITICAL-CANCEL-BUTTON,
+.CRITICAL-CONFIRM-BUTTON {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 100001 !important;
+  min-height: 48px !important;
+  min-width: 100px !important;
+  border: 2px solid blue !important; /* Debug border */
+  background: white !important;
+  color: black !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  transform: none !important;
+  transition: none !important;
+  filter: none !important;
+  outline: 2px solid green !important; /* Debug outline */
+}
+
+/* Force all possible button selectors to be visible */
+ion-modal.agent-confirmation-modal ion-button,
+ion-modal.agent-confirmation-modal button,
+.agent-confirmation-modal ion-button,
+.agent-confirmation-modal button {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 100002 !important;
+  background: rgba(0, 255, 0, 0.3) !important; /* Debug green background */
+  border: 3px solid purple !important;
+  min-height: 50px !important;
+  min-width: 120px !important;
+  margin: 5px !important;
+  padding: 10px !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  color: black !important;
+  text-decoration: none !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+/* Override any possible ionic hiding classes */
+ion-modal.agent-confirmation-modal .button-native,
+ion-modal.agent-confirmation-modal .button-inner,
+.agent-confirmation-modal .button-native,
+.agent-confirmation-modal .button-inner {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 100003 !important;
+}
+
+/* Nuclear option - make everything in the modal super visible */
+ion-modal.agent-confirmation-modal * {
+  max-height: none !important;
+  overflow: visible !important;
+  clip: none !important;
+  clip-path: none !important;
+}
+
+/* Force no transforms that could hide elements */
+ion-modal.agent-confirmation-modal *,
+.agent-confirmation-modal * {
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Mobile responsive fixes for agent modal */
+@media (max-width: 768px) {
+  ion-modal.agent-confirmation-modal {
+    --width: 95vw !important;
+    --height: auto !important;
+    --max-height: 90vh !important;
+    --border-radius: 16px !important;
+  }
+}
+
+/* Small mobile devices (375px) */
+@media (max-width: 375px) {
+  ion-modal.agent-confirmation-modal {
+    --width: 100vw !important;
+    --height: auto !important;
+    --max-height: 95vh !important;
+    --border-radius: 0 !important;
+  }
+
+  /* Reduce padding on very small screens */
+  .agent-modal-content {
+    padding: 16px !important;
+  }
+
+  .agent-modal-header {
+    gap: 12px !important;
+  }
+
+  .agent-modal-icon {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .agent-modal-buttons {
+    flex-direction: column !important;
+    gap: 8px !important;
   }
 }

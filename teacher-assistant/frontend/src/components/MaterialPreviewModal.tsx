@@ -59,6 +59,7 @@ export interface UnifiedMaterial {
     prompt?: string;
     model_used?: string;
     artifact_data?: Record<string, any>;
+    image_style?: string;  // TASK-010: Image generation style parameter
 
     // For manual materials
     tags?: string[];

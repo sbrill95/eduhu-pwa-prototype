@@ -1,6 +1,21 @@
 // API client for backend communication
+import type {
+  GermanState,
+  TeachingSubject,
+  TeachingPreference,
+  OnboardingData,
+  OnboardingStatus,
+  ManualContextItem,
+  ContextType,
+  AgentInfo,
+  AgentExecutionRequest,
+  AgentExecutionResponse,
+  AgentStatus,
+  AgentResult
+} from './types';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (
-  import.meta.env.PROD ? '/api' : 'http://localhost:8081/api'
+  import.meta.env.PROD ? '/api' : 'http://localhost:3006/api'
 );
 
 export interface ChatMessage {
@@ -13,6 +28,7 @@ export interface ChatRequest {
   model?: string;
   temperature?: number;
   max_tokens?: number;
+  image_data?: string;
 }
 
 export interface ChatResponse {
@@ -21,6 +37,14 @@ export interface ChatResponse {
     prompt_tokens: number;
     completion_tokens: number;
     total_tokens: number;
+  };
+  agentSuggestion?: {
+    agentId: string;
+    agentName: string;
+    context: string;
+    estimatedTime?: string;
+    creditsRequired?: number;
+    [key: string]: any; // Allow additional agent-specific fields
   };
 }
 
@@ -112,6 +136,29 @@ class ApiClient {
     return response.json();
   }
 
+  // Generic HTTP methods
+  async get<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, { method: 'GET' });
+  }
+
+  async post<T>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  async put<T>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  async delete<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, { method: 'DELETE' });
+  }
+
   // Health check
   async getHealth(): Promise<HealthResponse> {
     return this.request<HealthResponse>('/health');
@@ -119,10 +166,17 @@ class ApiClient {
 
   // Chat endpoints
   async sendChatMessage(request: ChatRequest): Promise<ChatResponse> {
-    return this.request<ChatResponse>('/chat', {
+    const response = await this.request<{
+      success: boolean;
+      data: ChatResponse;
+      timestamp: string;
+    }>('/chat', {
       method: 'POST',
       body: JSON.stringify(request),
     });
+
+    // Extract the actual chat response from the backend wrapper
+    return response.data;
   }
 
   async getChatModels(): Promise<{ models: ChatModel[]; default: string }> {
@@ -131,6 +185,331 @@ class ApiClient {
 
   async getChatHealth(): Promise<{ status: 'healthy' | 'unhealthy'; message?: string }> {
     return this.request<{ status: 'healthy' | 'unhealthy'; message?: string }>('/chat/health');
+  }
+
+  // Teacher Profile endpoints
+  async extractTeacherProfile(request: {
+    messages: ChatMessage[];
+    existing_profile?: any;
+  }): Promise<{
+    extracted_knowledge: any;
+    confidence_scores: any;
+    reasoning: string;
+  }> {
+    return this.request<{
+      extracted_knowledge: any;
+      confidence_scores: any;
+      reasoning: string;
+    }>('/teacher-profile/extract', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  // Profile endpoints
+  async updateUserName(userId: string, name: string): Promise<{
+    userId: string;
+    name: string;
+    message: string;
+  }> {
+    const response = await this.request<{
+      success: boolean;
+      data: { userId: string; name: string; message: string };
+    }>('/profile/update-name', {
+      method: 'POST',
+      body: JSON.stringify({ userId, name }),
+    });
+    return response.data;
+  }
+
+  // Context Management endpoints
+  async getManualContext(userId: string, contextType?: string, active?: boolean): Promise<{
+    contexts: ManualContextItem[];
+    count: number;
+    grouped: Record<string, ManualContextItem[]>;
+  }> {
+    const params = new URLSearchParams();
+    if (contextType) params.append('contextType', contextType);
+    if (active !== undefined) params.append('active', active.toString());
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+
+    const response = await this.request<{
+      success: boolean;
+      data: { contexts: ManualContextItem[]; count: number; grouped: Record<string, ManualContextItem[]> };
+    }>(`/profile/context/${userId}${queryString}`);
+    return response.data;
+  }
+
+  async createManualContext(userId: string, content: string, contextType: ContextType, priority?: number): Promise<{
+    contextId: string;
+    message: string;
+  }> {
+    const response = await this.request<{
+      success: boolean;
+      data: { contextId: string; message: string };
+    }>('/profile/context', {
+      method: 'POST',
+      body: JSON.stringify({
+        userId,
+        content,
+        contextType,
+        priority: priority || 5
+      }),
+    });
+    return response.data;
+  }
+
+  async updateManualContext(contextId: string, updates: {
+    content?: string;
+    contextType?: ContextType;
+    priority?: number;
+    isActive?: boolean;
+  }): Promise<{
+    contextId: string;
+    message: string;
+  }> {
+    const response = await this.request<{
+      success: boolean;
+      data: { contextId: string; message: string };
+    }>(`/profile/context/${contextId}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+    return response.data;
+  }
+
+  async deleteManualContext(contextId: string, permanent = false): Promise<{
+    contextId: string;
+    message: string;
+    permanent: boolean;
+  }> {
+    const params = permanent ? '?permanent=true' : '';
+    const response = await this.request<{
+      success: boolean;
+      data: { contextId: string; message: string; permanent: boolean };
+    }>(`/profile/context/${contextId}${params}`, {
+      method: 'DELETE',
+    });
+    return response.data;
+  }
+
+  async bulkManualContext(userId: string, operation: 'create' | 'activate' | 'deactivate' | 'delete', data: {
+    contextIds?: string[];
+    contexts?: Array<{
+      content: string;
+      contextType: ContextType;
+      priority?: number;
+    }>;
+  }): Promise<{
+    operation: string;
+    results: Array<{ contextId: string; success: boolean; [key: string]: any }>;
+    processedCount: number;
+  }> {
+    const response = await this.request<{
+      success: boolean;
+      data: { operation: string; results: any[]; processedCount: number };
+    }>('/profile/context/bulk', {
+      method: 'POST',
+      body: JSON.stringify({
+        userId,
+        operation,
+        ...data
+      }),
+    });
+    return response.data;
+  }
+
+  // Data endpoints for onboarding
+  async getGermanStates(search?: string): Promise<{
+    states: GermanState[];
+    count: number;
+  }> {
+    const params = search ? `?search=${encodeURIComponent(search)}` : '';
+    const response = await this.request<{
+      success: boolean;
+      data: { states: GermanState[]; count: number };
+    }>(`/data/states${params}`);
+    return response.data;
+  }
+
+  async getTeachingSubjects(search?: string, category?: string, gradeLevel?: string): Promise<{
+    subjects: TeachingSubject[];
+    count: number;
+    categories: string[];
+  }> {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (category) params.append('category', category);
+    if (gradeLevel) params.append('grade_level', gradeLevel);
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+
+    const response = await this.request<{
+      success: boolean;
+      data: { subjects: TeachingSubject[]; count: number; categories: string[] };
+    }>(`/data/subjects${queryString}`);
+    return response.data;
+  }
+
+  async getTeachingPreferences(search?: string, category?: string): Promise<{
+    preferences: TeachingPreference[];
+    count: number;
+    categories: string[];
+  }> {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (category) params.append('category', category);
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+
+    const response = await this.request<{
+      success: boolean;
+      data: { preferences: TeachingPreference[]; count: number; categories: string[] };
+    }>(`/data/preferences${queryString}`);
+    return response.data;
+  }
+
+  // Onboarding endpoints
+  async saveOnboardingData(data: OnboardingData): Promise<{
+    userId: string;
+    message: string;
+  }> {
+    const response = await this.request<{
+      success: boolean;
+      data: { userId: string; message: string };
+    }>('/onboarding', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    return response.data;
+  }
+
+  async getOnboardingStatus(userId: string): Promise<OnboardingStatus> {
+    const response = await this.request<{
+      success: boolean;
+      data: OnboardingStatus;
+    }>(`/onboarding/${userId}`);
+    return response.data;
+  }
+
+  async updateOnboardingData(userId: string, data: Partial<OnboardingData>): Promise<{
+    userId: string;
+    message: string;
+  }> {
+    const response = await this.request<{
+      success: boolean;
+      data: { userId: string; message: string };
+    }>(`/onboarding/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+    return response.data;
+  }
+
+  // File upload endpoint
+  async uploadFile(file: File): Promise<{
+    id: string;
+    filename: string;
+    size: number;
+    type: string;
+    url?: string;
+  }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const url = `${this.baseUrl}/files/upload`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+
+      try {
+        const errorData = JSON.parse(errorText);
+        errorMessage = errorData.user_message || errorData.error || errorData.message || errorMessage;
+      } catch {
+        // Use default error message if parsing fails
+      }
+
+      const enhancedError = new Error(errorMessage) as EnhancedError;
+      enhancedError.status = response.status;
+      throw enhancedError;
+    }
+
+    const result = await response.json();
+    return result.data;
+  }
+
+  // LangGraph Agent endpoints
+  async getAvailableAgents(): Promise<{
+    agents: AgentInfo[];
+    count: number;
+  }> {
+    const response = await this.request<{
+      success: boolean;
+      data: { agents: AgentInfo[]; count: number };
+    }>('/langgraph/agents/available');
+    return response.data;
+  }
+
+  async executeAgent(request: AgentExecutionRequest): Promise<AgentExecutionResponse> {
+    const response = await this.request<{
+      success: boolean;
+      data: AgentExecutionResponse;
+    }>('/langgraph/agents/execute', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+    return response.data;
+  }
+
+  async getAgentStatus(executionId: string): Promise<AgentStatus> {
+    const response = await this.request<{
+      success: boolean;
+      data: AgentStatus;
+    }>(`/langgraph/agents/execution/${executionId}/status`);
+    return response.data;
+  }
+
+  async getAgentResult(executionId: string): Promise<AgentResult> {
+    // Note: This endpoint doesn't exist in backend - using status instead
+    const response = await this.request<{
+      success: boolean;
+      data: any; // Backend response structure varies
+    }>(`/langgraph/agents/execution/${executionId}/status`);
+
+    const statusData = response.data;
+
+    // Transform backend response to AgentResult format
+    if (statusData.status === 'completed') {
+      return {
+        executionId,
+        agentId: statusData.agentId || statusData.agent_id || 'unknown',
+        status: 'completed',
+        result: statusData.result ? {
+          type: statusData.result.type || 'text',
+          content: statusData.result.content || statusData.result,
+          metadata: statusData.result.metadata || {}
+        } : undefined,
+        usage: statusData.cost ? {
+          creditsUsed: statusData.cost.credits || 0,
+          tokensUsed: statusData.cost.tokens
+        } : undefined,
+        artifacts: statusData.artifacts || []
+      } as AgentResult;
+    } else if (statusData.status === 'failed') {
+      return {
+        executionId,
+        agentId: statusData.agentId || statusData.agent_id || 'unknown',
+        status: 'failed',
+        error: statusData.error || 'Agent execution failed'
+      } as AgentResult;
+    } else {
+      // Still running or unknown status - return partial result
+      throw new Error(`Agent execution not completed. Status: ${statusData.status || 'unknown'}`);
+    }
   }
 }
 

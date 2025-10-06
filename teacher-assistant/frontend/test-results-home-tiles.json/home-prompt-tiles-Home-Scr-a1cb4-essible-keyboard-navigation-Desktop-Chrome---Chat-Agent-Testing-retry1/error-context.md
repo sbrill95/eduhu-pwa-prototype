@@ -1,0 +1,186 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - generic:
+          - generic:
+            - img "eduhu.app logo"
+        - button "Open Profile" [ref=e9] [cursor=pointer]:
+          - generic [ref=e10] [cursor=pointer]:
+            - generic:
+              - img:
+                - generic:
+                  - img
+    - main [ref=e11]:
+      - generic [ref=e14]:
+        - paragraph [ref=e17]: Ihr persönlicher KI-Assistent für Unterrichtsplanung und pädagogische Unterstützung.
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - heading "Vorschläge für dich" [level=2] [ref=e21]
+            - button [ref=e23] [cursor=pointer]:
+              - generic [ref=e24] [cursor=pointer]:
+                - generic:
+                  - img:
+                    - generic:
+                      - img
+          - generic [ref=e25]:
+            - button "quiz Erstelle ein Quiz Mathematik für 7. Klasse 2-3 Minuten" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28] [cursor=pointer]:
+                - generic [ref=e29] [cursor=pointer]:
+                  - img [ref=e31] [cursor=pointer]:
+                    - img [ref=e33] [cursor=pointer]
+                  - generic [ref=e37] [cursor=pointer]: quiz
+                - heading "Erstelle ein Quiz" [level=3] [ref=e38] [cursor=pointer]
+                - paragraph [ref=e39] [cursor=pointer]: Mathematik für 7. Klasse
+                - generic [ref=e40] [cursor=pointer]:
+                  - img [ref=e41] [cursor=pointer]:
+                    - img [ref=e43] [cursor=pointer]
+                  - text: 2-3 Minuten
+            - button "worksheet Erstelle Arbeitsblatt Übungsaufgaben für Mathematik 3-4 Minuten" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48] [cursor=pointer]:
+                - generic [ref=e49] [cursor=pointer]:
+                  - img [ref=e51] [cursor=pointer]:
+                    - img [ref=e53] [cursor=pointer]
+                  - generic [ref=e56] [cursor=pointer]: worksheet
+                - heading "Erstelle Arbeitsblatt" [level=3] [ref=e57] [cursor=pointer]
+                - paragraph [ref=e58] [cursor=pointer]: Übungsaufgaben für Mathematik
+                - generic [ref=e59] [cursor=pointer]:
+                  - img [ref=e60] [cursor=pointer]:
+                    - img [ref=e62] [cursor=pointer]
+                  - text: 3-4 Minuten
+            - button "lesson-plan Unterrichtsplan (45 Min) Strukturierte Stundenvorbereitung 4-5 Minuten" [ref=e66] [cursor=pointer]:
+              - generic [ref=e67] [cursor=pointer]:
+                - generic [ref=e68] [cursor=pointer]:
+                  - img [ref=e70] [cursor=pointer]:
+                    - img [ref=e72] [cursor=pointer]
+                  - generic [ref=e84] [cursor=pointer]: lesson-plan
+                - heading "Unterrichtsplan (45 Min)" [level=3] [ref=e85] [cursor=pointer]
+                - paragraph [ref=e86] [cursor=pointer]: Strukturierte Stundenvorbereitung
+                - generic [ref=e87] [cursor=pointer]:
+                  - img [ref=e88] [cursor=pointer]:
+                    - img [ref=e90] [cursor=pointer]
+                  - text: 4-5 Minuten
+            - button "quiz Erstelle spielerisches Quiz Unterhaltsames Quiz für Mathematik 2-3 Minuten" [ref=e94] [cursor=pointer]:
+              - generic [ref=e95] [cursor=pointer]:
+                - generic [ref=e96] [cursor=pointer]:
+                  - img [ref=e98] [cursor=pointer]:
+                    - img [ref=e100] [cursor=pointer]
+                  - generic [ref=e107] [cursor=pointer]: quiz
+                - heading "Erstelle spielerisches Quiz" [level=3] [ref=e108] [cursor=pointer]
+                - paragraph [ref=e109] [cursor=pointer]: Unterhaltsames Quiz für Mathematik
+                - generic [ref=e110] [cursor=pointer]:
+                  - img [ref=e111] [cursor=pointer]:
+                    - img [ref=e113] [cursor=pointer]
+                  - text: 2-3 Minuten
+            - button "image Erstelle Unterrichtsbild Visuelles Material für Mathematik 1-2 Minuten" [ref=e117] [cursor=pointer]:
+              - generic [ref=e118] [cursor=pointer]:
+                - generic [ref=e119] [cursor=pointer]:
+                  - img [ref=e121] [cursor=pointer]:
+                    - img [ref=e123] [cursor=pointer]
+                  - generic [ref=e127] [cursor=pointer]: image
+                - heading "Erstelle Unterrichtsbild" [level=3] [ref=e128] [cursor=pointer]
+                - paragraph [ref=e129] [cursor=pointer]: Visuelles Material für Mathematik
+                - generic [ref=e130] [cursor=pointer]:
+                  - img [ref=e131] [cursor=pointer]:
+                    - img [ref=e133] [cursor=pointer]
+                  - text: 1-2 Minuten
+            - button "quiz Erstelle schwieriges Quiz Herausforderndes Quiz für Mathematik 3-4 Minuten" [ref=e137] [cursor=pointer]:
+              - generic [ref=e138] [cursor=pointer]:
+                - generic [ref=e139] [cursor=pointer]:
+                  - img [ref=e141] [cursor=pointer]:
+                    - img [ref=e143] [cursor=pointer]
+                  - generic [ref=e146] [cursor=pointer]: quiz
+                - heading "Erstelle schwieriges Quiz" [level=3] [ref=e147] [cursor=pointer]
+                - paragraph [ref=e148] [cursor=pointer]: Herausforderndes Quiz für Mathematik
+                - generic [ref=e149] [cursor=pointer]:
+                  - img [ref=e150] [cursor=pointer]:
+                    - img [ref=e152] [cursor=pointer]
+                  - text: 3-4 Minuten
+        - generic [ref=e156]:
+          - generic [ref=e157]:
+            - img [ref=e159]:
+              - img [ref=e161]
+            - heading "Deine Termine" [level=2] [ref=e173]
+          - generic [ref=e174]:
+            - img [ref=e175]:
+              - img [ref=e177]
+            - paragraph [ref=e189]: Keine anstehenden Termine
+        - generic [ref=e190]:
+          - generic:
+            - generic [ref=e192]:
+              - heading "Letzte Chats" [level=2] [ref=e193]:
+                - generic: Letzte Chats
+              - button "Alle anzeigen" [ref=e195] [cursor=pointer]:
+                - generic [ref=e196] [cursor=pointer]:
+                  - generic [ref=e197] [cursor=pointer]:
+                    - generic: Alle anzeigen
+                  - generic:
+                    - img:
+                      - generic:
+                        - img
+            - list [ref=e199]:
+              - listitem [ref=e200]:
+                - button "New Chat 0 Nachrichten • Heute" [ref=e201] [cursor=pointer]:
+                  - img [ref=e202] [cursor=pointer]:
+                    - img [ref=e204] [cursor=pointer]
+                  - generic [ref=e208] [cursor=pointer]:
+                    - heading "New Chat" [level=3] [ref=e209] [cursor=pointer]
+                    - paragraph [ref=e210] [cursor=pointer]: 0 Nachrichten • Heute
+              - listitem [ref=e211]:
+                - button "New Chat 2 Nachrichten • Heute" [ref=e212] [cursor=pointer]:
+                  - img [ref=e213] [cursor=pointer]:
+                    - img [ref=e215] [cursor=pointer]
+                  - generic [ref=e219] [cursor=pointer]:
+                    - heading "New Chat" [level=3] [ref=e220] [cursor=pointer]
+                    - paragraph [ref=e221] [cursor=pointer]: 2 Nachrichten • Heute
+              - listitem [ref=e222]:
+                - button "New Chat 5 Nachrichten • Heute" [ref=e223] [cursor=pointer]:
+                  - img [ref=e224] [cursor=pointer]:
+                    - img [ref=e226] [cursor=pointer]
+                  - generic [ref=e230] [cursor=pointer]:
+                    - heading "New Chat" [level=3] [ref=e231] [cursor=pointer]
+                    - paragraph [ref=e232] [cursor=pointer]: 5 Nachrichten • Heute
+        - generic [ref=e233]:
+          - generic:
+            - generic [ref=e235]:
+              - heading "Materialien" [level=2] [ref=e236]:
+                - generic: Materialien
+              - button "Alle anzeigen" [ref=e238] [cursor=pointer]:
+                - generic [ref=e239] [cursor=pointer]:
+                  - generic [ref=e240] [cursor=pointer]:
+                    - generic: Alle anzeigen
+                  - generic:
+                    - img:
+                      - generic:
+                        - img
+            - generic [ref=e242]:
+              - img [ref=e243]:
+                - img [ref=e245]
+              - heading "Noch keine Materialien" [level=3] [ref=e251]
+              - paragraph [ref=e253]: Erstellen Sie Ihr erstes Unterrichtsmaterial in der Bibliothek.
+              - button "Zur Bibliothek" [ref=e255] [cursor=pointer]:
+                - generic [ref=e256] [cursor=pointer]:
+                  - generic:
+                    - img:
+                      - generic:
+                        - img
+                  - generic: Zur Bibliothek
+    - generic [ref=e257]:
+      - button "Home" [ref=e258] [cursor=pointer]:
+        - img [ref=e259] [cursor=pointer]:
+          - img [ref=e261] [cursor=pointer]
+        - generic [ref=e264] [cursor=pointer]: Home
+      - button "Chat" [ref=e265] [cursor=pointer]:
+        - img [ref=e266] [cursor=pointer]:
+          - img [ref=e268] [cursor=pointer]
+        - generic [ref=e270] [cursor=pointer]: Chat
+      - button "Library" [ref=e271] [cursor=pointer]:
+        - img [ref=e272] [cursor=pointer]:
+          - img [ref=e274] [cursor=pointer]
+        - generic [ref=e280] [cursor=pointer]: Library
+  - button [ref=e281] [cursor=pointer]:
+    - img [ref=e282] [cursor=pointer]
+```

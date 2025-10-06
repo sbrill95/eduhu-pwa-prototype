@@ -1,0 +1,113 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - generic:
+          - generic:
+            - img "eduhu.app logo"
+        - button "Open Profile" [ref=e9] [cursor=pointer]:
+          - generic [ref=e10] [cursor=pointer]:
+            - generic:
+              - img:
+                - generic:
+                  - img
+    - main [ref=e11]:
+      - generic [ref=e14]:
+        - paragraph [ref=e17]: Ihr persönlicher KI-Assistent für Unterrichtsplanung und pädagogische Unterstützung.
+        - generic [ref=e19]:
+          - paragraph [ref=e20]: Failed to fetch
+          - button "Erneut versuchen" [ref=e22] [cursor=pointer]:
+            - generic [ref=e23] [cursor=pointer]:
+              - generic:
+                - img:
+                  - generic:
+                    - img
+              - generic: Erneut versuchen
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - img [ref=e28]:
+              - img [ref=e30]
+            - heading "Deine Termine" [level=2] [ref=e42]
+          - generic [ref=e43]:
+            - img [ref=e44]:
+              - img [ref=e46]
+            - paragraph [ref=e58]: Keine anstehenden Termine
+        - generic [ref=e59]:
+          - generic:
+            - generic [ref=e61]:
+              - heading "Letzte Chats" [level=2] [ref=e62]:
+                - generic: Letzte Chats
+              - button "Alle anzeigen" [ref=e64] [cursor=pointer]:
+                - generic [ref=e65] [cursor=pointer]:
+                  - generic [ref=e66] [cursor=pointer]:
+                    - generic: Alle anzeigen
+                  - generic:
+                    - img:
+                      - generic:
+                        - img
+            - list [ref=e68]:
+              - listitem [ref=e69]:
+                - button "New Chat 0 Nachrichten • Heute" [ref=e70] [cursor=pointer]:
+                  - img [ref=e71] [cursor=pointer]:
+                    - img [ref=e73] [cursor=pointer]
+                  - generic [ref=e77] [cursor=pointer]:
+                    - heading "New Chat" [level=3] [ref=e78] [cursor=pointer]
+                    - paragraph [ref=e79] [cursor=pointer]: 0 Nachrichten • Heute
+              - listitem [ref=e80]:
+                - button "New Chat 2 Nachrichten • Heute" [ref=e81] [cursor=pointer]:
+                  - img [ref=e82] [cursor=pointer]:
+                    - img [ref=e84] [cursor=pointer]
+                  - generic [ref=e88] [cursor=pointer]:
+                    - heading "New Chat" [level=3] [ref=e89] [cursor=pointer]
+                    - paragraph [ref=e90] [cursor=pointer]: 2 Nachrichten • Heute
+              - listitem [ref=e91]:
+                - button "New Chat 5 Nachrichten • Heute" [ref=e92] [cursor=pointer]:
+                  - img [ref=e93] [cursor=pointer]:
+                    - img [ref=e95] [cursor=pointer]
+                  - generic [ref=e99] [cursor=pointer]:
+                    - heading "New Chat" [level=3] [ref=e100] [cursor=pointer]
+                    - paragraph [ref=e101] [cursor=pointer]: 5 Nachrichten • Heute
+        - generic [ref=e102]:
+          - generic:
+            - generic [ref=e104]:
+              - heading "Materialien" [level=2] [ref=e105]:
+                - generic: Materialien
+              - button "Alle anzeigen" [ref=e107] [cursor=pointer]:
+                - generic [ref=e108] [cursor=pointer]:
+                  - generic [ref=e109] [cursor=pointer]:
+                    - generic: Alle anzeigen
+                  - generic:
+                    - img:
+                      - generic:
+                        - img
+            - generic [ref=e111]:
+              - img [ref=e112]:
+                - img [ref=e114]
+              - heading "Noch keine Materialien" [level=3] [ref=e120]
+              - paragraph [ref=e122]: Erstellen Sie Ihr erstes Unterrichtsmaterial in der Bibliothek.
+              - button "Zur Bibliothek" [ref=e124] [cursor=pointer]:
+                - generic [ref=e125] [cursor=pointer]:
+                  - generic:
+                    - img:
+                      - generic:
+                        - img
+                  - generic: Zur Bibliothek
+    - generic [ref=e126]:
+      - button "Home" [ref=e127] [cursor=pointer]:
+        - img [ref=e128] [cursor=pointer]:
+          - img [ref=e130] [cursor=pointer]
+        - generic [ref=e133] [cursor=pointer]: Home
+      - button "Chat" [ref=e134] [cursor=pointer]:
+        - img [ref=e135] [cursor=pointer]:
+          - img [ref=e137] [cursor=pointer]
+        - generic [ref=e139] [cursor=pointer]: Chat
+      - button "Library" [ref=e140] [cursor=pointer]:
+        - img [ref=e141] [cursor=pointer]:
+          - img [ref=e143] [cursor=pointer]
+        - generic [ref=e149] [cursor=pointer]: Library
+  - button [ref=e150] [cursor=pointer]:
+    - img [ref=e151] [cursor=pointer]
+```

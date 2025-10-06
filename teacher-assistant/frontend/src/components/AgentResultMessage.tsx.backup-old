@@ -1,0 +1,285 @@
+import React from 'react';
+import {
+  IonCard,
+  IonCardContent,
+  IonButton,
+  IonIcon,
+  IonText,
+  IonBadge
+} from '@ionic/react';
+import {
+  sparklesOutline,
+  downloadOutline,
+  checkmarkCircleOutline,
+  documentTextOutline,
+  imageOutline
+} from 'ionicons/icons';
+import type { AgentResultMessage as AgentResultMessageType } from '../lib/types';
+
+interface AgentResultMessageProps {
+  message: AgentResultMessageType;
+  onDownload?: (url: string, filename: string) => void;
+}
+
+const AgentResultMessage: React.FC<AgentResultMessageProps> = React.memo(({
+  message,
+  onDownload
+}) => {
+  const getResultTypeIcon = () => {
+    switch (message.resultType) {
+      case 'image':
+        return imageOutline;
+      case 'document':
+        return documentTextOutline;
+      case 'text':
+      default:
+        return checkmarkCircleOutline;
+    }
+  };
+
+  const getResultTypeName = () => {
+    switch (message.resultType) {
+      case 'image':
+        return 'Bild';
+      case 'document':
+        return 'Dokument';
+      case 'text':
+      default:
+        return 'Ergebnis';
+    }
+  };
+
+  const handleDownload = () => {
+    if (onDownload && message.resultData.downloadUrl && message.resultData.fileName) {
+      onDownload(message.resultData.downloadUrl, message.resultData.fileName);
+    } else if (message.resultData.imageUrl) {
+      // For images, create a download link
+      const link = document.createElement('a');
+      link.href = message.resultData.imageUrl;
+      link.download = message.resultData.fileName || `agent-result-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'flex-start',
+      marginBottom: '12px'
+    }}>
+      <IonCard style={{
+        width: '100%',
+        margin: 0,
+        backgroundColor: '#E8F5E8', // Light green background as specified
+        border: '1px solid #4CAF50',
+        borderRadius: '12px',
+        boxShadow: '0 2px 4px rgba(76, 175, 80, 0.1)'
+      }}>
+        <IonCardContent style={{ padding: '16px' }}>
+          {/* Agent Header */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '12px'
+          }}>
+            <div style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              backgroundColor: '#4CAF50',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '16px'
+            }}>
+              ✅
+            </div>
+            <div style={{ flex: 1 }}>
+              <IonText>
+                <h4 style={{
+                  margin: 0,
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  color: '#2E7D32'
+                }}>
+                  {message.agentName}
+                </h4>
+              </IonText>
+              <IonText color="medium">
+                <p style={{
+                  margin: 0,
+                  fontSize: '12px',
+                  color: '#388E3C'
+                }}>
+                  Agent abgeschlossen
+                </p>
+              </IonText>
+            </div>
+            <IonBadge
+              color="success"
+              style={{ fontSize: '10px', marginLeft: 'auto' }}
+            >
+              FERTIG
+            </IonBadge>
+          </div>
+
+          {/* Success Message */}
+          <IonText style={{
+            display: 'block',
+            marginBottom: '16px',
+            fontSize: '14px',
+            lineHeight: '1.4',
+            color: '#2E7D32',
+            fontWeight: '500'
+          }}>
+            {getResultTypeName()} wurde erfolgreich erstellt und ist bereit zum Download!
+          </IonText>
+
+          {/* Result Description */}
+          {message.resultData.description && (
+            <IonText style={{
+              display: 'block',
+              marginBottom: '12px',
+              fontSize: '13px',
+              lineHeight: '1.4',
+              color: 'var(--ion-color-medium)',
+              fontStyle: 'italic'
+            }}>
+              {message.resultData.description}
+            </IonText>
+          )}
+
+          {/* Image Display */}
+          {message.resultType === 'image' && message.resultData.imageUrl && (
+            <div style={{
+              marginBottom: '16px',
+              border: '2px solid #4CAF50',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              position: 'relative'
+            }}>
+              <div style={{
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                padding: '8px 12px',
+                fontSize: '12px',
+                fontWeight: '600',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}>
+                <span>🎨</span>
+                KI-generiertes Bild
+              </div>
+              <img
+                src={message.resultData.imageUrl}
+                alt="Agent generated result"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  display: 'block',
+                  maxHeight: '300px',
+                  objectFit: 'contain',
+                  backgroundColor: '#ffffff'
+                }}
+                onError={(e) => {
+                  console.error('Failed to load image:', e);
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+          )}
+
+          {/* File Info */}
+          {message.resultData.fileName && (
+            <div style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              padding: '8px 12px',
+              borderRadius: '8px',
+              marginBottom: '12px',
+              border: '1px solid rgba(0, 0, 0, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <IonIcon
+                icon={getResultTypeIcon()}
+                style={{
+                  fontSize: '16px',
+                  color: 'var(--ion-color-success)'
+                }}
+              />
+              <IonText style={{
+                fontSize: '12px',
+                color: 'var(--ion-color-dark)',
+                fontWeight: '500',
+                flex: 1
+              }}>
+                {message.resultData.fileName}
+              </IonText>
+            </div>
+          )}
+
+          {/* Download Button */}
+          {(message.resultData.downloadUrl || message.resultData.imageUrl) && (
+            <IonButton
+              fill="solid"
+              expand="block"
+              size="default"
+              color="success"
+              onClick={handleDownload}
+              style={{
+                marginBottom: '12px',
+                height: '44px',
+                '--border-radius': '8px',
+                fontSize: '14px',
+                fontWeight: '600'
+              }}
+              aria-label={`${getResultTypeName()} herunterladen: ${message.resultData.fileName || 'Agent-Ergebnis'}`}
+            >
+              <IonIcon
+                icon={downloadOutline}
+                slot="start"
+                style={{ fontSize: '18px' }}
+              />
+              {getResultTypeName()} herunterladen
+            </IonButton>
+          )}
+
+          {/* Timestamp */}
+          <IonText
+            color="medium"
+            style={{
+              display: 'block',
+              fontSize: '12px',
+              textAlign: 'right'
+            }}
+          >
+            {(() => {
+              const now = new Date();
+              const messageDate = new Date(message.timestamp);
+              const diffInMs = now.getTime() - messageDate.getTime();
+              const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+
+              if (diffInMinutes < 1) {
+                return 'gerade eben';
+              } else if (diffInMinutes < 60) {
+                return `vor ${diffInMinutes} Min.`;
+              } else {
+                return messageDate.toLocaleTimeString('de-DE', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                });
+              }
+            })()}
+          </IonText>
+        </IonCardContent>
+      </IonCard>
+    </div>
+  );
+});
+
+export default AgentResultMessage;

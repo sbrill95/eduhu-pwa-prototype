@@ -66,6 +66,17 @@ export interface ChatRequest {
   stream?: boolean;
 }
 
+export interface AgentSuggestion {
+  agentType: 'image-generation' | 'worksheet' | 'lesson-plan';
+  reasoning: string;
+  prefillData: {
+    theme: string;
+    learningGroup?: string | undefined;
+    subject?: string | undefined;
+    [key: string]: any;
+  };
+}
+
 export interface ChatResponse extends ApiResponse {
   success: true;
   data: {
@@ -77,6 +88,7 @@ export interface ChatResponse extends ApiResponse {
     };
     model: string;
     finish_reason: string;
+    agentSuggestion?: AgentSuggestion | undefined;
   };
 }
 
@@ -86,4 +98,27 @@ export interface ChatErrorResponse extends ErrorResponse {
   user_message?: string; // User-friendly message for frontend display
   suggested_action?: string; // Suggested action for the user
   retry_after?: number; // For rate limiting - seconds to wait
+}
+
+// Prompt Service types
+export interface GeneratePromptsRequest {
+  userId?: string;
+  limit?: number;
+  excludeIds?: string[];
+  seed?: string;
+}
+
+export interface PromptSuggestion {
+  id: string;
+  text: string;
+  category: string;
+  weight?: number;
+}
+
+export interface PromptTemplate {
+  id: string;
+  text: string;
+  category: string;
+  requiresContext: string[];
+  weight: number;
 }

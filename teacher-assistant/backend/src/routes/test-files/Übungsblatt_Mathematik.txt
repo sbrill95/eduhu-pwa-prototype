@@ -1,0 +1,9 @@
+Dies ist ein Test-Dokument für den File-Upload mit deutschen Umlauten.
+Dateiname: Übungsblatt_Mathematik.txt
+
+Inhalt für Mathematik-Übung:
+- Aufgabe 1: Löse die Gleichung
+- Aufgabe 2: Berechne die Größe
+- Aufgabe 3: Finde die Lösung für x
+
+Erstellt für UTF-8 Encoding Tests.

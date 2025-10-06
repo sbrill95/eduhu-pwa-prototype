@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #0dcaf0;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .test-button:hover {
+            background: #0bb5d4;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h1>🔍 AgentConfirmationModal Debug Test</h1>
+        <p><strong>Issue:</strong> User reports modal shows up but buttons are not visible/clickable</p>
+        <p><strong>Test:</strong> Type "erstelle ein bild" in the chat to trigger the modal</p>
+
+        <h2>📋 Debugging Steps:</h2>
+        <ol>
+            <li>Open browser dev tools (F12)</li>
+            <li>Go to the application at <a href="http://localhost:5175" target="_blank">http://localhost:5175</a></li>
+            <li>Type "erstelle ein bild von einem löwen" in the chat</li>
+            <li>When modal appears, inspect the modal element in dev tools</li>
+            <li>Look for:
+                <ul>
+                    <li>Are the button elements present in the DOM?</li>
+                    <li>Are the buttons hidden by CSS (display: none, visibility: hidden)?</li>
+                    <li>Is there a z-index issue?</li>
+                    <li>Is the modal content being cut off?</li>
+                    <li>Are there any console errors?</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>🎯 Expected Behavior:</h2>
+        <p>Modal should show agent details AND two buttons:</p>
+        <button class="test-button" onclick="alert('This should be the Cancel button')">Abbrechen</button>
+        <button class="test-button" onclick="alert('This should be the Start button')">🎨 Ja, starten</button>
+    </div>
+
+    <div class="test-info">
+        <h2>🔍 Manual Check - Modal Code Analysis:</h2>
+        <p><strong>File:</strong> AgentConfirmationModal.tsx</p>
+        <p><strong>Button Section (lines 242-276):</strong></p>
+        <pre style="background: #f8f9fa; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 14px;">
+/* Action Buttons */
+&lt;div className="agent-modal-buttons" style={{
+  display: 'flex',
+  gap: '12px',
+  marginTop: '20px'
+}}&gt;
+  &lt;IonButton fill="outline" expand="block" size="large" onClick={onCancel}&gt;
+    Abbrechen
+  &lt;/IonButton&gt;
+  &lt;IonButton expand="block" size="large" onClick={onConfirm}&gt;
+    &lt;IonIcon icon={getAgentIcon(confirmation.agentId)} /&gt;
+    Ja, starten
+  &lt;/IonButton&gt;
+&lt;/div&gt;</pre>
+
+        <h2>✅ Code Analysis Results:</h2>
+        <ul>
+            <li>✅ Buttons are definitely present in the code</li>
+            <li>✅ Proper onClick handlers (onConfirm, onCancel)</li>
+            <li>✅ Proper Ionic components (IonButton)</li>
+            <li>✅ Proper styling with flex layout</li>
+            <li>✅ Modal integration looks correct in ChatView</li>
+        </ul>
+
+        <p><strong>Conclusion:</strong> The issue is likely a runtime CSS or rendering problem, not a code structure issue.</p>
+    </div>
+
+    <script>
+        console.log('🔍 Modal Debug Test loaded');
+        console.log('Next step: Test the actual modal at http://localhost:5175');
+    </script>
+</body>
+</html>

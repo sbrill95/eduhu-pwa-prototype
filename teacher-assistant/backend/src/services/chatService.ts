@@ -7,6 +7,7 @@ import {
 } from '../types';
 import { OpenAI } from 'openai';
 import { logError } from '../config/logger';
+import { AgentIntentService } from './agentIntentService';
 
 /**
  * Service class for handling OpenAI chat completions
@@ -65,6 +66,26 @@ export class ChatService {
         );
       }
 
+      // Detect agent intent from last user message
+      const lastUserMessage = messages
+        .filter(m => m.role === 'user')
+        .pop();
+
+      let agentSuggestion = null;
+      if (lastUserMessage && typeof lastUserMessage.content === 'string') {
+        const intent = AgentIntentService.detectAgentIntent(
+          lastUserMessage.content
+        );
+
+        if (intent && intent.confidence > 0.7) {
+          agentSuggestion = {
+            agentType: intent.agentType,
+            reasoning: intent.reasoning,
+            prefillData: intent.prefillData,
+          };
+        }
+      }
+
       // Create successful response
       const response: ChatResponse = {
         success: true,
@@ -77,6 +98,7 @@ export class ChatService {
           },
           model: completion.model,
           finish_reason: choice.finish_reason || 'unknown',
+          ...(agentSuggestion && { agentSuggestion }),
         },
         timestamp: new Date().toISOString(),
       };

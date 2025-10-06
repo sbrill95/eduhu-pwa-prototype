@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Agent Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background-color: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        #results { margin-top: 20px; }
+        iframe { width: 100%; height: 600px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Frontend Agent Confirmation System Test</h1>
+
+    <div id="results">
+        <div class="test-result info">🚀 Starting frontend agent test...</div>
+    </div>
+
+    <h3>Application Preview (with auth bypass):</h3>
+    <iframe id="app-frame" src="http://localhost:5180"></iframe>
+
+    <script>
+        const results = document.getElementById('results');
+
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+
+        function testFrontendAgents() {
+            const iframe = document.getElementById('app-frame');
+
+            iframe.onload = function() {
+                addResult('✅ Application loaded successfully', 'success');
+
+                // Test if we can access the iframe content (same origin)
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    addResult('✅ Same-origin access successful', 'success');
+
+                    // Check for auth bypass
+                    setTimeout(() => {
+                        const bodyText = iframeDoc.body.textContent;
+                        if (bodyText.includes('Starten Sie Ihr Gespräch') || bodyText.includes('Chat')) {
+                            addResult('✅ Auth bypass working - main interface loaded', 'success');
+                        } else if (bodyText.includes('Anmeldung') || bodyText.includes('Login')) {
+                            addResult('❌ Auth bypass failed - still showing login', 'error');
+                        } else {
+                            addResult('⚠️ Unknown state - could not determine auth status', 'info');
+                        }
+
+                        // Test navigation to chat
+                        const chatButton = iframeDoc.querySelector('button[aria-label="Chat"], button:contains("Chat")');
+                        if (chatButton) {
+                            addResult('✅ Chat button found', 'success');
+                        } else {
+                            addResult('⚠️ Chat button not found', 'info');
+                        }
+                    }, 3000);
+
+                } catch (e) {
+                    addResult('❌ Cannot access iframe content (CORS/different origin): ' + e.message, 'error');
+                }
+            };
+
+            iframe.onerror = function() {
+                addResult('❌ Failed to load application', 'error');
+            };
+        }
+
+        // Test backend API connectivity
+        async function testBackendAPI() {
+            try {
+                const response = await fetch('http://localhost:3009/api/health');
+                const data = await response.json();
+                if (data.success) {
+                    addResult('✅ Backend API is responding', 'success');
+                } else {
+                    addResult('❌ Backend API returned error', 'error');
+                }
+            } catch (e) {
+                addResult('❌ Backend API not accessible: ' + e.message, 'error');
+            }
+        }
+
+        // Test LangGraph agents
+        async function testLangGraphAgents() {
+            try {
+                const response = await fetch('http://localhost:3009/api/langgraph/agents/status');
+                const data = await response.json();
+                if (data.success && data.data.agents.total > 0) {
+                    addResult(`✅ LangGraph agents available: ${data.data.agents.total} agents`, 'success');
+                } else {
+                    addResult('❌ No LangGraph agents found', 'error');
+                }
+            } catch (e) {
+                addResult('❌ LangGraph agents not accessible: ' + e.message, 'error');
+            }
+        }
+
+        // Start tests
+        testBackendAPI();
+        testLangGraphAgents();
+        testFrontendAgents();
+    </script>
+</body>
+</html>

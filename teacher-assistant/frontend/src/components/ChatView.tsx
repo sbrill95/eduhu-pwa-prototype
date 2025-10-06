@@ -140,6 +140,9 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [lastMessageId, setLastMessageId] = useState<string | null>(null);
 
+  // BUG-001 FIX: Track processed prefilled prompts to prevent infinite loop
+  const processedPromptRef = useRef<string | null>(null);
+
   // TASK-009: State for image preview modal
   const [showImagePreviewModal, setShowImagePreviewModal] = useState(false);
   const [selectedImageMaterial, setSelectedImageMaterial] = useState<any>(null);
@@ -172,14 +175,17 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
     clearAgentState,
   } = useChat();
 
-  // Auto-generate chat summary
+  // FEATURE FLAG: Enable chat summary (backend route now active)
+  const ENABLE_CHAT_SUMMARY = true;
+
+  // Auto-generate chat summary (DISABLED due to missing backend route)
   useChatSummary({
     chatId: currentSessionId || '',
     messages: messages.map(m => ({
       role: m.role,
       content: m.content
     })),
-    enabled: !!currentSessionId && !!user
+    enabled: ENABLE_CHAT_SUMMARY && !!currentSessionId && !!user
   });
 
   const validateFile = (file: File): string | null => {
@@ -300,27 +306,86 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
     }
   }, [currentSessionId]); // onSessionChange is stable useCallback in App.tsx, safe to omit
 
-  // Handle prefilled prompt from Home screen
+  // Handle prefilled prompt from Home screen with auto-submit
+  // BUG-001 FIX: Use ref to track processed prompts and prevent infinite loop
   useEffect(() => {
-    if (prefilledPrompt) {
-      console.log('Setting prefilled prompt:', prefilledPrompt);
+    // Only process if we have a new prefilled prompt that hasn't been processed yet
+    if (prefilledPrompt && prefilledPrompt !== processedPromptRef.current) {
+      console.log('[ChatView] Setting prefilled prompt:', prefilledPrompt);
+
+      // Mark as processed IMMEDIATELY to prevent re-triggers
+      processedPromptRef.current = prefilledPrompt;
+
       setInputValue(prefilledPrompt);
-      // Focus the input field for better UX (on desktop)
-      // Note: Auto-focus might not work on mobile due to browser restrictions
-      setTimeout(() => {
-        const inputElement = document.querySelector('ion-input');
-        if (inputElement) {
-          inputElement.setFocus();
+
+      // AUTO-SUBMIT after brief delay (allow input to render)
+      setTimeout(async () => {
+        console.log('[ChatView] Auto-submitting prefilled prompt');
+
+        // Validate prompt
+        const trimmedPrompt = prefilledPrompt.trim();
+        if (!trimmedPrompt) {
+          console.warn('[ChatView] Auto-submit skipped: empty prompt');
+          processedPromptRef.current = null; // Reset on validation failure
+          return;
         }
-      }, 100);
+
+        if (trimmedPrompt.length > MAX_CHAR_LIMIT) {
+          setInputError(`Nachricht ist zu lang (${trimmedPrompt.length}/${MAX_CHAR_LIMIT} Zeichen)`);
+          console.warn('[ChatView] Auto-submit skipped: prompt too long');
+          processedPromptRef.current = null; // Reset on validation failure
+          return;
+        }
+
+        // Create message request
+        const apiMessages: ApiChatMessage[] = [
+          {
+            role: 'user' as const,
+            content: trimmedPrompt,
+          },
+        ];
+
+        try {
+          await sendMessage(apiMessages);
+
+          // Clear prefilled prompt after successful send
+          if (onClearPrefill) {
+            onClearPrefill();
+          }
+
+          // Clear input (sendMessage already does this in handleSubmit, but be explicit)
+          setInputValue('');
+
+          console.log('[ChatView] Auto-submit successful');
+        } catch (error) {
+          console.error('[ChatView] Auto-submit failed:', error);
+          // Reset ref on error to allow retry
+          processedPromptRef.current = null;
+          // Keep prompt in input on error for manual retry
+          setInputError('Automatisches Senden fehlgeschlagen. Bitte erneut versuchen.');
+        }
+      }, 300); // 300ms delay for smooth UX (not too fast, not too slow)
+    } else if (!prefilledPrompt && processedPromptRef.current) {
+      // Reset tracking when prefill is cleared from parent
+      console.log('[ChatView] Prefill cleared, resetting processed ref');
+      processedPromptRef.current = null;
     }
-  }, [prefilledPrompt]);
+  }, [prefilledPrompt, sendMessage, onClearPrefill]);
+
+  // FEATURE FLAG: Disable profile extraction to prevent 404 errors (BUG-004)
+  const ENABLE_PROFILE_EXTRACTION = false;
 
   // Profile extraction on chat unmount (TASK-016: Profile Redesign Auto-Extraction)
   // Triggers when user leaves chat view with meaningful conversation
+  // DISABLED due to missing backend route
   const hasExtractedRef = useRef(false);
 
   useEffect(() => {
+    // Skip if feature disabled
+    if (!ENABLE_PROFILE_EXTRACTION) {
+      return;
+    }
+
     // Reset extraction flag when session changes
     hasExtractedRef.current = false;
 
@@ -456,11 +521,11 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
       let errorMessage = 'Nachricht konnte nicht gesendet werden.';
       if (error instanceof Error) {
         if (error.message.includes('network')) {
-          errorMessage = 'Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.';
+          errorMessage = 'Netzwerkfehler. Bitte überprüfe deine Internetverbindung.';
         } else if (error.message.includes('timeout')) {
-          errorMessage = 'Zeitüberschreitung. Der Server antwortet nicht. Bitte versuchen Sie es erneut.';
+          errorMessage = 'Zeitüberschreitung. Der Server antwortet nicht. Bitte versuche es erneut.';
         } else if (error.message.includes('rate limit')) {
-          errorMessage = 'Zu viele Anfragen. Bitte warten Sie einen Moment und versuchen Sie es erneut.';
+          errorMessage = 'Zu viele Anfragen. Bitte warte einen Moment und versuche es erneut.';
         } else {
           errorMessage = `Fehler: ${error.message}`;
         }
@@ -618,11 +683,23 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
           <div style={{ flex: 1, marginBottom: '16px', paddingTop: '80px', paddingBottom: '140px' }}>
             {messages.map((message) => {
               // FIX-002: Check metadata FIRST for agentSuggestion (from InstantDB)
+              // DEBUG BUG-003: Enhanced logging to debug agent detection
+              console.log('[ChatView BUG-003 DEBUG] Message:', {
+                id: message.id,
+                role: message.role,
+                hasMetadata: !!message.metadata,
+                metadataType: typeof message.metadata,
+                metadataValue: message.metadata,
+                content: message.content?.substring(0, 50) + '...'
+              });
+
               if (message.metadata) {
                 try {
                   const metadata = typeof message.metadata === 'string'
                     ? JSON.parse(message.metadata)
                     : message.metadata;
+
+                  console.log('[ChatView BUG-003 DEBUG] Parsed metadata:', metadata);
 
                   if (metadata.agentSuggestion) {
                     console.log('[ChatView] Found agentSuggestion in metadata:', metadata.agentSuggestion);
@@ -639,11 +716,15 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                         </div>
                       </div>
                     );
+                  } else {
+                    console.log('[ChatView BUG-003 DEBUG] No agentSuggestion in metadata');
                   }
                 } catch (e) {
                   console.error('[ChatView] Failed to parse metadata:', e);
                   // Not JSON metadata, continue with regular rendering
                 }
+              } else {
+                console.log('[ChatView BUG-003 DEBUG] No metadata field on message');
               }
 
               // TASK-003: NEW Interface - Check for agentSuggestion property (direct property from local messages)

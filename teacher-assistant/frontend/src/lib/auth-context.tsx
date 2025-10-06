@@ -1,5 +1,12 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import { createContext, useContext, type ReactNode, useEffect } from 'react';
 import db from './instantdb';
+import {
+  isTestMode,
+  createTestAuthState,
+  testAuthMethods,
+  warnIfTestMode,
+  TEST_USER,
+} from './test-auth';
 
 // Auth context interface
 interface AuthContextType {
@@ -20,10 +27,29 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  // Use InstantDB's auth hooks
-  const { isLoading, user, error } = db.useAuth();
+  // Check if test mode is active and warn
+  useEffect(() => {
+    warnIfTestMode();
+  }, []);
+
+  // SECURITY CHECK: Use test auth ONLY if VITE_TEST_MODE is explicitly "true"
+  const useTestAuth = isTestMode();
+
+  // Use test auth if in test mode, otherwise use real InstantDB auth
+  const realAuth = db.useAuth();
+  const testAuthState = createTestAuthState();
+
+  // Select auth based on test mode flag
+  const { isLoading, user, error } = useTestAuth
+    ? testAuthState
+    : realAuth;
 
   const signOut = async () => {
+    // Use test auth methods in test mode
+    if (useTestAuth) {
+      return testAuthMethods.signOut();
+    }
+
     try {
       await db.auth.signOut();
     } catch (err) {
@@ -33,6 +59,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const sendMagicCode = async (email: string) => {
+    // Use test auth methods in test mode
+    if (useTestAuth) {
+      return testAuthMethods.sendMagicCode(email);
+    }
+
     try {
       console.log('DEBUG: Sending magic code to email:', email);
       const result = await db.auth.sendMagicCode({ email });
@@ -44,6 +75,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const signInWithMagicCode = async (params: { email: string; code: string }) => {
+    // Use test auth methods in test mode
+    if (useTestAuth) {
+      return testAuthMethods.signInWithMagicCode(params);
+    }
+
     try {
       console.log('DEBUG: Attempting to sign in with magic code', params);
       const result = await db.auth.signInWithMagicCode(params);
