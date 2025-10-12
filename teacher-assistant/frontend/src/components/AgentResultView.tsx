@@ -427,9 +427,9 @@ export const AgentResultView: React.FC = () => {
           </div>
         )}
 
-        {/* 3-Button Layout - T013: Updated for User Story 5 Design System Consistency */}
+        {/* 3-Button Layout - T013: User Story 5 - Result View Design System Consistency */}
         <div className="flex flex-col sm:flex-row gap-4">
-          {/* Button 1: Weiter im Chat (PRIMARY) */}
+          {/* Button 1: Weiter im Chat (PRIMARY) - T013: Updated styles */}
           <button
             data-testid="continue-in-chat-button"
             onClick={() => {
@@ -442,7 +442,7 @@ export const AgentResultView: React.FC = () => {
             Weiter im Chat 💬
           </button>
 
-          {/* Button 2: In Library öffnen (SECONDARY) */}
+          {/* Button 2: In Library öffnen (SECONDARY) - T013: Updated styles */}
           <button
             onClick={handleOpenInLibrary}
             className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors"
@@ -450,7 +450,7 @@ export const AgentResultView: React.FC = () => {
             In Library öffnen 📚
           </button>
 
-          {/* Button 3: Neu generieren (TERTIARY) */}
+          {/* Button 3: Neu generieren (TERTIARY) - T013: Updated styles */}
           <button
             onClick={handleRegenerate}
             className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors"

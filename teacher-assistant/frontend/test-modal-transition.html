@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Modal Transition Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+    .log { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 4px; max-height: 400px; overflow-y: auto; }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Modal Transition Test - useState vs useRef</h1>
+
+  <h2>Scenario: Close Modal A → Open Modal B</h2>
+  <p>This simulates MaterialPreviewModal closing and AgentFormView opening.</p>
+
+  <button onclick="testWithState()">Test with useState (OLD - BROKEN)</button>
+  <button onclick="testWithRef()">Test with useRef (NEW - FIXED)</button>
+
+  <div class="log" id="log"></div>
+
+  <script>
+    const log = document.getElementById('log');
+
+    function addLog(message, type = 'info') {
+      const entry = document.createElement('div');
+      entry.className = type;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function testWithState() {
+      log.innerHTML = '';
+      addLog('=== Testing with useState ===');
+
+      let pendingRegeneration = null;
+
+      // Simulate handleRegenerate()
+      addLog('1. handleRegenerate() called');
+      addLog('2. setPendingRegeneration(params) - ASYNC state update queued');
+      pendingRegeneration = { description: 'Test', imageStyle: 'realistic' };
+
+      addLog('3. onClose() called - triggers onDidDismiss immediately');
+
+      // Simulate onDidDismiss (runs BEFORE state update)
+      setTimeout(() => {
+        addLog('4. onDidDismiss() executes');
+        addLog(`5. Check pendingRegeneration: ${pendingRegeneration ? 'HAS VALUE' : 'NULL'}`, pendingRegeneration ? 'success' : 'error');
+
+        if (pendingRegeneration) {
+          addLog('6. ✅ Opening AgentFormView with params', 'success');
+        } else {
+          addLog('6. ❌ pendingRegeneration is NULL - AgentFormView NOT opened!', 'error');
+          addLog('   REASON: React state updates are async - onDidDismiss runs before setPendingRegeneration completes', 'error');
+        }
+
+        // Simulate React state update completing AFTER onDidDismiss
+        setTimeout(() => {
+          addLog('7. ⚠️ React state update completes NOW (too late!)', 'error');
+        }, 100);
+      }, 10);
+    }
+
+    function testWithRef() {
+      log.innerHTML = '';
+      addLog('=== Testing with useRef ===');
+
+      let pendingRegenerationRef = { current: null };
+
+      // Simulate handleRegenerate()
+      addLog('1. handleRegenerate() called');
+      addLog('2. pendingRegenerationRef.current = params - SYNCHRONOUS update');
+      pendingRegenerationRef.current = { description: 'Test', imageStyle: 'realistic' };
+
+      addLog('3. onClose() called - triggers onDidDismiss immediately');
+
+      // Simulate onDidDismiss (runs immediately after ref update)
+      setTimeout(() => {
+        addLog('4. onDidDismiss() executes');
+        addLog(`5. Check pendingRegenerationRef.current: ${pendingRegenerationRef.current ? 'HAS VALUE' : 'NULL'}`, pendingRegenerationRef.current ? 'success' : 'error');
+
+        if (pendingRegenerationRef.current) {
+          addLog('6. ✅ Opening AgentFormView with params', 'success');
+          addLog(`   Params: ${JSON.stringify(pendingRegenerationRef.current)}`, 'success');
+          addLog('7. ✅ SUCCESS - AgentFormView opened!', 'success');
+        } else {
+          addLog('6. ❌ pendingRegenerationRef.current is NULL - AgentFormView NOT opened!', 'error');
+        }
+      }, 10);
+    }
+  </script>
+</body>
+</html>

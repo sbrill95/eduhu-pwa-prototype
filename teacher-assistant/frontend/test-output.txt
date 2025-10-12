@@ -1,33 +1,255 @@
 
-Running 4 tests using 1 worker
+Running 2 tests using 1 worker
 
 [info] api: => browser.newContext started []
 [info] api: <= browser.newContext succeeded []
 [info] api: => browserContext.newPage started []
 [info] api: <= browserContext.newPage succeeded []
 
-========================================
-   COMPLETE IMAGE GENERATION WORKFLOW   
-   10-Step E2E Test from TESTING-STRATEGY.md
-========================================
-
-START: Fresh Browser Session
-1. Browser öffnen: http://localhost:5173
-2. DevTools Console öffnen
-3. Prüfen: KEINE Errors
-
+🐛 INVESTIGATING BUG-001: Agent Confirmation Button Not Visible
+User report: "Button exists but is not visible - fundamental design problem"
 [info] api: => page.addInitScript started []
 [info] api: <= page.addInitScript succeeded []
 [info] api: => page.addInitScript started []
 [info] api: <= page.addInitScript succeeded []
 [info] api: => page.goto started []
-⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
-⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
-⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
-⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
-⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
-⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
-❌ Console Error: Mutation failed {status: 400, eventId: 07e2f9d2-96b7-45b6-b98b-1f5a52d85344, op: error, client-event-id: 07e2f9d2-96b7-45b6-b98b-1f5a52d85344, original-event: Object}
+⚠️ CONSOLE WARNING: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
+⚠️ CONSOLE WARNING: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
+⚠️ CONSOLE WARNING: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
+⚠️ CONSOLE WARNING: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
+⚠️ CONSOLE WARNING: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
+⚠️ CONSOLE WARNING: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+❌ CONSOLE ERROR: Mutation failed {status: 400, eventId: 43bd4ff7-f44d-4250-9718-83a0574fc956, op: error, client-event-id: 43bd4ff7-f44d-4250-9718-83a0574fc956, original-event: Object}
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+✅ Test auth successful
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+
+📍 Step 1: Navigate to Chat
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+✅ Chat loaded
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 Step 2: Send message to trigger agent
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.fill started []
+[info] api: <= elementHandle.fill succeeded []
+[info] api: => keyboard.press started []
+[info] api: <= keyboard.press succeeded []
+✅ Message sent
+
+📍 Step 3: Wait for agent confirmation (up to 15 seconds)
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 Step 4: DOM INVESTIGATION - Agent Confirmation Button
+
+🔍 Inspecting: Agent Button [[data-testid="agent-confirmation-start-button"]] [[data-testid="agent-confirmation-start-button"]]
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+✅ Element exists in DOM
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+[info] api: => elementHandle.boundingBox started []
+[info] api: <= elementHandle.boundingBox succeeded []
+[info] api: => elementHandle.evaluate started []
+[info] api: <= elementHandle.evaluate succeeded []
+[info] api: => elementHandle.evaluate started []
+[info] api: <= elementHandle.evaluate succeeded []
+[info] api: => elementHandle.evaluate started []
+[info] api: <= elementHandle.evaluate succeeded []
+[info] api: => elementHandle.evaluate started []
+[info] api: <= elementHandle.evaluate succeeded []
+  Computed Styles: {
+  "display": "block",
+  "visibility": "visible",
+  "opacity": "1",
+  "position": "static",
+  "zIndex": "auto",
+  "width": "506.396px",
+  "height": "56px",
+  "color": "rgb(255, 255, 255)",
+  "backgroundColor": "rgba(0, 0, 0, 0)",
+  "transform": "none",
+  "overflow": "visible",
+  "pointerEvents": "auto",
+  "fontSize": "16px",
+  "padding": "0px",
+  "margin": "0px",
+  "border": "0px solid rgb(255, 255, 255)"
+}
+  Bounding Box: { x: [33m34[39m, y: [33m284.8958435058594[39m, width: [33m506.3958740234375[39m, height: [33m56[39m }
+  Classes: flex-1 h-14 bg-primary-600 ring-2 ring-white ring-offset-2 text-white rounded-xl font-semibold text-base shadow-md hover:shadow-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200
+  Parent: {
+  "tag": "DIV",
+  "classes": "flex flex-col sm:flex-row gap-3",
+  "display": "flex",
+  "visibility": "visible",
+  "opacity": "1",
+  "overflow": "visible"
+}
+
+🔍 Inspecting: Agent Button [button:has-text("Jetzt starten")] [button:has-text("Jetzt starten")]
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+❌ Element NOT FOUND in DOM
+
+🔍 Inspecting: Agent Button [.agent-confirmation button] [.agent-confirmation button]
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+❌ Element NOT FOUND in DOM
+
+🔍 Inspecting: Agent Button [[class*="confirmation"] button] [[class*="confirmation"] button]
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+❌ Element NOT FOUND in DOM
+
+🔍 Inspecting: Agent Confirmation Card [[data-testid="agent-confirmation-card"]]
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+❌ Element NOT FOUND in DOM
+
+📍 Step 5: Visual inspection screenshots
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 Step 6: List all buttons in viewport
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+All buttons: [
+  {
+    "text": "Bild-Generierung starten ✨",
+    "classes": "flex-1 h-14 bg-primary-600 ring-2 ring-white ring-offset-2 text-white rounded-xl font-semibold text-base shadow-md hover:shadow-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200",
+    "visible": true,
+    "display": "block",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": "agent-confirmation-start-button"
+  },
+  {
+    "text": "Weiter im Chat 💬",
+    "classes": "flex-1 h-12 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 active:bg-gray-300 transition-colors duration-200 text-sm sm:text-base",
+    "visible": true,
+    "display": "block",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": null
+  },
+  {
+    "text": "",
+    "classes": "",
+    "visible": true,
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": null
+  },
+  {
+    "text": "",
+    "classes": "min-w-[44px] min-h-[44px] w-14 h-12 flex items-center justify-center rounded-xl border-none shadow-sm transition-all flex-shrink-0",
+    "visible": true,
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": null
+  },
+  {
+    "text": "",
+    "classes": "fixed z-50 w-14 h-14 flex items-center justify-center rounded-full shadow-lg transition-all duration-200 hover:scale-110 active:scale-95",
+    "visible": false,
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": null
+  },
+  {
+    "text": "",
+    "classes": "floating-profile-button",
+    "visible": false,
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": null
+  },
+  {
+    "text": "Home",
+    "classes": "transition-colors duration-200",
+    "visible": true,
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": null
+  },
+  {
+    "text": "Chat",
+    "classes": "transition-colors duration-200",
+    "visible": true,
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": "tab-chat"
+  },
+  {
+    "text": "Bibliothek",
+    "classes": "transition-colors duration-200",
+    "visible": true,
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": null
+  },
+  {
+    "text": "",
+    "classes": "instant-devtool-toggler",
+    "visible": false,
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "dataTestId": null
+  }
+]
+
+📊 BUG-001 Investigation Complete
+  Console Errors: [33m1[39m
+  Console Warnings: [33m6[39m
+  Button Selectors Tested: [33m4[39m
+  Total Buttons Found: [33m10[39m
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+  ✓  1 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-investigation-2025-10-12.spec.ts:176:3 › Bug Investigation: Agent Button & Library Modal › BUG-001: Agent Confirmation Button Not Visible (14.8s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+
+🐛 INVESTIGATING BUG-002: Library Modal Image Not Showing
+User report: "Can't open images. Displaced buttons but no image. Nothing works."
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.goto started []
+⚠️ CONSOLE WARNING: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
+⚠️ CONSOLE WARNING: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
+⚠️ CONSOLE WARNING: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
+⚠️ CONSOLE WARNING: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
+⚠️ CONSOLE WARNING: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
+⚠️ CONSOLE WARNING: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
 [info] api: <= page.goto succeeded []
 [info] api: => page.waitForTimeout started []
 [info] api: <= page.waitForTimeout succeeded []
@@ -36,795 +258,134 @@ START: Fresh Browser Session
 [info] api: => locator.count started []
 [info] api: <= locator.count succeeded []
 ✅ Test auth successful
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
 [info] api: => page.waitForTimeout started []
 [info] api: <= page.waitForTimeout succeeded []
-❌ 1 console errors on page load
 
---- STEP 1: Chat Message ---
-1. Chat Tab öffnen
-2. Eingabe: "Erstelle ein Bild vom Satz des Pythagoras"
-3. Send Button klicken
-[info] api: => locator.click started []
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => expect.toBeVisible started []
-[info] api: <= expect.toBeVisible succeeded []
-[info] api: => locator.fill started []
-[info] api: <= locator.fill succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.click started []
-[info] api: <= locator.click succeeded []
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 01-chat-message.png
-
---- STEP 2: Backend Response ---
-1. Console prüfen: NO "Failed to fetch" ✅
-2. Agent Confirmation erscheint ✅
-3. Orange Card (NICHT grün) ✅
-⏳ Waiting for OpenAI response (up to 20 seconds)...
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-✅ No "Failed to fetch" errors
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Agent Confirmation Card erschienen
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Orange gradient card detected (NOT green button)
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 02-confirmation-card.png
-
---- STEP 3: Form Opens ---
-1. "Bild-Generierung starten" klicken
-2. Fullscreen Form öffnet ✅
-3. Description vorausgefüllt: "Satz des Pythagoras" ✅
-[info] api: => locator.all started []
-[info] api: <= locator.all succeeded []
-Found 1 "Bild-Generierung starten" buttons
-[info] api: => locator.isVisible started []
-[info] api: <= locator.isVisible succeeded []
-[info] api: => locator.textContent started []
-[info] api: <= locator.textContent succeeded []
-  Button 1: visible=true, text="Bild-Generierung starten ✨"
-[info] api: => locator.click started []
-📝 [Browser Console] [AgentContext] Opening modal {agentType: image-generation, prefillData: Object, sessionId: 5c47c20e-ef91-440b-9855-a58d689d77e3}
-📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Fullscreen Form opened
-[info] api: => locator.inputValue started []
-[info] api: <= locator.inputValue succeeded []
-📝 Description field value: "vom Satz des Pythagoras"
-✅ Description field IS prefilled
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 03-form-prefilled.png
-
---- STEP 4: Generate ---
-1. "Generieren" Button klicken
-2. NUR EINE Progress Animation (mittig) ✅
-3. Warten (<30s)
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-Generate button count: 1
-[info] api: => locator.isVisible started []
-[info] api: <= locator.isVisible succeeded []
-[info] api: => locator.isEnabled started []
-[info] api: <= locator.isEnabled succeeded []
-[info] api: => locator.textContent started []
-[info] api: <= locator.textContent succeeded []
-Generate button state: { visible: [33mtrue[39m, enabled: [33mtrue[39m, text: [32m'Bild generieren'[39m }
-[info] api: => locator.scrollIntoViewIfNeeded started []
-[info] api: <= locator.scrollIntoViewIfNeeded succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-🖱️  Clicking generate button...
-[info] api: => locator.click started []
-📝 [Browser Console] [AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-08T20:30:04.685Z, isValidForm: true, submitting: false, formData: Object, agentType: image-generation}
-📝 [Browser Console] [AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }
-📝 [Browser Console] [AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-08T20:30:04.686Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}
-📝 [Browser Console] [AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}
-📝 [Browser Console] [AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}
-📝 [Browser Console] [ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-08T20:30:04.687Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}
-[info] api: <= locator.click succeeded []
-✅ Button click completed
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 04-progress-animation.png
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-Progress animations found: 0
-⚠️  Unexpected loader count: 0
-
---- STEP 5: Preview Opens ---
-1. Bild erscheint in Fullscreen ✅
-2. 3 Buttons sichtbar ✅
-⏳ Waiting for image generation (up to 70 seconds for DALL-E 3)...
-[info] api: => locator.waitFor started []
-📝 [Browser Console] [ApiClient] ✅ executeAgent RESPONSE {timestamp: 2025-10-08T20:30:28.511Z, success: true, hasImageUrl: true, responseKeys: Array(12), dataType: object}
-📝 [Browser Console] [AgentContext] 📨 API response received: {hasResponse: true, responseKeys: Array(12)}
-📝 [Browser Console] [AgentContext] ✅ Agent execution response received {hasImageUrl: true, hasRevisedPrompt: true, hasTitle: true, responseKeys: Array(12), imageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-...}
-📝 [Browser Console] [AgentContext] Extracted executionId: exec-1759955428508
-📝 [Browser Console] [AgentContext] 🔍 Checking if response has image_url... {hasImageUrl: true, responseImageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-…ontrol=public%2C%20max-age%3D86400%2C%20immutable}
-📝 [Browser Console] [AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase {executionId: exec-1759955428508, hasImageUrl: true, imageUrlPreview: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-..., title: vom Satz des Pythagoras, revisedPromptLength: 529}
-📝 [Browser Console] [AgentContext] 🚀 Setting state to result phase NOW...
-📝 [Browser Console] [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true}
-📝 [Browser Console] [AgentFormView] 🎉 submitForm completed successfully
-📝 [Browser Console] [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true}
-📝 [Browser Console] [AgentContext] Saving to library {artifactId: exec-1759955428508}
-📝 [Browser Console] [AgentContext] Saving to library {artifactId: exec-1759955428508}
-❌ Console Error: [AgentContext] Save to library failed InstantAPIError: Validation failed for tx-steps: Invalid entity ID 'exec-1759955428508'. Entity IDs must be UUIDs. Use id() or lookup() to generate a valid UUID.
-    at Reactor._finishTransaction (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5433:20)
-    at Reactor._handleMutationError (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5621:12)
-    at Reactor._handleReceiveError (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5636:12)
-    at Reactor._handleReceive (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5596:14)
-    at Reactor._wsOnMessage (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5302:12)
-❌ Console Error: [AgentContext] Save to library failed InstantAPIError: Validation failed for tx-steps: Invalid entity ID 'exec-1759955428508'. Entity IDs must be UUIDs. Use id() or lookup() to generate a valid UUID.
-    at Reactor._finishTransaction (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5433:20)
-    at Reactor._handleMutationError (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5621:12)
-    at Reactor._handleReceiveError (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5636:12)
-    at Reactor._handleReceive (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5596:14)
-    at Reactor._wsOnMessage (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5302:12)
-[info] api: <= locator.waitFor succeeded []
-[info] api: => locator.isVisible started []
-[info] api: <= locator.isVisible succeeded []
-✅ Result view opened
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Generated image visible
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-Buttons found: 13
-✅ 3+ Buttons visible
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 05-preview-result.png
-
---- STEP 6: Continue in Chat ---
-1. "Weiter im Chat 💬" klicken
-2. Chat Tab öffnet ✅
-3. Bild als Thumbnail sichtbar (max 200px) ✅
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-[info] api: => locator.click started []
-📝 [Browser Console] [AgentContext] Closing modal
-📝 [Browser Console] [AgentContext] 🔍 navigateToTab CALLED {tab: chat, queryParams: undefined, hasCallback: true, callbackType: function, timestamp: 2025-10-08T20:30:29.375Z}
-📝 [Browser Console] [AgentContext] ➡️  Calling onNavigateToTab callback with tab: "chat"
-📝 [Browser Console] [AgentContext] ✅ onNavigateToTab("chat") callback completed
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-📝 [Browser Console] [AgentContext] Closing modal
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-❌ Not in chat view
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 06-chat-thumbnail.png
-
---- STEP 7: Thumbnail Clickable ---
-1. Thumbnail klicken
-2. Preview Modal öffnet ✅
-3. "Neu generieren" Button sichtbar ✅
-⏭️  Skipping STEP-7: No chat thumbnail
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 07-preview-from-chat.png
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-
---- STEP 8: Library Auto-Save ---
-1. Library Tab öffnen
-2. Filter "Bilder" klicken
-3. Generiertes Bild sichtbar ✅
-[info] api: => locator.click started []
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-❌ "Bilder" filter NOT found
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 08-library-image.png
-
---- STEP 9: Library Preview ---
-1. Bild in Library klicken
-2. Preview öffnet ✅
-3. "Neu generieren" Button sichtbar ✅
-⏭️  Skipping STEP-9: No library materials
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 09-library-preview.png
-
---- STEP 10: Regenerate from Library ---
-1. "Neu generieren" klicken
-2. Form öffnet mit Original-Params ✅
-3. Description field hat "Satz des Pythagoras" ✅
-⏭️  Skipping STEP-10: No regenerate button
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 10-regenerate-form.png
-
-========================================
-   TEST RESULTS SUMMARY
-========================================
-
-❌ INIT: Console errors: Mutation failed {status: 400, eventId: 07e2f9d2-96b7-45b6-b98b-1f5a52d85344, op: error, client-event-id: 07e2f9d2-96b7-45b6-b98b-1f5a52d85344, original-event: Object}
-✅ STEP-1: Chat message sent successfully
-✅ STEP-2: Agent confirmation with orange card
-✅ STEP-3: Form opened with prefilled data
-✅ STEP-4: 0 loaders found
-✅ STEP-5: Preview with image and buttons
-❌ STEP-6: Failed to navigate to chat
-❌ STEP-7: Skipped - no chat thumbnail
-❌ STEP-8: No "Bilder" filter
-❌ STEP-9: Skipped - no library materials
-❌ STEP-10: Skipped - no regenerate button
-
-========================================
-TOTAL: 5 PASS / 6 FAIL
-Console Errors: 3
-Console Logs Captured: 33
-Network Failures: 0
-Screenshots: 13 captured
-========================================
-
-
-📝 Component Logs (AgentFormView, AgentContext, ApiClient):
-  [AgentContext] Opening modal {agentType: image-generation, prefillData: Object, sessionId: 5c47c20e-ef91-440b-9855-a58d689d77e3}
-  [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-  [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-  [AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-08T20:30:04.685Z, isValidForm: true, submitting: false, formData: Object, agentType: image-generation}
-  [AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }
-  [AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-08T20:30:04.686Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}
-  [AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}
-  [AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}
-  [ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-08T20:30:04.687Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}
-  [ApiClient] ✅ executeAgent RESPONSE {timestamp: 2025-10-08T20:30:28.511Z, success: true, hasImageUrl: true, responseKeys: Array(12), dataType: object}
-  [AgentContext] 📨 API response received: {hasResponse: true, responseKeys: Array(12)}
-  [AgentContext] ✅ Agent execution response received {hasImageUrl: true, hasRevisedPrompt: true, hasTitle: true, responseKeys: Array(12), imageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-...}
-  [AgentContext] Extracted executionId: exec-1759955428508
-  [AgentContext] 🔍 Checking if response has image_url... {hasImageUrl: true, responseImageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-…ontrol=public%2C%20max-age%3D86400%2C%20immutable}
-  [AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase {executionId: exec-1759955428508, hasImageUrl: true, imageUrlPreview: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-..., title: vom Satz des Pythagoras, revisedPromptLength: 529}
-  [AgentContext] 🚀 Setting state to result phase NOW...
-  [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true}
-  [AgentFormView] 🎉 submitForm completed successfully
-  [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true}
-  [AgentContext] Saving to library {artifactId: exec-1759955428508}
-  [AgentContext] Saving to library {artifactId: exec-1759955428508}
-  [AgentContext] Closing modal
-  [AgentContext] 🔍 navigateToTab CALLED {tab: chat, queryParams: undefined, hasCallback: true, callbackType: function, timestamp: 2025-10-08T20:30:29.375Z}
-  [AgentContext] ➡️  Calling onNavigateToTab callback with tab: "chat"
-  [AgentContext] ✅ onNavigateToTab("chat") callback completed
-  [AgentContext] Closing modal
-📄 Report saved: C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\docs\testing\test-reports\2025-10-07\e2e-complete-workflow-report.json
-
+📍 Step 1: Navigate to Library → Materials
+[info] api: => page.click started []
+[info] api: <= page.click failed []
 [info] api: => browserContext.close started []
 [info] api: <= browserContext.close succeeded []
 [info] api: => browser.close started []
 [info] api: <= browser.close succeeded []
-  x  1 [Desktop Chrome - Chat Agent Testing] › e2e-tests\image-generation-complete-workflow.spec.ts:90:3 › Complete Image Generation Workflow - 10 Steps › Complete User Journey - Image Generation E2E (1.1m)
+  ✘  2 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-investigation-2025-10-12.spec.ts:289:3 › Bug Investigation: Agent Button & Library Modal › BUG-002: Library Modal Image Not Showing (21.3s)
 [info] api: => browser.newContext started []
 [info] api: <= browser.newContext succeeded []
 [info] api: => browserContext.newPage started []
 [info] api: <= browserContext.newPage succeeded []
 
-========================================
-   COMPLETE IMAGE GENERATION WORKFLOW   
-   10-Step E2E Test from TESTING-STRATEGY.md
-========================================
-
-START: Fresh Browser Session
-1. Browser öffnen: http://localhost:5173
-2. DevTools Console öffnen
-3. Prüfen: KEINE Errors
-
+🐛 INVESTIGATING BUG-002: Library Modal Image Not Showing
+User report: "Can't open images. Displaced buttons but no image. Nothing works."
 [info] api: => page.addInitScript started []
 [info] api: <= page.addInitScript succeeded []
 [info] api: => page.addInitScript started []
 [info] api: <= page.addInitScript succeeded []
 [info] api: => page.goto started []
-⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
-⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
-⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
-⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
-⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
-⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
+⚠️ CONSOLE WARNING: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
+⚠️ CONSOLE WARNING: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
+⚠️ CONSOLE WARNING: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
+⚠️ CONSOLE WARNING: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
+⚠️ CONSOLE WARNING: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
+⚠️ CONSOLE WARNING: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
 [info] api: <= page.goto succeeded []
 [info] api: => page.waitForTimeout started []
+❌ CONSOLE ERROR: Mutation failed {status: 400, eventId: 4196ee1b-ee12-4f34-b738-113b4194ab9f, op: error, client-event-id: 4196ee1b-ee12-4f34-b738-113b4194ab9f, original-event: Object}
 [info] api: <= page.waitForTimeout succeeded []
 [info] api: => locator.count started []
 [info] api: <= locator.count succeeded []
 [info] api: => locator.count started []
 [info] api: <= locator.count succeeded []
 ✅ Test auth successful
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
 [info] api: => page.waitForTimeout started []
 [info] api: <= page.waitForTimeout succeeded []
-✅ No console errors on page load
 
---- STEP 1: Chat Message ---
-1. Chat Tab öffnen
-2. Eingabe: "Erstelle ein Bild vom Satz des Pythagoras"
-3. Send Button klicken
-[info] api: => locator.click started []
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => expect.toBeVisible started []
-[info] api: <= expect.toBeVisible succeeded []
-[info] api: => locator.fill started []
-[info] api: <= locator.fill succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.click started []
-[info] api: <= locator.click succeeded []
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 01-chat-message.png
-
---- STEP 2: Backend Response ---
-1. Console prüfen: NO "Failed to fetch" ✅
-2. Agent Confirmation erscheint ✅
-3. Orange Card (NICHT grün) ✅
-⏳ Waiting for OpenAI response (up to 20 seconds)...
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-✅ No "Failed to fetch" errors
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Agent Confirmation Card erschienen
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Orange gradient card detected (NOT green button)
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 02-confirmation-card.png
-
---- STEP 3: Form Opens ---
-1. "Bild-Generierung starten" klicken
-2. Fullscreen Form öffnet ✅
-3. Description vorausgefüllt: "Satz des Pythagoras" ✅
-[info] api: => locator.all started []
-[info] api: <= locator.all succeeded []
-Found 1 "Bild-Generierung starten" buttons
-[info] api: => locator.isVisible started []
-[info] api: <= locator.isVisible succeeded []
-[info] api: => locator.textContent started []
-[info] api: <= locator.textContent succeeded []
-  Button 1: visible=true, text="Bild-Generierung starten ✨"
-[info] api: => locator.click started []
-📝 [Browser Console] [AgentContext] Opening modal {agentType: image-generation, prefillData: Object, sessionId: a45f73cd-b6ec-440a-9053-38a76ac2f1a4}
-📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Fullscreen Form opened
-[info] api: => locator.inputValue started []
-[info] api: <= locator.inputValue succeeded []
-📝 Description field value: "vom Satz des Pythagoras"
-✅ Description field IS prefilled
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 03-form-prefilled.png
-
---- STEP 4: Generate ---
-1. "Generieren" Button klicken
-2. NUR EINE Progress Animation (mittig) ✅
-3. Warten (<30s)
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-Generate button count: 1
-[info] api: => locator.isVisible started []
-[info] api: <= locator.isVisible succeeded []
-[info] api: => locator.isEnabled started []
-[info] api: <= locator.isEnabled succeeded []
-[info] api: => locator.textContent started []
-[info] api: <= locator.textContent succeeded []
-Generate button state: { visible: [33mtrue[39m, enabled: [33mtrue[39m, text: [32m'Bild generieren'[39m }
-[info] api: => locator.scrollIntoViewIfNeeded started []
-[info] api: <= locator.scrollIntoViewIfNeeded succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-🖱️  Clicking generate button...
-[info] api: => locator.click started []
-📝 [Browser Console] [AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-08T20:31:12.083Z, isValidForm: true, submitting: false, formData: Object, agentType: image-generation}
-📝 [Browser Console] [AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }
-📝 [Browser Console] [AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-08T20:31:12.085Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}
-📝 [Browser Console] [AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}
-📝 [Browser Console] [AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}
-📝 [Browser Console] [ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-08T20:31:12.086Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}
-[info] api: <= locator.click succeeded []
-✅ Button click completed
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 04-progress-animation.png
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-Progress animations found: 0
-⚠️  Unexpected loader count: 0
-
---- STEP 5: Preview Opens ---
-1. Bild erscheint in Fullscreen ✅
-2. 3 Buttons sichtbar ✅
-⏳ Waiting for image generation (up to 70 seconds for DALL-E 3)...
-[info] api: => locator.waitFor started []
-📝 [Browser Console] [ApiClient] ✅ executeAgent RESPONSE {timestamp: 2025-10-08T20:31:34.400Z, success: true, hasImageUrl: true, responseKeys: Array(12), dataType: object}
-📝 [Browser Console] [AgentContext] 📨 API response received: {hasResponse: true, responseKeys: Array(12)}
-📝 [Browser Console] [AgentContext] ✅ Agent execution response received {hasImageUrl: true, hasRevisedPrompt: true, hasTitle: true, responseKeys: Array(12), imageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-...}
-📝 [Browser Console] [AgentContext] Extracted executionId: exec-1759955494396
-📝 [Browser Console] [AgentContext] 🔍 Checking if response has image_url... {hasImageUrl: true, responseImageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-…ontrol=public%2C%20max-age%3D86400%2C%20immutable}
-📝 [Browser Console] [AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase {executionId: exec-1759955494396, hasImageUrl: true, imageUrlPreview: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-..., title: vom Satz des Pythagoras, revisedPromptLength: 430}
-📝 [Browser Console] [AgentContext] 🚀 Setting state to result phase NOW...
-📝 [Browser Console] [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true}
-📝 [Browser Console] [AgentFormView] 🎉 submitForm completed successfully
-📝 [Browser Console] [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true}
-📝 [Browser Console] [AgentContext] Saving to library {artifactId: exec-1759955494396}
-📝 [Browser Console] [AgentContext] Saving to library {artifactId: exec-1759955494396}
-❌ Console Error: [AgentContext] Save to library failed InstantAPIError: Validation failed for tx-steps: Invalid entity ID 'exec-1759955494396'. Entity IDs must be UUIDs. Use id() or lookup() to generate a valid UUID.
-    at Reactor._finishTransaction (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5433:20)
-    at Reactor._handleMutationError (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5621:12)
-    at Reactor._handleReceiveError (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5636:12)
-    at Reactor._handleReceive (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5596:14)
-    at Reactor._wsOnMessage (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5302:12)
-❌ Console Error: [AgentContext] Save to library failed InstantAPIError: Validation failed for tx-steps: Invalid entity ID 'exec-1759955494396'. Entity IDs must be UUIDs. Use id() or lookup() to generate a valid UUID.
-    at Reactor._finishTransaction (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5433:20)
-    at Reactor._handleMutationError (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5621:12)
-    at Reactor._handleReceiveError (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5636:12)
-    at Reactor._handleReceive (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5596:14)
-    at Reactor._wsOnMessage (http://localhost:5173/node_modules/.vite/deps/@instantdb_react.js?v=a4b91727:5302:12)
-[info] api: <= locator.waitFor succeeded []
-[info] api: => locator.isVisible started []
-[info] api: <= locator.isVisible succeeded []
-✅ Result view opened
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Generated image visible
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-Buttons found: 13
-✅ 3+ Buttons visible
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 05-preview-result.png
-
---- STEP 6: Continue in Chat ---
-1. "Weiter im Chat 💬" klicken
-2. Chat Tab öffnet ✅
-3. Bild als Thumbnail sichtbar (max 200px) ✅
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-[info] api: => locator.click started []
-📝 [Browser Console] [AgentContext] Closing modal
-📝 [Browser Console] [AgentContext] 🔍 navigateToTab CALLED {tab: chat, queryParams: undefined, hasCallback: true, callbackType: function, timestamp: 2025-10-08T20:31:35.215Z}
-📝 [Browser Console] [AgentContext] ➡️  Calling onNavigateToTab callback with tab: "chat"
-📝 [Browser Console] [AgentContext] ✅ onNavigateToTab("chat") callback completed
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-📝 [Browser Console] [AgentContext] Closing modal
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-❌ Not in chat view
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 06-chat-thumbnail.png
-
---- STEP 7: Thumbnail Clickable ---
-1. Thumbnail klicken
-2. Preview Modal öffnet ✅
-3. "Neu generieren" Button sichtbar ✅
-⏭️  Skipping STEP-7: No chat thumbnail
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 07-preview-from-chat.png
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-
---- STEP 8: Library Auto-Save ---
-1. Library Tab öffnen
-2. Filter "Bilder" klicken
-3. Generiertes Bild sichtbar ✅
-[info] api: => locator.click started []
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-❌ "Bilder" filter NOT found
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 08-library-image.png
-
---- STEP 9: Library Preview ---
-1. Bild in Library klicken
-2. Preview öffnet ✅
-3. "Neu generieren" Button sichtbar ✅
-⏭️  Skipping STEP-9: No library materials
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 09-library-preview.png
-
---- STEP 10: Regenerate from Library ---
-1. "Neu generieren" klicken
-2. Form öffnet mit Original-Params ✅
-3. Description field hat "Satz des Pythagoras" ✅
-⏭️  Skipping STEP-10: No regenerate button
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 10-regenerate-form.png
-
-========================================
-   TEST RESULTS SUMMARY
-========================================
-
-✅ INIT: Page loaded without errors
-✅ STEP-1: Chat message sent successfully
-✅ STEP-2: Agent confirmation with orange card
-✅ STEP-3: Form opened with prefilled data
-✅ STEP-4: 0 loaders found
-✅ STEP-5: Preview with image and buttons
-❌ STEP-6: Failed to navigate to chat
-❌ STEP-7: Skipped - no chat thumbnail
-❌ STEP-8: No "Bilder" filter
-❌ STEP-9: Skipped - no library materials
-❌ STEP-10: Skipped - no regenerate button
-
-========================================
-TOTAL: 6 PASS / 5 FAIL
-Console Errors: 2
-Console Logs Captured: 33
-Network Failures: 0
-Screenshots: 13 captured
-========================================
-
-
-📝 Component Logs (AgentFormView, AgentContext, ApiClient):
-  [AgentContext] Opening modal {agentType: image-generation, prefillData: Object, sessionId: a45f73cd-b6ec-440a-9053-38a76ac2f1a4}
-  [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-  [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-  [AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-08T20:31:12.083Z, isValidForm: true, submitting: false, formData: Object, agentType: image-generation}
-  [AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}
-  [AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }
-  [AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-08T20:31:12.085Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}
-  [AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}
-  [AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}
-  [ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-08T20:31:12.086Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}
-  [ApiClient] ✅ executeAgent RESPONSE {timestamp: 2025-10-08T20:31:34.400Z, success: true, hasImageUrl: true, responseKeys: Array(12), dataType: object}
-  [AgentContext] 📨 API response received: {hasResponse: true, responseKeys: Array(12)}
-  [AgentContext] ✅ Agent execution response received {hasImageUrl: true, hasRevisedPrompt: true, hasTitle: true, responseKeys: Array(12), imageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-...}
-  [AgentContext] Extracted executionId: exec-1759955494396
-  [AgentContext] 🔍 Checking if response has image_url... {hasImageUrl: true, responseImageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-…ontrol=public%2C%20max-age%3D86400%2C%20immutable}
-  [AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase {executionId: exec-1759955494396, hasImageUrl: true, imageUrlPreview: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-..., title: vom Satz des Pythagoras, revisedPromptLength: 430}
-  [AgentContext] 🚀 Setting state to result phase NOW...
-  [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true}
-  [AgentFormView] 🎉 submitForm completed successfully
-  [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true}
-  [AgentContext] Saving to library {artifactId: exec-1759955494396}
-  [AgentContext] Saving to library {artifactId: exec-1759955494396}
-  [AgentContext] Closing modal
-  [AgentContext] 🔍 navigateToTab CALLED {tab: chat, queryParams: undefined, hasCallback: true, callbackType: function, timestamp: 2025-10-08T20:31:35.215Z}
-  [AgentContext] ➡️  Calling onNavigateToTab callback with tab: "chat"
-  [AgentContext] ✅ onNavigateToTab("chat") callback completed
-  [AgentContext] Closing modal
-📄 Report saved: C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\docs\testing\test-reports\2025-10-07\e2e-complete-workflow-report.json
-
+📍 Step 1: Navigate to Library → Materials
+[info] api: => page.click started []
+[info] api: <= page.click failed []
 [info] api: => browserContext.close started []
 [info] api: <= browserContext.close succeeded []
 [info] api: => browser.close started []
 [info] api: <= browser.close succeeded []
-  x  2 [Desktop Chrome - Chat Agent Testing] › e2e-tests\image-generation-complete-workflow.spec.ts:90:3 › Complete Image Generation Workflow - 10 Steps › Complete User Journey - Image Generation E2E (retry #1) (1.0m)
-[info] api: => browser.newContext started []
-[info] api: <= browser.newContext succeeded []
-[info] api: => browserContext.newPage started []
-[info] api: <= browserContext.newPage succeeded []
+  ✘  3 [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-investigation-2025-10-12.spec.ts:289:3 › Bug Investigation: Agent Button & Library Modal › BUG-002: Library Modal Image Not Showing (retry #1) (22.1s)
 
-========================================
-   COMPLETE IMAGE GENERATION WORKFLOW   
-   10-Step E2E Test from TESTING-STRATEGY.md
-========================================
 
-START: Fresh Browser Session
-1. Browser öffnen: http://localhost:5173
-2. DevTools Console öffnen
-3. Prüfen: KEINE Errors
+  1) [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-investigation-2025-10-12.spec.ts:289:3 › Bug Investigation: Agent Button & Library Modal › BUG-002: Library Modal Image Not Showing 
 
-[info] api: => page.addInitScript started []
-[info] api: <= page.addInitScript succeeded []
-[info] api: => page.addInitScript started []
-[info] api: <= page.addInitScript succeeded []
-[info] api: => page.goto started []
-⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
-⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
-⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
-⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;
-⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;
-⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;
-[info] api: <= page.goto succeeded []
-[info] api: => page.waitForTimeout started []
-❌ Console Error: Mutation failed {status: 400, eventId: fc79b8ab-56c1-4ac5-97a8-93e6dc534a7e, op: error, client-event-id: fc79b8ab-56c1-4ac5-97a8-93e6dc534a7e, original-event: Object}
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Test auth successful
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-❌ 1 console errors on page load
+    TimeoutError: page.click: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('button:has-text("Library")')[22m
 
---- STEP 1: Chat Message ---
-1. Chat Tab öffnen
-2. Eingabe: "Erstelle ein Bild vom Satz des Pythagoras"
-3. Send Button klicken
-[info] api: => locator.click started []
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => expect.toBeVisible started []
-[info] api: <= expect.toBeVisible succeeded []
-[info] api: => locator.fill started []
-[info] api: <= locator.fill succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.click started []
-[info] api: <= locator.click succeeded []
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 01-chat-message.png
 
---- STEP 2: Backend Response ---
-1. Console prüfen: NO "Failed to fetch" ✅
-2. Agent Confirmation erscheint ✅
-3. Orange Card (NICHT grün) ✅
-⏳ Waiting for OpenAI response (up to 20 seconds)...
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-✅ No "Failed to fetch" errors
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Agent Confirmation Card erschienen
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Orange gradient card detected (NOT green button)
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 02-confirmation-card.png
+      302 |     // Navigate to Library
+      303 |     console.log('\n📍 Step 1: Navigate to Library → Materials');
+    > 304 |     await page.click('button:has-text("Library")');
+          |                ^
+      305 |     await page.waitForTimeout(1000);
+      306 |
+      307 |     await page.screenshot({
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-investigation-2025-10-12.spec.ts:304:16
 
---- STEP 3: Form Opens ---
-1. "Bild-Generierung starten" klicken
-2. Fullscreen Form öffnet ✅
-3. Description vorausgefüllt: "Satz des Pythagoras" ✅
-[info] api: => locator.all started []
-[info] api: <= locator.all succeeded []
-Found 1 "Bild-Generierung starten" buttons
-[info] api: => locator.isVisible started []
-[info] api: <= locator.isVisible succeeded []
-[info] api: => locator.textContent started []
-[info] api: <= locator.textContent succeeded []
-  Button 1: visible=true, text="Bild-Generierung starten ✨"
-[info] api: => locator.click started []
-📝 [Browser Console] [AgentContext] Opening modal {agentType: image-generation, prefillData: undefined, sessionId: 9d52f466-56b4-4ac5-9fb2-c54d6f8c222c}
-📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}
-[info] api: <= locator.click succeeded []
-[info] api: => page.waitForTimeout started []
-📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-✅ Fullscreen Form opened
-[info] api: => locator.inputValue started []
-[info] api: <= locator.inputValue succeeded []
-📝 Description field value: "vom Satz des Pythagoras"
-✅ Description field IS prefilled
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 03-form-prefilled.png
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
 
---- STEP 4: Generate ---
-1. "Generieren" Button klicken
-2. NUR EINE Progress Animation (mittig) ✅
-3. Warten (<30s)
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-Generate button count: 1
-[info] api: => locator.isVisible started []
-[info] api: <= locator.isVisible succeeded []
-[info] api: => locator.isEnabled started []
-[info] api: <= locator.isEnabled succeeded []
-[info] api: => locator.textContent started []
-[info] api: <= locator.textContent succeeded []
-Generate button state: { visible: [33mtrue[39m, enabled: [33mtrue[39m, text: [32m'Bild generieren'[39m }
-[info] api: => locator.scrollIntoViewIfNeeded started []
-[info] api: <= locator.scrollIntoViewIfNeeded succeeded []
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-🖱️  Clicking generate button...
-[info] api: => locator.click started []
-📝 [Browser Console] [AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-08T20:32:19.164Z, isValidForm: true, submitting: false, formData: undefined, agentType: image-generation}
-📝 [Browser Console] [AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}
-📝 [Browser Console] [AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }
-📝 [Browser Console] [AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-08T20:32:19.165Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}
-📝 [Browser Console] [AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}
-📝 [Browser Console] [AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}
-📝 [Browser Console] [ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-08T20:32:19.166Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}
-[info] api: <= locator.click succeeded []
-✅ Button click completed
-[info] api: => page.waitForTimeout started []
-[info] api: <= page.waitForTimeout succeeded []
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot succeeded []
-📸 Screenshot: 04-progress-animation.png
-[info] api: => locator.count started []
-[info] api: <= locator.count succeeded []
-Progress animations found: 0
-⚠️  Unexpected loader count: 0
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
 
---- STEP 5: Preview Opens ---
-1. Bild erscheint in Fullscreen ✅
-2. 3 Buttons sichtbar ✅
-⏳ Waiting for image generation (up to 70 seconds for DALL-E 3)...
-[info] api: => locator.waitFor started []
-[info] api: <= locator.waitFor failed []
-❌ Timeout waiting for result view (70s exceeded)
-[info] api: => page.screenshot started []
-[info] api: <= page.screenshot failed []
-[info] api: => browserContext.close started []
-[info] api: <= browserContext.close failed []
-[info] api: => browser.close started []
-[info] api: <= browser.close failed []
-  x  3 [Mobile Safari - Touch Interface Testing] › e2e-tests\image-generation-complete-workflow.spec.ts:90:3 › Complete Image Generation Workflow - 10 Steps › Complete User Journey - Image Generation E2E (0ms)
+    Error Context: test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: page.click: Timeout 15000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('button:has-text("Library")')[22m
+
+
+      302 |     // Navigate to Library
+      303 |     console.log('\n📍 Step 1: Navigate to Library → Materials');
+    > 304 |     await page.click('button:has-text("Library")');
+          |                ^
+      305 |     await page.waitForTimeout(1000);
+      306 |
+      307 |     await page.screenshot({
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\bug-investigation-2025-10-12.spec.ts:304:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\bug-investigation-2025-10--5210b-ary-Modal-Image-Not-Showing-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [Desktop Chrome - Chat Agent Testing] › e2e-tests\bug-investigation-2025-10-12.spec.ts:289:3 › Bug Investigation: Agent Button & Library Modal › BUG-002: Library Modal Image Not Showing 
+  1 passed (1.0m)
+
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report[39m
+[36m[39m

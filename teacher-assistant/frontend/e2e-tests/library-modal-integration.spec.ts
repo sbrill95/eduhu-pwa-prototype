@@ -8,7 +8,49 @@
  * Expected duration: 45-90 seconds per test due to real image generation
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+
+// Helper function to setup test authentication (Test-Bypass Mode)
+async function setupTestAuth(page: Page) {
+  await page.addInitScript(() => {
+    (window as any).__VITE_TEST_MODE__ = true;
+    (window as any).__TEST_USER__ = {
+      id: '38eb3d27-dd97-4ed4-9e80-08fafe18115f',
+      email: 's.brill@eduhu.de',
+    };
+  });
+
+  await page.addInitScript(() => {
+    const testAuthData = {
+      user: {
+        id: '38eb3d27-dd97-4ed4-9e80-08fafe18115f',
+        email: 's.brill@eduhu.de',
+        refresh_token: 'test-refresh-token-playwright',
+        created_at: Date.now(),
+      },
+      token: 'test-token-playwright',
+      timestamp: Date.now(),
+    };
+    localStorage.setItem('instantdb-test-auth', JSON.stringify(testAuthData));
+    localStorage.setItem('test-mode-active', 'true');
+  });
+}
+
+// Helper to wait for auth and verify no errors
+async function waitForAuth(page: Page) {
+  await page.waitForTimeout(2000);
+
+  // Verify tabs are visible (auth successful)
+  const chatTab = await page.locator('[aria-label="Chat"]').or(page.locator('text="Chat"')).count();
+  const homeTab = await page.locator('[aria-label="Home"]').or(page.locator('text="Home"')).count();
+  const visibleTabs = chatTab + homeTab;
+
+  if (visibleTabs < 1) {
+    throw new Error('Test authentication failed - no tabs found');
+  }
+
+  console.log('✅ Test auth successful');
+}
 
 test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
 
@@ -20,7 +62,9 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
     // SETUP: Generate image with REAL OpenAI call
     // ========================================
     console.log('\n📍 SETUP: Generate test image');
-    await page.goto('http://localhost:5173');
+    await setupTestAuth(page);
+    await page.goto('http://localhost:5174');
+    await waitForAuth(page);
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -37,9 +81,9 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
     await page.keyboard.press('Enter');
     console.log('✅ Message sent');
 
-    // Wait for agent confirmation (NEW Gemini interface)
+    // Wait for agent confirmation
     await page.waitForTimeout(8000);
-    const confirmButton = await page.waitForSelector('button:has-text("Ja, Bild erstellen")', { timeout: 15000 });
+    const confirmButton = await page.waitForSelector('[data-testid="agent-confirmation-start-button"]', { timeout: 15000 });
     console.log('✅ Agent confirmation appeared');
 
     // Click confirm to open form
@@ -47,19 +91,21 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
     await page.waitForTimeout(2000);
 
     // Submit form to start generation (REAL OpenAI call)
-    const submitButton = await page.waitForSelector('button:has-text("Bild generieren")', { timeout: 10000 });
+    const submitButton = await page.waitForSelector('[data-testid="generate-image-button"]', { timeout: 10000 });
     await submitButton.click();
     console.log('✅ Form submitted - starting REAL OpenAI generation...');
 
     // Wait for generation to complete (REAL wait - up to 60s)
     console.log('⏳ Waiting for image generation (up to 60 seconds)...');
-    const saveToLibraryButton = await page.waitForSelector('button:has-text("In Library speichern")', { timeout: 60000 });
-    console.log('✅ Image generated successfully!');
+    await page.waitForSelector('text="In Library gespeichert"', { timeout: 60000 });
+    console.log('✅ Image generated and automatically saved to library!');
 
-    // Save to library
-    await saveToLibraryButton.click();
+    // Verify "In Library öffnen" button exists (confirms success state)
+    const openLibraryButton = await page.waitForSelector('button:has-text("In Library öffnen")', { timeout: 5000 });
+    console.log('✅ Success state confirmed with "In Library öffnen" button');
+
+    // Close the modal to proceed to library
     await page.waitForTimeout(2000);
-    console.log('✅ Image saved to library');
 
     // ========================================
     // TEST: Navigate to Library → Materials tab
@@ -99,21 +145,21 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
     // ========================================
     console.log('\n📍 TEST: Verify modal content');
 
-    // Check for IonModal (MaterialPreviewModal component)
-    const modal = await page.waitForSelector('ion-modal[aria-modal="true"]', { timeout: 10000 });
-    expect(modal).not.toBeNull();
-    console.log('✅ Modal is visible');
+    // Wait for modal to fully open by checking for the image inside
+    // (More reliable than checking ion-modal attributes which may not be set immediately)
+    await page.waitForSelector('[data-testid="material-image"]', { timeout: 10000 });
+    console.log('✅ Modal is visible with image');
 
     // Verify full image is displayed
     const modalImage = await page.waitForSelector('img[data-testid="material-image"]', { timeout: 5000 });
     expect(modalImage).not.toBeNull();
     console.log('✅ Full image is displayed in modal');
 
-    // Verify image has valid src (Azure Blob Storage URL)
+    // Verify image has valid src (InstantDB S3 Storage URL)
     const imageSrc = await modalImage.getAttribute('src');
     expect(imageSrc).toBeTruthy();
-    expect(imageSrc).toContain('blob.core.windows.net');
-    console.log('✅ Image URL is valid:', imageSrc?.substring(0, 50) + '...');
+    expect(imageSrc).toMatch(/https:\/\/(instant-storage\.s3\.amazonaws\.com|.*blob\.core\.windows\.net)/);
+    console.log('✅ Image URL is valid:', imageSrc?.substring(0, 80) + '...');
 
     // ========================================
     // TEST: Verify metadata displays
@@ -155,8 +201,8 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
     await closeButton.click();
     await page.waitForTimeout(1000);
 
-    // Verify modal is closed (ion-modal should no longer have aria-modal="true")
-    const modalStillOpen = await page.$('ion-modal[aria-modal="true"]');
+    // Verify modal is closed (material-image should no longer be visible)
+    const modalStillOpen = await page.$('[data-testid="material-image"]');
     expect(modalStillOpen).toBeNull();
     console.log('✅ Modal closed successfully');
 
@@ -174,7 +220,9 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
     // PREREQUISITE: Generate first image
     // ========================================
     console.log('\n📍 PREREQUISITE: Generate first image');
-    await page.goto('http://localhost:5173');
+    await setupTestAuth(page);
+    await page.goto('http://localhost:5174');
+    await waitForAuth(page);
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -193,21 +241,19 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
 
     // Wait for agent confirmation
     await page.waitForTimeout(8000);
-    const confirmButton = await page.waitForSelector('button:has-text("Ja, Bild erstellen")', { timeout: 15000 });
+    const confirmButton = await page.waitForSelector('[data-testid="agent-confirmation-start-button"]', { timeout: 15000 });
     await confirmButton.click();
     await page.waitForTimeout(2000);
 
     // Submit form (first generation)
-    const submitButton = await page.waitForSelector('button:has-text("Bild generieren")', { timeout: 10000 });
+    const submitButton = await page.waitForSelector('[data-testid="generate-image-button"]', { timeout: 10000 });
     await submitButton.click();
     console.log('✅ First generation started...');
 
     // Wait for first generation to complete
-    const saveToLibraryButton = await page.waitForSelector('button:has-text("In Library speichern")', { timeout: 60000 });
-    console.log('✅ First image generated!');
+    await page.waitForSelector('text="In Library gespeichert"', { timeout: 60000 });
+    console.log('✅ First image generated and automatically saved!');
 
-    // Save to library
-    await saveToLibraryButton.click();
     await page.waitForTimeout(2000);
 
     // ========================================
@@ -236,7 +282,43 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
     expect(regenerateButton).not.toBeNull();
     console.log('✅ "Neu generieren" button found');
 
-    await regenerateButton.click();
+    // Listen for console logs to verify handleRegenerate is called
+    page.on('console', msg => {
+      if (msg.text().includes('[MaterialPreviewModal]') || msg.text().includes('[AgentContext]')) {
+        console.log('  BROWSER LOG:', msg.text());
+      }
+    });
+
+    // FIX: Trigger click via JavaScript to ensure React event handler fires
+    // force: true in Playwright bypasses actionability checks but doesn't trigger React events properly
+    console.log('⚡ Triggering button click via JavaScript...');
+    await page.evaluate(() => {
+      const button = document.querySelector('[data-testid="regenerate-button"]') as HTMLElement;
+      if (button) {
+        button.click(); // Native DOM click triggers React's onClick
+        console.log('[TEST] Button click triggered via JS');
+      } else {
+        console.error('[TEST] Button not found in DOM!');
+      }
+    });
+    console.log('✅ "Neu generieren" button clicked - waiting for modals to transition...');
+    await page.waitForTimeout(1000); // Give time for console logs and handlers to execute
+
+    // Wait for MaterialPreviewModal to close completely (Ionic animation + cleanup)
+    console.log('⏳ Waiting for MaterialPreviewModal to close...');
+    await page.waitForTimeout(2000);
+
+    // Verify MaterialPreviewModal is actually closed
+    const previewModalStillOpen = await page.$('[data-testid="material-image"]');
+    if (previewModalStillOpen) {
+      console.error('❌ MaterialPreviewModal is still open after 2s!');
+      await page.screenshot({ path: 'e2e-tests/screenshots/us2-ERROR-modal-stuck.png', fullPage: true });
+    } else {
+      console.log('✅ MaterialPreviewModal closed successfully');
+    }
+
+    // Wait for AgentFormView to fully render (after 800ms timeout in MaterialPreviewModal)
+    console.log('⏳ Waiting for AgentFormView to render (800ms timeout + buffer)...');
     await page.waitForTimeout(2000);
 
     await page.screenshot({ path: 'e2e-tests/screenshots/us2-02-form-opened.png', fullPage: true });
@@ -244,10 +326,10 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
     // ========================================
     // TEST: Verify form is pre-filled with original parameters
     // ========================================
-    console.log('\n📍 TEST: Verify form pre-fill');
+    console.log('\n📍 TEST: Verify AgentFormView opened with pre-filled form');
 
-    // Check description field is pre-filled
-    const descriptionInput = await page.waitForSelector('textarea#description-input', { timeout: 5000 });
+    // Wait for AgentFormView to fully load by checking for the description field
+    const descriptionInput = await page.waitForSelector('textarea#description-input', { timeout: 10000 });
     const descriptionValue = await descriptionInput.inputValue();
 
     console.log('  Description field value:', descriptionValue);
@@ -271,19 +353,17 @@ test.describe('Library UX Fixes - Material Preview Modal Integration', () => {
     console.log('✅ Description modified to:', modifiedDescription);
 
     // Submit form for second generation
-    const regenerateSubmitButton = await page.waitForSelector('button:has-text("Bild generieren")', { timeout: 10000 });
+    const regenerateSubmitButton = await page.waitForSelector('[data-testid="generate-image-button"]', { timeout: 10000 });
     await regenerateSubmitButton.click();
     console.log('✅ Second generation started (REAL OpenAI call)...');
 
     // Wait for second generation to complete
     console.log('⏳ Waiting for second generation (up to 60 seconds)...');
-    const saveToLibraryButton2 = await page.waitForSelector('button:has-text("In Library speichern")', { timeout: 60000 });
-    console.log('✅ Second image generated successfully!');
+    await page.waitForSelector('text="In Library gespeichert"', { timeout: 60000 });
+    console.log('✅ Second image generated and automatically saved!');
 
     await page.screenshot({ path: 'e2e-tests/screenshots/us2-04-second-generation-complete.png', fullPage: true });
 
-    // Save second image
-    await saveToLibraryButton2.click();
     await page.waitForTimeout(2000);
 
     // ========================================

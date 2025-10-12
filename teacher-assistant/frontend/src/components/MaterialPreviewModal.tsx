@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonModal,
   IonHeader,
@@ -92,8 +92,50 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
   const [editedTitle, setEditedTitle] = useState('');
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
+  // FIX: Use ref to track pending regeneration (avoids state timing issues)
+  const pendingRegenerationRef = React.useRef<{ description: string; imageStyle: 'realistic' | 'cartoon' | 'illustrative' | 'abstract' } | null>(null);
+
+  // FIX: Ref to the IonModal component for programmatic dismissal
+  const modalRef = React.useRef<HTMLIonModalElement>(null);
+
+  // FIX: Ref to close button for programmatic click
+  const closeButtonRef = React.useRef<HTMLIonButtonElement>(null);
+
   // TASK-010: Import AgentContext for regeneration
   const { openModal } = useAgent();
+
+  // FIX: Handle modal dismiss event to execute regeneration
+  const handleModalDidDismiss = () => {
+    console.log('[MaterialPreviewModal] onDidDismiss triggered', {
+      hasPendingRegeneration: !!pendingRegenerationRef.current,
+      pendingRegeneration: pendingRegenerationRef.current
+    });
+
+    // Always call onClose first to update parent component state
+    // This ensures the MaterialPreviewModal isOpen state is cleared immediately
+    onClose();
+
+    // Only execute regeneration if we have pending params
+    if (pendingRegenerationRef.current) {
+      console.log('[MaterialPreviewModal] ✅ Pending regeneration detected, executing...', pendingRegenerationRef.current);
+
+      // Store params and clear ref
+      const paramsToUse = { ...pendingRegenerationRef.current };
+      pendingRegenerationRef.current = null;
+
+      // Wait for Ionic modal close animation to complete (300ms + buffer)
+      // This ensures the DOM is fully clean before opening the new modal
+      setTimeout(() => {
+        console.log('[MaterialPreviewModal] 🚀 Opening AgentFormView with params:', paramsToUse);
+        try {
+          openModal('image-generation', paramsToUse, undefined);
+          console.log('[MaterialPreviewModal] ✅ openModal called successfully');
+        } catch (error) {
+          console.error('[MaterialPreviewModal] ❌ Error calling openModal:', error);
+        }
+      }, 800);  // Increased to 800ms for reliable Ionic modal transitions
+    }
+  };
 
   if (!material) return null;
 
@@ -140,6 +182,7 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
   };
 
   // T028-T029: Handle regeneration of images with new metadata structure
+  // FIX: Open AgentFormView directly, then close this modal
   const handleRegenerate = () => {
     console.log('[MaterialPreviewModal] Regenerating image - checking metadata...');
 
@@ -190,20 +233,24 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
 
     console.log('[MaterialPreviewModal] Final params for regeneration:', originalParams);
 
-    // Close preview modal
-    onClose();
-
-    // Open agent form with prefilled data
+    // FIX: Open AgentFormView FIRST (Ionic will handle modal stacking)
+    console.log('[MaterialPreviewModal] Opening AgentFormView immediately...');
     openModal('image-generation', originalParams, undefined);
+
+    // Then close this modal after a short delay to let AgentFormView render
+    setTimeout(() => {
+      console.log('[MaterialPreviewModal] Closing MaterialPreviewModal...');
+      onClose();
+    }, 300);
   };
 
   return (
     <>
-      <IonModal isOpen={isOpen} onDidDismiss={onClose}>
+      <IonModal ref={modalRef} isOpen={isOpen} onDidDismiss={handleModalDidDismiss}>
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
-              <IonButton onClick={onClose} data-testid="close-button">
+              <IonButton ref={closeButtonRef} onClick={onClose} data-testid="close-button">
                 <IonIcon icon={closeOutline} />
               </IonButton>
             </IonButtons>
@@ -234,7 +281,7 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
           </IonToolbar>
         </IonHeader>
 
-        <IonContent>
+        <IonContent className="ion-padding">
           {/* Material Preview Content */}
           <div style={{ padding: '16px' }}>
             {/* Show material based on type */}
@@ -248,12 +295,22 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
             )}
 
             {material.type === 'image' && material.metadata.artifact_data?.url && (
-              <img
-                src={material.metadata.artifact_data.url}
-                alt={material.title}
-                style={{ width: '100%', borderRadius: '8px' }}
-                data-testid="material-image"
-              />
+              <div>
+                <img
+                  src={material.metadata.artifact_data.url}
+                  alt={material.title}
+                  style={{ width: '100%', borderRadius: '8px' }}
+                  data-testid="material-image"
+                  onError={(e) => {
+                    // Replace with placeholder on load failure (expired URL)
+                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="%23f3f4f6"/><text x="50%" y="50%" text-anchor="middle" fill="%239ca3af" font-family="system-ui" font-size="16">Bild nicht verfügbar</text></svg>';
+                    (e.target as HTMLImageElement).style.opacity = '0.5';
+                  }}
+                />
+                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '8px', textAlign: 'center' }}>
+                  Hinweis: Bilder älter als 7 Tage müssen möglicherweise neu generiert werden.
+                </p>
+              </div>
             )}
 
             {material.metadata.content && (
@@ -297,7 +354,7 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
             </div>
 
             {/* Actions */}
-            <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px', paddingBottom: '32px' }}>
               {/* TASK-010: Regenerate button for images */}
               {material.type === 'image' && material.source === 'agent-generated' && (
                 <IonButton

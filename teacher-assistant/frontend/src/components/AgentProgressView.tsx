@@ -172,11 +172,19 @@ export const AgentProgressView: React.FC = () => {
               </div>
             </div>
           ) : (
-            /* Fallback: Simple Loading Message (No WebSocket or No Progress Yet) */
-            <div className="text-center">
-              <p className="text-lg font-medium text-gray-700">
+            /* Fallback: Simple Loading Message (No WebSocket or No Progress Yet) - T011: User Story 4 */
+            <div className="text-center space-y-4">
+              {/* Spinner - T011 */}
+              <div className="flex justify-center">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent" />
+              </div>
+
+              {/* Main message - T011 */}
+              <p className="mt-4 text-lg font-medium text-gray-700">
                 Dein Bild wird erstellt...
               </p>
+
+              {/* Sub-message - T011 */}
               <p className="mt-2 text-sm text-gray-500">
                 Das kann bis zu 1 Minute dauern
               </p>

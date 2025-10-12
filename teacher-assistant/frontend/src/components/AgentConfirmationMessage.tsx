@@ -275,10 +275,10 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
           <button
             data-testid="agent-confirmation-start-button"
             onClick={handleConfirm}
-            className="flex-1 h-14 bg-primary-500 text-white rounded-xl font-semibold text-base shadow-md hover:shadow-lg hover:bg-primary-600 active:bg-primary-700 transition-all duration-200"
+            className="flex-1 h-14 bg-primary-600 ring-2 ring-white ring-offset-2 text-white rounded-xl font-semibold text-base shadow-md hover:shadow-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200"
             aria-label="Bild-Generierung starten"
           >
-            Bild-Generierung starten ✨
+            Bild-Generierung starten
           </button>
 
           {/* Cancel Button - Continue Chat (SECONDARY - BOTTOM/RIGHT) */}
