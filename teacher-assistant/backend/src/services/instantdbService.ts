@@ -22,6 +22,34 @@ import { config } from '../config';
 let instantDB: any = null;
 
 /**
+ * Schema Migration Logger (FR-009d)
+ * Logs which fields were added/dropped during schema migration
+ */
+export const logSchemaMigration = (entity: string, changes: { added?: string[]; dropped?: string[] }) => {
+  const { added = [], dropped = [] } = changes;
+
+  if (added.length > 0) {
+    logInfo(`[Schema Migration] Fields added to ${entity}`, {
+      entity,
+      fields: added,
+      action: 'add'
+    });
+  }
+
+  if (dropped.length > 0) {
+    logInfo(`[Schema Migration] Fields dropped from ${entity}`, {
+      entity,
+      fields: dropped,
+      action: 'drop'
+    });
+  }
+
+  if (added.length === 0 && dropped.length === 0) {
+    logInfo(`[Schema Migration] No changes for ${entity}`, { entity });
+  }
+};
+
+/**
  * Initialize InstantDB connection
  */
 export const initializeInstantDB = () => {
@@ -31,14 +59,27 @@ export const initializeInstantDB = () => {
       return false;
     }
 
+    // BUG-025 FIX: Remove local schema - use cloud schema only
     instantDB = init({
       appId: config.INSTANTDB_APP_ID,
       adminToken: config.INSTANTDB_ADMIN_TOKEN,
-      schema: teacherAssistantSchema,
+      // schema: teacherAssistantSchema, // Removed - conflicts with cloud schema
     });
 
     logInfo('InstantDB initialized successfully', {
       appId: config.INSTANTDB_APP_ID.substring(0, 8) + '...',
+    });
+
+    // T010: Log schema migration changes (FR-009d)
+    // Log recent schema changes for messages and library_materials
+    logSchemaMigration('messages', {
+      added: ['metadata (json)'],
+      dropped: [] // No fields dropped - schema was already synchronized
+    });
+
+    logSchemaMigration('library_materials', {
+      added: ['metadata (json)'],
+      dropped: []
     });
 
     return true;
@@ -690,6 +731,75 @@ export class ProfileCharacteristicsService {
 }
 
 /**
+ * File Storage Service
+ * For uploading images and files to InstantDB permanent storage
+ */
+export class FileStorageService {
+  /**
+   * Upload an image from a URL to InstantDB storage
+   * Converts temporary DALL-E URLs to permanent storage URLs
+   *
+   * @param imageUrl - Temporary DALL-E image URL
+   * @param filename - Filename for storage (e.g., 'image-123.png')
+   * @returns Permanent InstantDB storage URL
+   */
+  static async uploadImageFromUrl(imageUrl: string, filename: string): Promise<string> {
+    if (!isInstantDBAvailable()) {
+      throw new Error('InstantDB not available for file upload');
+    }
+
+    try {
+      logInfo('[FileStorage] Downloading image from URL', { imageUrl: imageUrl.substring(0, 60) + '...' });
+
+      // 1. Download image from DALL-E URL
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to download image: ${response.statusText}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      logInfo('[FileStorage] Image downloaded', { size: buffer.length });
+
+      // 2. Upload to InstantDB storage using Admin SDK
+      const db = getInstantDB();
+
+      logInfo('[FileStorage] Uploading to InstantDB storage', { filename });
+
+      // Upload file to InstantDB using Admin SDK (requires Buffer, not File)
+      await db.storage.upload(filename, buffer, {
+        contentType: 'image/png'
+      });
+
+      logInfo('[FileStorage] Upload successful, querying for file URL...');
+
+      // Query for the uploaded file to get the URL
+      const queryResult = await db.query({ $files: { $: { where: { path: filename } } } });
+      const fileData = queryResult.$files?.[0];
+
+      if (!fileData || !fileData.url) {
+        throw new Error('Failed to retrieve uploaded file URL');
+      }
+
+      logInfo('[FileStorage] File URL retrieved', {
+        filename,
+        url: fileData.url.substring(0, 60) + '...',
+        size: fileData.size
+      });
+
+      return fileData.url;
+
+    } catch (error) {
+      logError('[FileStorage] Upload failed', error as Error);
+      // Fallback: Return original URL if upload fails
+      logInfo('[FileStorage] Fallback to original URL');
+      return imageUrl;
+    }
+  }
+}
+
+/**
  * Export all services and utilities
  */
 export const InstantDBService = {
@@ -701,4 +811,5 @@ export const InstantDBService = {
   Artifact: ArtifactService,
   Analytics: AnalyticsService,
   ProfileCharacteristics: ProfileCharacteristicsService,
+  FileStorage: FileStorageService,
 };

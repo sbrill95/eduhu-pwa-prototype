@@ -87,12 +87,24 @@ export class LangGraphImageGenerationAgent {
    */
   public async execute(params: AgentParams, userId: string, sessionId?: string): Promise<AgentResult> {
     const imageParams = params as LangGraphImageGenerationParams;
+    const executionStartTime = Date.now();
+
+    console.log('[IMAGE-GEN] Execute started', {
+      timestamp: new Date().toISOString(),
+      userId,
+      sessionId,
+      hasPrompt: !!imageParams.prompt,
+      promptLength: imageParams.prompt?.length || 0
+    });
 
     try {
       logInfo(`Starting image generation for user ${userId}: "${imageParams.prompt}"`);
 
       // Validate prompt
       if (!imageParams.prompt || imageParams.prompt.trim().length === 0) {
+        console.error('[IMAGE-GEN] Validation failed: No prompt', {
+          timestamp: new Date().toISOString()
+        });
         return {
           success: false,
           error: 'Prompt ist erforderlich'
@@ -100,20 +112,36 @@ export class LangGraphImageGenerationAgent {
       }
 
       if (imageParams.prompt.length > 1000) {
+        console.error('[IMAGE-GEN] Validation failed: Prompt too long', {
+          timestamp: new Date().toISOString(),
+          length: imageParams.prompt.length
+        });
         return {
           success: false,
           error: 'Prompt ist zu lang (max. 1000 Zeichen)'
         };
       }
 
+      console.log('[IMAGE-GEN] Validation passed', {
+        timestamp: new Date().toISOString()
+      });
+
       // Check user limits
       const canExecute = await this.canExecute(userId);
       if (!canExecute) {
+        console.error('[IMAGE-GEN] User limit exceeded', {
+          timestamp: new Date().toISOString(),
+          userId
+        });
         return {
           success: false,
           error: 'Monatliches Limit für Bildgenerierung erreicht'
         };
       }
+
+      console.log('[IMAGE-GEN] User limit check passed', {
+        timestamp: new Date().toISOString()
+      });
 
       // Enhanced prompt processing
       let finalPrompt = imageParams.prompt;
@@ -132,6 +160,11 @@ export class LangGraphImageGenerationAgent {
       }
 
       // Generate image
+      console.log('[IMAGE-GEN] About to call generateImage', {
+        timestamp: new Date().toISOString(),
+        promptLength: finalPrompt.length
+      });
+
       const imageResult = await this.generateImage({
         prompt: finalPrompt,
         size: imageParams.size || this.config.default_size,
@@ -139,7 +172,16 @@ export class LangGraphImageGenerationAgent {
         style: imageParams.style || this.config.default_style
       });
 
+      console.log('[IMAGE-GEN] generateImage completed', {
+        timestamp: new Date().toISOString(),
+        success: imageResult.success
+      });
+
       if (!imageResult.success) {
+        console.error('[IMAGE-GEN] Image generation failed', {
+          timestamp: new Date().toISOString(),
+          error: imageResult.error
+        });
         return imageResult;
       }
 
@@ -167,7 +209,23 @@ export class LangGraphImageGenerationAgent {
         tags
       );
 
+      const totalExecutionTime = Date.now() - executionStartTime;
+      console.log('[IMAGE-GEN] Artifact creation completed', {
+        timestamp: new Date().toISOString(),
+        totalExecutionTimeMs: totalExecutionTime,
+        totalExecutionTimeSec: (totalExecutionTime / 1000).toFixed(2)
+      });
+
       logInfo(`Image generation completed successfully for user ${userId}`);
+
+      // T020: Extract originalParams for re-generation feature (FR-008)
+      const geminiInputForRegeneration = imageParams as any;
+      const originalParams = {
+        description: geminiInputForRegeneration.description || imageParams.prompt || '',
+        imageStyle: geminiInputForRegeneration.imageStyle || 'illustrative',
+        learningGroup: geminiInputForRegeneration.learningGroup || '',
+        subject: geminiInputForRegeneration.subject || ''
+      };
 
       const resultData = {
         image_url: imageResult.data.url,
@@ -175,7 +233,8 @@ export class LangGraphImageGenerationAgent {
         enhanced_prompt: finalPrompt !== imageParams.prompt ? finalPrompt : undefined,
         educational_optimized: finalPrompt !== imageParams.prompt,
         title, // Include generated title
-        tags // Include generated tags
+        tags, // Include generated tags
+        originalParams // T020: Include for re-generation (FR-008)
       };
 
       console.log('[ImageAgent] Final result data:', {
@@ -185,12 +244,18 @@ export class LangGraphImageGenerationAgent {
         tagsCount: resultData.tags?.length || 0
       });
 
+      console.log('[IMAGE-GEN] Sending success response to frontend', {
+        timestamp: new Date().toISOString(),
+        success: true,
+        totalTimeMs: Date.now() - executionStartTime
+      });
+
       return {
         success: true,
         data: resultData,
         cost,
         metadata: {
-          processing_time: Date.now(),
+          processing_time: Date.now() - executionStartTime,
           model: 'dall-e-3',
           size: imageParams.size || this.config.default_size,
           quality: imageParams.quality || this.config.default_quality
@@ -199,7 +264,17 @@ export class LangGraphImageGenerationAgent {
       };
 
     } catch (error) {
+      const totalExecutionTime = Date.now() - executionStartTime;
+      console.error('[IMAGE-GEN] Execute failed with error', {
+        timestamp: new Date().toISOString(),
+        error: (error as Error).message,
+        errorStack: (error as Error).stack,
+        totalExecutionTimeMs: totalExecutionTime,
+        totalExecutionTimeSec: (totalExecutionTime / 1000).toFixed(2)
+      });
       logError('Image generation failed', error as Error);
+
+      // ALWAYS return error response - never leave frontend hanging
       return {
         success: false,
         error: this.getGermanErrorMessage((error as Error).message)
@@ -268,7 +343,7 @@ export class LangGraphImageGenerationAgent {
   }
 
   /**
-   * Generate image with DALL-E 3
+   * Generate image with DALL-E 3 with timeout protection
    */
   private async generateImage(params: {
     prompt: string;
@@ -276,14 +351,49 @@ export class LangGraphImageGenerationAgent {
     quality: string;
     style: string;
   }): Promise<AgentResult> {
+    const startTime = Date.now();
+    console.log('[IMAGE-GEN] Starting DALL-E 3 generation', {
+      timestamp: new Date().toISOString(),
+      prompt: params.prompt.substring(0, 100),
+      size: params.size,
+      quality: params.quality,
+      style: params.style
+    });
+
     try {
-      const response = await openaiClient.images.generate({
+      // Add timeout wrapper (60 seconds max for DALL-E 3)
+      const IMAGE_GENERATION_TIMEOUT = 60000; // 60 seconds
+
+      const imageGenerationPromise = openaiClient.images.generate({
         model: 'dall-e-3',
         prompt: params.prompt,
         size: params.size as any,
         quality: params.quality as any,
         style: params.style as any,
         n: 1
+      });
+
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error(`Image generation timeout after ${IMAGE_GENERATION_TIMEOUT / 1000} seconds`));
+        }, IMAGE_GENERATION_TIMEOUT);
+      });
+
+      console.log('[IMAGE-GEN] Calling OpenAI DALL-E API', {
+        timestamp: new Date().toISOString(),
+        timeout: `${IMAGE_GENERATION_TIMEOUT / 1000}s`
+      });
+
+      const response = await Promise.race([
+        imageGenerationPromise,
+        timeoutPromise
+      ]);
+
+      const elapsedTime = Date.now() - startTime;
+      console.log('[IMAGE-GEN] OpenAI response received', {
+        timestamp: new Date().toISOString(),
+        elapsedMs: elapsedTime,
+        elapsedSec: (elapsedTime / 1000).toFixed(2)
       });
 
       if (!response.data || response.data.length === 0) {
@@ -295,6 +405,12 @@ export class LangGraphImageGenerationAgent {
         throw new Error('Keine Bild-URL von DALL-E erhalten');
       }
 
+      console.log('[IMAGE-GEN] Image generated successfully', {
+        timestamp: new Date().toISOString(),
+        imageUrl: imageData.url.substring(0, 60),
+        totalTimeMs: Date.now() - startTime
+      });
+
       return {
         success: true,
         data: {
@@ -304,6 +420,13 @@ export class LangGraphImageGenerationAgent {
       };
 
     } catch (error) {
+      const elapsedTime = Date.now() - startTime;
+      console.error('[IMAGE-GEN] DALL-E generation failed', {
+        timestamp: new Date().toISOString(),
+        error: (error as Error).message,
+        elapsedMs: elapsedTime,
+        elapsedSec: (elapsedTime / 1000).toFixed(2)
+      });
       logError('DALL-E image generation failed', error as Error);
       throw error;
     }

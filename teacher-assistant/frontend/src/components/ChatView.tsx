@@ -32,6 +32,7 @@ import { useChat } from '../hooks/useChat';
 import { useAuth } from '../lib/auth-context';
 import { useChatSummary } from '../hooks/useChatSummary';
 import { useAgent } from '../lib/AgentContext';
+import { logger } from '../lib/logger';
 import {
   ProgressiveMessage,
   AgentConfirmationMessage,
@@ -298,6 +299,17 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
     setUploadError(null);
     setIsUploading(false);
   }, []);
+
+  // T035: Log navigation event when chat tab becomes active
+  useEffect(() => {
+    logger.navigation('ChatTabActive', {
+      source: 'tab-navigation',
+      destination: 'chat',
+      trigger: 'tab-change',
+      hasSession: !!currentSessionId,
+      sessionId: currentSessionId || undefined
+    });
+  }, []); // Empty dependency array - log once on mount when chat tab is opened
 
   // Notify parent of session changes
   useEffect(() => {

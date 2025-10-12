@@ -1,0 +1,114 @@
+{
+  "timestamp": "2025-10-09T22:19:11.987Z",
+  "test_name": "Image Generation Complete Workflow",
+  "spec": ".specify/specs/image-generation-ux-v2/TESTING-STRATEGY.md",
+  "total_steps": 11,
+  "passed": 5,
+  "failed": 6,
+  "console_errors": 1,
+  "console_error_details": [
+    "Mutation failed {status: 400, eventId: 8c84da72-2f85-4d6f-89ad-83abc9e41218, op: error, client-event-id: 8c84da72-2f85-4d6f-89ad-83abc9e41218, original-event: Object}"
+  ],
+  "console_logs": 35,
+  "console_log_details": [
+    "[AgentContext] Opening modal {agentType: image-generation, prefillData: Object, sessionId: 54c6a2bb-00a5-4578-a695-084595e010dd}",
+    "[AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}",
+    "[AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}",
+    "[AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}",
+    "[AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}",
+    "[AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}",
+    "[AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}",
+    "[AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}",
+    "[AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}",
+    "[AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-09T22:18:31.299Z, isValidForm: true, submitting: false, formData: Object, agentType: image-generation}",
+    "[AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}",
+    "[AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }",
+    "[AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-09T22:18:31.299Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}",
+    "[AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}",
+    "[AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}",
+    "[ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-09T22:18:31.300Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}",
+    "[ApiClient] ✅ executeAgent RESPONSE {timestamp: 2025-10-09T22:19:06.507Z, success: true, hasImageUrl: true, responseKeys: Array(12), dataType: object}",
+    "[AgentContext] 📨 API response received: {hasResponse: true, responseKeys: Array(12)}",
+    "[AgentContext] ✅ Agent execution response received {hasImageUrl: true, hasRevisedPrompt: true, hasTitle: true, responseKeys: Array(12), imageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-...}",
+    "[AgentContext] Extracted executionId: exec-1760048346503",
+    "[AgentContext] 🔍 Checking if response has image_url... {hasImageUrl: true, responseImageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-…ontrol=public%2C%20max-age%3D86400%2C%20immutable}",
+    "[AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase {executionId: exec-1760048346503, hasImageUrl: true, imageUrlPreview: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-..., title: vom Satz des Pythagoras, revisedPromptLength: 404}",
+    "[AgentContext] 🚀 Setting state to result phase NOW...",
+    "[AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: 4990fb08-e12f-4d8d-af57-8f26d1fbf340}",
+    "[AgentFormView] 🎉 submitForm completed successfully",
+    "[AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: 4990fb08-e12f-4d8d-af57-8f26d1fbf340}",
+    "[AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760048346503, libraryId: 4990fb08-e12f-4d8d-af57-8f26d1fbf340, userId: test-user-playwright-id-12345}",
+    "[AgentContext] ✅ Library save confirmed (backend already completed)",
+    "[AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760048346503, libraryId: 4990fb08-e12f-4d8d-af57-8f26d1fbf340, userId: test-user-playwright-id-12345}",
+    "[AgentContext] ✅ Library save confirmed (backend already completed)",
+    "[AgentContext] 🔍 navigateToTab CALLED {tab: chat, queryParams: undefined, hasCallback: true, callbackType: function, timestamp: 2025-10-09T22:19:07.551Z}",
+    "[AgentContext] ➡️  Calling onNavigateToTab callback with tab: \"chat\"",
+    "[AgentContext] ✅ onNavigateToTab(\"chat\") callback completed",
+    "[AgentContext] Closing modal",
+    "[AgentContext] Closing modal"
+  ],
+  "network_failures": 0,
+  "network_failure_details": [],
+  "screenshots": [
+    "01-chat-message.png",
+    "02-confirmation-card.png",
+    "03-form-prefilled.png",
+    "04-progress-animation.png",
+    "04-skipped.png",
+    "05-preview-result.png",
+    "06-chat-thumbnail.png",
+    "07-preview-from-chat.png",
+    "08-library-image.png",
+    "09-library-preview.png",
+    "10-regenerate-form.png",
+    "final-test",
+    "nul"
+  ],
+  "screenshot_directory": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\docs\\testing\\screenshots\\2025-10-07",
+  "step_results": {
+    "INIT": {
+      "status": "FAIL",
+      "message": "Console errors: Mutation failed {status: 400, eventId: 8c84da72-2f85-4d6f-89ad-83abc9e41218, op: error, client-event-id: 8c84da72-2f85-4d6f-89ad-83abc9e41218, original-event: Object}"
+    },
+    "STEP-1": {
+      "status": "PASS",
+      "message": "Chat message sent successfully"
+    },
+    "STEP-2": {
+      "status": "PASS",
+      "message": "Agent confirmation with orange card"
+    },
+    "STEP-3": {
+      "status": "PASS",
+      "message": "Form opened with prefilled data"
+    },
+    "STEP-4": {
+      "status": "PASS",
+      "message": "0 loaders found"
+    },
+    "STEP-5": {
+      "status": "PASS",
+      "message": "Preview with image and buttons"
+    },
+    "STEP-6": {
+      "status": "FAIL",
+      "message": "No image thumbnail in chat"
+    },
+    "STEP-7": {
+      "status": "FAIL",
+      "message": "Skipped - no chat thumbnail"
+    },
+    "STEP-8": {
+      "status": "FAIL",
+      "message": "No \"Bilder\" filter"
+    },
+    "STEP-9": {
+      "status": "FAIL",
+      "message": "Skipped - no library materials"
+    },
+    "STEP-10": {
+      "status": "FAIL",
+      "message": "Skipped - no regenerate button"
+    }
+  }
+}

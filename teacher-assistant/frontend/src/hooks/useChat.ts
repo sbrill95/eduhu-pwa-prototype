@@ -16,7 +16,8 @@ import type {
   AgentResult,
   AgentConfirmationMessage,
   AgentProgressMessage,
-  AgentResultMessage
+  AgentResultMessage,
+  AgentSuggestion
 } from '../lib/types';
 import { useStableData } from './useDeepCompareMemo';
 
@@ -114,6 +115,7 @@ export const useChat = () => {
     role: 'user' | 'assistant';
     content: string;
     timestamp: Date;
+    agentSuggestion?: AgentSuggestion; // BUG-011 FIX: Include agentSuggestion for deduplication logic (uses shared type from backend)
   }>>([]);
   const [sessionMessageCount, setSessionMessageCount] = useState(0);
   const [isLoadingSession, setIsLoadingSession] = useState(false);
@@ -1205,13 +1207,25 @@ export const useChat = () => {
       allMessages.push(...dbMessages);
     }
 
-    // Optimized deduplication - simple content and role matching
+    // BUG-011 FIX: Optimized deduplication that preserves local messages with agentSuggestion
+    // Issue: Local messages with agentSuggestion were being filtered out in favor of DB messages
+    // with metadata strings, causing AgentConfirmationMessage to not render
     const uniqueLocalMessages = safeLocalMessages.filter(localMsg => {
-      return !allMessages.some(existingMsg => {
-        // Simple content and role match to avoid expensive JSON parsing on every render
+      const matchingDbIndex = allMessages.findIndex(existingMsg => {
         return existingMsg.content === localMsg.content &&
                existingMsg.role === localMsg.role;
       });
+
+      // If local message has agentSuggestion, keep it even if DB match exists
+      // (local message has richer data structure than DB metadata string)
+      if (localMsg.agentSuggestion && matchingDbIndex !== -1) {
+        // Remove the DB version and keep the local version with agentSuggestion
+        allMessages.splice(matchingDbIndex, 1);
+        return true; // Keep local message
+      }
+
+      // Otherwise, only keep local messages that don't have a DB match
+      return matchingDbIndex === -1;
     });
 
     // Add unique local messages

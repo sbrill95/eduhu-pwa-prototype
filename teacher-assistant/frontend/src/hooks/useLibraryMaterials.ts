@@ -15,6 +15,7 @@ export interface LibraryMaterial {
   updated_at: number;
   is_favorite: boolean;
   source_session_id?: string;
+  metadata?: any; // JSON metadata field for originalParams, imageStyle, etc. (stored as JSON in InstantDB)
 }
 
 export interface CreateMaterialData {
@@ -55,19 +56,33 @@ export const useLibraryMaterials = () => {
     } : null
   );
 
-  const materials: LibraryMaterial[] = materialsData?.library_materials?.map(material => ({
-    id: material.id,
-    user_id: material.user_id,
-    title: material.title,
-    type: material.type as LibraryMaterial['type'],
-    content: material.content,
-    description: material.description,
-    tags: typeof material.tags === 'string' ? JSON.parse(material.tags) : material.tags || [],
-    created_at: material.created_at,
-    updated_at: material.updated_at,
-    is_favorite: material.is_favorite,
-    source_session_id: material.source_session_id,
-  })) || [];
+  const materials: LibraryMaterial[] = materialsData?.library_materials?.map(material => {
+    // T041: Parse metadata JSON string from InstantDB for MaterialPreviewModal
+    let parsedMetadata = undefined;
+    if (material.metadata) {
+      try {
+        parsedMetadata = typeof material.metadata === 'string' ? JSON.parse(material.metadata) : material.metadata;
+      } catch (err) {
+        console.error('Error parsing material metadata:', err, { materialId: material.id });
+        parsedMetadata = undefined;
+      }
+    }
+
+    return {
+      id: material.id,
+      user_id: material.user_id,
+      title: material.title,
+      type: material.type as LibraryMaterial['type'],
+      content: material.content,
+      description: material.description,
+      tags: typeof material.tags === 'string' ? JSON.parse(material.tags) : material.tags || [],
+      created_at: material.created_at,
+      updated_at: material.updated_at,
+      is_favorite: material.is_favorite,
+      source_session_id: material.source_session_id,
+      metadata: parsedMetadata,
+    };
+  }) || [];
 
   // Create a new material
   const createMaterial = useCallback(async (data: CreateMaterialData): Promise<string> => {

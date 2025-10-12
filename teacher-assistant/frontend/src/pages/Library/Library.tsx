@@ -3,6 +3,9 @@ import { useAuth } from '../../lib/auth-context';
 import db from '../../lib/instantdb';
 import useLibraryMaterials from '../../hooks/useLibraryMaterials';
 import { formatRelativeDate } from '../../lib/formatRelativeDate';
+import { logger } from '../../lib/logger';
+import { MaterialPreviewModal, UnifiedMaterial } from '../../components/MaterialPreviewModal';
+import { convertArtifactToUnifiedMaterial, ArtifactItem as MappedArtifactItem } from '../../lib/materialMappers';
 
 interface ChatHistoryItem {
   id: string;
@@ -38,6 +41,10 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
   const [selectedTab, setSelectedTab] = useState<'chats' | 'artifacts'>('chats');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'document' | 'image' | 'worksheet' | 'quiz' | 'lesson_plan'>('all');
 
+  // T003: Modal state for MaterialPreviewModal integration
+  const [selectedMaterial, setSelectedMaterial] = useState<UnifiedMaterial | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   // Get chat sessions from InstantDB with messages for lastMessage display
   const { data: chatData } = db.useQuery(
     user ? {
@@ -52,7 +59,17 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
   );
 
   // Get library materials
-  const { materials } = useLibraryMaterials();
+  const { materials, error: materialsError } = useLibraryMaterials();
+
+  // T042: Log InstantDB query errors per FR-011
+  useEffect(() => {
+    if (materialsError) {
+      logger.error('Failed to fetch library materials from InstantDB', materialsError, {
+        userId: user?.id,
+        component: 'Library.tsx'
+      });
+    }
+  }, [materialsError, user?.id]);
 
   // Track which chats are currently extracting tags to prevent duplicate requests
   const [extractingTags, setExtractingTags] = useState<Set<string>>(new Set());
@@ -176,6 +193,7 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
   });
 
   // Map materials to ArtifactItem format
+  // T007: Include metadata and is_favorite for MaterialPreviewModal regeneration support
   const artifacts: ArtifactItem[] = materials.map((material: any) => ({
     id: material.id,
     title: material.title,
@@ -184,7 +202,9 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
     dateCreated: new Date(material.created_at),
     source: 'chat_generated' as const,
     chatId: material.chat_session_id,
-    size: undefined
+    size: undefined,
+    metadata: material.metadata,          // T007: Pass through parsed metadata
+    is_favorite: material.is_favorite     // T007: Pass through favorite status
   }));
 
   const artifactTypes = [
@@ -239,6 +259,24 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
       onTabChange('chat');
     }
   }, [onChatSelect, onTabChange]);
+
+  // T003: Handle material card click - open modal with selected material
+  const handleMaterialClick = useCallback((artifact: ArtifactItem) => {
+    console.log('[Library] Material clicked:', artifact.id);
+
+    // Convert ArtifactItem to UnifiedMaterial using mapper
+    const unifiedMaterial = convertArtifactToUnifiedMaterial(artifact);
+
+    // Set selected material and open modal
+    setSelectedMaterial(unifiedMaterial);
+    setIsModalOpen(true);
+  }, []);
+
+  // T003: Handle modal close - clear state
+  const handleModalClose = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedMaterial(null);
+  }, []);
 
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto">
@@ -378,19 +416,43 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
               );
             })
           ) : (
-            /* Material Items */
+            /* Material Items - T039: Show image thumbnails for image-type materials */
             filteredItems.map((item) => {
               const artifact = item as ArtifactItem;
+              // For images, content field contains the InstantDB storage URL
+              const isImage = artifact.type === 'image';
+              const imageUrl = isImage ? artifact.description : null;
+
               return (
                 <div
                   key={artifact.id}
+                  onClick={() => handleMaterialClick(artifact)}
                   className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="text-3xl">{getArtifactIcon(artifact.type)}</div>
+                    {/* T039: Display thumbnail for images, icon for other types */}
+                    {isImage && imageUrl ? (
+                      <div className="w-16 h-16 flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
+                        <img
+                          src={imageUrl}
+                          alt={artifact.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            // Fallback to icon if image fails to load
+                            logger.warn('Failed to load image thumbnail', {
+                              materialId: artifact.id,
+                              imageUrl: imageUrl
+                            });
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="text-3xl">{getArtifactIcon(artifact.type)}</div>
+                    )}
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-900 mb-1">{artifact.title}</h3>
-                      <p className="text-sm text-gray-600 line-clamp-2">{artifact.description}</p>
+                      {!isImage && <p className="text-sm text-gray-600 line-clamp-2">{artifact.description}</p>}
                       <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
                         <span>{artifact.dateCreated.toLocaleDateString('de-DE')}</span>
                         <span>•</span>
@@ -435,6 +497,13 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
           )}
         </div>
       )}
+
+      {/* T003: MaterialPreviewModal integration */}
+      <MaterialPreviewModal
+        material={selectedMaterial}
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+      />
     </div>
   );
 };

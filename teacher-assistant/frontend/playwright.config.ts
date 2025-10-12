@@ -15,8 +15,8 @@ export default defineConfig({
   // Test directory structure
   testDir: './e2e-tests',
 
-  // Global test timeout
-  timeout: 60000, // 60 seconds per test
+  // Global test timeout (increased for DALL-E 3 image generation)
+  timeout: 150000, // 150 seconds per test (allows 70s for image generation + 80s for other steps)
   expect: {
     timeout: 10000, // 10 seconds for assertions
   },

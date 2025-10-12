@@ -98,7 +98,12 @@ export class ChatService {
           },
           model: completion.model,
           finish_reason: choice.finish_reason || 'unknown',
-          ...(agentSuggestion && { agentSuggestion }),
+          ...(agentSuggestion && {
+            agentSuggestion: {
+              ...agentSuggestion,
+              prefillData: agentSuggestion.prefillData as Record<string, unknown>
+            }
+          }),
         },
         timestamp: new Date().toISOString(),
       };

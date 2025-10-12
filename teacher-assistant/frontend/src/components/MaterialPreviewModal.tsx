@@ -139,18 +139,56 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
     }
   };
 
-  // TASK-010: Handle regeneration of images
+  // T028-T029: Handle regeneration of images with new metadata structure
   const handleRegenerate = () => {
-    console.log('[MaterialPreviewModal] Regenerating image with params:', {
-      description: material.metadata.prompt,
-      imageStyle: material.metadata.image_style
-    });
+    console.log('[MaterialPreviewModal] Regenerating image - checking metadata...');
 
-    // Extract original parameters from material metadata
-    const originalParams = {
-      description: material.metadata.prompt || material.description || material.title || '',
-      imageStyle: material.metadata.image_style || 'realistic'
+    let originalParams = {
+      description: '',
+      imageStyle: 'realistic' as const
     };
+
+    // T029: Try to parse metadata JSON string (new structure from FR-004)
+    // T028: If metadata is null or invalid, use empty form (graceful degradation)
+    if (material.metadata) {
+      try {
+        const parsedMetadata = typeof material.metadata === 'string'
+          ? JSON.parse(material.metadata)
+          : material.metadata;
+
+        // Extract originalParams from parsed metadata (FR-008)
+        if (parsedMetadata.originalParams) {
+          originalParams = {
+            description: parsedMetadata.originalParams.description || '',
+            imageStyle: (parsedMetadata.originalParams.imageStyle as any) || 'realistic'
+          };
+          console.log('[MaterialPreviewModal] ✅ Metadata parsed successfully:', originalParams);
+        } else {
+          // Fallback to old structure for backward compatibility
+          originalParams = {
+            description: parsedMetadata.prompt || material.metadata.prompt || material.description || material.title || '',
+            imageStyle: (parsedMetadata.image_style || material.metadata.image_style || 'realistic') as any
+          };
+          console.log('[MaterialPreviewModal] ⚠️ Using legacy metadata structure:', originalParams);
+        }
+      } catch (error) {
+        // T028: Validation failed - show empty form (FR-008 graceful degradation)
+        console.warn('[MaterialPreviewModal] ⚠️ Metadata parse failed - using empty form:', error);
+        originalParams = {
+          description: material.description || material.title || '',
+          imageStyle: 'realistic'
+        };
+      }
+    } else {
+      // T028: Metadata is null - use fallback (graceful degradation per CHK111)
+      console.warn('[MaterialPreviewModal] ⚠️ Metadata is null - using fallback values');
+      originalParams = {
+        description: material.description || material.title || '',
+        imageStyle: 'realistic'
+      };
+    }
+
+    console.log('[MaterialPreviewModal] Final params for regeneration:', originalParams);
 
     // Close preview modal
     onClose();

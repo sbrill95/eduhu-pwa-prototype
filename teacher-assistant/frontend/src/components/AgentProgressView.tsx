@@ -111,12 +111,11 @@ export const AgentProgressView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background-teal flex flex-col">
-      {/* Header - SIMPLIFIED: No animation (TASK-007: Remove duplicate "oben links" animation) */}
+      {/* Header - Simplified: Single status message */}
       <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between safe-area-top">
         <div className="flex items-center gap-2">
           <div>
-            <p className="text-xs text-gray-500">Bild erstellen</p>
-            <p className="text-sm font-medium text-gray-900">In Bearbeitung...</p>
+            <p className="text-sm font-medium text-gray-900">Bildgenerierung</p>
           </div>
         </div>
         {wsStatus === 'error' && (
@@ -174,11 +173,11 @@ export const AgentProgressView: React.FC = () => {
             </div>
           ) : (
             /* Fallback: Simple Loading Message (No WebSocket or No Progress Yet) */
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <p className="text-center text-lg font-medium text-gray-900 mb-2">
+            <div className="text-center">
+              <p className="text-lg font-medium text-gray-700">
                 Dein Bild wird erstellt...
               </p>
-              <p className="text-center text-sm text-gray-600">
+              <p className="mt-2 text-sm text-gray-500">
                 Das kann bis zu 1 Minute dauern
               </p>
             </div>

@@ -1,375 +1,191 @@
-# Teacher Assistant - Project Constitution
+<!--
+SYNC IMPACT REPORT
+==================
+Version: NEW → 1.0.0 (Initial Constitution)
+Rationale: MINOR bump - Initial constitution establishment with core principles
 
-**Version**: 1.0
-**Last Updated**: 2025-09-30
-**Status**: Living Document
+Modified Principles: N/A (new constitution)
+Added Sections:
+  - Core Principles (5 principles)
+  - Development Workflow
+  - Quality Standards
+  - Governance
 
----
+Removed Sections: N/A (new constitution)
 
-## Vision & Mission
+Templates Requiring Updates:
+  ✅ .specify/templates/plan-template.md - Constitution Check section aligns
+  ✅ .specify/templates/spec-template.md - Requirements section aligns
+  ✅ .specify/templates/tasks-template.md - Phase structure aligns with DoD
+  ⚠ CLAUDE.md - Consider consolidating with constitution (currently redundant)
 
-### Vision
-Wir schaffen den weltweit beliebtesten digitalen Assistenten für Lehrkräfte—ein Tool, das Lehrerinnen und Lehrer täglich nutzen **wollen**, nicht **müssen**.
+Follow-up TODOs: None
+-->
 
-### Mission
-Durch herausragendes Design, ethische KI-Nutzung und bedingungslosen Respekt für Lehrkräfte und Schülerdaten bauen wir ein Produkt, das:
-- **Zeit spart** (Automatisierung von Routineaufgaben)
-- **Qualität steigert** (KI-gestützte Materialerstellung)
-- **Freude bereitet** (Emotional Design Principles)
-- **Vertrauen schafft** (Transparenz, Datenschutz, Sicherheit)
-
----
+# Teacher Assistant Constitution
 
 ## Core Principles
 
-### 1. Teachers First 👩‍🏫
+### I. SpecKit-First (NON-NEGOTIABLE)
 
-**Jede Entscheidung wird durch die Brille einer Lehrkraft getroffen.**
+**Rule**: ALL development work (features, bugs, refactoring) MUST follow the SpecKit workflow unless explicitly exempted.
 
-- **Verstehe den Kontext**: Lehrkräfte arbeiten unter Zeitdruck, mit 20-30 Schülern, unterschiedlichen Fähigkeiten
-- **Respektiere ihre Expertise**: KI unterstützt, ersetzt nicht ihre pädagogische Kompetenz
-- **Spreche ihre Sprache**: Deutsch, freundlich (Du-Form), mit deutscher Bildungsterminologie
-- **Löse echte Probleme**: Fokus auf Unterrichtsvorbereitung, Differenzierung, Materialerstellung
+**Process**:
+- Before starting ANY task, check `.specify/specs/[feature-name]/` for existing SpecKit
+- If no SpecKit exists: STOP and ask user whether to create one
+- Work from `tasks.md` task list, reading `spec.md` and `plan.md` for context
+- Mark tasks complete in `tasks.md` only when Definition of Done criteria met
 
-**Anti-Pattern**: Features bauen, die cool sind, aber keinen echten Wert für Lehrkräfte haben
+**Exemptions** (require user approval):
+- Critical hotfixes (<15 minutes work)
+- Documentation-only updates
+- Code cleanup without logic changes
 
----
+**Rationale**: Prevents ad-hoc development, ensures requirements are captured, enables incremental delivery, and maintains project traceability.
 
-### 2. Privacy & Security by Default 🔒
+### II. Definition of Done (NON-NEGOTIABLE)
 
-**Schüler- und Lehrerdaten sind heilig. Kein Kompromiss.**
+**Rule**: A task is ONLY complete when ALL four quality gates pass:
 
-#### Data Protection Principles
+1. **Build Clean**: `npm run build` → 0 TypeScript errors
+2. **Tests Pass**: `npm test` → all tests pass
+3. **Manual Test**: Feature works end-to-end (documented in session log)
+4. **Pre-Commit Pass**: `git commit` succeeds (hooks pass)
 
-**Minimale Datenerfassung**:
-- Sammle nur Daten, die absolut notwendig sind
-- Keine unnötigen Tracking-Mechanismen
-- Klar kommunizieren, welche Daten wofür genutzt werden
+**Agent Compliance**:
+- Mark task as ✅ in `tasks.md` ONLY when all criteria met
+- If blocked: keep task as ⏳ in_progress, document blocker, create resolution task
+- Session log MUST include: build output, test results, manual verification
 
-**Transparenz**:
-- Lehrkräfte verstehen jederzeit, wo ihre Daten sind
-- Klare Consent-Flows (kein Dark Pattern)
-- Export- und Löschfunktionen zugänglich
+**Rationale**: Prevents incomplete work from being marked done, ensures code quality at commit time, provides audit trail for verification.
 
-**Sicherheit**:
-- Alle sensiblen Daten verschlüsselt (at rest, in transit)
-- InstantDB Authentication für sichere User-Verwaltung
-- OpenAI API: Keine Trainingsdaten-Nutzung (opt-out Einstellung)
-- Regelmäßige Security Audits
+### III. TypeScript Everywhere
 
-**Compliance**:
-- DSGVO-konform (EU-Standard)
-- Schul-Datenschutz-Richtlinien befolgen
-- Keine Weitergabe von Daten an Dritte ohne explizite Zustimmung
+**Rule**: ALL code MUST be TypeScript - no `.js` files in `src/` directories.
 
-**Anti-Pattern**: "Wir brauchen diese Daten für zukünftige Features" ohne klaren Mehrwert
+**Standards**:
+- Zero TypeScript errors in build
+- No `@ts-ignore` or `@ts-expect-error` without explicit justification
+- Shared types in `teacher-assistant/shared/types/` for cross-package consistency
+- Functional React components with proper type definitions
 
----
+**Rationale**: Type safety catches bugs early, improves IDE support, enables safe refactoring, and serves as living documentation.
 
-### 3. Code Quality & Maintainability 💎
+### IV. Documentation & Traceability
 
-**Schreibe Code, als würdest du ihn in 2 Jahren debuggen müssen.**
+**Rule**: Every development session MUST produce a session log with concrete evidence of work completed.
 
-#### Technical Standards
+**Location Rules** (NEVER create files in repository root):
+- **Session Logs**: `docs/development-logs/sessions/YYYY-MM-DD/session-XX-feature-name.md`
+- **Bug Reports**: `docs/quality-assurance/resolved-issues/YYYY-MM-DD/`
+- **QA Reports**: `docs/quality-assurance/verification-reports/YYYY-MM-DD/`
+- **Test Reports**: `docs/testing/test-reports/YYYY-MM-DD/`
 
-**TypeScript Strict Mode**:
-```typescript
-// ✅ GOOD: Explizite Types, klare Interfaces
-interface TeacherContext {
-  userId: string;
-  subject: string;
-  gradeLevel: number;
-  schoolType: 'Grundschule' | 'Gymnasium' | 'Realschule' | 'Gesamtschule';
-}
+**Session Log Requirements**:
+- Task ID and description
+- Files modified
+- Build output
+- Test results
+- Manual verification steps
+- Any blockers or deviations
 
-// ❌ BAD: Implizite any, unklare Strukturen
-function processContext(data) {
-  return data.map(d => d.value);
-}
-```
+**Rationale**: Creates audit trail, enables knowledge transfer, facilitates debugging, and proves work completion.
 
-**Error Handling**:
-- Alle Fehler mit deutschen, hilfreichen Nachrichten
-- Niemals rohe Error-Objekte an User zeigen
-- Graceful Degradation (Feature funktioniert nicht → App stürzt nicht ab)
+### V. Tech Stack Consistency
 
-**Testing**:
-- Unit Tests für Business Logic (mind. 80% Coverage)
-- Integration Tests für kritische Flows
-- E2E Tests für User Journeys
-- Keine Tests für triviale Getter/Setter
+**Mandatory Technologies**:
+- **Frontend**: React + TypeScript + Vite + Tailwind CSS + InstantDB
+- **Backend**: Node.js + Express + TypeScript + OpenAI SDK
+- **Database**: InstantDB for auth, real-time queries, and storage
+- **Testing**: Playwright for E2E, Jest/Vitest for unit tests
+- **Linting**: ESLint + Prettier (enforced via pre-commit hooks)
 
-**Performance**:
-- Mobile First: Alles muss auf Smartphone schnell sein
-- Bundle Size: Lazy Loading für große Features
-- Rendering: 60fps Animationen, keine Jank
-- API: Response Times < 500ms
+**Architecture Rules**:
+- Functional React components with hooks (no class components)
+- Tailwind for ALL styling (no custom CSS files)
+- InstantDB for ALL data operations (no direct database access)
+- Shared types for backend/frontend contract enforcement
 
-**Documentation**:
-- Code ist self-documenting (klare Namen)
-- Komplexe Logik hat Kommentare mit "Warum", nicht "Was"
-- Session Logs für alle Features (in `/docs/development-logs/sessions/`)
+**Rationale**: Reduces cognitive load, prevents technology sprawl, ensures team consistency, and simplifies onboarding.
 
-**Anti-Pattern**: "Funktioniert bei mir" ohne Cross-Browser/Device Testing
+## Development Workflow
 
----
+### SpecKit Structure
 
-### 4. Emotional Design as Competitive Edge 🎨
+Every feature MUST have three artifacts in `.specify/specs/[feature-name]/`:
 
-**Functional ist Standard. Delightful ist unser Vorteil.**
+1. **spec.md**: WHAT & WHY (user stories, requirements, acceptance criteria)
+2. **plan.md**: HOW (technical approach, architecture, implementation strategy)
+3. **tasks.md**: CONCRETE STEPS (checkboxed task list with dependencies)
 
-> "The product has to be so good people want to talk about it." — Reed Hastings
+### Work Execution Flow
 
-#### Design Philosophy
+1. **Planning Phase**: User creates or approves SpecKit via `/speckit.specify` + `/speckit.plan`
+2. **Task Generation**: Generate tasks via `/speckit.tasks` command
+3. **Implementation**: Work through `tasks.md` sequentially or in parallel (marked [P])
+4. **Quality Gates**: Each task must pass Definition of Done before marking complete
+5. **Session Logging**: Create session log after each work session with evidence
+6. **Bug Tracking**: Document any issues in `docs/quality-assurance/bug-tracking.md`
 
-**Human, Not Robotic**:
-- Animationen sind emotionales Feedback, nicht Eye-Candy
-- Erfolgsmomente werden gefeiert (nicht nur Checkmarks)
-- Fehler werden freundlich behandelt (Forgiveness Principle)
+### Parallel Work
 
-**Polish = Trust**:
-- In High-Stakes-Bereichen (Bildung) signalisiert Polish Kompetenz
-- Jede Micro-Interaction ist ein Trust Signal
-- Erste Impression ist kritisch (Onboarding Investment)
+- Tasks marked `[P]` in `tasks.md` can run concurrently (different files, no dependencies)
+- Use TodoWrite tool to track in-progress tasks (limit: ONE task in_progress at a time per agent)
+- User stories should be independently testable and deliverable
 
-**Addictiveness (Ethical)**:
-- ✅ Progress Visualization, Streaks, Micro-Achievements
-- ✅ Positive Feedback Loops, Celebration Moments
-- ❌ Dark Patterns, Artificial Scarcity, Nagging
+## Quality Standards
 
-**Mobile Excellence**:
-- Touch Targets ≥ 44x44px
-- 60fps Animationen
-- Gestures für häufige Aktionen
+### Pre-Commit Hooks (Enforced)
 
-**Anti-Pattern**: "Design können wir später machen" (Design ist Product, nicht Decoration)
+- TypeScript compilation check
+- ESLint critical error check
+- Test suite execution
+- Formatting validation (Prettier)
 
----
+**Configured via**: Husky in repository root
 
-### 5. Accessibility & Inclusion ♿
+### Code Review Requirements
 
-**Jede Lehrkraft, unabhängig von Fähigkeiten oder Technologie-Zugang.**
+- All changes require explicit user approval before commit
+- Pull requests must reference SpecKit spec and task IDs
+- Breaking changes require constitution compliance justification
 
-#### Standards
+### Testing Discipline
 
-**WCAG 2.1 AA Compliance**:
-- Keyboard Navigation für alle Features
-- Screen Reader Support (ARIA Labels)
-- Farbkontraste mind. 4.5:1
-- Keine Information nur über Farbe
+- **Unit Tests**: Required for business logic and utilities
+- **Integration Tests**: Required for API endpoints and database operations
+- **E2E Tests**: Required for critical user journeys (Playwright)
+- Tests MUST be written BEFORE implementation when using TDD approach
+- Manual testing MUST be documented in session logs
 
-**Responsive Design**:
-- Funktioniert auf alten Android-Geräten
-- Offline-Fähigkeit für kritische Features
-- Langsame Internet-Verbindungen berücksichtigt
+## Governance
 
-**Internationalisierung**:
-- Aktuell: Deutsch (Deutschland)
-- Zukunft: Deutsch (Österreich, Schweiz), andere Sprachen
-- Keine hard-coded Strings
+### Amendment Procedure
 
-**Anti-Pattern**: "Die meisten User haben schnelles Internet" (viele Schulen nicht)
+1. Propose changes via discussion with rationale
+2. Update constitution with version bump (see versioning rules below)
+3. Update dependent templates and documentation
+4. Create sync impact report (HTML comment at top of this file)
+5. Commit with message: `docs: amend constitution to vX.Y.Z (description)`
 
----
+### Versioning Policy
 
-### 6. AI Ethics & Transparency 🤖
+- **MAJOR** (X.0.0): Backward-incompatible governance changes, principle removals
+- **MINOR** (0.X.0): New principles added, material guidance expansions
+- **PATCH** (0.0.X): Clarifications, wording fixes, typos
 
-**KI ist Werkzeug, nicht Blackbox.**
+### Compliance Review
 
-#### OpenAI Integration
+- Constitution supersedes all other documentation when conflicts arise
+- All pull requests must verify compliance with applicable principles
+- Complexity violations (e.g., adding new tech, skipping SpecKit) require explicit justification
+- Agent instructions in `CLAUDE.md` must align with constitution principles
 
-**Transparenz**:
-- Lehrkräfte wissen immer, wann KI im Einsatz ist
-- Generierte Inhalte sind gekennzeichnet
-- Kosten transparent kommuniziert (wenn relevant)
+### Runtime Guidance
 
-**Quality Control**:
-- KI-Output wird validiert, nicht blind übernommen
-- Lehrkraft hat finale Kontrolle über alle Inhalte
-- Feedback-Loops zur Verbesserung
+- **Primary Reference**: This constitution
+- **Agent Instructions**: `CLAUDE.md` (must stay synchronized with constitution)
+- **Template Reference**: `.specify/templates/` (plan, spec, tasks, DoD)
+- **SpecKit Commands**: `.specify/templates/commands/*.md` (automated workflows)
 
-**Educational Context**:
-- Prompts sind auf deutschen Bildungskontext optimiert
-- Berücksichtigung von Lehrplänen und Schulformen
-- Altergerechte Sprache für Schülerinnen und Schüler
-
-**Bias Awareness**:
-- Bewusstsein für KI-Bias in Ausgaben
-- Diverse Beispiele und Perspektiven
-- Regelmäßige Audits der generierten Inhalte
-
-**LangGraph Agents**:
-- Klare Agent Detection (Lehrkraft versteht, was passiert)
-- Usage Limits kommuniziert
-- State Management sicher und nachvollziehbar
-
-**Anti-Pattern**: "KI macht das schon" ohne Human-in-the-Loop
-
----
-
-### 7. Performance & Reliability 🚀
-
-**Downtime = Lehrkraft kann nicht vorbereiten = unacceptable.**
-
-#### Infrastructure
-
-**Uptime Target**: 99.9% (max. 43 Minuten Downtime/Monat)
-
-**Monitoring**:
-- Error Tracking (Sentry o.ä.)
-- Performance Monitoring (Response Times, Bundle Size)
-- User Analytics (Privacy-respecting, opt-in)
-
-**Deployment**:
-- Zero-Downtime Deployments
-- Rollback Plan für jedes Deployment
-- Staging Environment für Testing
-
-**Scalability**:
-- Vorbereitet für 10.000+ gleichzeitige User
-- InstantDB und OpenAI API Rate Limits verstanden
-- Caching-Strategie (Redis für Sessions)
-
-**Anti-Pattern**: "Das skaliert später" (später ist zu spät)
-
----
-
-### 8. Developer Experience & Team Culture 🤝
-
-**Gutes Product braucht gutes Team. Gutes Team braucht gute Tools.**
-
-#### Workflow
-
-**SpecKit Integration**:
-- Alle Features starten mit spec.md (WAS & WARUM)
-- Technical Planning in plan.md (WIE)
-- Task Breakdown in tasks.md (Implementierung)
-
-**Agent Collaboration**:
-- Backend-Agent, Frontend-Agent, QA-Agent, Emotional Design Agent
-- Klare Verantwortlichkeiten, parallele Arbeit wo möglich
-- Session Logs nach jedem Task
-
-**Documentation**:
-- `/docs/development-logs/sessions/` für tägliche Arbeit
-- `/docs/architecture/` für System-Überblick
-- `/docs/quality-assurance/bug-tracking.md` für Issues
-
-**Communication**:
-- Session Logs sind Kommunikationsmittel
-- Retrospectives nach Features
-- Lessons Learned dokumentiert
-
-**Anti-Pattern**: "Das steht im Code" ohne Kontext-Dokumentation
-
----
-
-## Decision Framework
-
-### Bei jeder Entscheidung fragen:
-
-1. **Teacher First**: Hilft das Lehrkräften wirklich? Oder ist es nur cool?
-2. **Privacy**: Brauchen wir diese Daten wirklich? Wie schützen wir sie?
-3. **Quality**: Können wir das in 2 Jahren noch verstehen und maintainen?
-4. **Design**: Fühlt sich das gut an? Würde eine Lehrkraft das weiterempfehlen?
-5. **Accessibility**: Funktioniert das für alle Lehrkräfte?
-6. **Ethics**: Ist das transparent und fair?
-7. **Performance**: Ist das schnell genug für Schulnetz-Infrastruktur?
-8. **Team**: Macht das die Arbeit für andere Agents einfacher oder komplizierter?
-
-### Wenn in Zweifel:
-
-**Ask the Teacher**: Frag eine echte Lehrkraft. Keine Annahmen.
-
----
-
-## Non-Negotiables
-
-Diese Prinzipien sind **absolut** und können nicht "später" aufgeräumt werden:
-
-1. ❌ **Keine Schülerdaten ohne explizite Zustimmung**
-2. ❌ **Keine Dark Patterns oder manipulative UX**
-3. ❌ **Keine rohen Error Messages an User**
-4. ❌ **Keine ungetesteten Deployments zu Production**
-5. ❌ **Keine Features ohne SpecKit-Dokumentation**
-6. ❌ **Keine TypeScript `any` Types (außer explizit gerechtfertigt)**
-7. ❌ **Keine Features ohne Mobile Testing**
-8. ❌ **Keine KI-Outputs ohne Human Review**
-
----
-
-## Success Metrics
-
-### Product Success
-
-**Engagement**:
-- Daily Active Users (DAU)
-- Weekly Active Users (WAU)
-- DAU/MAU Ratio (Stickiness)
-- Feature Usage Rates
-
-**Satisfaction**:
-- Net Promoter Score (NPS) > 50
-- User Interviews (qualitative Feedback)
-- Support Ticket Volume (niedrig = gut)
-- Retention Rate nach 30/60/90 Tagen
-
-**Impact**:
-- Zeit gespart pro Woche (Self-Reported)
-- Materialien erstellt
-- Teacher Testimonials
-
-### Technical Success
-
-**Quality**:
-- Test Coverage > 80%
-- Zero Critical Security Issues
-- Performance Budget eingehalten
-- Accessibility Audit passed
-
-**Reliability**:
-- Uptime > 99.9%
-- Error Rate < 0.1%
-- Average Response Time < 500ms
-
-**Maintainability**:
-- Code Review Approval Rate
-- Time to Fix Bugs
-- Deployment Frequency
-
----
-
-## Living Document
-
-Diese Constitution ist ein **Living Document**. Sie wird erweitert und verfeinert, wenn wir lernen.
-
-### Amendment Process
-
-1. Problem oder neue Erkenntnis identifiziert
-2. Vorschlag in Team diskutiert
-3. Constitution aktualisiert mit Rationale
-4. Version Bump und Change Log
-
-### Change Log
-
-| Date | Version | Change | Rationale |
-|------|---------|--------|-----------|
-| 2025-09-30 | 1.0 | Initial Constitution | Project Foundation |
-
----
-
-## Conclusion
-
-> "Your long-term edge isn't the code or the features. It's how your product leaves people feeling when they close the tab or swipe away."
-
-Wir bauen nicht nur eine App. Wir bauen ein Tool, das Lehrkräfte **lieben** werden.
-
-Jede Zeile Code, jede Design-Entscheidung, jede Feature-Priorisierung wird an diesen Prinzipien gemessen.
-
-**Das ist unser Versprechen an Lehrkräfte. Das ist unsere Constitution.**
-
----
-
-**Maintained by**: All Agents (Backend, Frontend, QA, Emotional Design)
-**Enforced by**: Code Reviews, SpecKit Workflow, Session Logs
-**Reviewed**: Quarterly or when major changes occur
+**Version**: 1.0.0 | **Ratified**: 2025-09-26 | **Last Amended**: 2025-10-11

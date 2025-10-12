@@ -1,374 +1,104 @@
-# [Feature Name] - Technical Plan
+# Implementation Plan: [FEATURE]
 
-**Status**: `draft` | `review` | `approved`
-**Created**: YYYY-MM-DD
-**Author**: [Agent Name]
-**Related Spec**: [Link to spec.md]
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
----
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
 
-## 1. Architecture Overview
+## Summary
 
-### High-Level Design
-[Beschreibe das technische Design auf hoher Ebene]
+[Extract from feature spec: primary requirement + technical approach from research]
+
+## Technical Context
+
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
+
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [single/web/mobile - determines source structure]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+
+## Constitution Check
+
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+
+[Gates determined based on constitution file]
+
+## Project Structure
+
+### Documentation (this feature)
 
 ```
-[Optional: ASCII/Mermaid Diagram]
-┌─────────────┐      ┌─────────────┐
-│  Component  │─────▶│  Component  │
-│      A      │      │      B      │
-└─────────────┘      └─────────────┘
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
-### System Components Affected
-| Component | Type | Impact | Changes Required |
-|-----------|------|--------|-----------------|
-| [Component 1] | Frontend/Backend | New/Modified | [Beschreibung] |
-| [Component 2] | Frontend/Backend | New/Modified | [Beschreibung] |
+### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
----
+```
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
 
-## 2. Frontend Implementation
+tests/
+├── contract/
+├── integration/
+└── unit/
 
-### New Components
-```typescript
-// Component 1: [Name]
-// Purpose: [Beschreibung]
-// Location: src/components/[Name].tsx
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
 
-interface [Name]Props {
-  // Props definition
-}
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-### Modified Components
-- **Component**: `src/components/[Existing].tsx`
-  - **Changes**: [Beschreibung der Änderungen]
-  - **Rationale**: [Warum diese Änderungen]
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
-### State Management
-- **State Location**: [Context/Zustand/Redux/etc.]
-- **State Shape**:
-```typescript
-interface [FeatureName]State {
-  // State definition
-}
-```
+## Complexity Tracking
 
-### Routing Changes
-- **New Routes**:
-  - `/path`: [Beschreibung]
-- **Modified Routes**:
-  - `/existing-path`: [Änderungen]
+*Fill ONLY if Constitution Check has violations that must be justified*
 
----
-
-## 3. Backend Implementation
-
-### API Endpoints
-
-#### New Endpoints
-```typescript
-// POST /api/[endpoint]
-// Purpose: [Beschreibung]
-interface Request {
-  // Request body definition
-}
-
-interface Response {
-  // Response body definition
-}
-```
-
-#### Modified Endpoints
-- **Endpoint**: `PUT /api/existing`
-  - **Changes**: [Beschreibung]
-  - **Breaking Changes**: Yes/No
-
-### Services
-```typescript
-// Service: [ServiceName]
-// Purpose: [Beschreibung]
-// Location: src/services/[serviceName].ts
-
-class [ServiceName] {
-  // Service interface
-}
-```
-
-### Middleware
-- **New Middleware**: [Name und Zweck]
-- **Modified Middleware**: [Name und Änderungen]
-
----
-
-## 4. Data Model
-
-### Database Schema Changes
-
-#### New Entities
-```typescript
-// Entity: [EntityName]
-interface [EntityName] {
-  id: string;
-  // Field definitions mit Typen
-}
-```
-
-#### Modified Entities
-- **Entity**: `[ExistingEntity]`
-  - **New Fields**:
-    - `fieldName: type` - [Beschreibung]
-  - **Modified Fields**:
-    - `existingField` - [Änderungen]
-  - **Removed Fields**:
-    - `oldField` - [Migration strategy]
-
-### Migrations
-```sql
--- Migration: [description]
--- Date: YYYY-MM-DD
-
--- Add new fields
-ALTER TABLE table_name
-  ADD COLUMN field_name TYPE;
-
--- Modify existing fields
--- etc.
-```
-
-### Data Validation
-- **Validation Rules**: [Beschreibung der Validierungslogik]
-- **Schema Validation**: [Zod/Joi/etc. schemas]
-
----
-
-## 5. External Integrations
-
-### New Integrations
-- **Service**: [Service Name]
-  - **Purpose**: [Warum benötigt]
-  - **API Endpoint**: [URL]
-  - **Authentication**: [Method]
-  - **Rate Limits**: [Limits]
-
-### Modified Integrations
-- **Service**: [Existing Service]
-  - **Changes**: [Beschreibung]
-
----
-
-## 6. Security Considerations
-
-### Authentication & Authorization
-- [ ] [Security Measure 1]
-- [ ] [Security Measure 2]
-
-### Data Protection
-- [ ] [Data protection measure 1]
-- [ ] [Data protection measure 2]
-
-### Input Validation
-- [ ] [Validation rule 1]
-- [ ] [Validation rule 2]
-
-### Rate Limiting
-- **Endpoints**: [Which endpoints need rate limiting]
-- **Limits**: [Specific limits]
-
----
-
-## 7. Performance Considerations
-
-### Expected Load
-- **Concurrent Users**: [Number]
-- **Request Volume**: [Requests/second]
-- **Data Volume**: [Amount of data]
-
-### Optimization Strategies
-- [ ] [Optimization 1]
-- [ ] [Optimization 2]
-
-### Caching Strategy
-- **Cache Location**: [Redis/Memory/etc.]
-- **Cache Duration**: [TTL]
-- **Cache Keys**: [Key structure]
-
-### Database Optimization
-- **Indexes**: [Which fields to index]
-- **Query Optimization**: [Specific optimizations]
-
----
-
-## 8. Testing Strategy
-
-### Unit Tests
-```typescript
-// Test Coverage Requirements
-describe('[Feature Name]', () => {
-  // Key test scenarios
-});
-```
-
-**Coverage Target**: [Percentage]
-**Critical Paths**: [List critical functionality to test]
-
-### Integration Tests
-- **Test Scenarios**:
-  - [ ] Scenario 1
-  - [ ] Scenario 2
-
-### E2E Tests
-- **User Flows to Test**:
-  - [ ] Flow 1
-  - [ ] Flow 2
-
-### Performance Tests
-- **Load Testing**: [Strategy]
-- **Stress Testing**: [Strategy]
-
----
-
-## 9. Error Handling
-
-### Error Scenarios
-| Scenario | Error Type | User Message | Recovery Strategy |
-|----------|-----------|--------------|-------------------|
-| [Scenario 1] | [Type] | [Message] | [Strategy] |
-
-### Logging Strategy
-- **Log Level**: [INFO/WARN/ERROR]
-- **Log Format**: [Structure]
-- **Log Destination**: [Where logs are stored]
-
----
-
-## 10. Monitoring & Observability
-
-### Metrics to Track
-- [Metric 1]: [What it measures]
-- [Metric 2]: [What it measures]
-
-### Alerts
-- **Alert 1**: [Condition] → [Action]
-- **Alert 2**: [Condition] → [Action]
-
-### Dashboards
-- [Dashboard 1]: [Purpose and key metrics]
-
----
-
-## 11. Deployment Strategy
-
-### Deployment Steps
-1. [ ] Step 1
-2. [ ] Step 2
-3. [ ] Step 3
-
-### Rollback Plan
-[Beschreibe die Rollback-Strategie bei Problemen]
-
-### Feature Flags
-- **Flag Name**: [Name]
-- **Purpose**: [Why needed]
-- **Rollout Strategy**: [How to enable]
-
----
-
-## 12. Migration Strategy
-
-### Data Migration
-- **Migration Type**: [One-time/Continuous]
-- **Steps**:
-  1. [Step 1]
-  2. [Step 2]
-
-### Backward Compatibility
-- **Breaking Changes**: [List any breaking changes]
-- **Compatibility Period**: [How long old version supported]
-
----
-
-## 13. Dependencies & Prerequisites
-
-### Technical Dependencies
-- [ ] Dependency 1: [Description]
-- [ ] Dependency 2: [Description]
-
-### External Dependencies
-- [ ] External Service 1: [Setup required]
-- [ ] External Service 2: [Configuration needed]
-
----
-
-## 14. Risks & Mitigations
-
-### Technical Risks
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|-----------|
-| [Risk 1] | Low/Med/High | Low/Med/High | [Strategy] |
-
-### Performance Risks
-| Risk | Mitigation |
-|------|-----------|
-| [Risk 1] | [Strategy] |
-
----
-
-## 15. Implementation Timeline
-
-### Phase 1: Foundation (Week 1)
-- [ ] Task 1
-- [ ] Task 2
-
-### Phase 2: Core Features (Week 2)
-- [ ] Task 1
-- [ ] Task 2
-
-### Phase 3: Testing & Polish (Week 3)
-- [ ] Task 1
-- [ ] Task 2
-
----
-
-## 16. Success Criteria
-
-### Technical Success Criteria
-- [ ] All tests passing (>90% coverage)
-- [ ] Performance benchmarks met
-- [ ] Security review passed
-- [ ] No critical bugs in production
-
-### Quality Gates
-- [ ] Code review completed
-- [ ] Documentation complete
-- [ ] Load testing passed
-- [ ] Accessibility requirements met
-
----
-
-## Approval
-
-### Technical Reviewers
-- [ ] Backend Lead
-- [ ] Frontend Lead
-- [ ] DevOps/Infrastructure
-- [ ] Security Team
-
-### Approval Date
-[Date when plan was approved]
-
----
-
-## Change Log
-| Date | Author | Changes |
-|------|--------|---------|
-| YYYY-MM-DD | [Name] | Initial draft |
-
----
-
-## Next Steps
-1. [ ] Technical Review durchführen
-2. [ ] Feedback einarbeiten
-3. [ ] Approval einholen
-4. [ ] `tasks.md` erstellen und Implementation beginnen
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

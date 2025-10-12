@@ -1,0 +1,225 @@
+
+> teacher-assistant-backend@1.0.0 build
+> tsc
+
+src/agents/langGraphImageGenerationAgent.ts(151,13): error TS2451: Cannot redeclare block-scoped variable 'geminiInput'.
+src/agents/langGraphImageGenerationAgent.ts(222,13): error TS2451: Cannot redeclare block-scoped variable 'geminiInput'.
+src/config/redis.ts(6,19): error TS2307: Cannot find module 'ioredis' or its corresponding type declarations.
+src/config/redis.ts(7,28): error TS2307: Cannot find module '@langchain/langgraph-checkpoint-redis' or its corresponding type declarations.
+src/config/redis.ts(8,30): error TS2307: Cannot find module 'redis' or its corresponding type declarations.
+src/config/redis.ts(103,30): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/routes/chatTags.test.ts(5,65): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+src/routes/context.test.ts(12,67): error TS2344: Type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...' does not satisfy the constraint 'Constructable'.
+  Type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...' provides no match for the signature 'new (...args: any[]): any'.
+src/routes/context.test.ts(19,34): error TS2749: 'InstantDBService' refers to a value, but is being used as a type here. Did you mean 'typeof InstantDBService'?
+src/routes/context.test.ts(23,25): error TS2351: This expression is not constructable.
+  Type 'MockInstance<any, never, never> & { prototype: never; } & { initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; ... 5 more ...; FileStorage: typeof FileStorageService; }' has no construct signatures.
+src/routes/context.test.ts(23,63): error TS2749: 'InstantDBService' refers to a value, but is being used as a type here. Did you mean 'typeof InstantDBService'?
+src/routes/context.ts(12,10): error TS2614: Module '"../schemas/instantdb"' has no exported member 'ManualContext'. Did you mean to use 'import ManualContext from "../schemas/instantdb"' instead?
+src/routes/context.ts(67,48): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(76,67): error TS7006: Parameter 'context' implicitly has an 'any' type.
+src/routes/context.ts(89,20): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/routes/context.ts(89,23): error TS7006: Parameter 'b' implicitly has an 'any' type.
+src/routes/context.ts(105,35): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/routes/context.ts(105,40): error TS7006: Parameter 'context' implicitly has an 'any' type.
+src/routes/context.ts(162,41): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(192,43): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(193,24): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(259,52): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(287,28): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(288,24): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(297,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/routes/context.ts(343,52): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(364,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(365,26): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(369,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(370,26): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(384,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/routes/context.ts(451,49): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(452,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(470,34): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(471,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(491,34): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/context.ts(492,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/data.test.ts(37,28): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/routes/data.test.ts(95,28): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/routes/data.test.ts(151,28): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/routes/data.test.ts(194,28): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/routes/data.ts(12,10): error TS2614: Module '"../schemas/instantdb"' has no exported member 'GermanState'. Did you mean to use 'import GermanState from "../schemas/instantdb"' instead?
+src/routes/data.ts(12,23): error TS2614: Module '"../schemas/instantdb"' has no exported member 'TeachingSubject'. Did you mean to use 'import TeachingSubject from "../schemas/instantdb"' instead?
+src/routes/data.ts(12,40): error TS2614: Module '"../schemas/instantdb"' has no exported member 'TeachingPreference'. Did you mean to use 'import TeachingPreference from "../schemas/instantdb"' instead?
+src/routes/files-encoding-test.ts(2,20): error TS2307: Cannot find module 'multer' or its corresponding type declarations.
+src/routes/files-encoding-test.ts(52,16): error TS7006: Parameter 'req' implicitly has an 'any' type.
+src/routes/files-encoding-test.ts(52,21): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/routes/files-encoding-test.ts(52,27): error TS7006: Parameter 'cb' implicitly has an 'any' type.
+src/routes/files-encoding-test.ts(68,14): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(77,25): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(78,22): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(79,21): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(80,21): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(81,17): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(82,19): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(84,43): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(85,45): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(86,26): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(87,26): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(88,40): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(89,26): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files-encoding-test.ts(90,41): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files.ts(2,20): error TS2307: Cannot find module 'multer' or its corresponding type declarations.
+src/routes/files.ts(15,16): error TS7006: Parameter 'req' implicitly has an 'any' type.
+src/routes/files.ts(15,21): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/routes/files.ts(15,27): error TS7006: Parameter 'cb' implicitly has an 'any' type.
+src/routes/files.ts(55,36): error TS7006: Parameter 'err' implicitly has an 'any' type.
+src/routes/files.ts(88,14): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files.ts(99,46): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files.ts(110,44): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files.ts(110,70): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files.ts(112,41): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files.ts(120,56): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files.ts(121,19): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/files.ts(122,19): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/routes/langGraphAgents.ts(137,11): error TS2353: Object literal may only specify known properties, and 'details' does not exist in type 'ApiResponse<Record<string, unknown>>'.
+src/routes/langGraphAgents.ts(485,9): error TS2353: Object literal may only specify known properties, and 'metadata' does not exist in type 'ApiResponse<Record<string, unknown>>'.
+src/routes/langGraphAgents.ts(548,11): error TS2353: Object literal may only specify known properties, and 'details' does not exist in type 'ApiResponse<Record<string, unknown>>'.
+src/routes/langGraphAgents.ts(703,13): error TS2375: Type '{ success: boolean; data: { executionId: any; image_url: any; revised_prompt: any; enhanced_prompt: any; title: any; dalle_title: any; quality_score: any; educational_optimized: any; cost: number | undefined; library_id: string | undefined; message_id: string | undefined; metadata: { ...; }; } | undefined; error: st...' is not assignable to type 'ApiResponse<Record<string, unknown>>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'data' are incompatible.
+    Type '{ executionId: any; image_url: any; revised_prompt: any; enhanced_prompt: any; title: any; dalle_title: any; quality_score: any; educational_optimized: any; cost: number | undefined; library_id: string | undefined; message_id: string | undefined; metadata: { ...; }; } | undefined' is not assignable to type 'Record<string, unknown>'.
+      Type 'undefined' is not assignable to type 'Record<string, unknown>'.
+src/routes/langGraphAgents.ts(758,11): error TS2353: Object literal may only specify known properties, and 'details' does not exist in type 'ApiResponse<Record<string, unknown>>'.
+src/routes/langGraphAgents.ts(830,11): error TS2353: Object literal may only specify known properties, and 'details' does not exist in type 'ApiResponse<Record<string, unknown>>'.
+src/routes/onboarding.test.ts(12,67): error TS2344: Type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...' does not satisfy the constraint 'Constructable'.
+  Type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...' provides no match for the signature 'new (...args: any[]): any'.
+src/routes/onboarding.test.ts(19,34): error TS2749: 'InstantDBService' refers to a value, but is being used as a type here. Did you mean 'typeof InstantDBService'?
+src/routes/onboarding.test.ts(23,25): error TS2351: This expression is not constructable.
+  Type 'MockInstance<any, never, never> & { prototype: never; } & { initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; ... 5 more ...; FileStorage: typeof FileStorageService; }' has no construct signatures.
+src/routes/onboarding.test.ts(23,63): error TS2749: 'InstantDBService' refers to a value, but is being used as a type here. Did you mean 'typeof InstantDBService'?
+src/routes/onboarding.ts(94,49): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(107,9): error TS2322: Type 'string' is not assignable to type 'string[]'.
+src/routes/onboarding.ts(108,9): error TS2322: Type 'string' is not assignable to type 'string[]'.
+src/routes/onboarding.ts(117,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(118,26): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(127,9): error TS2322: Type 'string' is not assignable to type 'string[]'.
+src/routes/onboarding.ts(128,9): error TS2322: Type 'string' is not assignable to type 'string[]'.
+src/routes/onboarding.ts(138,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(139,26): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(144,52): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(154,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(155,26): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(165,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(166,26): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(258,49): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(277,11): error TS2375: Type '{ onboarding_completed?: boolean; onboarding_completed_at?: number; school?: string; teaching_preferences?: string; grade_levels?: string; subjects?: string; german_state?: string; last_active: number; }' is not assignable to type 'Partial<User>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'grade_levels' are incompatible.
+    Type 'string' is not assignable to type 'string[]'.
+src/routes/onboarding.ts(290,28): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(291,24): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(295,52): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(311,30): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(312,26): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/onboarding.ts(319,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/routes/onboarding.ts(348,41): error TS2339: Property 'db' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/routes/teacher-profile.ts(6,3): error TS2305: Module '"../types"' has no exported member 'KnowledgeExtractionRequest'.
+src/routes/teacher-profile.ts(7,3): error TS2305: Module '"../types"' has no exported member 'KnowledgeExtractionResponse'.
+src/routes/teacher-profile.ts(108,10): error TS7006: Parameter 'total' implicitly has an 'any' type.
+src/routes/teacher-profile.ts(108,17): error TS7006: Parameter 'msg' implicitly has an 'any' type.
+src/services/agentIntentService.test.ts(2,10): error TS2305: Module '"../types"' has no exported member 'TeacherKnowledge'.
+src/services/agentService.ts(8,10): error TS2614: Module '"../schemas/instantdb"' has no exported member 'GeneratedArtifact'. Did you mean to use 'import GeneratedArtifact from "../schemas/instantdb"' instead?
+src/services/agentService.ts(8,29): error TS2614: Module '"../schemas/instantdb"' has no exported member 'UserUsage'. Did you mean to use 'import UserUsage from "../schemas/instantdb"' instead?
+src/services/agentService.ts(8,40): error TS2614: Module '"../schemas/instantdb"' has no exported member 'AgentExecution'. Did you mean to use 'import AgentExecution from "../schemas/instantdb"' instead?
+src/services/agentService.ts(298,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/agentService.ts(333,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/agentService.ts(388,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/agentService.ts(467,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/agentService.ts(502,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/agentService.ts(559,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/chatTagService.test.ts(5,65): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+src/services/dataSeederService.ts(9,10): error TS2614: Module '"../schemas/instantdb"' has no exported member 'GermanState'. Did you mean to use 'import GermanState from "../schemas/instantdb"' instead?
+src/services/dataSeederService.ts(9,23): error TS2614: Module '"../schemas/instantdb"' has no exported member 'TeachingSubject'. Did you mean to use 'import TeachingSubject from "../schemas/instantdb"' instead?
+src/services/dataSeederService.ts(9,40): error TS2614: Module '"../schemas/instantdb"' has no exported member 'TeachingPreference'. Did you mean to use 'import TeachingPreference from "../schemas/instantdb"' instead?
+src/services/fileService.ts(6,44): error TS2694: Namespace 'global.Express' has no exported member 'Multer'.
+src/services/fileService.ts(78,50): error TS2694: Namespace 'global.Express' has no exported member 'Multer'.
+src/services/instantdbService.test.ts(392,43): error TS2339: Property 'updateCharacteristicCategory' does not exist on type 'typeof ProfileCharacteristicsService'.
+src/services/instantdbService.test.ts(405,39): error TS2339: Property 'updateCharacteristicCategory' does not exist on type 'typeof ProfileCharacteristicsService'.
+src/services/instantdbService.test.ts(415,39): error TS2339: Property 'updateCharacteristicCategory' does not exist on type 'typeof ProfileCharacteristicsService'.
+src/services/langGraphAgentService.ts(14,10): error TS2614: Module '"../schemas/instantdb"' has no exported member 'GeneratedArtifact'. Did you mean to use 'import GeneratedArtifact from "../schemas/instantdb"' instead?
+src/services/langGraphAgentService.ts(189,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/langGraphAgentService.ts(268,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/langGraphAgentService.ts(307,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/langGraphAgentService.ts(352,35): error TS2339: Property 'getDB' does not exist on type '{ initialize: () => boolean; isAvailable: () => boolean; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: typeof FileStorag...'.
+src/services/profileDeduplicationService.ts(12,35): error TS2307: Cannot find module 'string-similarity' or its corresponding type declarations.
+src/services/progressStreamingService.ts(6,23): error TS7016: Could not find a declaration file for module 'ws'. 'C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/node_modules/ws/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/ws` if it exists or add a new declaration (.d.ts) file containing `declare module 'ws';`
+src/services/progressStreamingService.ts(7,33): error TS7016: Could not find a declaration file for module 'ws'. 'C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/node_modules/ws/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/ws` if it exists or add a new declaration (.d.ts) file containing `declare module 'ws';`
+src/services/progressStreamingService.ts(177,31): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/services/progressStreamingService.ts(249,23): error TS7006: Parameter 'data' implicitly has an 'any' type.
+src/services/progressStreamingService.ts(251,21): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/services/promptService.test.ts(7,31): error TS2307: Cannot find module './promptService' or its corresponding type declarations.
+src/services/promptService.test.ts(59,22): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(67,46): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(68,44): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(78,22): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(88,25): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(101,27): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(115,54): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(125,28): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(148,40): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(149,40): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(168,40): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(169,40): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(172,48): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/services/promptService.test.ts(172,52): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/services/promptService.test.ts(190,24): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(216,25): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(230,45): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(238,25): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(252,49): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(262,25): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(276,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(289,25): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(305,22): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(319,30): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(333,37): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/teacherProfileService.ts(3,3): error TS2305: Module '"../types"' has no exported member 'KnowledgeExtractionRequest'.
+src/services/teacherProfileService.ts(4,3): error TS2305: Module '"../types"' has no exported member 'KnowledgeExtractionResponse'.
+src/services/teacherProfileService.ts(6,3): error TS2305: Module '"../types"' has no exported member 'TeacherKnowledge'.
+src/services/teacherProfileService.ts(44,10): error TS7006: Parameter 'msg' implicitly has an 'any' type.
+src/tests/agentSuggestion.integration.test.ts(339,9): error TS2353: Object literal may only specify known properties, and 'userId' does not exist in type 'ChatRequest'.
+src/tests/api.endpoints.test.ts(7,10): error TS2614: Module '"../app"' has no exported member 'app'. Did you mean to use 'import app from "../app"' instead?
+src/tests/error.handling.test.ts(7,10): error TS2614: Module '"../app"' has no exported member 'app'. Did you mean to use 'import app from "../app"' instead?
+src/tests/errorHandlingService.test.ts(16,48): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(17,43): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(19,48): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(20,42): error TS2345: Argument of type 'null' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(21,54): error TS2345: Argument of type '1' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(22,41): error TS2345: Argument of type 'false' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(23,41): error TS2345: Argument of type 'true' is not assignable to parameter of type 'never'.
+src/tests/langGraph.integration.test.ts(7,10): error TS2614: Module '"../app"' has no exported member 'app'. Did you mean to use 'import app from "../app"' instead?
+src/tests/langGraphAgentService.test.ts(18,45): error TS2345: Argument of type '{ data: { url: string; revised_prompt: string; }[]; }' is not assignable to parameter of type 'never'.
+src/tests/langGraphAgentService.test.ts(27,45): error TS2345: Argument of type '{ choices: { message: { content: string; }; }[]; }' is not assignable to parameter of type 'never'.
+src/tests/langGraphAgentService.test.ts(43,42): error TS2345: Argument of type '{}' is not assignable to parameter of type 'never'.
+src/tests/langGraphAgentService.test.ts(44,45): error TS2345: Argument of type 'true' is not assignable to parameter of type 'never'.
+src/tests/langGraphAgentService.test.ts(91,14): error TS2532: Object is possibly 'undefined'.
+src/tests/langGraphAgentService.test.ts(109,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(119,16): error TS18048: 'result.metadata' is possibly 'undefined'.
+src/tests/langGraphAgentService.test.ts(134,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(152,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(178,11): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(202,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(225,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(247,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(337,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(360,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(382,9): error TS2554: Expected 3-4 arguments, but got 5.
+src/tests/langGraphAgentService.test.ts(410,50): error TS2339: Property 'getWorkflowConfig' does not exist on type 'LangGraphImageGenerationAgent'.
+src/tests/performance.test.ts(7,10): error TS2614: Module '"../app"' has no exported member 'app'. Did you mean to use 'import app from "../app"' instead?
+src/tests/performance.test.ts(42,29): error TS18048: 'stats.min' is possibly 'undefined'.
+src/tests/performance.test.ts(43,29): error TS18048: 'stats.max' is possibly 'undefined'.
+src/tests/performance.test.ts(44,41): error TS18048: 'stats.p95' is possibly 'undefined'.
+src/tests/performance.test.ts(501,100): error TS18048: 'stats.p95' is possibly 'undefined'.
+src/tests/redis.integration.test.ts(6,19): error TS2307: Cannot find module 'ioredis' or its corresponding type declarations.
+src/tests/redis.integration.test.ts(313,25): error TS7006: Parameter 'result' implicitly has an 'any' type.

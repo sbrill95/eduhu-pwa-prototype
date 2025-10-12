@@ -6,10 +6,9 @@ import imageGenerationRouter from './imageGeneration';
 import chatSummaryRouter from './chat-summary';
 import profileRouter from './profile';
 import filesRouter from './files';
+// import langGraphAgentsRouter from './langGraphAgents'; // TODO: Fix TypeScript errors (ApiResponse type issues)
 // import promptsRouter from './prompts'; // Disabled - prompts.ts.disabled
-// TODO: Fix TypeScript errors in these routes before enabling
-// import langGraphAgentsRouter from './langGraphAgents';
-// import teacherProfileRouter from './teacher-profile';
+// import teacherProfileRouter from './teacher-profile'; // TODO: Fix TypeScript errors
 
 const router = Router();
 
@@ -22,7 +21,7 @@ router.use('/', chatRouter);
 // Mount chat tags routes
 router.use('/chat', chatTagsRouter);
 
-// Mount image generation routes (simple fallback for broken langGraphAgents)
+// Mount LangGraph image generation routes (includes timeout fix)
 router.use('/langgraph', imageGenerationRouter);
 
 // Mount chat summary routes
@@ -36,9 +35,6 @@ router.use('/files', filesRouter);
 
 // Mount prompts routes
 // router.use('/prompts', promptsRouter); // Disabled - prompts.ts.disabled
-
-// TODO: Fix TypeScript errors in langGraphAgents before enabling
-// router.use('/langgraph', langGraphAgentsRouter);
 
 // TODO: Enable these routes after fixing TypeScript errors
 // router.use('/teacher-profile', teacherProfileRouter);

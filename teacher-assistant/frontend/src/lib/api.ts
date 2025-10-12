@@ -449,14 +449,51 @@ class ApiClient {
   }
 
   async executeAgent(request: AgentExecutionRequest): Promise<AgentExecutionResponse> {
-    const response = await this.request<{
-      success: boolean;
-      data: AgentExecutionResponse;
-    }>('/langgraph/agents/execute', {
-      method: 'POST',
-      body: JSON.stringify(request),
+    const endpoint = '/langgraph/agents/execute';
+    const fullUrl = `${this.baseUrl}${endpoint}`;
+
+    console.log('[ApiClient] 🚀 executeAgent REQUEST', {
+      timestamp: new Date().toISOString(),
+      endpoint,
+      fullUrl,
+      agentId: request.agentId,
+      hasInput: !!request.input,
+      inputType: typeof request.input,
+      inputKeys: request.input && typeof request.input === 'object' ? Object.keys(request.input) : [],
+      userId: request.userId,
+      sessionId: request.sessionId,
+      confirmExecution: request.confirmExecution
     });
-    return response.data;
+
+    try {
+      const response = await this.request<{
+        success: boolean;
+        data: AgentExecutionResponse;
+      }>(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(request),
+      });
+
+      console.log('[ApiClient] ✅ executeAgent RESPONSE', {
+        timestamp: new Date().toISOString(),
+        success: !!response.data,
+        hasImageUrl: !!(response.data as any)?.image_url,
+        responseKeys: response.data ? Object.keys(response.data) : [],
+        dataType: typeof response.data
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('[ApiClient] ❌ executeAgent ERROR', {
+        timestamp: new Date().toISOString(),
+        errorType: error?.constructor?.name,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStatus: (error as any)?.status,
+        errorCode: (error as any)?.errorCode,
+        stack: error instanceof Error ? error.stack?.split('\n').slice(0, 3).join('\n') : undefined
+      });
+      throw error;
+    }
   }
 
   async getAgentStatus(executionId: string): Promise<AgentStatus> {

@@ -40,6 +40,7 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   timestamp: number;
   message_index: number;
+  metadata?: string; // Optional metadata field for agentSuggestion, image info, etc.
 }
 
 export interface LibraryMaterial {
@@ -249,8 +250,9 @@ export interface AgentInfo {
 
 export interface AgentExecutionRequest {
   agentId: string;
-  input: string;
+  input: string | Record<string, any>; // Support both string and object input
   context?: Record<string, any>;
+  userId?: string; // BUG-040 fix - Required for InstantDB permissions
   sessionId?: string;
   confirmExecution?: boolean; // Whether to execute (true) or just preview (false)
 }

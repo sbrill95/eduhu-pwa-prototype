@@ -271,12 +271,32 @@ router.post('/execute',
       }
 
       // Execute agent with LangGraph workflow
+      console.log('[langGraphAgents] Starting agent execution', {
+        timestamp: new Date().toISOString(),
+        agentId,
+        userId: effectiveUserId,
+        sessionId,
+        hasParams: !!params,
+        hasPrompt: !!params.prompt
+      });
+
+      const executionStartTime = Date.now();
       const result = await langGraphAgentService.executeAgentWithWorkflow(
         agentId,
         params,
         effectiveUserId,
         sessionId
       );
+
+      const executionTime = Date.now() - executionStartTime;
+      console.log('[langGraphAgents] Agent execution completed', {
+        timestamp: new Date().toISOString(),
+        agentId,
+        success: result.success,
+        executionTimeMs: executionTime,
+        executionTimeSec: (executionTime / 1000).toFixed(2),
+        hasError: !!result.error
+      });
 
       // TASK-004 & TASK-005: Save image to library_materials and create chat message (for image generation)
       let libraryId: string | undefined;
@@ -319,7 +339,36 @@ router.post('/execute',
               hasSessionId: !!sessionId
             });
 
+            // T023-T025: Prepare and validate metadata for library_materials (same as messages pattern)
+            // Use originalParams from agent result or construct from params
+            const originalParams = result.data.originalParams || {
+              description: params.prompt || params.description || '',
+              imageStyle: params.imageStyle || 'illustrative',
+              learningGroup: params.learningGroup || '',
+              subject: params.subject || ''
+            };
+
+            // T023: Validate metadata object BEFORE stringifying (FR-010)
+            const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+            const libraryMetadataObject = {
+              type: 'image',
+              image_url: result.data.image_url,
+              title: titleToUse,
+              originalParams: originalParams
+            };
+
+            const validatedLibraryMetadata = validateAndStringifyMetadata(libraryMetadataObject);
+
+            // T024: Log validation failure (FR-010a, FR-011)
+            if (!validatedLibraryMetadata) {
+              logError('[langGraphAgents] Library metadata validation failed - saving without metadata', new Error('Metadata validation failed'), { libraryMetadataObject });
+              console.warn('[langGraphAgents] ⚠️ Library metadata validation failed - saving with null metadata');
+            } else {
+              logInfo('[langGraphAgents] Library metadata validation successful', { libraryId: imageLibraryId, metadataSize: validatedLibraryMetadata.length });
+            }
+
             // TASK-004: Save image to library_materials with German title
+            // T025: Use validated & stringified metadata or null on failure (FR-004, FR-010a)
             await db.transact([
               db.tx.library_materials[imageLibraryId].update({
                 user_id: effectiveUserId,
@@ -332,7 +381,8 @@ router.post('/execute',
                 updated_at: now,
                 is_favorite: false,
                 usage_count: 0,
-                source_session_id: sessionId || null
+                source_session_id: sessionId || null,
+                metadata: validatedLibraryMetadata // T025: Stringified JSON or null (FR-004)
               })
             ]);
 
@@ -352,21 +402,47 @@ router.post('/execute',
                 libraryId: imageLibraryId
               });
 
+              // T020: Use originalParams from agent result (FR-008)
+              // Agent now returns originalParams in result.data
+              const originalParams = result.data.originalParams || {
+                description: params.prompt || '',
+                imageStyle: 'illustrative',
+                learningGroup: '',
+                subject: ''
+              };
+
+              // T018 & T019: Validate metadata before saving (FR-010c backend enforcement)
+              const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+              const metadataObject = {
+                type: 'image',
+                image_url: result.data.image_url,
+                title: titleToUse,
+                originalParams: originalParams
+              };
+
+              const validatedMetadata = validateAndStringifyMetadata(metadataObject);
+
+              if (!validatedMetadata) {
+                // T019: Log validation failure (FR-011)
+                logError('[langGraphAgents] Metadata validation failed - saving message without metadata', new Error('Metadata validation failed'), { metadataObject });
+                console.warn('[langGraphAgents] ⚠️ Metadata validation failed - saving with null metadata');
+              } else {
+                // T019: Log validation success (FR-011)
+                logInfo('[langGraphAgents] Metadata validation successful', { messageId: imageChatMessageId, metadataSize: validatedMetadata.length });
+              }
+
+              // BUG-025 FIX: Add required relationship fields (session, author)
+              // T016 & T017: Save with validated metadata or null on failure (FR-010a, CHK111)
               await db.transact([
                 db.tx.messages[imageChatMessageId].update({
                   content: `Ich habe ein Bild für dich erstellt.`,
                   role: 'assistant',
-                  user_id: effectiveUserId,
-                  session_id: sessionId,
+                  timestamp: now,
                   message_index: 0, // Will be updated by frontend
-                  created_at: now,
-                  updated_at: now,
-                  is_edited: false,
-                  metadata: JSON.stringify({
-                    type: 'image',
-                    image_url: result.data.image_url,
-                    library_id: imageLibraryId
-                  })
+                  is_edited: false, // BUG-025: Required field
+                  metadata: validatedMetadata, // T017: Use validated & stringified metadata (FR-004)
+                  session: sessionId,     // BUG-025: Link to chat_sessions
+                  author: effectiveUserId   // BUG-025: Link to users
                 })
               ]);
 
@@ -374,9 +450,10 @@ router.post('/execute',
               console.log('[langGraphAgents] ✅ Chat message created:', {
                 messageId,
                 sessionId,
-                libraryId
+                libraryId,
+                hasMetadata: !!validatedMetadata
               });
-              logInfo(`Image chat message created`, { messageId, sessionId, libraryId });
+              logInfo(`Image chat message created`, { messageId, sessionId, libraryId, metadataValidated: !!validatedMetadata });
             } else {
               console.log('[langGraphAgents] ⚠️ No sessionId - skipping chat message creation');
             }
@@ -412,6 +489,16 @@ router.post('/execute',
         },
         timestamp: new Date().toISOString()
       };
+
+      console.log('[langGraphAgents] Sending response to frontend', {
+        timestamp: new Date().toISOString(),
+        statusCode,
+        success: result.success,
+        hasImageUrl: !!result.data?.image_url,
+        hasLibraryId: !!libraryId,
+        totalRequestTimeMs: Date.now() - executionStartTime,
+        totalRequestTimeSec: ((Date.now() - executionStartTime) / 1000).toFixed(2)
+      });
 
       res.status(statusCode).json(response);
 
@@ -581,21 +668,22 @@ router.post('/image/generate',
 
             // TASK-005: Create chat message with image (clean UI - no prompt/metadata)
             if (sessionId) {
+              // BUG-025 FIX: Add required relationship fields (session, author)
               await db.transact([
                 db.tx.messages[imageChatMessageId].update({
                   content: `Ich habe ein Bild für dich erstellt.`,
                   role: 'assistant',
-                  user_id: userId,
-                  session_id: sessionId,
-                  message_index: 0, // Will be updated by frontend
-                  created_at: now,
-                  updated_at: now,
+                  timestamp: now,
+                  edited_at: now,
                   is_edited: false,
+                  message_index: 0, // Will be updated by frontend
                   metadata: JSON.stringify({
                     type: 'image',
                     image_url: result.data.image_url,
                     library_id: imageLibraryId
-                  })
+                  }),
+                  session_id: sessionId, // BUG-025: Link to chat_sessions
+                  user_id: userId        // BUG-025: Link to users
                 })
               ]);
 

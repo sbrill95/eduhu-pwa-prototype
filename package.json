@@ -4,6 +4,7 @@
     "puppeteer": "^24.22.3"
   },
   "devDependencies": {
+    "@instantdb/admin": "^0.22.8",
     "@playwright/test": "^1.55.1"
   },
   "scripts": {

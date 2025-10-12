@@ -85,6 +85,21 @@ export const teacherAssistantSchema = i.schema({
       feedback_type: i.string(), // 'chat_response', 'artifact', 'general'
       created_at: i.number(),
     }),
+
+    // BUG-025 FIX: Library materials for storing generated images and resources
+    library_materials: i.entity({
+      user_id: i.string().indexed(),
+      title: i.string(),
+      type: i.string(), // 'image', 'document', 'resource'
+      content: i.string(), // URL or content
+      description: i.string().optional(),
+      tags: i.string().optional(), // JSON array of tags
+      created_at: i.number(),
+      updated_at: i.number(),
+      is_favorite: i.boolean(),
+      usage_count: i.number(),
+      source_session_id: i.string().optional(),
+    }),
   },
 
   links: {
