@@ -361,6 +361,21 @@ export class LangGraphImageGenerationAgent {
     });
 
     try {
+      // TEST MODE BYPASS: Skip actual OpenAI API call for faster tests
+      if (process.env.VITE_TEST_MODE === 'true') {
+        console.log('[IMAGE-GEN] TEST MODE: Bypassing OpenAI API call');
+        const mockImageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiM0Mjg1RjQiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQ4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlRFU1QgSU1BR0U8L3RleHQ+PC9zdmc+';
+        const mockRevisedPrompt = `Test image for: ${params.prompt.substring(0, 50)}`;
+
+        return {
+          success: true,
+          data: {
+            url: mockImageUrl,
+            revised_prompt: mockRevisedPrompt
+          }
+        };
+      }
+
       // Add timeout wrapper (60 seconds max for DALL-E 3)
       const IMAGE_GENERATION_TIMEOUT = 60000; // 60 seconds
 

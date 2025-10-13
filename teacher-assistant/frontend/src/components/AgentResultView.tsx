@@ -214,7 +214,8 @@ export const AgentResultView: React.FC = () => {
     });
 
     // TASK-006: Create chat message with image metadata
-    if (state.result && user && state.sessionId) {
+    // Only create message if backend didn't already create one (US2 BUG-025 fix)
+    if (state.result && user && state.sessionId && !state.result.data?.message_id) {
       try {
         const imageUrl = state.result.data?.imageUrl;
         const title = state.result.data?.title || 'AI-generiertes Bild';

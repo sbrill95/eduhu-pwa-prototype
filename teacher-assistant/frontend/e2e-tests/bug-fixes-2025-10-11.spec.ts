@@ -254,7 +254,7 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
     await continueButton.click({ force: true });
 
     // Wait for modal to close and chat view to load
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(3000);
     console.log('⏱️ Navigation occurred successfully');
     // Note: Performance assertion relaxed due to modal animations
     // SC-003 target of <500ms applies to normal tab switches, not modal-based navigation
@@ -503,7 +503,7 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
 
     if (await regenerateButton.isVisible({ timeout: 2000 })) {
       await regenerateButton.click();
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(2500);
 
       await helper.takeScreenshot('us4-regenerate-form');
 

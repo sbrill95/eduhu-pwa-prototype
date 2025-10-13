@@ -426,6 +426,7 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
               return (
                 <div
                   key={artifact.id}
+                  data-testid="material-card"
                   onClick={() => handleMaterialClick(artifact)}
                   className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
                 >
