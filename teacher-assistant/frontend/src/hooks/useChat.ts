@@ -155,9 +155,26 @@ export const useChat = () => {
 
   // DEBUG BUG-003: Log InstantDB query results to verify metadata field
   useEffect(() => {
+    console.log('[useChat CHAT-MESSAGE-DEBUG] Query executed:', {
+      hasQuery: !!sessionQuery,
+      currentSessionId,
+      userId: user?.id,
+      hasData: !!sessionData,
+      hasMessages: !!sessionData?.messages,
+      messageCount: sessionData?.messages?.length || 0,
+      error: sessionError
+    });
+
     if (sessionData?.messages) {
       console.log('[useChat BUG-003 DEBUG] InstantDB query returned messages:', {
         count: sessionData.messages.length,
+        allMessages: sessionData.messages.map(m => ({
+          id: m.id,
+          role: m.role,
+          content: m.content.substring(0, 50),
+          session_id: m.session_id,
+          timestamp: m.timestamp
+        })),
         sampleMessage: sessionData.messages[0] ? {
           id: sessionData.messages[0].id,
           role: sessionData.messages[0].role,
@@ -166,8 +183,13 @@ export const useChat = () => {
           allKeys: Object.keys(sessionData.messages[0])
         } : 'No messages'
       });
+    } else {
+      console.log('[useChat CHAT-MESSAGE-DEBUG] NO messages returned from query', {
+        sessionData,
+        sessionError
+      });
     }
-  }, [sessionData]);
+  }, [sessionData, currentSessionId, user?.id, sessionError]);
 
   // FIX: Stabilize sessionData to prevent infinite loops
   // InstantDB returns NEW object references on every render even if data unchanged
