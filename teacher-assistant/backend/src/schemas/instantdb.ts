@@ -99,6 +99,7 @@ export const teacherAssistantSchema = i.schema({
       is_favorite: i.boolean(),
       usage_count: i.number(),
       source_session_id: i.string().optional(),
+      metadata: i.string().optional(), // BUG-019 FIX: JSON string for image generation parameters
     }),
   },
 

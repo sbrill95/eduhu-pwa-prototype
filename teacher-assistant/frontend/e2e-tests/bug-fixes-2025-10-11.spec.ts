@@ -1,7 +1,8 @@
 import { test, expect, Page, ConsoleMessage } from '@playwright/test';
+import { setupMockServer } from './mocks/setup';
 
 /**
- * E2E Test Suite: Bug Fixes 2025-10-11
+ * E2E Test Suite: Bug Fixes 2025-10-11 (MOCK MODE - Fast Tests)
  *
  * Comprehensive automated tests for 4 user stories:
  * - US1 (BUG-030): Fix Chat Navigation After Image Generation (debouncing + correct tab)
@@ -10,6 +11,7 @@ import { test, expect, Page, ConsoleMessage } from '@playwright/test';
  * - US4 (BUG-019): Persist Image Metadata with originalParams for Re-generation
  *
  * Test Strategy:
+ * - MOCK MODE: All API calls are mocked for instant responses
  * - All tests run with VITE_TEST_MODE=true (bypasses auth)
  * - Console monitoring for errors and navigation events
  * - Performance assertions for navigation and library load
@@ -129,10 +131,10 @@ class BugFixTestHelper {
     await sendButton.click();
     await this.page.waitForTimeout(2000);
 
-    // Wait for agent confirmation
-    console.log('⏳ Waiting for agent suggestion (may take 30-60s for DALL-E 3)...');
+    // Wait for agent confirmation (fast in mock mode)
+    console.log('⏳ Waiting for agent suggestion (mock mode - fast)...');
     const confirmButton = this.page.locator('button:has-text("Bild-Generierung starten")').first();
-    await expect(confirmButton).toBeVisible({ timeout: 90000 });
+    await expect(confirmButton).toBeVisible({ timeout: 10000 });
     console.log('✅ Agent suggestion appeared, clicking button...');
     await confirmButton.click();
     await this.page.waitForTimeout(1000);
@@ -152,10 +154,10 @@ class BugFixTestHelper {
     await expect(generateButton).toBeVisible({ timeout: 5000 });
     await generateButton.click();
 
-    // Wait for result (longer timeout for actual generation)
-    console.log('⏳ Waiting for image generation result (DALL-E 3 is processing)...');
+    // Wait for result (fast in mock mode)
+    console.log('⏳ Waiting for image generation result (mock mode - instant)...');
     const resultView = this.page.locator('[data-testid="agent-result-view"], .agent-result-view').first();
-    await expect(resultView).toBeVisible({ timeout: 120000 }); // Wait up to 2 minutes for image result
+    await expect(resultView).toBeVisible({ timeout: 10000 }); // Mock returns instantly
 
     console.log('✅ Image generation complete!');
   }
@@ -202,6 +204,9 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
     helper = new BugFixTestHelper(page);
     await helper.startMonitoring();
 
+    console.log('🎭 Setting up mock server...');
+    await setupMockServer(page);
+
     console.log('🌐 Navigating to application...');
     await page.goto('/');
 
@@ -229,7 +234,7 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
 
   // T044: User Story 1 - Fix Chat Navigation (BUG-030)
   test('US1 (BUG-030): "Weiter im Chat" navigates to Chat tab with image thumbnail', async ({ page }) => {
-    test.setTimeout(300000); // 5 minutes per test (allows for slow DALL-E 3)
+    test.setTimeout(60000); // 1 minute (mock mode is fast)
 
     console.log('\n🎯 TEST: US1 (BUG-030) - Chat Navigation Fix');
 
@@ -291,7 +296,7 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
 
   // T045: User Story 1 - Debouncing Test
   test('US1 (BUG-030): Debouncing prevents duplicate navigation on rapid clicks', async ({ page }) => {
-    test.setTimeout(300000); // 5 minutes per test (allows for slow DALL-E 3)
+    test.setTimeout(60000); // 1 minute (mock mode is fast)
 
     console.log('\n🎯 TEST: US1 (BUG-030) - Debouncing');
 
@@ -339,7 +344,7 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
 
   // T046: User Story 2 - Message Persistence (BUG-025)
   test('US2 (BUG-025): Messages persist with metadata after page refresh', async ({ page }) => {
-    test.setTimeout(300000); // 5 minutes per test (allows for slow DALL-E 3)
+    test.setTimeout(60000); // 1 minute (mock mode is fast)
 
     console.log('\n🎯 TEST: US2 (BUG-025) - Message Persistence');
 
@@ -399,7 +404,7 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
 
   // T047: User Story 3 - Library Display (BUG-020)
   test('US3 (BUG-020): Library displays materials in grid (no placeholder)', async ({ page }) => {
-    test.setTimeout(300000); // 5 minutes per test (allows for slow DALL-E 3)
+    test.setTimeout(90000); // 1.5 minutes (multiple mock generations)
 
     console.log('\n🎯 TEST: US3 (BUG-020) - Library Display');
 
@@ -467,7 +472,7 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
 
   // T048: User Story 4 - Metadata Persistence (BUG-019)
   test('US4 (BUG-019): Image metadata persists with originalParams for re-generation', async ({ page }) => {
-    test.setTimeout(300000); // 5 minutes per test (allows for slow DALL-E 3)
+    test.setTimeout(60000); // 1 minute (mock mode is fast)
 
     console.log('\n🎯 TEST: US4 (BUG-019) - Metadata Persistence');
 
@@ -533,7 +538,7 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
 
   // T049: Metadata Validation Test
   test('Metadata Validation: Invalid metadata is rejected or saved as null', async ({ page }) => {
-    test.setTimeout(300000); // 5 minutes per test (allows for slow DALL-E 3)
+    test.setTimeout(60000); // 1 minute (mock mode is fast)
 
     console.log('\n🎯 TEST: Metadata Validation');
 
@@ -612,7 +617,7 @@ test.describe('Bug Fixes 2025-10-11 - E2E Test Suite', () => {
   // T051: Console Log Verification (integrated into other tests)
   // This test explicitly checks for required logging
   test('Console Logging: Navigation events and agent lifecycle are logged', async ({ page }) => {
-    test.setTimeout(300000); // 5 minutes per test (allows for slow DALL-E 3)
+    test.setTimeout(60000); // 1 minute (mock mode is fast)
 
     console.log('\n🎯 TEST: Console Logging Verification');
 

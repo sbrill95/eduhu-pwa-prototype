@@ -431,7 +431,7 @@ router.post('/execute',
                 logInfo('[langGraphAgents] Metadata validation successful', { messageId: imageChatMessageId, metadataSize: validatedMetadata.length });
               }
 
-              // BUG-025 FIX: Add required relationship fields (session, author)
+              // BUG-025 FIX: Add required relationship fields (session_id, user_id)
               // T016 & T017: Save with validated metadata or null on failure (FR-010a, CHK111)
               await db.transact([
                 db.tx.messages[imageChatMessageId].update({
@@ -441,8 +441,8 @@ router.post('/execute',
                   message_index: 0, // Will be updated by frontend
                   is_edited: false, // BUG-025: Required field
                   metadata: validatedMetadata, // T017: Use validated & stringified metadata (FR-004)
-                  session: sessionId,     // BUG-025: Link to chat_sessions
-                  author: effectiveUserId   // BUG-025: Link to users
+                  session_id: sessionId,     // BUG-025 FIX: Correct field name
+                  user_id: effectiveUserId   // BUG-025 FIX: Correct field name
                 })
               ]);
 
@@ -646,11 +646,38 @@ router.post('/image/generate',
             const imageLibraryId = db.id();
             const imageChatMessageId = db.id();
 
+            const titleToUse = result.data.title || result.data.dalle_title || 'AI-generiertes Bild';
+
+            // US4 FIX: Prepare and validate metadata for library_materials
+            const originalParamsForLibrary = result.data.originalParams || {
+              description: params.prompt || '',
+              imageStyle: 'illustrative',
+              learningGroup: '',
+              subject: ''
+            };
+
+            const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+            const libraryMetadataObject = {
+              type: 'image',
+              image_url: result.data.image_url,
+              title: titleToUse,
+              originalParams: originalParamsForLibrary
+            };
+
+            const validatedLibraryMetadata = validateAndStringifyMetadata(libraryMetadataObject);
+
+            if (!validatedLibraryMetadata) {
+              logError('[langGraphAgents] Library metadata validation failed - saving without metadata', new Error('Metadata validation failed'), { libraryMetadataObject });
+              console.warn('[langGraphAgents] Library metadata validation failed - saving with null metadata');
+            } else {
+              logInfo('[langGraphAgents] Library metadata validation successful', { libraryId: imageLibraryId, metadataSize: validatedLibraryMetadata.length });
+            }
+
             // TASK-004: Save image to library_materials with German title
             await db.transact([
               db.tx.library_materials[imageLibraryId].update({
                 user_id: userId,
-                title: result.data.title || result.data.dalle_title || 'AI-generiertes Bild',
+                title: titleToUse,
                 type: 'image',
                 content: result.data.image_url,
                 description: result.data.revised_prompt || params.prompt,
@@ -659,36 +686,58 @@ router.post('/image/generate',
                 updated_at: now,
                 is_favorite: false,
                 usage_count: 0,
-                source_session_id: sessionId || null
+                source_session_id: sessionId || null,
+                metadata: validatedLibraryMetadata // US4 FIX: Include originalParams in metadata
               })
             ]);
 
             libraryId = imageLibraryId;
-            logInfo(`Image saved to library_materials`, { libraryId, userId, title: result.data.title });
+            logInfo(`Image saved to library_materials`, { libraryId, userId, title: titleToUse, metadataValidated: !!validatedLibraryMetadata });
 
             // TASK-005: Create chat message with image (clean UI - no prompt/metadata)
             if (sessionId) {
-              // BUG-025 FIX: Add required relationship fields (session, author)
+              // US4 FIX: Use originalParams from agent result for metadata
+              const originalParams = result.data.originalParams || {
+                description: params.prompt || '',
+                imageStyle: 'illustrative',
+                learningGroup: '',
+                subject: ''
+              };
+
+              // US4 FIX: Validate metadata before saving (same as /execute endpoint)
+              const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+              const messageMetadataObject = {
+                type: 'image',
+                image_url: result.data.image_url,
+                title: result.data.title || result.data.dalle_title || 'AI-generiertes Bild',
+                originalParams: originalParams
+              };
+
+              const validatedMessageMetadata = validateAndStringifyMetadata(messageMetadataObject);
+
+              if (!validatedMessageMetadata) {
+                logError('[langGraphAgents] Message metadata validation failed - saving without metadata', new Error('Metadata validation failed'), { messageMetadataObject });
+                console.warn('[langGraphAgents] Message metadata validation failed - saving with null metadata');
+              } else {
+                logInfo('[langGraphAgents] Message metadata validation successful', { messageId: imageChatMessageId, metadataSize: validatedMessageMetadata.length });
+              }
+
+              // BUG-025 FIX: Add required relationship fields (session_id, user_id)
               await db.transact([
                 db.tx.messages[imageChatMessageId].update({
                   content: `Ich habe ein Bild für dich erstellt.`,
                   role: 'assistant',
                   timestamp: now,
-                  edited_at: now,
-                  is_edited: false,
                   message_index: 0, // Will be updated by frontend
-                  metadata: JSON.stringify({
-                    type: 'image',
-                    image_url: result.data.image_url,
-                    library_id: imageLibraryId
-                  }),
+                  is_edited: false,
+                  metadata: validatedMessageMetadata, // US4 FIX: Use validated metadata with originalParams
                   session_id: sessionId, // BUG-025: Link to chat_sessions
                   user_id: userId        // BUG-025: Link to users
                 })
               ]);
 
               messageId = imageChatMessageId;
-              logInfo(`Image chat message created`, { messageId, sessionId, libraryId });
+              logInfo(`Image chat message created`, { messageId, sessionId, libraryId, metadataValidated: !!validatedMessageMetadata });
             }
           } else {
             logError('InstantDB not available for saving image to library', new Error('DB not initialized'));

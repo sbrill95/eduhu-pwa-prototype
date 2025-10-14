@@ -26,6 +26,8 @@ interface ArtifactItem {
   source: 'chat_generated' | 'uploaded' | 'manual';
   chatId?: string;
   size?: string;
+  metadata?: any; // T007: Metadata for MaterialPreviewModal regeneration support
+  is_favorite?: boolean; // T007: Favorite status
 }
 
 type LibraryItem = ChatHistoryItem | ArtifactItem;
@@ -109,24 +111,6 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
     }
   }, [extractingTags]);
 
-  // Listen for navigation events from Homepage
-  useEffect(() => {
-    const handleLibraryNav = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      console.log('[Library] Received navigate-library-tab event:', customEvent.detail);
-
-      if (customEvent.detail?.tab === 'materials') {
-        setSelectedTab('artifacts'); // 'artifacts' is the materials tab
-      }
-    };
-
-    window.addEventListener('navigate-library-tab', handleLibraryNav);
-
-    return () => {
-      window.removeEventListener('navigate-library-tab', handleLibraryNav);
-    };
-  }, []);
-
   // DISABLED BUG-009: Auto-tag extraction - backend routes not registered
   // This feature requires /api/chat/:chatId/tags route to be registered in Express app.ts
   // Currently causes infinite 404 loop and "Maximum update depth exceeded" error
@@ -207,6 +191,53 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
     is_favorite: material.is_favorite     // T007: Pass through favorite status
   }));
 
+  // T015: Listen for navigation events from Homepage and AgentResultView (US2)
+  // MUST be placed after artifacts declaration to avoid "used before declaration" error
+  useEffect(() => {
+    const handleLibraryNav = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      console.log('[Library] Received navigate-library-tab event:', customEvent.detail);
+
+      // Switch to materials tab
+      if (customEvent.detail?.tab === 'materials') {
+        setSelectedTab('artifacts'); // 'artifacts' is the materials tab
+      }
+
+      // T015: Auto-open modal if materialId is provided (US2)
+      const materialId = customEvent.detail?.materialId;
+      if (materialId) {
+        console.log('[Library] materialId provided, looking for material:', materialId);
+
+        // Find material in artifacts array
+        const artifact = artifacts.find(a => a.id === materialId);
+
+        if (artifact) {
+          console.log('[Library] Material found, converting and opening modal:', artifact.title);
+
+          // Convert to UnifiedMaterial using mapper
+          const unifiedMaterial = convertArtifactToUnifiedMaterial(artifact);
+
+          // Open modal with the material
+          setSelectedMaterial(unifiedMaterial);
+          setIsModalOpen(true);
+
+          console.log('[Library] ✅ Modal opened with material:', materialId);
+        } else {
+          console.warn('[Library] ⚠️ Material not found in artifacts array:', materialId, {
+            totalArtifacts: artifacts.length,
+            artifactIds: artifacts.map(a => a.id).slice(0, 5) // Show first 5 IDs for debugging
+          });
+        }
+      }
+    };
+
+    window.addEventListener('navigate-library-tab', handleLibraryNav);
+
+    return () => {
+      window.removeEventListener('navigate-library-tab', handleLibraryNav);
+    };
+  }, [artifacts]); // T015: Add artifacts as dependency to ensure we can find the material
+
   const artifactTypes = [
     { key: 'all', label: 'Alle', icon: '📁' },
     { key: 'document', label: 'Dokumente', icon: '📄' },
@@ -264,8 +295,31 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
   const handleMaterialClick = useCallback((artifact: ArtifactItem) => {
     console.log('[Library] Material clicked:', artifact.id);
 
+    // DEBUG: Log raw artifact data to identify US4 issue
+    console.log('🐛 [DEBUG US4] Raw artifact data:', {
+      id: artifact.id,
+      title: artifact.title,
+      type: artifact.type,
+      description: artifact.description?.substring(0, 100), // First 100 chars
+      source: artifact.source,
+      metadata: artifact.metadata,
+      is_favorite: artifact.is_favorite
+    });
+
     // Convert ArtifactItem to UnifiedMaterial using mapper
     const unifiedMaterial = convertArtifactToUnifiedMaterial(artifact);
+
+    // DEBUG: Log transformed UnifiedMaterial to see what modal receives
+    console.log('🐛 [DEBUG US4] Converted UnifiedMaterial:', {
+      id: unifiedMaterial.id,
+      title: unifiedMaterial.title,
+      type: unifiedMaterial.type,
+      source: unifiedMaterial.source,
+      'metadata.artifact_data': unifiedMaterial.metadata.artifact_data,
+      'metadata.image_data': unifiedMaterial.metadata.image_data,
+      'metadata.agent_name': unifiedMaterial.metadata.agent_name,
+      is_favorite: unifiedMaterial.is_favorite
+    });
 
     // Set selected material and open modal
     setSelectedMaterial(unifiedMaterial);

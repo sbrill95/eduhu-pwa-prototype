@@ -2,26 +2,27 @@
 
 ## 📊 Übersicht
 
-**Letzte Aktualisierung**: 2025-10-08 (BUG-028, BUG-029, BUG-030 Updates)
-**Gesamte Issues verfolgt**: 43 issues (4 aktiv)
-**Resolved Issues**: 39/43 (91% Resolution Rate)
+**Letzte Aktualisierung**: 2025-10-13 (Bug Fixes 2025-10-11 Complete - BUG-030, BUG-025, BUG-020, BUG-019 Resolved)
+**Gesamte Issues verfolgt**: 44 issues (0 aktiv)
+**Resolved Issues**: 44/44 (100% Resolution Rate)
 **Durchschnittliche Lösungszeit**: 1.5 hours für P0 Critical Issues
-**Kritische Issues**: 1 offen ⚠️
+**Kritische Issues**: 0 offen ✅
 **Recent Issues**:
-- BUG-030 Page Reload on Chat Navigation 🟡 OPEN (2025-10-08) - SPA navigation issue
+- BUG-030 Page Reload on Chat Navigation ✅ RESOLVED (2025-10-13) - Navigation & debouncing fixes
+- BUG-025 InstantDB Schema Field Mismatch ✅ RESOLVED (2025-10-13) - Message field names corrected
+- BUG-020 Library.tsx in Placeholder State ✅ RESOLVED (2025-10-13) - Conditional rendering fixed
+- BUG-019 InstantDB Schema Metadata Field Not Applied ✅ RESOLVED (2025-10-13) - Metadata with originalParams
+- BUG-042 InstantDB S3 CORS Errors ✅ RESOLVED (2025-10-13) - Backend proxy + Vite config + URL mapper fixes
 - BUG-029 InstantDB Storage 403 Forbidden ✅ RESOLVED (2025-10-08) - Testing methodology (GET vs HEAD)
 - BUG-028 Playwright Strict Mode Violation ✅ RESOLVED (2025-10-08) - Button selector + timeout fixes
 - BUG-041 DALL-E URL Expiry & CORS ⚠️ REVERTED (2025-10-08) - Caused BUG-029
 - BUG-040 Missing userId in Agent Requests ✅ RESOLVED (2025-10-08) - Permission check failing
 - BUG-039 Images Not Showing in Library ✅ RESOLVED (2025-10-07) - InstantDB permissions + field mismatch
 - BUG-026 Agent Confirmation Card Not Rendering ✅ RESOLVED (2025-10-07)
-- BUG-025 InstantDB Schema Field Mismatch ⚠️ ACTIVE (2025-10-07) - Messages wrong fields
 - BUG-024 InstantDB Storage Error - db.id is not a function ✅ RESOLVED (2025-10-07)
 - BUG-023 Missing originalParams in Message Metadata ✅ RESOLVED (2025-10-07)
 - BUG-022 Image Generation Timeout (OpenAI 30s < DALL-E 35-60s) ✅ VERIFIED (2025-10-07 - 14.78s)
 - BUG-021 Agent Confirmation Button Text Truncation ✅ RESOLVED (2025-10-07)
-- BUG-020 Library.tsx in Placeholder State ⚠️ ACTIVE (2025-10-05)
-- BUG-019 InstantDB Schema Metadata Field Not Applied ⚠️ ACTIVE (2025-10-05)
 - BUG-018 InstantDB Schema Missing Metadata Field ✅ RESOLVED (2025-10-05) ← FALSE RESOLUTION
 - BUG-017 Chat Context Lost on Library Continuation ✅ RESOLVED (2025-10-04)
 - BUG-016 Image Modal Gemini - Legacy Form statt Gemini Form ✅ RESOLVED (2025-10-03)
@@ -30,19 +31,34 @@
 - BUG-013 Old Cyan Colors in App.css ✅ RESOLVED (2025-10-01)
 - BUG-012 TypeScript Compilation Errors ✅ RESOLVED (2025-10-01)
 **Gemini Design Language**: ✅ Complete with 0 bugs
-**Library Unification Feature**: ⚠️ BLOCKED (Library.tsx placeholder state)
-**Image Modal Gemini Feature**: ⚠️ BLOCKED (2 critical schema/integration bugs)
+**Library Unification Feature**: ✅ Complete - All issues resolved (2025-10-13)
+**Image Modal Gemini Feature**: ✅ Complete - All issues resolved (2025-10-13)
+**Bug Fixes 2025-10-11**: ✅ Complete - All 4 user stories implemented and verified (2025-10-13)
 
 ---
 
 ## 🚨 ACTIVE ISSUES
 
-### BUG-030: Page Reload on "Weiter im Chat" Navigation 🟡 PARTIALLY RESOLVED
+*No active issues - All bugs resolved as of 2025-10-13*
+
+---
+
+## ✅ RESOLVED ISSUES
+
+### BUG-030: Page Reload on "Weiter im Chat" Navigation ✅ RESOLVED
 **Datum**: 2025-10-08
 **Priority**: P2 - Medium
-**Status**: 🟡 PARTIALLY RESOLVED (Implementation complete, verification pending)
+**Status**: ✅ RESOLVED (2025-10-13)
+**Fixed Date**: 2025-10-13
+**Resolution Time**: ~2 hours (across multiple sessions)
 **Reporter**: E2E Test (image-generation-complete-workflow.spec.ts)
 **Bug Report**: `docs/quality-assurance/resolved-issues/2025-10-08/BUG-030-spa-navigation-fix.md`
+**Spec**: `.specify/specs/bug-fixes-2025-10-11/` (User Story 1 - Tasks T006-T011)
+**Verified with E2E test**: `bug-fixes-2025-10-11-real-api.spec.ts` (PASSED - Session 04)
+**Session Logs**:
+- `docs/development-logs/sessions/2025-10-13/session-04-real-api-e2e-test-success.md`
+- `docs/development-logs/sessions/2025-10-13/session-03-bug-fixes-implementation-complete.md`
+- `docs/development-logs/sessions/2025-10-13/session-02-bug-fixes-polish-phase.md`
 
 **Original Symptom**:
 - Clicking "Weiter im Chat 💬" button in AgentResultView triggered full page reload
@@ -65,23 +81,70 @@
 - `components/AgentResultView.tsx` (+18, -7): Replaced window.location with navigateToTab
 - `App.tsx` (+1, -3): Fixed stale closure in handleTabChange
 
-**Current Status**:
-✅ **Page reload eliminated** - Console logs confirm no full page reload
+**Final Resolution**:
+✅ **Navigation order fixed** - Close modal before navigation (eliminates race condition)
+✅ **Debouncing implemented** - 300ms cooldown prevents duplicate navigations
+✅ **Modal timing issue resolved** - flushSync() ensures proper state updates
 ✅ **Build succeeds** - 0 TypeScript errors
-✅ **Architecture correct** - Navigation now uses Ionic tab system
-⚠️ **Wrong tab activated** - Navigation goes to Library instead of Chat (under investigation)
-❌ **E2E Step 6 still fails** - Blocked by wrong tab issue
+✅ **Architecture correct** - Navigation uses Ionic tab system properly
 
-**Next Steps**:
-1. Investigate why `navigateToTab('chat')` activates Library tab instead
-2. Check for race conditions or state override issues
-3. Verify manual testing with local dev server
-4. Target E2E pass rate: 70%+ (current: 54.5%)
+**Implementation**:
+1. Fixed navigation order in AgentResultView.tsx: closeModal() → wait → navigateToTab()
+2. Added debouncing with proper dependency array (empty [])
+3. Used React flushSync() to prevent animation interference
+4. All console logs confirm proper navigation flow
 
 **Related**:
-- TASK-010: E2E Test (54.5% pass rate, still blocked at Step 6)
-- TASK-005: AgentResultView 3-button implementation
+- User Story 1 (Tasks T006-T011) in bug-fixes-2025-10-11
 - BUG-028: Playwright Strict Mode (resolved, led to this discovery)
+
+---
+
+## ✅ RESOLVED ISSUES
+
+### BUG-042: InstantDB S3 Images Blocked by CORS ✅ RESOLVED
+**Datum**: 2025-10-13
+**Priority**: P1 - High
+**Status**: ✅ RESOLVED
+**Resolution Time**: ~4 hours
+**Bug Report**: `docs/quality-assurance/resolved-issues/2025-10-13/BUG-042-cors-proxy-instantdb-images.md`
+
+**Symptom**:
+- Browser CORS errors blocking all InstantDB S3 image requests
+- Library thumbnails not loading
+- MaterialPreviewModal full-size images not loading
+- Error: "Access to fetch at 'https://instant-storage.s3.amazonaws.com/...' has been blocked by CORS policy"
+
+**Root Causes**:
+1. **Missing Vite Proxy Configuration** - `/api/*` requests handled by Vite instead of backend
+2. **Stale URL Mapping** - `materialMappers.ts` preserved old metadata URLs instead of current ones
+3. **TypeScript TS7030** - Missing return statements in proxy endpoint
+
+**Solution Implemented**:
+1. Created backend proxy endpoint at `/api/storage-proxy` with CORS headers
+2. Added Vite proxy configuration to forward `/api/*` to backend (CRITICAL FIX)
+3. Fixed URL mapper to ALWAYS use current URL from `artifact.description` (CRITICAL FIX)
+4. Updated 4 components to use `getProxiedImageUrl()` utility
+5. Removed all debug console.log statements
+
+**Files Modified**:
+- `vite.config.ts` - Added API proxy configuration ⚠️ CRITICAL
+- `materialMappers.ts` - Fixed URL mapping logic ⚠️ CRITICAL
+- Backend: `storageProxy.ts` (NEW), `routes/index.ts`
+- Frontend: `imageProxy.ts` (NEW), `AgentResultView.tsx`, `ChatView.tsx`, `Library.tsx`, `MaterialPreviewModal.tsx`
+
+**Verification**:
+- ✅ Library thumbnails load correctly
+- ✅ MaterialPreviewModal full-size images load correctly
+- ✅ Backend proxy working with proper CORS headers
+- ✅ No CORS errors in console
+- ✅ Clean code (debug logs removed)
+
+**Technical Details**:
+- Backend proxies S3 URLs server-side to add CORS headers
+- 24-hour cache for performance
+- URL validation (InstantDB S3 only)
+- Graceful handling of expired URLs
 
 ---
 
@@ -723,12 +786,18 @@ After clicking "Bild generieren" button in the image generation form, the DALL-E
 
 ---
 
-### BUG-025: InstantDB Schema Not Deployed - Messages Save Failed ⚠️ BLOCKED
+### BUG-025: InstantDB Schema Not Deployed - Messages Save Failed ✅ RESOLVED
 **Datum**: 2025-10-07
 **Priority**: P0 - CRITICAL
-**Status**: ⚠️ BLOCKED (Requires InstantDB Schema Deployment)
+**Status**: ✅ RESOLVED (2025-10-13)
+**Fixed Date**: 2025-10-13
+**Resolution Time**: ~1 hour
 **Reporter**: backend-node-developer (during BUG-024 manual verification)
-**Fix Attempted**: 2025-10-07 (Code fixed, blocked by schema deployment)
+**Spec**: `.specify/specs/bug-fixes-2025-10-11/` (User Story 2 - Tasks T012-T017)
+**Verified with**: Message persistence across page refresh, InstantDB field validation
+**Session Logs**:
+- `docs/development-logs/sessions/2025-10-13/session-03-bug-fixes-implementation-complete.md`
+- `docs/development-logs/sessions/2025-10-13/backend-message-metadata-fix-report.md`
 **Discovered During**: Manual Image Generation API Test
 **Feature**: Image Generation Message Storage
 **Impact**: Images generate successfully but messages are NOT saved to InstantDB (message_id = null)
@@ -989,12 +1058,22 @@ metadata: JSON.stringify({
 
 **Session Log**: `docs/development-logs/sessions/2025-10-07/session-08-bug-025-fix-attempt.md` ✅ CREATED
 
-**Next Step**: **USER ACTION REQUIRED** - Deploy InstantDB schema or approve metadata workaround
+**Final Resolution**:
+✅ **Field names corrected** - Changed `session` → `session_id`, `author` → `user_id`
+✅ **Metadata validation added** - Proper JSON.stringify() before InstantDB save
+✅ **Schema alignment verified** - All field names match InstantDB schema exactly
+✅ **Messages persist correctly** - InstantDB transactions succeed
+
+**Implementation**:
+1. Fixed field name mismatches in langGraphAgents.ts (lines 444-445)
+2. Added metadata validation with Zod schemas
+3. Included originalParams in metadata structure for regeneration
+4. All messages now persist with correct schema fields
 
 **Related Bugs**:
 - BUG-024: db.id is not a function ✅ RESOLVED (prerequisite fix)
 - BUG-023: Missing originalParams ✅ RESOLVED (fixed together with BUG-024)
-- BUG-019: Schema metadata field not applied ⚠️ ACTIVE (related schema issue)
+- BUG-019: Schema metadata field not applied ✅ RESOLVED (related schema issue)
 
 ---
 
@@ -1192,12 +1271,19 @@ metadata: JSON.stringify({
 
 ---
 
-### BUG-019: InstantDB Schema Metadata Field Not Applied ⚠️ ACTIVE
+### BUG-019: InstantDB Schema Metadata Field Not Applied ✅ RESOLVED
 **Datum**: 2025-10-05
 **Priority**: P0 - CRITICAL BLOCKING
-**Status**: ⚠️ ACTIVE (Falsely claimed as resolved in BUG-018)
+**Status**: ✅ RESOLVED (2025-10-13)
+**Fixed Date**: 2025-10-13
+**Resolution Time**: Schema migration + implementation ~1.5 hours
 **Reporter**: qa-integration-reviewer
 **Discovered During**: QA Verification of Image Generation UX V2
+**Spec**: `.specify/specs/bug-fixes-2025-10-11/` (User Story 4 - Tasks T024-T030 + Phase 2 T003-T005)
+**Verified with**: "Neu generieren" button prefills form with originalParams from metadata
+**Session Logs**:
+- `docs/development-logs/sessions/2025-10-13/session-03-bug-fixes-implementation-complete.md`
+- `docs/development-logs/sessions/2025-10-13/session-03-bug-fixes-implementation-phases1-3.md`
 **Feature**: Agent Suggestions & Image Generation
 **Related Files**:
 - `teacher-assistant/backend/src/schemas/instantdb.ts` (Lines 41-51)
@@ -1249,23 +1335,35 @@ messages: i.entity({
 }),
 ```
 
-**Verification**:
-- [ ] Restart backend server
-- [ ] Check logs for "Schema synced"
-- [ ] Test message save with metadata
+**Final Resolution**:
+✅ **Schema migration completed** - Added `metadata: i.string().optional()` to library_materials
+✅ **InstantDB schema pushed** - Used `npx instant-cli push-schema`
+✅ **originalParams included** - Metadata now contains full regeneration parameters
+✅ **Form prefill working** - MaterialPreviewModal correctly extracts and passes params
 
-**Estimated Fix Time**: 5 minutes
-**Assigned To**: backend-node-developer
+**Implementation**:
+1. Added metadata field to instant.schema.ts library_materials entity
+2. Pushed schema changes to InstantDB with instant-cli
+3. Updated langGraphAgents.ts to populate metadata with originalParams
+4. MaterialPreviewModal parsing validates and extracts parameters
+5. Image regeneration now pre-fills form with original parameters
+
 **QA Report**: `/docs/quality-assurance/verification-reports/image-generation-ux-v2-qa-report-2025-10-05.md`
 
 ---
 
-### BUG-020: Library.tsx in Placeholder State ⚠️ ACTIVE
+### BUG-020: Library.tsx in Placeholder State ✅ RESOLVED
 **Datum**: 2025-10-05
 **Priority**: P0 - CRITICAL BLOCKING
-**Status**: ⚠️ ACTIVE
+**Status**: ✅ RESOLVED (2025-10-13)
+**Fixed Date**: 2025-10-13
+**Resolution Time**: ~1 hour
 **Reporter**: qa-integration-reviewer
 **Discovered During**: QA Verification of Library Storage Feature
+**Spec**: `.specify/specs/bug-fixes-2025-10-11/` (User Story 3 - Tasks T018-T023)
+**Verified with**: Manual testing - materials display correctly in Library grid view
+**Session Logs**:
+- `docs/development-logs/sessions/2025-10-13/session-03-bug-fixes-implementation-complete.md`
 **Feature**: Library Material Display
 **Related Files**:
 - `teacher-assistant/frontend/src/pages/Library/Library.tsx` (Lines 1-212)
@@ -1322,14 +1420,19 @@ const {
 } = useLibraryMaterials();  // ← Change from useMaterials
 ```
 
-**Verification**:
-- [ ] Restart frontend server
-- [ ] Navigate to Library tab
-- [ ] Verify "Alle" and "Bilder" tabs load
-- [ ] No console errors
+**Final Resolution**:
+✅ **InstantDB query added** - Library.tsx now queries library_materials with user_id filter
+✅ **Conditional rendering fixed** - Shows placeholder only when materials.length === 0 and !isLoading
+✅ **Debug logging added** - Comprehensive logging for diagnostics (useLibraryMaterials + Library.tsx)
+✅ **Materials display correctly** - Grid shows all generated images with thumbnails
 
-**Estimated Fix Time**: 10 minutes (restore) OR 15 minutes (manual fix)
-**Assigned To**: User OR react-frontend-developer
+**Implementation**:
+1. Added InstantDB query in Library.tsx with useLibraryMaterials hook
+2. Fixed conditional rendering: `!isLoading && materials.length === 0` for placeholder
+3. Added error boundaries and retry buttons for failed queries
+4. Debug logging helps diagnose async timing issues
+5. Materials grid correctly displays all user-generated images
+
 **QA Report**: `/docs/quality-assurance/verification-reports/image-generation-ux-v2-qa-report-2025-10-05.md`
 
 ---

@@ -72,63 +72,87 @@ export default defineConfig({
 
   // Test projects for different browsers and viewports
   projects: [
+    // ============================================
+    // MOCK TESTS (Fast - Default)
+    // ============================================
     {
-      name: 'Desktop Chrome - Chat Agent Testing',
+      name: 'Mock Tests (Fast)',
+      testMatch: /.*\.spec\.ts$/,
+      testIgnore: /.*-real-api\.spec\.ts$/,
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },
-        // Enhanced console monitoring for desktop
         contextOptions: {
           recordVideo: {
-            dir: 'test-results/videos/desktop',
+            dir: 'test-results/videos/mock',
             size: { width: 1280, height: 720 }
           }
         }
       },
     },
 
+    // ============================================
+    // REAL API TESTS (Smoke/Integration)
+    // ============================================
     {
-      name: 'Mobile Safari - Touch Interface Testing',
+      name: 'Real API Tests (Smoke)',
+      testMatch: /.*-real-api\.spec\.ts$/,
       use: {
-        ...devices['iPhone 12'],
-        viewport: { width: 390, height: 844 },
-        // Mobile-specific debugging
-        contextOptions: {
-          recordVideo: {
-            dir: 'test-results/videos/mobile',
-            size: { width: 390, height: 844 }
-          }
-        }
-      },
-    },
-
-    {
-      name: 'Desktop Firefox - Cross-browser Validation',
-      use: {
-        ...devices['Desktop Firefox'],
+        ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },
         contextOptions: {
           recordVideo: {
-            dir: 'test-results/videos/firefox',
+            dir: 'test-results/videos/real-api',
             size: { width: 1280, height: 720 }
           }
         }
       },
     },
 
-    {
-      name: 'Mobile Chrome - Android Testing',
-      use: {
-        ...devices['Pixel 5'],
-        viewport: { width: 393, height: 851 },
-        contextOptions: {
-          recordVideo: {
-            dir: 'test-results/videos/android',
-            size: { width: 393, height: 851 }
-          }
-        }
-      },
-    },
+    // ============================================
+    // LEGACY PROJECTS (Optional - Comment out if not needed)
+    // ============================================
+    // {
+    //   name: 'Mobile Safari - Touch Interface Testing',
+    //   use: {
+    //     ...devices['iPhone 12'],
+    //     viewport: { width: 390, height: 844 },
+    //     contextOptions: {
+    //       recordVideo: {
+    //         dir: 'test-results/videos/mobile',
+    //         size: { width: 390, height: 844 }
+    //       }
+    //     }
+    //   },
+    // },
+
+    // {
+    //   name: 'Desktop Firefox - Cross-browser Validation',
+    //   use: {
+    //     ...devices['Desktop Firefox'],
+    //     viewport: { width: 1280, height: 720 },
+    //     contextOptions: {
+    //       recordVideo: {
+    //         dir: 'test-results/videos/firefox',
+    //         size: { width: 1280, height: 720 }
+    //       }
+    //     }
+    //   },
+    // },
+
+    // {
+    //   name: 'Mobile Chrome - Android Testing',
+    //   use: {
+    //     ...devices['Pixel 5'],
+    //     viewport: { width: 393, height: 851 },
+    //     contextOptions: {
+    //       recordVideo: {
+    //         dir: 'test-results/videos/android',
+    //         size: { width: 393, height: 851 }
+    //       }
+    //     }
+    //   },
+    // },
   ],
 
   // Development server configuration

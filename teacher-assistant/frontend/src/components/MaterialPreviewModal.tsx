@@ -7,7 +7,6 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
-  IonContent,
   IonItem,
   IonLabel,
   IonInput,
@@ -24,6 +23,7 @@ import {
   refreshOutline
 } from 'ionicons/icons';
 import { useAgent } from '../lib/AgentContext';
+import { getProxiedImageUrl } from '../lib/imageProxy';
 
 export type MaterialSource = 'manual' | 'upload' | 'agent-generated';
 
@@ -106,19 +106,12 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
 
   // FIX: Handle modal dismiss event to execute regeneration
   const handleModalDidDismiss = () => {
-    console.log('[MaterialPreviewModal] onDidDismiss triggered', {
-      hasPendingRegeneration: !!pendingRegenerationRef.current,
-      pendingRegeneration: pendingRegenerationRef.current
-    });
-
     // Always call onClose first to update parent component state
     // This ensures the MaterialPreviewModal isOpen state is cleared immediately
     onClose();
 
     // Only execute regeneration if we have pending params
     if (pendingRegenerationRef.current) {
-      console.log('[MaterialPreviewModal] ✅ Pending regeneration detected, executing...', pendingRegenerationRef.current);
-
       // Store params and clear ref
       const paramsToUse = { ...pendingRegenerationRef.current };
       pendingRegenerationRef.current = null;
@@ -126,12 +119,10 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
       // Wait for Ionic modal close animation to complete (300ms + buffer)
       // This ensures the DOM is fully clean before opening the new modal
       setTimeout(() => {
-        console.log('[MaterialPreviewModal] 🚀 Opening AgentFormView with params:', paramsToUse);
         try {
           openModal('image-generation', paramsToUse, undefined);
-          console.log('[MaterialPreviewModal] ✅ openModal called successfully');
         } catch (error) {
-          console.error('[MaterialPreviewModal] ❌ Error calling openModal:', error);
+          console.error('[MaterialPreviewModal] Error calling openModal:', error);
         }
       }, 800);  // Increased to 800ms for reliable Ionic modal transitions
     }
@@ -184,8 +175,6 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
   // T028-T029: Handle regeneration of images with new metadata structure
   // FIX: Open AgentFormView directly, then close this modal
   const handleRegenerate = () => {
-    console.log('[MaterialPreviewModal] Regenerating image - checking metadata...');
-
     let originalParams = {
       description: '',
       imageStyle: 'realistic' as const
@@ -205,18 +194,15 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
             description: parsedMetadata.originalParams.description || '',
             imageStyle: (parsedMetadata.originalParams.imageStyle as any) || 'realistic'
           };
-          console.log('[MaterialPreviewModal] ✅ Metadata parsed successfully:', originalParams);
         } else {
           // Fallback to old structure for backward compatibility
           originalParams = {
             description: parsedMetadata.prompt || material.metadata.prompt || material.description || material.title || '',
             imageStyle: (parsedMetadata.image_style || material.metadata.image_style || 'realistic') as any
           };
-          console.log('[MaterialPreviewModal] ⚠️ Using legacy metadata structure:', originalParams);
         }
       } catch (error) {
         // T028: Validation failed - show empty form (FR-008 graceful degradation)
-        console.warn('[MaterialPreviewModal] ⚠️ Metadata parse failed - using empty form:', error);
         originalParams = {
           description: material.description || material.title || '',
           imageStyle: 'realistic'
@@ -224,29 +210,28 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
       }
     } else {
       // T028: Metadata is null - use fallback (graceful degradation per CHK111)
-      console.warn('[MaterialPreviewModal] ⚠️ Metadata is null - using fallback values');
       originalParams = {
         description: material.description || material.title || '',
         imageStyle: 'realistic'
       };
     }
 
-    console.log('[MaterialPreviewModal] Final params for regeneration:', originalParams);
-
     // FIX: Open AgentFormView FIRST (Ionic will handle modal stacking)
-    console.log('[MaterialPreviewModal] Opening AgentFormView immediately...');
     openModal('image-generation', originalParams, undefined);
 
     // Then close this modal after a short delay to let AgentFormView render
     setTimeout(() => {
-      console.log('[MaterialPreviewModal] Closing MaterialPreviewModal...');
       onClose();
     }, 300);
   };
 
   return (
     <>
-      <IonModal ref={modalRef} isOpen={isOpen} onDidDismiss={handleModalDidDismiss}>
+      <IonModal
+        ref={modalRef}
+        isOpen={isOpen}
+        onDidDismiss={handleModalDidDismiss}
+      >
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
@@ -254,40 +239,23 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
                 <IonIcon icon={closeOutline} />
               </IonButton>
             </IonButtons>
-            <IonTitle>
-              {isEditingTitle ? (
-                <IonInput
-                  value={editedTitle}
-                  onIonInput={e => setEditedTitle(e.detail.value!)}
-                  placeholder="Titel eingeben..."
-                  data-testid="title-input"
-                />
-              ) : (
-                <span data-testid="material-title">{material.title}</span>
-              )}
-            </IonTitle>
-            <IonButtons slot="end">
-              {isEditingTitle ? (
-                <IonButton onClick={handleSaveTitle} data-testid="save-title-button">Speichern</IonButton>
-              ) : (
-                <IonButton onClick={() => {
-                  setEditedTitle(material.title);
-                  setIsEditingTitle(true);
-                }} data-testid="edit-title-button">
-                  <IonIcon icon={createOutline} />
-                </IonButton>
-              )}
-            </IonButtons>
           </IonToolbar>
         </IonHeader>
 
-        <IonContent className="ion-padding">
+        {/* QA OPTION A: Replace IonContent with plain div to bypass Ionic Shadow DOM issues */}
+        <div style={{
+          padding: '16px',
+          maxHeight: '80vh',
+          overflowY: 'auto',
+          backgroundColor: '#fff'
+        }}>
           {/* Material Preview Content */}
           <div style={{ padding: '16px' }}>
+
             {/* Show material based on type */}
             {material.type === 'upload-image' && material.metadata.image_data && (
               <img
-                src={material.metadata.image_data}
+                src={getProxiedImageUrl(material.metadata.image_data)}
                 alt={material.title}
                 style={{ width: '100%', borderRadius: '8px' }}
                 data-testid="material-image"
@@ -296,12 +264,66 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
 
             {material.type === 'image' && material.metadata.artifact_data?.url && (
               <div>
+                {(() => {
+                  const originalUrl = material.metadata.artifact_data.url;
+                  const proxiedUrl = getProxiedImageUrl(originalUrl);
+                  console.log('🖼️ [DEBUG US4] Image rendering:', {
+                    originalUrl: originalUrl.substring(0, 100) + '...',
+                    proxiedUrl,
+                    'proxiedUrl === originalUrl': proxiedUrl === originalUrl
+                  });
+                  return null;
+                })()}
                 <img
-                  src={material.metadata.artifact_data.url}
+                  src={getProxiedImageUrl(material.metadata.artifact_data.url)}
                   alt={material.title}
                   style={{ width: '100%', borderRadius: '8px' }}
                   data-testid="material-image"
+                  onLoad={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    const rect = img.getBoundingClientRect();
+                    const parent = img.parentElement;
+                    const parentRect = parent?.getBoundingClientRect();
+
+                    console.log('✅ [DEBUG US4] Image loaded successfully!', {
+                      naturalWidth: img.naturalWidth,
+                      naturalHeight: img.naturalHeight,
+                      displayWidth: img.width,
+                      displayHeight: img.height,
+                      boundingRect: {
+                        top: rect.top,
+                        left: rect.left,
+                        bottom: rect.bottom,
+                        right: rect.right,
+                        width: rect.width,
+                        height: rect.height
+                      },
+                      viewportHeight: window.innerHeight,
+                      isInViewport: rect.top < window.innerHeight && rect.bottom > 0,
+                      parentDimensions: parentRect ? {
+                        width: parentRect.width,
+                        height: parentRect.height,
+                        overflow: parent ? window.getComputedStyle(parent).overflow : 'unknown'
+                      } : null,
+                      computedStyle: {
+                        width: window.getComputedStyle(img).width,
+                        height: window.getComputedStyle(img).height,
+                        display: window.getComputedStyle(img).display,
+                        opacity: window.getComputedStyle(img).opacity,
+                        visibility: window.getComputedStyle(img).visibility,
+                        position: window.getComputedStyle(img).position,
+                        zIndex: window.getComputedStyle(img).zIndex
+                      }
+                    });
+
+                    // Try to force scroll to image
+                    img.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
                   onError={(e) => {
+                    console.error('❌ [DEBUG US4] Image failed to load:', {
+                      src: (e.target as HTMLImageElement).src,
+                      error: e
+                    });
                     // Replace with placeholder on load failure (expired URL)
                     (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="%23f3f4f6"/><text x="50%" y="50%" text-anchor="middle" fill="%239ca3af" font-family="system-ui" font-size="16">Bild nicht verfügbar</text></svg>';
                     (e.target as HTMLImageElement).style.opacity = '0.5';
@@ -313,44 +335,45 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
               </div>
             )}
 
-            {material.metadata.content && (
-              <div style={{ marginTop: '16px' }} data-testid="material-content">
-                <IonLabel>
-                  <p style={{ whiteSpace: 'pre-wrap' }}>{material.metadata.content}</p>
-                </IonLabel>
-              </div>
-            )}
-
-            {/* Metadata */}
-            <div style={{ marginTop: '24px' }}>
-              <IonItem>
-                <IonLabel>
-                  <h3>Typ</h3>
-                  <p data-testid="material-type">{material.type}</p>
-                </IonLabel>
-              </IonItem>
-              <IonItem>
-                <IonLabel>
-                  <h3>Quelle</h3>
-                  <p data-testid="material-source">{getSourceLabel()}</p>
-                </IonLabel>
-              </IonItem>
-              <IonItem>
-                <IonLabel>
-                  <h3>Erstellt am</h3>
-                  <p data-testid="material-date">
-                    {new Date(material.created_at).toLocaleDateString('de-DE')}
-                  </p>
-                </IonLabel>
-              </IonItem>
-              {material.metadata.agent_name && (
-                <IonItem>
-                  <IonLabel>
-                    <h3>Agent</h3>
-                    <p data-testid="material-agent">{material.metadata.agent_name}</p>
-                  </IonLabel>
-                </IonItem>
+            {/* Title below image */}
+            <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              {isEditingTitle ? (
+                <IonInput
+                  value={editedTitle}
+                  onIonInput={e => setEditedTitle(e.detail.value!)}
+                  placeholder="Titel eingeben..."
+                  data-testid="title-input"
+                  style={{ fontSize: '20px', fontWeight: 'bold', flex: 1 }}
+                />
+              ) : (
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold', margin: 0, flex: 1 }} data-testid="material-title">
+                  {material.title}
+                </h2>
               )}
+              {isEditingTitle ? (
+                <IonButton size="small" onClick={handleSaveTitle} data-testid="save-title-button">
+                  Speichern
+                </IonButton>
+              ) : (
+                <IonButton size="small" fill="clear" onClick={() => {
+                  setEditedTitle(material.title);
+                  setIsEditingTitle(true);
+                }} data-testid="edit-title-button">
+                  <IonIcon icon={createOutline} />
+                </IonButton>
+              )}
+            </div>
+
+            {/* Simplified Metadata - Only source and date */}
+            <div style={{ marginTop: '12px', fontSize: '14px', color: '#6b7280' }}>
+              {material.source === 'agent-generated' && (
+                <p style={{ margin: '4px 0' }} data-testid="material-source">
+                  {getSourceLabel()}
+                </p>
+              )}
+              <p style={{ margin: '4px 0' }} data-testid="material-date">
+                Erstellt am {new Date(material.created_at).toLocaleDateString('de-DE')}
+              </p>
             </div>
 
             {/* Actions */}
@@ -386,7 +409,8 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({
               </IonButton>
             </div>
           </div>
-        </IonContent>
+        </div>
+        {/* End of plain div replacement for IonContent */}
       </IonModal>
 
       {/* Delete Confirmation */}

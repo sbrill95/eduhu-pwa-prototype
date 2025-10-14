@@ -59,7 +59,7 @@ interface AgentContextValue {
   /** Save the result to the user's library */
   saveToLibrary: () => Promise<void>;
   /** Navigate to a specific tab (SPA navigation, no page reload) */
-  navigateToTab: (tab: 'home' | 'chat' | 'library', queryParams?: Record<string, string>) => void;
+  navigateToTab: (tab: 'home' | 'chat' | 'library', options?: { sessionId?: string, queryParams?: Record<string, string> }) => void;
 }
 
 const AgentContext = createContext<AgentContextValue | undefined>(undefined);
@@ -70,7 +70,7 @@ const AgentContext = createContext<AgentContextValue | undefined>(undefined);
 interface AgentProviderProps {
   children: React.ReactNode;
   /** Optional navigation callback for tab switching (Ionic tab system) */
-  onNavigateToTab?: (tab: 'home' | 'chat' | 'library') => void;
+  onNavigateToTab?: (tab: 'home' | 'chat' | 'library', options?: { sessionId?: string }) => void;
 }
 
 /**
@@ -382,15 +382,15 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children, onNaviga
    * Navigate to a specific tab using the provided callback
    * Falls back to window.location if no callback is provided (for backwards compatibility)
    * @param tab - Target tab to navigate to
-   * @param queryParams - Optional query parameters (not used in Ionic tab navigation)
+   * @param options - Optional configuration including sessionId and queryParams
    *
    * T030: Fixed to pass correct tab identifier to App.tsx's handleTabChange
-   * The callback is already correctly wired through AgentProvider props (line 451 in App.tsx)
+   * CHAT-MESSAGE-FIX: Now passes sessionId to properly load chat history
    */
-  const navigateToTab = useCallback((tab: 'home' | 'chat' | 'library', queryParams?: Record<string, string>) => {
+  const navigateToTab = useCallback((tab: 'home' | 'chat' | 'library', options?: { sessionId?: string, queryParams?: Record<string, string> }) => {
     console.log('[AgentContext] 🔍 navigateToTab CALLED', {
       tab,
-      queryParams,
+      options,
       hasCallback: !!onNavigateToTab,
       callbackType: typeof onNavigateToTab,
       timestamp: new Date().toISOString()
@@ -400,13 +400,15 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children, onNaviga
     if (onNavigateToTab) {
       // T030: Use provided callback for SPA navigation (Ionic tabs)
       // This correctly passes the tab identifier ('chat', 'library', 'home') to App.tsx's handleTabChange
-      console.log(`[AgentContext] ➡️  Calling onNavigateToTab callback with tab: "${tab}"`);
-      onNavigateToTab(tab);
+      // CHAT-MESSAGE-FIX: Pass sessionId to ensure Chat loads correct session
+      console.log(`[AgentContext] ➡️  Calling onNavigateToTab callback with tab: "${tab}" and sessionId: "${options?.sessionId || 'none'}"`);
+      onNavigateToTab(tab, options);
       console.log(`[AgentContext] ✅ onNavigateToTab("${tab}") callback completed`);
     } else {
       // Fallback to URL navigation (backwards compatibility)
       console.warn('[AgentContext] No onNavigateToTab callback provided, falling back to window.location');
-      const path = `/${tab}${queryParams ? '?' + new URLSearchParams(queryParams).toString() : ''}`;
+      const queryParams = options?.queryParams || {};
+      const path = `/${tab}${Object.keys(queryParams).length > 0 ? '?' + new URLSearchParams(queryParams).toString() : ''}`;
       window.location.href = path;
     }
   }, [onNavigateToTab]);

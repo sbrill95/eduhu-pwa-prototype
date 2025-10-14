@@ -113,15 +113,24 @@ const AppContent: React.FC = () => {
     setAutoLoadChecked(true);
   }, []);
 
-  const handleTabChange = useCallback((tab: ActiveTab) => {
+  const handleTabChange = useCallback((tab: ActiveTab, options?: { sessionId?: string }) => {
     console.log(`🔄 [App.handleTabChange] Setting activeTab to: "${tab}"`, {
       timestamp: new Date().toISOString(),
-      newTab: tab
+      newTab: tab,
+      sessionId: options?.sessionId
     });
     console.trace('[App.handleTabChange] Call stack');
+
+    // CHAT-MESSAGE-FIX: If navigating to chat with a sessionId, set it
+    if (tab === 'chat' && options?.sessionId) {
+      console.log(`📌 [App.handleTabChange] Setting currentChatSessionId to: "${options.sessionId}"`);
+      setCurrentChatSessionId(options.sessionId);
+      setAutoLoadChecked(true); // Prevent auto-load from overriding
+    }
+
     setActiveTab(tab);
     console.log(`✅ [App.handleTabChange] setActiveTab("${tab}") called`);
-  }, []); // No dependencies - setActiveTab is stable
+  }, []); // No dependencies - setActiveTab/setCurrentChatSessionId are stable
 
   const handleNavigateToChat = useCallback((prompt?: string) => {
     // Navigate to chat tab with pre-filled prompt

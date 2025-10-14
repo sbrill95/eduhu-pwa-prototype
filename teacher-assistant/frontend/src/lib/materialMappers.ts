@@ -70,11 +70,12 @@ export function convertArtifactToUnifiedMaterial(artifact: ArtifactItem): Unifie
   const metadata: UnifiedMaterial['metadata'] = artifact.metadata ? { ...artifact.metadata } : {};
 
   // For images: Store URL in artifact_data (matches MaterialPreviewModal expectation)
+  // ALWAYS use the current description field as source of truth for image URLs
   if (artifact.type === 'image' && artifact.description) {
-    // Only set artifact_data if not already present in metadata
-    if (!metadata.artifact_data) {
-      metadata.artifact_data = { url: artifact.description };
-    }
+    metadata.artifact_data = {
+      ...(metadata.artifact_data || {}),  // Preserve other artifact_data fields
+      url: artifact.description           // Always update URL to current value
+    };
   }
 
   return {

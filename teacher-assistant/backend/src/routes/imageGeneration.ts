@@ -171,6 +171,31 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
         libraryMaterialId = libId;
         const now = Date.now();
 
+        // US4 FIX: Extract originalParams for metadata (same as messages line 204-209)
+        const originalParams = {
+          description: theme || '',
+          imageStyle: style || 'realistic',
+          learningGroup: educationalLevel || '',
+          subject: ''
+        };
+
+        // US4 FIX: Validate and stringify metadata before saving
+        const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+        const libraryMetadataObject = {
+          type: 'image' as const,
+          image_url: imageUrl,
+          title: theme || 'Generiertes Bild',
+          originalParams: originalParams
+        };
+
+        const validatedLibraryMetadata = validateAndStringifyMetadata(libraryMetadataObject);
+
+        if (!validatedLibraryMetadata) {
+          logError('[ImageGen] Library metadata validation failed - saving without metadata', new Error('Metadata validation failed'), { libraryMetadataObject });
+        } else {
+          logInfo('[ImageGen] Library metadata validation successful', { libraryId: libId, metadataSize: validatedLibraryMetadata.length });
+        }
+
         // BUG-029 FIX: Save to library_materials (not artifacts)
         await db.transact([
           db.tx.library_materials[libId].update({
@@ -184,11 +209,12 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
             is_favorite: false,
             usage_count: 0,
             user_id: userId,
-            source_session_id: sessionId || null
+            source_session_id: sessionId || null,
+            metadata: validatedLibraryMetadata // US4 FIX: Add metadata field
           })
         ]);
 
-        logInfo('[ImageGen] Saved to library_materials', { libraryMaterialId: libId });
+        logInfo('[ImageGen] Saved to library_materials', { libraryMaterialId: libId, metadataValidated: !!validatedLibraryMetadata });
 
         // 2. Save to messages (if sessionId provided)
         if (sessionId) {

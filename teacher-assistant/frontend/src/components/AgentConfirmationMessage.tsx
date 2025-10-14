@@ -85,17 +85,14 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
         }}
       >
         <div
+          data-testid="agent-confirmation-card"
+          className="bg-gradient-to-r from-primary-50 to-primary-100 border-2 border-primary-500 rounded-2xl p-4 shadow-lg"
           style={{
             width: '100%',
-            margin: 0,
-            backgroundColor: '#E3F2FD',
-            border: '1px solid #BBDEFB',
-            borderRadius: '12px',
-            boxShadow: '0 2px 4px rgba(33, 150, 243, 0.1)',
-            padding: '16px'
+            margin: 0
           }}
         >
-          {/* OLD UI - Keep existing implementation for backward compatibility */}
+          {/* OLD UI - Updated with orange gradient styling for better contrast */}
           <div
             style={{
               display: 'flex',
@@ -109,7 +106,7 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
                 width: '32px',
                 height: '32px',
                 borderRadius: '50%',
-                backgroundColor: message.agentColor || '#2196F3',
+                backgroundColor: '#FB6542',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -124,7 +121,7 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
                   margin: 0,
                   fontSize: '16px',
                   fontWeight: '600',
-                  color: '#1565C0'
+                  color: '#1f2937'
                 }}
               >
                 {message.agentName}
@@ -133,7 +130,7 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
                 style={{
                   margin: 0,
                   fontSize: '12px',
-                  color: '#1976D2'
+                  color: '#6b7280'
                 }}
               >
                 KI-Agent verfügbar
@@ -142,15 +139,16 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
           </div>
 
           <div
+            data-testid="agent-reasoning"
             style={{
-              backgroundColor: 'rgba(33, 150, 243, 0.08)',
-              border: '1px solid rgba(33, 150, 243, 0.2)',
+              backgroundColor: 'rgba(251, 101, 66, 0.08)',
+              border: '1px solid rgba(251, 101, 66, 0.2)',
               borderRadius: '8px',
               padding: '12px',
               marginBottom: '16px'
             }}
           >
-            <p style={{ fontSize: '14px', color: '#0D47A1', fontStyle: 'italic', margin: 0 }}>
+            <p style={{ fontSize: '14px', color: '#374151', fontStyle: 'italic', margin: 0 }}>
               "{message.context}"
             </p>
           </div>
@@ -160,55 +158,27 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
               display: 'block',
               marginBottom: '16px',
               fontSize: '14px',
-              color: '#1565C0',
+              color: '#374151',
               lineHeight: '1.4'
             }}
           >
             Ich kann dir dabei helfen! Möchtest du den {message.agentName} starten?
           </p>
 
-          <div
-            style={{
-              display: 'flex',
-              gap: '8px',
-              flexWrap: 'wrap'
-            }}
-          >
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
+              data-testid="agent-confirm-button"
               onClick={() => onConfirm(message.agentId)}
-              style={{
-                flex: '1',
-                minWidth: '140px',
-                height: '44px',
-                borderRadius: '8px',
-                padding: '0 16px',
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}
+              className="flex-1 h-14 bg-primary-600 ring-2 ring-white ring-offset-2 text-white rounded-xl font-semibold text-base shadow-md hover:shadow-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200"
               aria-label={`${message.agentName} Agent starten`}
             >
               {message.agentIcon} Ja, Agent starten
             </button>
 
             <button
+              data-testid="agent-skip-button"
               onClick={() => onCancel(message.agentId)}
-              style={{
-                flex: '1',
-                minWidth: '140px',
-                height: '44px',
-                borderRadius: '8px',
-                padding: '0 16px',
-                backgroundColor: 'transparent',
-                color: '#757575',
-                border: '1px solid #BDBDBD',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}
+              className="flex-1 h-12 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 active:bg-gray-300 transition-colors duration-200 text-sm sm:text-base"
               aria-label="Agent-Bestätigung ablehnen und Konversation fortsetzen"
             >
               ❌ Nein, Konversation fortsetzen
@@ -261,11 +231,11 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
 
       {/* Orange Gradient Card with Agent Confirmation */}
       <div
-        data-testid="agent-confirmation"
-        className="bg-gradient-to-r from-primary-50 to-primary-100 border-2 border-primary-500 rounded-2xl p-4"
+        data-testid="agent-confirmation-card"
+        className="bg-gradient-to-r from-primary-50 to-primary-100 border-2 border-primary-500 rounded-2xl p-4 shadow-lg"
       >
         {/* Reasoning Text */}
-        <p className="text-sm text-gray-700 mb-3">
+        <p data-testid="agent-reasoning" className="text-sm text-gray-700 mb-3">
           {message.agentSuggestion.reasoning}
         </p>
 
@@ -273,7 +243,7 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Confirm Button - Start Agent (PRIMARY - TOP/LEFT) */}
           <button
-            data-testid="agent-confirmation-start-button"
+            data-testid="agent-confirm-button"
             onClick={handleConfirm}
             className="flex-1 h-14 bg-primary-600 ring-2 ring-white ring-offset-2 text-white rounded-xl font-semibold text-base shadow-md hover:shadow-lg hover:bg-primary-700 active:bg-primary-800 transition-all duration-200"
             aria-label="Bild-Generierung starten"
@@ -283,6 +253,7 @@ const AgentConfirmationMessage: React.FC<AgentConfirmationMessageProps> = (props
 
           {/* Cancel Button - Continue Chat (SECONDARY - BOTTOM/RIGHT) */}
           <button
+            data-testid="agent-skip-button"
             onClick={handleCancel}
             className="flex-1 h-12 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 active:bg-gray-300 transition-colors duration-200 text-sm sm:text-base"
             aria-label="Weiter im Chat"

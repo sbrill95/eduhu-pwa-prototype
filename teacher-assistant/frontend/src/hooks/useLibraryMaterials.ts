@@ -45,6 +45,7 @@ export const useLibraryMaterials = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Query all user materials
+  // US4 FIX: Explicitly request metadata field from InstantDB
   const { data: materialsData, error: queryError } = db.useQuery(
     user ? {
       library_materials: {
@@ -58,6 +59,15 @@ export const useLibraryMaterials = () => {
 
   const materials: LibraryMaterial[] = materialsData?.library_materials?.map(material => {
     // T041: Parse metadata JSON string from InstantDB for MaterialPreviewModal
+    // US4 DEBUG: Log raw material data from InstantDB
+    console.log('🔍 [DEBUG US4] Raw material from InstantDB:', {
+      id: material.id,
+      title: material.title,
+      hasMetadata: !!material.metadata,
+      metadataType: typeof material.metadata,
+      metadataValue: material.metadata
+    });
+
     let parsedMetadata = undefined;
     if (material.metadata) {
       try {
@@ -83,6 +93,15 @@ export const useLibraryMaterials = () => {
       metadata: parsedMetadata,
     };
   }) || [];
+
+  // BUG-020 FIX: Debug logging for library display issues
+  console.log('[useLibraryMaterials] Materials loaded:', {
+    count: materials.length,
+    hasData: !!materialsData,
+    hasLibraryMaterials: !!materialsData?.library_materials,
+    rawCount: materialsData?.library_materials?.length || 0,
+    imageCount: materials.filter(m => m.type === 'image').length
+  });
 
   // Create a new material
   const createMaterial = useCallback(async (data: CreateMaterialData): Promise<string> => {

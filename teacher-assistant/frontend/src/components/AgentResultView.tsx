@@ -358,6 +358,30 @@ export const AgentResultView: React.FC = () => {
     console.log(`[AgentResultView] 📚 handleOpenInLibrary CALLED [ID:${callId}] - Button: "In Library öffnen"`);
     console.trace('[AgentResultView] handleOpenInLibrary call stack');
 
+    // T014: Extract materialId from agent result
+    const materialId = state.result?.data?.library_id || state.result?.metadata?.library_id;
+    console.log(`[AgentResultView] materialId extracted: ${materialId} [ID:${callId}]`);
+
+    // T014: Dispatch custom event with materialId to auto-open modal (US2)
+    if (materialId) {
+      window.dispatchEvent(new CustomEvent('navigate-library-tab', {
+        detail: {
+          tab: 'materials',
+          materialId: materialId,
+          source: 'AgentResultView'
+        }
+      }));
+      console.log(`[AgentResultView] ✅ Dispatched navigate-library-tab event with materialId: ${materialId} [ID:${callId}]`);
+    } else {
+      console.warn(`[AgentResultView] ⚠️ No materialId found, event dispatched without materialId [ID:${callId}]`);
+      window.dispatchEvent(new CustomEvent('navigate-library-tab', {
+        detail: {
+          tab: 'materials',
+          source: 'AgentResultView'
+        }
+      }));
+    }
+
     // BUG-030 FIX: Use flushSync to force navigation
     console.log(`[AgentResultView] 📍 Calling navigateToTab("library") with flushSync [ID:${callId}]`);
     flushSync(() => {

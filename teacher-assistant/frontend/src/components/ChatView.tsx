@@ -46,6 +46,7 @@ import {
 import type { ChatMessage as ApiChatMessage } from '../lib/api';
 import { apiClient } from '../lib/api';
 import { featureFlags } from '../lib/featureFlags';
+import { getProxiedImageUrl } from '../lib/imageProxy';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -978,7 +979,7 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                               style={{
                                 marginBottom: '8px',
                                 cursor: agentResult?.libraryId ? 'pointer' : 'default',
-                                maxWidth: '300px'
+                                maxWidth: '200px' // THUMBNAIL SIZE - small inline image like ChatGPT
                               }}
                               onClick={() => {
                                 // TASK-009: Open preview modal on click if library_id exists
@@ -1013,10 +1014,10 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                               }}
                             >
                               <img
-                                src={imageData}
+                                src={getProxiedImageUrl(imageData)}
                                 alt="Generated image"
                                 style={{
-                                  maxWidth: '100%',
+                                  width: '200px', // FORCE thumbnail width
                                   height: 'auto',
                                   borderRadius: '8px',
                                   border: '1px solid var(--ion-color-light-shade)',
@@ -1077,7 +1078,8 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                                   border: '2px solid var(--ion-color-secondary)',
                                   borderRadius: '12px',
                                   overflow: 'hidden',
-                                  marginBottom: '8px'
+                                  marginBottom: '8px',
+                                  maxWidth: '220px' // THUMBNAIL SIZE - constrain wrapper (200px image + borders)
                                 }}>
                                   <div style={{
                                     backgroundColor: 'var(--ion-color-secondary)',
@@ -1098,10 +1100,11 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                                     )}
                                   </div>
                                   <img
-                                    src={agentResult.content}
+                                    src={getProxiedImageUrl(agentResult.content)}
                                     alt="Agent generated image"
                                     style={{
                                       width: '100%',
+                                      maxWidth: '200px', // THUMBNAIL SIZE - match new format
                                       height: 'auto',
                                       display: 'block',
                                       maxHeight: '300px',

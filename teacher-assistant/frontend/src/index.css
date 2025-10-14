@@ -1,8 +1,22 @@
 /* Tailwind CSS v4 Import - REQUIRED for Tailwind to work */
 @import "tailwindcss";
 
-/* Import Inter Font from Google Fonts - Gemini Design Language */
+/* Import Inter Font from Google Fonts - Gemini Design Language - MUST come before @theme */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Tailwind v4 Custom Theme - Primary Colors (Orange) */
+@theme {
+  --color-primary-50: #fef7f0;
+  --color-primary-100: #feeedb;
+  --color-primary-200: #fbd9b7;
+  --color-primary-300: #f8c088;
+  --color-primary-400: #f49e57;
+  --color-primary-500: #fb6542;
+  --color-primary-600: #ec4c30;
+  --color-primary-700: #c53727;
+  --color-primary-800: #9d2d25;
+  --color-primary-900: #802724;
+}
 
 /* Ionic Variables and theming - UPDATED TO GEMINI DESIGN LANGUAGE */
 :root {
