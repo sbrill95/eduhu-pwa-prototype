@@ -222,12 +222,35 @@ export const useLibraryMaterials = () => {
   // Search materials
   const searchMaterials = useCallback((query: string) => {
     const lowercaseQuery = query.toLowerCase();
-    return materials.filter(material =>
-      material.title.toLowerCase().includes(lowercaseQuery) ||
-      material.description?.toLowerCase().includes(lowercaseQuery) ||
-      material.content.toLowerCase().includes(lowercaseQuery) ||
-      material.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
-    );
+    return materials.filter(material => {
+      // Parse metadata to extract tags (FR-028: Tags must be searchable)
+      let metadataTags: string[] = [];
+      if (material.metadata) {
+        try {
+          const metadata = typeof material.metadata === 'string'
+            ? JSON.parse(material.metadata)
+            : material.metadata;
+          metadataTags = metadata.tags || [];
+        } catch (e) {
+          // Ignore parse errors, use empty array
+          metadataTags = [];
+        }
+      }
+
+      // Check if any metadata tags match the search query
+      const matchesMetadataTags = metadataTags.some((tag: string) =>
+        tag.toLowerCase().includes(lowercaseQuery)
+      );
+
+      // Match title, description, content, material.tags, OR metadata.tags
+      return (
+        material.title.toLowerCase().includes(lowercaseQuery) ||
+        material.description?.toLowerCase().includes(lowercaseQuery) ||
+        material.content.toLowerCase().includes(lowercaseQuery) ||
+        material.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery)) ||
+        matchesMetadataTags
+      );
+    });
   }, [materials]);
 
   // Get all unique tags

@@ -394,6 +394,79 @@ router.post('/execute',
             });
             logInfo(`Image saved to library_materials`, { libraryId, userId: effectiveUserId, title: titleToUse });
 
+            // T036: Trigger automatic tagging (async, non-blocking)
+            console.log('[ImageAgent] Triggering automatic tagging for:', imageLibraryId);
+
+            const VisionService = (await import('../services/visionService')).default;
+
+            VisionService.tagImage(result.data.image_url, {
+              title: titleToUse,
+              description: result.data.revised_prompt || params.prompt || '',
+              subject: params.subject || originalParams.subject || '',
+              grade: params.learningGroup || originalParams.learningGroup || ''
+            })
+              .then(async (tagResult) => {
+                console.log(`[ImageAgent] Tagging complete for ${imageLibraryId}:`, tagResult.tags);
+
+                // T037: Update metadata with tags
+                try {
+                  // Read current metadata
+                  const currentMaterial = await db.queryOnce({
+                    library_materials: {
+                      $: {
+                        where: { id: imageLibraryId }
+                      }
+                    }
+                  });
+
+                  const material = currentMaterial.library_materials?.[0];
+                  if (!material) {
+                    console.warn('[ImageAgent] Material not found for tagging update:', imageLibraryId);
+                    return;
+                  }
+
+                  // Parse existing metadata
+                  let metadata = {};
+                  try {
+                    metadata = typeof material.metadata === 'string'
+                      ? JSON.parse(material.metadata)
+                      : (material.metadata || {});
+                  } catch (e) {
+                    console.warn('[ImageAgent] Failed to parse metadata, using empty object');
+                  }
+
+                  // Add tags and tagging info
+                  const updatedMetadata = {
+                    ...metadata,
+                    tags: tagResult.tags,
+                    tagging: {
+                      generatedAt: Date.now(),
+                      model: tagResult.model,
+                      confidence: tagResult.confidence,
+                      processingTime: tagResult.processingTime
+                    }
+                  };
+
+                  // Update InstantDB
+                  await db.transact([
+                    db.tx.library_materials[imageLibraryId].update({
+                      metadata: JSON.stringify(updatedMetadata)
+                    })
+                  ]);
+
+                  console.log(`[ImageAgent] ✅ Tags saved for ${imageLibraryId}:`, tagResult.tags.join(', '));
+                  logInfo(`[ImageAgent] Tags saved`, { materialId: imageLibraryId, tags: tagResult.tags, confidence: tagResult.confidence });
+                } catch (updateError: any) {
+                  console.error('[ImageAgent] Failed to save tags:', updateError.message);
+                  logError('[ImageAgent] Failed to save tags', updateError);
+                }
+              })
+              .catch((error) => {
+                console.warn('[ImageAgent] Tagging failed (non-blocking):', error.message);
+                logError('[ImageAgent] Tagging failed (non-blocking)', error);
+                // Don't throw - image creation already succeeded
+              });
+
             // TASK-005: Create chat message with image (clean UI - no prompt/metadata)
             if (sessionId) {
               console.log('[langGraphAgents] Creating chat message with image:', {
@@ -693,6 +766,79 @@ router.post('/image/generate',
 
             libraryId = imageLibraryId;
             logInfo(`Image saved to library_materials`, { libraryId, userId, title: titleToUse, metadataValidated: !!validatedLibraryMetadata });
+
+            // T036: Trigger automatic tagging (async, non-blocking)
+            console.log('[ImageAgent] Triggering automatic tagging for:', imageLibraryId);
+
+            const VisionService = (await import('../services/visionService')).default;
+
+            VisionService.tagImage(result.data.image_url, {
+              title: titleToUse,
+              description: result.data.revised_prompt || params.prompt || '',
+              subject: params.subject || originalParamsForLibrary.subject || '',
+              grade: params.targetAgeGroup || originalParamsForLibrary.learningGroup || ''
+            })
+              .then(async (tagResult) => {
+                console.log(`[ImageAgent] Tagging complete for ${imageLibraryId}:`, tagResult.tags);
+
+                // T037: Update metadata with tags
+                try {
+                  // Read current metadata
+                  const currentMaterial = await db.queryOnce({
+                    library_materials: {
+                      $: {
+                        where: { id: imageLibraryId }
+                      }
+                    }
+                  });
+
+                  const material = currentMaterial.library_materials?.[0];
+                  if (!material) {
+                    console.warn('[ImageAgent] Material not found for tagging update:', imageLibraryId);
+                    return;
+                  }
+
+                  // Parse existing metadata
+                  let metadata = {};
+                  try {
+                    metadata = typeof material.metadata === 'string'
+                      ? JSON.parse(material.metadata)
+                      : (material.metadata || {});
+                  } catch (e) {
+                    console.warn('[ImageAgent] Failed to parse metadata, using empty object');
+                  }
+
+                  // Add tags and tagging info
+                  const updatedMetadata = {
+                    ...metadata,
+                    tags: tagResult.tags,
+                    tagging: {
+                      generatedAt: Date.now(),
+                      model: tagResult.model,
+                      confidence: tagResult.confidence,
+                      processingTime: tagResult.processingTime
+                    }
+                  };
+
+                  // Update InstantDB
+                  await db.transact([
+                    db.tx.library_materials[imageLibraryId].update({
+                      metadata: JSON.stringify(updatedMetadata)
+                    })
+                  ]);
+
+                  console.log(`[ImageAgent] ✅ Tags saved for ${imageLibraryId}:`, tagResult.tags.join(', '));
+                  logInfo(`[ImageAgent] Tags saved`, { materialId: imageLibraryId, tags: tagResult.tags, confidence: tagResult.confidence });
+                } catch (updateError: any) {
+                  console.error('[ImageAgent] Failed to save tags:', updateError.message);
+                  logError('[ImageAgent] Failed to save tags', updateError);
+                }
+              })
+              .catch((error) => {
+                console.warn('[ImageAgent] Tagging failed (non-blocking):', error.message);
+                logError('[ImageAgent] Tagging failed (non-blocking)', error);
+                // Don't throw - image creation already succeeded
+              });
 
             // TASK-005: Create chat message with image (clean UI - no prompt/metadata)
             if (sessionId) {

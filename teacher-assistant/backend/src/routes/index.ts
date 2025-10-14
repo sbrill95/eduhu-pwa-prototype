@@ -7,6 +7,7 @@ import chatSummaryRouter from './chat-summary';
 import profileRouter from './profile';
 import filesRouter from './files';
 import storageProxyRouter from './storageProxy';
+import visionTaggingRouter from './visionTagging';
 // import langGraphAgentsRouter from './langGraphAgents'; // TODO: Fix TypeScript errors (ApiResponse type issues)
 // import promptsRouter from './prompts'; // Disabled - prompts.ts.disabled
 // import teacherProfileRouter from './teacher-profile'; // TODO: Fix TypeScript errors
@@ -36,6 +37,9 @@ router.use('/files', filesRouter);
 
 // Mount storage proxy routes
 router.use('/', storageProxyRouter);
+
+// Mount vision tagging routes (for automatic image tagging)
+router.use('/vision', visionTaggingRouter);
 
 // Mount prompts routes
 // router.use('/prompts', promptsRouter); // Disabled - prompts.ts.disabled
