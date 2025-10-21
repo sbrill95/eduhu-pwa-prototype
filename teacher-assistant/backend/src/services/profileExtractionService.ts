@@ -63,7 +63,7 @@ export class ProfileExtractionService {
     if (!userId || !messages || messages.length < 2) {
       logInfo('Skipping profile extraction - insufficient messages', {
         userId,
-        messageCount: messages?.length || 0
+        messageCount: messages?.length || 0,
       });
       return [];
     }
@@ -75,7 +75,7 @@ export class ProfileExtractionService {
       logInfo('Starting profile characteristic extraction', {
         userId,
         messageCount: messages.length,
-        existingCharacteristicsCount: existingProfile.length
+        existingCharacteristicsCount: existingProfile.length,
       });
 
       // Call OpenAI for extraction
@@ -93,12 +93,12 @@ WICHTIG: Extrahiere 2-3 relevante, wiederkehrende Merkmale.
 - Bevorzuge spezifische über allgemeine Merkmale
 
 ANTWORTE NUR mit einem JSON Array von Strings: ["Merkmal1", "Merkmal2", "Merkmal3"]
-Keine Erklärungen, nur das JSON Array.`
+Keine Erklärungen, nur das JSON Array.`,
           },
           {
             role: 'user',
-            content: prompt
-          }
+            content: prompt,
+          },
         ],
         max_tokens: 100,
         temperature: 0.3,
@@ -111,13 +111,19 @@ Keine Erklärungen, nur das JSON Array.`
       try {
         characteristics = JSON.parse(content);
       } catch (parseError) {
-        logError('Failed to parse OpenAI response', parseError as Error, { content });
+        logError('Failed to parse OpenAI response', parseError as Error, {
+          content,
+        });
         return [];
       }
 
       // Validate that we got an array
       if (!Array.isArray(characteristics)) {
-        logError('OpenAI returned non-array response', new Error('Invalid response format'), { content });
+        logError(
+          'OpenAI returned non-array response',
+          new Error('Invalid response format'),
+          { content }
+        );
         return [];
       }
 
@@ -127,7 +133,7 @@ Keine Erklärungen, nur das JSON Array.`
       logInfo('Successfully extracted characteristics', {
         userId,
         extractedCount: characteristics.length,
-        characteristics
+        characteristics,
       });
 
       // Categorize each characteristic
@@ -142,7 +148,6 @@ Keine Erklärungen, nur das JSON Array.`
       await this.updateCharacteristicCounts(userId, categorized);
 
       return categorized;
-
     } catch (error) {
       logError('Profile extraction failed', error as Error, { userId });
       return []; // Graceful fallback - return empty array on error
@@ -156,7 +161,14 @@ Keine Erklärungen, nur das JSON Array.`
    * @returns Category string (subjects, gradeLevel, teachingStyle, schoolType, topics, uncategorized)
    */
   async categorizeCharacteristic(characteristic: string): Promise<string> {
-    const validCategories = ['subjects', 'gradeLevel', 'teachingStyle', 'schoolType', 'topics', 'uncategorized'];
+    const validCategories = [
+      'subjects',
+      'gradeLevel',
+      'teachingStyle',
+      'schoolType',
+      'topics',
+      'uncategorized',
+    ];
 
     const prompt = `Kategorisiere dieses Lehrerprofil-Merkmal:
 "${characteristic}"
@@ -177,29 +189,34 @@ Antworte NUR mit der Kategorie (ein Wort, lowercase).`;
         messages: [
           {
             role: 'system',
-            content: 'Du bist ein Kategorisierungs-Experte. Antworte nur mit einem Wort: der Kategorie.'
+            content:
+              'Du bist ein Kategorisierungs-Experte. Antworte nur mit einem Wort: der Kategorie.',
           },
-          { role: 'user', content: prompt }
+          { role: 'user', content: prompt },
         ],
         max_tokens: 10,
         temperature: 0.2,
       });
 
-      const category = response.choices[0]?.message?.content?.trim() || 'uncategorized';
+      const category =
+        response.choices[0]?.message?.content?.trim() || 'uncategorized';
 
       // Validate category
       if (!validCategories.includes(category)) {
         logInfo('Invalid category returned, defaulting to uncategorized', {
           characteristic,
-          returnedCategory: category
+          returnedCategory: category,
         });
         return 'uncategorized';
       }
 
       return category;
-
     } catch (error) {
-      logError('Categorization failed, defaulting to uncategorized', error as Error, { characteristic });
+      logError(
+        'Categorization failed, defaulting to uncategorized',
+        error as Error,
+        { characteristic }
+      );
       return 'uncategorized';
     }
   }
@@ -223,12 +240,16 @@ Antworte NUR mit der Kategorie (ein Wort, lowercase).`;
           category
         );
 
-        logInfo('Characteristic count updated', { userId, characteristic, category });
+        logInfo('Characteristic count updated', {
+          userId,
+          characteristic,
+          category,
+        });
       } catch (error) {
         logError('Failed to update characteristic count', error as Error, {
           userId,
           characteristic,
-          category
+          category,
         });
         // Continue with next characteristic even if one fails
       }
@@ -249,12 +270,12 @@ Antworte NUR mit der Kategorie (ein Wort, lowercase).`;
     // Format conversation
     const conversation = messages
       .slice(0, 10) // Limit to last 10 messages for context
-      .map(m => `${m.role === 'user' ? 'Lehrer' : 'Assistant'}: ${m.content}`)
+      .map((m) => `${m.role === 'user' ? 'Lehrer' : 'Assistant'}: ${m.content}`)
       .join('\n\n');
 
     // Format existing profile characteristics
     const existing = existingProfile
-      .map(p => p.characteristic)
+      .map((p) => p.characteristic)
       .slice(0, 15) // Limit to top 15 for context
       .join(', ');
 

@@ -7,7 +7,11 @@ import request from 'supertest';
 import express from 'express';
 import profileRouter from './profile';
 import { profileExtractionService } from '../services/profileExtractionService';
-import { InstantDBService, isInstantDBAvailable, getInstantDB } from '../services/instantdbService';
+import {
+  InstantDBService,
+  isInstantDBAvailable,
+  getInstantDB,
+} from '../services/instantdbService';
 
 // Mock dependencies
 jest.mock('../services/profileExtractionService');
@@ -54,10 +58,12 @@ describe('POST /profile/extract', () => {
     ];
 
     // Mock service methods
-    (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-      mockExistingProfile
-    );
-    (profileExtractionService.extractCharacteristics as jest.Mock).mockResolvedValue(mockExtracted);
+    (
+      InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+    ).mockResolvedValue(mockExistingProfile);
+    (
+      profileExtractionService.extractCharacteristics as jest.Mock
+    ).mockResolvedValue(mockExtracted);
 
     // Make request
     const response = await request(app)
@@ -69,15 +75,12 @@ describe('POST /profile/extract', () => {
     expect(response.body.success).toBe(true);
     expect(response.body.data.extracted).toEqual(mockExtracted);
     expect(response.body.data.count).toBe(2);
-    expect(InstantDBService.ProfileCharacteristics.getCharacteristics).toHaveBeenCalledWith(
-      mockUserId,
-      0
-    );
-    expect(profileExtractionService.extractCharacteristics).toHaveBeenCalledWith(
-      mockUserId,
-      mockMessages,
-      mockExistingProfile
-    );
+    expect(
+      InstantDBService.ProfileCharacteristics.getCharacteristics
+    ).toHaveBeenCalledWith(mockUserId, 0);
+    expect(
+      profileExtractionService.extractCharacteristics
+    ).toHaveBeenCalledWith(mockUserId, mockMessages, mockExistingProfile);
   });
 
   it('should return 400 with missing userId', async () => {
@@ -115,9 +118,9 @@ describe('POST /profile/extract', () => {
 
   it('should return 500 on service error', async () => {
     // Mock service to throw error
-    (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockRejectedValue(
-      new Error('Database error')
-    );
+    (
+      InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+    ).mockRejectedValue(new Error('Database error'));
 
     const response = await request(app)
       .post('/profile/extract')
@@ -170,20 +173,24 @@ describe('GET /profile/characteristics', () => {
     ];
 
     // Mock service
-    (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-      mockCharacteristics
-    );
+    (
+      InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+    ).mockResolvedValue(mockCharacteristics);
 
     // Make request
-    const response = await request(app).get('/profile/characteristics').query({ userId: mockUserId });
+    const response = await request(app)
+      .get('/profile/characteristics')
+      .query({ userId: mockUserId });
 
     // Assertions
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.data.characteristics).toEqual(mockCharacteristics);
-    expect(InstantDBService.ProfileCharacteristics.getCharacteristics).toHaveBeenCalledWith(
+    expect(
+      InstantDBService.ProfileCharacteristics.getCharacteristics
+    ).toHaveBeenCalledWith(
       mockUserId,
-      3 // minCount threshold
+      0 // Fetches all, then filters in code
     );
   });
 
@@ -196,9 +203,9 @@ describe('GET /profile/characteristics', () => {
   });
 
   it('should return 500 on service error', async () => {
-    (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockRejectedValue(
-      new Error('Database error')
-    );
+    (
+      InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+    ).mockRejectedValue(new Error('Database error'));
 
     const response = await request(app)
       .get('/profile/characteristics')
@@ -219,10 +226,14 @@ describe('POST /profile/characteristics/add', () => {
     const mockUserId = 'user123';
     const mockCharacteristic = 'Projektbasiertes Lernen';
 
+    // Mock InstantDB availability
+    (isInstantDBAvailable as jest.Mock).mockReturnValue(true);
+
     // Mock service
-    (InstantDBService.ProfileCharacteristics.addManualCharacteristic as jest.Mock).mockResolvedValue(
-      undefined
-    );
+    (
+      InstantDBService.ProfileCharacteristics
+        .addManualCharacteristic as jest.Mock
+    ).mockResolvedValue(undefined);
 
     // Make request
     const response = await request(app)
@@ -233,19 +244,22 @@ describe('POST /profile/characteristics/add', () => {
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.data.characteristic).toBe(mockCharacteristic);
-    expect(InstantDBService.ProfileCharacteristics.addManualCharacteristic).toHaveBeenCalledWith(
-      mockUserId,
-      mockCharacteristic
-    );
+    expect(
+      InstantDBService.ProfileCharacteristics.addManualCharacteristic
+    ).toHaveBeenCalledWith(mockUserId, mockCharacteristic);
   });
 
   it('should trim whitespace from characteristic', async () => {
     const mockUserId = 'user123';
     const mockCharacteristic = '  Projektbasiertes Lernen  ';
 
-    (InstantDBService.ProfileCharacteristics.addManualCharacteristic as jest.Mock).mockResolvedValue(
-      undefined
-    );
+    // Mock InstantDB availability
+    (isInstantDBAvailable as jest.Mock).mockReturnValue(true);
+
+    (
+      InstantDBService.ProfileCharacteristics
+        .addManualCharacteristic as jest.Mock
+    ).mockResolvedValue(undefined);
 
     const response = await request(app)
       .post('/profile/characteristics/add')
@@ -253,10 +267,9 @@ describe('POST /profile/characteristics/add', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.data.characteristic).toBe('Projektbasiertes Lernen');
-    expect(InstantDBService.ProfileCharacteristics.addManualCharacteristic).toHaveBeenCalledWith(
-      mockUserId,
-      'Projektbasiertes Lernen'
-    );
+    expect(
+      InstantDBService.ProfileCharacteristics.addManualCharacteristic
+    ).toHaveBeenCalledWith(mockUserId, 'Projektbasiertes Lernen');
   });
 
   it('should return 400 with missing userId', async () => {
@@ -290,9 +303,13 @@ describe('POST /profile/characteristics/add', () => {
   });
 
   it('should return 500 on service error', async () => {
-    (InstantDBService.ProfileCharacteristics.addManualCharacteristic as jest.Mock).mockRejectedValue(
-      new Error('Database error')
-    );
+    // Mock InstantDB availability
+    (isInstantDBAvailable as jest.Mock).mockReturnValue(true);
+
+    (
+      InstantDBService.ProfileCharacteristics
+        .addManualCharacteristic as jest.Mock
+    ).mockRejectedValue(new Error('Database error'));
 
     const response = await request(app)
       .post('/profile/characteristics/add')
@@ -367,9 +384,9 @@ describe('POST /profile/characteristics/categorize', () => {
     (getInstantDB as jest.Mock).mockReturnValue(mockDb);
 
     // Mock service methods
-    (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-      mockAllCharacteristics
-    );
+    (
+      InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+    ).mockResolvedValue(mockAllCharacteristics);
     (profileExtractionService.categorizeCharacteristic as jest.Mock)
       .mockResolvedValueOnce('teachingStyle')
       .mockResolvedValueOnce('teachingStyle');
@@ -384,12 +401,16 @@ describe('POST /profile/characteristics/categorize', () => {
     expect(response.body.success).toBe(true);
     expect(response.body.data.categorized).toBe(2);
     expect(response.body.data.total).toBe(2);
-    expect(profileExtractionService.categorizeCharacteristic).toHaveBeenCalledTimes(2);
+    expect(
+      profileExtractionService.categorizeCharacteristic
+    ).toHaveBeenCalledTimes(2);
     expect(mockTransact).toHaveBeenCalledTimes(2);
   });
 
   it('should return 400 with missing userId', async () => {
-    const response = await request(app).post('/profile/characteristics/categorize').send({});
+    const response = await request(app)
+      .post('/profile/characteristics/categorize')
+      .send({});
 
     expect(response.status).toBe(400);
     expect(response.body.success).toBe(false);
@@ -451,9 +472,9 @@ describe('POST /profile/characteristics/categorize', () => {
     };
     (getInstantDB as jest.Mock).mockReturnValue(mockDb);
 
-    (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-      mockAllCharacteristics
-    );
+    (
+      InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+    ).mockResolvedValue(mockAllCharacteristics);
 
     // First categorization succeeds, second fails
     (profileExtractionService.categorizeCharacteristic as jest.Mock)
@@ -473,9 +494,9 @@ describe('POST /profile/characteristics/categorize', () => {
 
   it('should return 500 on service error', async () => {
     (isInstantDBAvailable as jest.Mock).mockReturnValue(true);
-    (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockRejectedValue(
-      new Error('Database error')
-    );
+    (
+      InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+    ).mockRejectedValue(new Error('Database error'));
 
     const response = await request(app)
       .post('/profile/characteristics/categorize')

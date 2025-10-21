@@ -17,10 +17,9 @@ describe('Redis Integration Tests', () => {
     redisClient = new Redis({
       host: process.env.REDIS_HOST || 'localhost',
       port: parseInt(process.env.REDIS_PORT || '6379'),
-      retryDelayOnFailover: 100,
       enableReadyCheck: false,
       maxRetriesPerRequest: 1,
-      lazyConnect: true
+      lazyConnect: true,
     });
 
     testStateKey = `test:langgraph:checkpoint:${Date.now()}`;
@@ -30,7 +29,7 @@ describe('Redis Integration Tests', () => {
       agentId: 'image-generation',
       sessionId: `test-session-${Date.now()}`,
       params: {
-        prompt: 'Test image generation prompt'
+        prompt: 'Test image generation prompt',
       },
       result: undefined,
       error: undefined,
@@ -40,9 +39,9 @@ describe('Redis Integration Tests', () => {
       startTime: Date.now(),
       metadata: {
         testMode: true,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       },
-      cancelled: false
+      cancelled: false,
     };
   });
 
@@ -77,8 +76,7 @@ describe('Redis Integration Tests', () => {
         port: 9999,
         connectTimeout: 1000,
         lazyConnect: true,
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 1
+        maxRetriesPerRequest: 1,
       });
 
       try {
@@ -145,7 +143,9 @@ describe('Redis Integration Tests', () => {
         expect(parsedData.currentStep).toBe(testCheckpointData.currentStep);
         expect(parsedData.progress).toBe(testCheckpointData.progress);
       } catch (error) {
-        console.warn('Skipping checkpoint retrieval test - Redis not available');
+        console.warn(
+          'Skipping checkpoint retrieval test - Redis not available'
+        );
       }
     });
 
@@ -167,8 +167,8 @@ describe('Redis Integration Tests', () => {
           progress: 50,
           metadata: {
             ...testCheckpointData.metadata,
-            updatedAt: new Date().toISOString()
-          }
+            updatedAt: new Date().toISOString(),
+          },
         };
 
         await redisClient.setex(
@@ -207,13 +207,15 @@ describe('Redis Integration Tests', () => {
         expect(retrieved).toBeDefined();
 
         // Wait for expiration
-        await new Promise(resolve => setTimeout(resolve, 1100));
+        await new Promise((resolve) => setTimeout(resolve, 1100));
 
         // Should be expired
         retrieved = await redisClient.get(shortLivedKey);
         expect(retrieved).toBeNull();
       } catch (error) {
-        console.warn('Skipping checkpoint expiration test - Redis not available');
+        console.warn(
+          'Skipping checkpoint expiration test - Redis not available'
+        );
       }
     });
   });
@@ -298,19 +300,17 @@ describe('Redis Integration Tests', () => {
           const key = `${testStateKey}:concurrent:${i}`;
           const data = {
             ...testCheckpointData,
-            executionId: `concurrent-execution-${i}`
+            executionId: `concurrent-execution-${i}`,
           };
 
-          operations.push(
-            redisClient.setex(key, 3600, JSON.stringify(data))
-          );
+          operations.push(redisClient.setex(key, 3600, JSON.stringify(data)));
         }
 
         // Wait for all operations to complete
         const results = await Promise.all(operations);
 
         // All should succeed
-        results.forEach(result => {
+        results.forEach((result) => {
           expect(result).toBe('OK');
         });
 
@@ -320,7 +320,6 @@ describe('Redis Integration Tests', () => {
           deleteOps.push(redisClient.del(`${testStateKey}:concurrent:${i}`));
         }
         await Promise.all(deleteOps);
-
       } catch (error) {
         console.warn('Skipping concurrency test - Redis not available');
       }
@@ -348,7 +347,9 @@ describe('Redis Integration Tests', () => {
         const totalTime = endTime - startTime;
         const avgTime = totalTime / iterations;
 
-        logInfo(`Redis performance: ${avgTime}ms average per checkpoint operation`);
+        logInfo(
+          `Redis performance: ${avgTime}ms average per checkpoint operation`
+        );
 
         // Should be fast (under 10ms average)
         expect(avgTime).toBeLessThan(10);
@@ -359,7 +360,6 @@ describe('Redis Integration Tests', () => {
           deleteOps.push(redisClient.del(`${performanceKey}:${i}`));
         }
         await Promise.all(deleteOps);
-
       } catch (error) {
         console.warn('Skipping performance test - Redis not available');
       }
@@ -379,7 +379,11 @@ describe('Redis Integration Tests', () => {
         for (let i = 0; i < 1000; i++) {
           const key = `${testStateKey}:memory:${i}`;
           keys.push(key);
-          await redisClient.setex(key, 3600, JSON.stringify(testCheckpointData));
+          await redisClient.setex(
+            key,
+            3600,
+            JSON.stringify(testCheckpointData)
+          );
         }
 
         // Check memory usage after storing data
@@ -390,7 +394,6 @@ describe('Redis Integration Tests', () => {
 
         // Cleanup all keys
         await redisClient.del(...keys);
-
       } catch (error) {
         console.warn('Skipping memory test - Redis not available');
       }
@@ -406,8 +409,8 @@ describe('Redis Integration Tests', () => {
           ...testCheckpointData,
           metadata: {
             ...testCheckpointData.metadata,
-            largeArray: new Array(10000).fill('data')
-          }
+            largeArray: new Array(10000).fill('data'),
+          },
         };
 
         const result = await redisClient.setex(
@@ -420,7 +423,6 @@ describe('Redis Integration Tests', () => {
 
         // Cleanup
         await redisClient.del(largeDataKey);
-
       } catch (error) {
         console.warn('Skipping resource limits test - Redis not available');
       }
@@ -438,7 +440,7 @@ describe('Redis Integration Tests', () => {
           port: parseInt(process.env.REDIS_PORT || '6379'),
           connectTimeout: 1,
           commandTimeout: 1,
-          lazyConnect: true
+          lazyConnect: true,
         });
 
         try {
@@ -450,9 +452,10 @@ describe('Redis Integration Tests', () => {
         } finally {
           await timeoutClient.disconnect();
         }
-
       } catch (error) {
-        console.warn('Skipping network interruption test - Redis not available');
+        console.warn(
+          'Skipping network interruption test - Redis not available'
+        );
       }
     });
 
@@ -462,7 +465,7 @@ describe('Redis Integration Tests', () => {
         port: 6379,
         connectTimeout: 1000,
         maxRetriesPerRequest: 1,
-        lazyConnect: true
+        lazyConnect: true,
       });
 
       try {

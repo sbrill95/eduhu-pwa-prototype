@@ -11,7 +11,11 @@
 
 import { compareTwoStrings } from 'string-similarity';
 import { ProfileCharacteristic } from '../schemas/instantdb';
-import { InstantDBService, getInstantDB, isInstantDBAvailable } from './instantdbService';
+import {
+  InstantDBService,
+  getInstantDB,
+  isInstantDBAvailable,
+} from './instantdbService';
 import { logError, logInfo } from '../config/logger';
 
 /**
@@ -24,22 +28,22 @@ const SIMILARITY_THRESHOLD = 0.8;
  * Common abbreviations mapping for German educational terms
  */
 const ABBREVIATION_MAP: Record<string, string> = {
-  'sol': 'Selbstorganisiertes Lernen',
+  sol: 'Selbstorganisiertes Lernen',
   's.o.l': 'Selbstorganisiertes Lernen',
   's.o.l.': 'Selbstorganisiertes Lernen',
-  'pbl': 'Projektbasiertes Lernen',
+  pbl: 'Projektbasiertes Lernen',
   'p.b.l': 'Projektbasiertes Lernen',
   'p.b.l.': 'Projektbasiertes Lernen',
-  'gk': 'Grundkurs',
-  'lk': 'Leistungskurs',
-  'mathe': 'Mathematik',
-  'bio': 'Biologie',
-  'geo': 'Geographie',
-  'sowi': 'Sozialwissenschaften',
-  'powi': 'Politikwissenschaften',
-  'reli': 'Religion',
-  'pädagogik': 'Pädagogik',
-  'päda': 'Pädagogik',
+  gk: 'Grundkurs',
+  lk: 'Leistungskurs',
+  mathe: 'Mathematik',
+  bio: 'Biologie',
+  geo: 'Geographie',
+  sowi: 'Sozialwissenschaften',
+  powi: 'Politikwissenschaften',
+  reli: 'Religion',
+  pädagogik: 'Pädagogik',
+  päda: 'Pädagogik',
 };
 
 /**
@@ -85,10 +89,16 @@ function isAbbreviationMatch(str1: string, str2: string): boolean {
   const norm2 = normalizeString(str2);
 
   // Check both directions
-  if (ABBREVIATION_MAP[norm1] && normalizeString(ABBREVIATION_MAP[norm1]) === norm2) {
+  if (
+    ABBREVIATION_MAP[norm1] &&
+    normalizeString(ABBREVIATION_MAP[norm1]) === norm2
+  ) {
     return true;
   }
-  if (ABBREVIATION_MAP[norm2] && normalizeString(ABBREVIATION_MAP[norm2]) === norm1) {
+  if (
+    ABBREVIATION_MAP[norm2] &&
+    normalizeString(ABBREVIATION_MAP[norm2]) === norm1
+  ) {
     return true;
   }
 
@@ -99,7 +109,10 @@ function isAbbreviationMatch(str1: string, str2: string): boolean {
  * Calculates similarity between two characteristics
  * Returns a score between 0 (completely different) and 1 (identical)
  */
-function calculateSimilarity(char1: ProfileCharacteristic, char2: ProfileCharacteristic): {
+function calculateSimilarity(
+  char1: ProfileCharacteristic,
+  char2: ProfileCharacteristic
+): {
   score: number;
   reason: 'abbreviation' | 'typo' | 'casing' | 'similarity';
 } {
@@ -139,14 +152,17 @@ function calculateSimilarity(char1: ProfileCharacteristic, char2: ProfileCharact
  * 2. Longest name (prefer full name over abbreviation)
  * 3. Non-manually added (prefer AI-extracted)
  */
-function selectKeepCharacteristic(chars: ProfileCharacteristic[]): ProfileCharacteristic {
+function selectKeepCharacteristic(
+  chars: ProfileCharacteristic[]
+): ProfileCharacteristic {
   return chars.reduce((best, current) => {
     // Higher count wins
     if (current.count > best.count) return current;
     if (current.count < best.count) return best;
 
     // Longer name wins (prefer full name over abbreviation)
-    if (current.characteristic.length > best.characteristic.length) return current;
+    if (current.characteristic.length > best.characteristic.length)
+      return current;
     if (current.characteristic.length < best.characteristic.length) return best;
 
     // Prefer AI-extracted over manual
@@ -165,7 +181,9 @@ function selectKeepCharacteristic(chars: ProfileCharacteristic[]): ProfileCharac
  * @param userId - User ID
  * @returns Array of similarity groups
  */
-export async function findSimilarCharacteristics(userId: string): Promise<SimilarityGroup[]> {
+export async function findSimilarCharacteristics(
+  userId: string
+): Promise<SimilarityGroup[]> {
   if (!isInstantDBAvailable()) {
     const error = new Error('InstantDB not initialized');
     logError('InstantDB not available for similarity detection', error);
@@ -174,7 +192,11 @@ export async function findSimilarCharacteristics(userId: string): Promise<Simila
 
   try {
     // Fetch all characteristics for this user (no min count filter)
-    const allCharacteristics = await InstantDBService.ProfileCharacteristics.getCharacteristics(userId, 0);
+    const allCharacteristics =
+      await InstantDBService.ProfileCharacteristics.getCharacteristics(
+        userId,
+        0
+      );
 
     logInfo('Finding similar characteristics', {
       userId,
@@ -193,7 +215,8 @@ export async function findSimilarCharacteristics(userId: string): Promise<Simila
 
       const similar: ProfileCharacteristic[] = [char1];
       let maxSimilarity = 0;
-      let groupReason: 'abbreviation' | 'typo' | 'casing' | 'similarity' = 'similarity';
+      let groupReason: 'abbreviation' | 'typo' | 'casing' | 'similarity' =
+        'similarity';
 
       // Find all similar characteristics
       for (let j = i + 1; j < allCharacteristics.length; j++) {
@@ -217,7 +240,9 @@ export async function findSimilarCharacteristics(userId: string): Promise<Simila
       // If we found similar characteristics, create a group
       if (similar.length > 1) {
         const keepCharacteristic = selectKeepCharacteristic(similar);
-        const mergeCharacteristics = similar.filter((c) => c.id !== keepCharacteristic.id);
+        const mergeCharacteristics = similar.filter(
+          (c) => c.id !== keepCharacteristic.id
+        );
 
         groups.push({
           keepCharacteristic,
@@ -247,7 +272,9 @@ export async function findSimilarCharacteristics(userId: string): Promise<Simila
 
     return groups;
   } catch (error) {
-    logError('Failed to find similar characteristics', error as Error, { userId });
+    logError('Failed to find similar characteristics', error as Error, {
+      userId,
+    });
     throw error;
   }
 }
@@ -273,9 +300,15 @@ export async function mergeSimilarCharacteristics(
     logInfo('Starting characteristic merge', { userId, keepId, mergeIds });
 
     // Fetch all characteristics involved
-    const allCharacteristics = await InstantDBService.ProfileCharacteristics.getCharacteristics(userId, 0);
+    const allCharacteristics =
+      await InstantDBService.ProfileCharacteristics.getCharacteristics(
+        userId,
+        0
+      );
     const keepChar = allCharacteristics.find((c) => c.id === keepId);
-    const mergeChars = allCharacteristics.filter((c) => mergeIds.includes(c.id));
+    const mergeChars = allCharacteristics.filter((c) =>
+      mergeIds.includes(c.id)
+    );
 
     if (!keepChar) {
       throw new Error(`Keep characteristic not found: ${keepId}`);
@@ -286,9 +319,18 @@ export async function mergeSimilarCharacteristics(
     }
 
     // Calculate merged data
-    const totalCount = mergeChars.reduce((sum, char) => sum + char.count, keepChar.count);
-    const earliestFirstSeen = Math.min(keepChar.first_seen, ...mergeChars.map((c) => c.first_seen));
-    const latestLastSeen = Math.max(keepChar.last_seen, ...mergeChars.map((c) => c.last_seen));
+    const totalCount = mergeChars.reduce(
+      (sum, char) => sum + char.count,
+      keepChar.count
+    );
+    const earliestFirstSeen = Math.min(
+      keepChar.first_seen,
+      ...mergeChars.map((c) => c.first_seen)
+    );
+    const latestLastSeen = Math.max(
+      keepChar.last_seen,
+      ...mergeChars.map((c) => c.last_seen)
+    );
 
     const db = getInstantDB();
     const now = Date.now();
@@ -311,7 +353,9 @@ export async function mergeSimilarCharacteristics(
     });
 
     // Delete the merged characteristics
-    const deleteTransactions = mergeIds.map((id) => db.tx.profile_characteristics[id].delete());
+    const deleteTransactions = mergeIds.map((id) =>
+      db.tx.profile_characteristics[id].delete()
+    );
 
     await db.transact(deleteTransactions);
 
@@ -328,7 +372,11 @@ export async function mergeSimilarCharacteristics(
       totalCount,
     });
   } catch (error) {
-    logError('Failed to merge characteristics', error as Error, { userId, keepId, mergeIds });
+    logError('Failed to merge characteristics', error as Error, {
+      userId,
+      keepId,
+      mergeIds,
+    });
     throw error;
   }
 }
@@ -352,7 +400,11 @@ export async function findSimilarExisting(
 
   try {
     // Fetch all characteristics for this user
-    const allCharacteristics = await InstantDBService.ProfileCharacteristics.getCharacteristics(userId, 0);
+    const allCharacteristics =
+      await InstantDBService.ProfileCharacteristics.getCharacteristics(
+        userId,
+        0
+      );
 
     // Normalize the new characteristic
     const normalizedNew = normalizeString(characteristic);
@@ -387,7 +439,10 @@ export async function findSimilarExisting(
 
     // Check for similarity match
     for (const existing of allCharacteristics) {
-      const similarity = compareTwoStrings(normalizedNew, normalizeString(existing.characteristic));
+      const similarity = compareTwoStrings(
+        normalizedNew,
+        normalizeString(existing.characteristic)
+      );
 
       if (similarity >= SIMILARITY_THRESHOLD) {
         logInfo('Found similarity match for new characteristic', {
@@ -404,7 +459,10 @@ export async function findSimilarExisting(
     // No similar characteristic found
     return null;
   } catch (error) {
-    logError('Failed to find similar existing characteristic', error as Error, { userId, characteristic });
+    logError('Failed to find similar existing characteristic', error as Error, {
+      userId,
+      characteristic,
+    });
     return null;
   }
 }

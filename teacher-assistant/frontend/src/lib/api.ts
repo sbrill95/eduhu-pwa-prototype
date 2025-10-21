@@ -542,6 +542,75 @@ class ApiClient {
       throw new Error(`Agent execution not completed. Status: ${statusData.status || 'unknown'}`);
     }
   }
+
+  /**
+   * Execute image generation using OpenAI Agents SDK
+   * @param params - Image generation parameters
+   * @returns Image generation response
+   */
+  async executeImageGenerationSdk(params: {
+    prompt?: string;
+    description?: string;
+    size?: '1024x1024' | '1024x1792' | '1792x1024';
+    quality?: 'standard' | 'hd';
+    style?: 'vivid' | 'natural';
+    imageStyle?: 'realistic' | 'cartoon' | 'illustrative' | 'abstract';
+    learningGroup?: string;
+    educationalContext?: string;
+    targetAgeGroup?: string;
+    subject?: string;
+    enhancePrompt?: boolean;
+  }): Promise<{
+    image_url: string;
+    revised_prompt: string;
+    enhanced_prompt?: string;
+    educational_optimized: boolean;
+    title: string;
+    tags: string[];
+    library_id?: string;
+    originalParams: any;
+  }> {
+    const endpoint = '/agents-sdk/image/generate';
+
+    console.log('[ApiClient] 🚀 executeImageGenerationSdk REQUEST', {
+      timestamp: new Date().toISOString(),
+      endpoint,
+      hasPrompt: !!params.prompt,
+      hasDescription: !!params.description,
+      params
+    });
+
+    try {
+      const response = await this.request<{
+        success: boolean;
+        data: any;
+        cost: number;
+        metadata: any;
+        artifacts: any[];
+        timestamp: number;
+      }>(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      console.log('[ApiClient] ✅ executeImageGenerationSdk RESPONSE', {
+        timestamp: new Date().toISOString(),
+        success: response.success,
+        hasImageUrl: !!response.data?.image_url,
+        cost: response.cost
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('[ApiClient] ❌ executeImageGenerationSdk ERROR', {
+        timestamp: new Date().toISOString(),
+        errorType: error?.constructor?.name,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStatus: (error as any)?.status
+      });
+      throw error;
+    }
+  }
 }
 
 export const apiClient = new ApiClient();

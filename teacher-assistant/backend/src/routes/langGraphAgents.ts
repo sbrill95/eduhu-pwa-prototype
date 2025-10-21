@@ -9,7 +9,10 @@ import { z } from 'zod';
 import { agentRegistry } from '../services/agentService';
 import { langGraphAgentService } from '../services/langGraphAgentService';
 import { langGraphImageGenerationAgent } from '../agents/langGraphImageGenerationAgent';
-import { ProgressLevel, progressStreamingService } from '../services/progressStreamingService';
+import {
+  ProgressLevel,
+  progressStreamingService,
+} from '../services/progressStreamingService';
 import { checkRedisHealth } from '../config/redis';
 import { ApiResponse } from '../types';
 import { logInfo, logError } from '../config/logger';
@@ -20,7 +23,10 @@ import { logInfo, logError } from '../config/logger';
 
 // Gemini Image Generation Form Data Schema (Phase 3.2 - CORRECT)
 const ImageGenerationFormSchema = z.object({
-  description: z.string().min(3, 'Description must be at least 3 characters').max(500, 'Description too long'),
+  description: z
+    .string()
+    .min(3, 'Description must be at least 3 characters')
+    .max(500, 'Description too long'),
   imageStyle: z.enum(['realistic', 'cartoon', 'illustrative', 'abstract']),
   // Optional legacy fields for backward compatibility
   prompt: z.string().optional(), // Will be set from description if missing
@@ -41,15 +47,20 @@ const LegacyParamsSchema = z.object({
 // Agent Execution Request Schema
 const AgentExecutionRequestSchema = z.object({
   agentId: z.string().min(1, 'Agent ID is required'),
-  input: z.union([
-    z.string(), // Simple string input
-    ImageGenerationFormSchema, // Gemini form
-    LegacyParamsSchema // Legacy format
-  ]).optional(),
+  input: z
+    .union([
+      z.string(), // Simple string input
+      ImageGenerationFormSchema, // Gemini form
+      LegacyParamsSchema, // Legacy format
+    ])
+    .optional(),
   params: LegacyParamsSchema.optional(),
   userId: z.string().optional(),
   sessionId: z.string().optional(),
-  progressLevel: z.enum(['user_friendly', 'detailed', 'debug']).optional().default('user_friendly'),
+  progressLevel: z
+    .enum(['user_friendly', 'detailed', 'debug'])
+    .optional()
+    .default('user_friendly'),
   confirmExecution: z.boolean().optional().default(false),
 });
 
@@ -76,17 +87,17 @@ router.get('/status', async (req: Request, res: Response) => {
           langgraph_enabled: true,
           redis_status: redisHealth.status,
           redis_latency: redisHealth.latency,
-          agent_service: agentServiceStatus
+          agent_service: agentServiceStatus,
         },
         agents: {
           total: agentRegistry.getAllAgents().length,
           enabled: agentRegistry.getEnabledAgents().length,
-          langgraph_compatible: agentRegistry.getEnabledAgents().filter(
-            agent => 'createWorkflow' in agent
-          ).length
-        }
+          langgraph_compatible: agentRegistry
+            .getEnabledAgents()
+            .filter((agent) => 'createWorkflow' in agent).length,
+        },
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     res.json(response);
@@ -95,7 +106,7 @@ router.get('/status', async (req: Request, res: Response) => {
     const response: ApiResponse = {
       success: false,
       error: 'Failed to retrieve system status',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
     res.status(500).json(response);
   }
@@ -107,7 +118,8 @@ router.get('/status', async (req: Request, res: Response) => {
  *
  * Accepts both legacy format (params.prompt) and new Gemini form format (input object)
  */
-router.post('/execute',
+router.post(
+  '/execute',
   [
     body('agentId').isString().notEmpty().withMessage('Agent ID is required'),
     // Accept both 'params' (legacy) and 'input' (new Gemini format)
@@ -115,10 +127,14 @@ router.post('/execute',
     body('params').optional(),
     body('userId').optional().isString(),
     body('sessionId').optional().isString(),
-    body('progressLevel').optional().isIn(['user_friendly', 'detailed', 'debug'])
+    body('progressLevel')
+      .optional()
+      .isIn(['user_friendly', 'detailed', 'debug'])
       .withMessage('Invalid progress level'),
-    body('confirmExecution').optional().isBoolean()
-      .withMessage('Confirm execution must be boolean')
+    body('confirmExecution')
+      .optional()
+      .isBoolean()
+      .withMessage('Confirm execution must be boolean'),
   ],
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -126,16 +142,16 @@ router.post('/execute',
       const validationResult = AgentExecutionRequestSchema.safeParse(req.body);
 
       if (!validationResult.success) {
-        const errorMessages = validationResult.error.errors.map(err => ({
+        const errorMessages = validationResult.error.errors.map((err) => ({
           field: err.path.join('.'),
-          message: err.message
+          message: err.message,
         }));
 
         const response: ApiResponse = {
           success: false,
           error: 'Validierung fehlgeschlagen',
           details: errorMessages,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
@@ -149,7 +165,7 @@ router.post('/execute',
         userId,
         sessionId,
         progressLevel = 'user_friendly',
-        confirmExecution = false
+        confirmExecution = false,
       } = validatedData;
 
       // Support both legacy format (params.prompt) and new Gemini format (input object)
@@ -170,11 +186,17 @@ router.post('/execute',
             if ('description' in inputObj) {
               // Image generation form: description -> prompt
               params.prompt = inputObj.description;
-              console.log('[langGraphAgents] Using description as prompt:', inputObj.description);
+              console.log(
+                '[langGraphAgents] Using description as prompt:',
+                inputObj.description
+              );
             } else if ('theme' in inputObj) {
               // Worksheet form: theme -> prompt
               params.prompt = inputObj.theme;
-              console.log('[langGraphAgents] Using theme as prompt:', inputObj.theme);
+              console.log(
+                '[langGraphAgents] Using theme as prompt:',
+                inputObj.theme
+              );
             }
           }
 
@@ -186,7 +208,7 @@ router.post('/execute',
           const response: ApiResponse = {
             success: false,
             error: 'Input muss ein String oder Objekt sein',
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           };
           res.status(400).json(response);
           return;
@@ -198,19 +220,27 @@ router.post('/execute',
         const response: ApiResponse = {
           success: false,
           error: 'Entweder "input" oder "params" ist erforderlich',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
       }
 
       // Ensure we have a prompt (either directly or from theme/description)
-      if (!params.prompt || typeof params.prompt !== 'string' || params.prompt.trim().length === 0) {
-        console.log('[langGraphAgents] ❌ Missing prompt. Received params:', params);
+      if (
+        !params.prompt ||
+        typeof params.prompt !== 'string' ||
+        params.prompt.trim().length === 0
+      ) {
+        console.log(
+          '[langGraphAgents] ❌ Missing prompt. Received params:',
+          params
+        );
         const response: ApiResponse = {
           success: false,
-          error: 'Prompt ist erforderlich (als String, input.prompt, input.description, input.theme oder params.prompt)',
-          timestamp: new Date().toISOString()
+          error:
+            'Prompt ist erforderlich (als String, input.prompt, input.description, input.theme oder params.prompt)',
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
@@ -219,7 +249,9 @@ router.post('/execute',
       // Provide default userId if not provided (for testing/development)
       const effectiveUserId = userId || 'anonymous';
 
-      logInfo(`LangGraph agent execution request: ${agentId} for user ${effectiveUserId}`);
+      logInfo(
+        `LangGraph agent execution request: ${agentId} for user ${effectiveUserId}`
+      );
 
       // Check if agent supports LangGraph
       const agent = agentRegistry.getAgent(agentId);
@@ -227,10 +259,10 @@ router.post('/execute',
         const response: ApiResponse = {
           success: false,
           error: `Agent not found: ${agentId}`,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(404).json(response);
-      return;
+        return;
       }
 
       const isLangGraphAgent = 'createWorkflow' in agent;
@@ -238,7 +270,7 @@ router.post('/execute',
         const response: ApiResponse = {
           success: false,
           error: `Agent ${agentId} does not support LangGraph workflows`,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
@@ -260,10 +292,10 @@ router.post('/execute',
               can_execute: canExecute,
               requires_confirmation: true,
               progress_level: progressLevel,
-              workflow_enabled: true
-            }
+              workflow_enabled: true,
+            },
           },
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
 
         res.json(response);
@@ -277,7 +309,7 @@ router.post('/execute',
         userId: effectiveUserId,
         sessionId,
         hasParams: !!params,
-        hasPrompt: !!params.prompt
+        hasPrompt: !!params.prompt,
       });
 
       const executionStartTime = Date.now();
@@ -295,7 +327,7 @@ router.post('/execute',
         success: result.success,
         executionTimeMs: executionTime,
         executionTimeSec: (executionTime / 1000).toFixed(2),
-        hasError: !!result.error
+        hasError: !!result.error,
       });
 
       // TASK-004 & TASK-005: Save image to library_materials and create chat message (for image generation)
@@ -310,10 +342,15 @@ router.post('/execute',
         hasTitle: !!result.data?.title,
         title: result.data?.title,
         sessionId,
-        effectiveUserId
+        effectiveUserId,
       });
 
-      if (result.success && (agentId === 'image-generation' || agentId === 'langgraph-image-generation') && result.data?.image_url) {
+      if (
+        result.success &&
+        (agentId === 'image-generation' ||
+          agentId === 'langgraph-image-generation') &&
+        result.data?.image_url
+      ) {
         console.log('[langGraphAgents] ✅ SAVING TO LIBRARY - conditions met!');
         try {
           const { getInstantDB } = await import('../services/instantdbService');
@@ -321,7 +358,7 @@ router.post('/execute',
 
           console.log('[langGraphAgents] InstantDB status:', {
             dbAvailable: !!db,
-            dbType: db ? typeof db : 'undefined'
+            dbType: db ? typeof db : 'undefined',
           });
 
           if (db) {
@@ -329,14 +366,17 @@ router.post('/execute',
             const imageLibraryId = db.id();
             const imageChatMessageId = db.id();
 
-            const titleToUse = result.data.title || result.data.dalle_title || 'AI-generiertes Bild';
+            const titleToUse =
+              result.data.title ||
+              result.data.dalle_title ||
+              'AI-generiertes Bild';
 
             console.log('[langGraphAgents] Preparing to save image:', {
               libraryId: imageLibraryId,
               title: titleToUse,
               userId: effectiveUserId,
               imageUrlPreview: result.data.image_url.substring(0, 60),
-              hasSessionId: !!sessionId
+              hasSessionId: !!sessionId,
             });
 
             // T023-T025: Prepare and validate metadata for library_materials (same as messages pattern)
@@ -345,26 +385,42 @@ router.post('/execute',
               description: params.prompt || params.description || '',
               imageStyle: params.imageStyle || 'illustrative',
               learningGroup: params.learningGroup || '',
-              subject: params.subject || ''
+              subject: params.subject || '',
             };
 
             // T023: Validate metadata object BEFORE stringifying (FR-010)
-            const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+            const { validateAndStringifyMetadata } = await import(
+              '../utils/metadataValidator'
+            );
             const libraryMetadataObject = {
               type: 'image',
               image_url: result.data.image_url,
               title: titleToUse,
-              originalParams: originalParams
+              originalParams: originalParams,
             };
 
-            const validatedLibraryMetadata = validateAndStringifyMetadata(libraryMetadataObject);
+            const validatedLibraryMetadata = validateAndStringifyMetadata(
+              libraryMetadataObject
+            );
 
             // T024: Log validation failure (FR-010a, FR-011)
             if (!validatedLibraryMetadata) {
-              logError('[langGraphAgents] Library metadata validation failed - saving without metadata', new Error('Metadata validation failed'), { libraryMetadataObject });
-              console.warn('[langGraphAgents] ⚠️ Library metadata validation failed - saving with null metadata');
+              logError(
+                '[langGraphAgents] Library metadata validation failed - saving without metadata',
+                new Error('Metadata validation failed'),
+                { libraryMetadataObject }
+              );
+              console.warn(
+                '[langGraphAgents] ⚠️ Library metadata validation failed - saving with null metadata'
+              );
             } else {
-              logInfo('[langGraphAgents] Library metadata validation successful', { libraryId: imageLibraryId, metadataSize: validatedLibraryMetadata.length });
+              logInfo(
+                '[langGraphAgents] Library metadata validation successful',
+                {
+                  libraryId: imageLibraryId,
+                  metadataSize: validatedLibraryMetadata.length,
+                }
+              );
             }
 
             // TASK-004: Save image to library_materials with German title
@@ -382,31 +438,45 @@ router.post('/execute',
                 is_favorite: false,
                 usage_count: 0,
                 source_session_id: sessionId || null,
-                metadata: validatedLibraryMetadata // T025: Stringified JSON or null (FR-004)
-              })
+                metadata: validatedLibraryMetadata, // T025: Stringified JSON or null (FR-004)
+              }),
             ]);
 
             libraryId = imageLibraryId;
-            console.log('[langGraphAgents] ✅ Image saved to library_materials:', {
+            console.log(
+              '[langGraphAgents] ✅ Image saved to library_materials:',
+              {
+                libraryId,
+                userId: effectiveUserId,
+                title: titleToUse,
+              }
+            );
+            logInfo(`Image saved to library_materials`, {
               libraryId,
               userId: effectiveUserId,
-              title: titleToUse
+              title: titleToUse,
             });
-            logInfo(`Image saved to library_materials`, { libraryId, userId: effectiveUserId, title: titleToUse });
 
             // T036: Trigger automatic tagging (async, non-blocking)
-            console.log('[ImageAgent] Triggering automatic tagging for:', imageLibraryId);
+            console.log(
+              '[ImageAgent] Triggering automatic tagging for:',
+              imageLibraryId
+            );
 
-            const VisionService = (await import('../services/visionService')).default;
+            const VisionService = (await import('../services/visionService'))
+              .default;
 
             VisionService.tagImage(result.data.image_url, {
               title: titleToUse,
               description: result.data.revised_prompt || params.prompt || '',
               subject: params.subject || originalParams.subject || '',
-              grade: params.learningGroup || originalParams.learningGroup || ''
+              grade: params.learningGroup || originalParams.learningGroup || '',
             })
               .then(async (tagResult) => {
-                console.log(`[ImageAgent] Tagging complete for ${imageLibraryId}:`, tagResult.tags);
+                console.log(
+                  `[ImageAgent] Tagging complete for ${imageLibraryId}:`,
+                  tagResult.tags
+                );
 
                 // T037: Update metadata with tags
                 try {
@@ -414,25 +484,31 @@ router.post('/execute',
                   const currentMaterial = await db.queryOnce({
                     library_materials: {
                       $: {
-                        where: { id: imageLibraryId }
-                      }
-                    }
+                        where: { id: imageLibraryId },
+                      },
+                    },
                   });
 
                   const material = currentMaterial.library_materials?.[0];
                   if (!material) {
-                    console.warn('[ImageAgent] Material not found for tagging update:', imageLibraryId);
+                    console.warn(
+                      '[ImageAgent] Material not found for tagging update:',
+                      imageLibraryId
+                    );
                     return;
                   }
 
                   // Parse existing metadata
                   let metadata = {};
                   try {
-                    metadata = typeof material.metadata === 'string'
-                      ? JSON.parse(material.metadata)
-                      : (material.metadata || {});
+                    metadata =
+                      typeof material.metadata === 'string'
+                        ? JSON.parse(material.metadata)
+                        : material.metadata || {};
                   } catch (e) {
-                    console.warn('[ImageAgent] Failed to parse metadata, using empty object');
+                    console.warn(
+                      '[ImageAgent] Failed to parse metadata, using empty object'
+                    );
                   }
 
                   // Add tags and tagging info
@@ -443,37 +519,53 @@ router.post('/execute',
                       generatedAt: Date.now(),
                       model: tagResult.model,
                       confidence: tagResult.confidence,
-                      processingTime: tagResult.processingTime
-                    }
+                      processingTime: tagResult.processingTime,
+                    },
                   };
 
                   // Update InstantDB
                   await db.transact([
                     db.tx.library_materials[imageLibraryId].update({
-                      metadata: JSON.stringify(updatedMetadata)
-                    })
+                      metadata: JSON.stringify(updatedMetadata),
+                    }),
                   ]);
 
-                  console.log(`[ImageAgent] ✅ Tags saved for ${imageLibraryId}:`, tagResult.tags.join(', '));
-                  logInfo(`[ImageAgent] Tags saved`, { materialId: imageLibraryId, tags: tagResult.tags, confidence: tagResult.confidence });
+                  console.log(
+                    `[ImageAgent] ✅ Tags saved for ${imageLibraryId}:`,
+                    tagResult.tags.join(', ')
+                  );
+                  logInfo(`[ImageAgent] Tags saved`, {
+                    materialId: imageLibraryId,
+                    tags: tagResult.tags,
+                    confidence: tagResult.confidence,
+                  });
                 } catch (updateError: any) {
-                  console.error('[ImageAgent] Failed to save tags:', updateError.message);
+                  console.error(
+                    '[ImageAgent] Failed to save tags:',
+                    updateError.message
+                  );
                   logError('[ImageAgent] Failed to save tags', updateError);
                 }
               })
               .catch((error) => {
-                console.warn('[ImageAgent] Tagging failed (non-blocking):', error.message);
+                console.warn(
+                  '[ImageAgent] Tagging failed (non-blocking):',
+                  error.message
+                );
                 logError('[ImageAgent] Tagging failed (non-blocking)', error);
                 // Don't throw - image creation already succeeded
               });
 
             // TASK-005: Create chat message with image (clean UI - no prompt/metadata)
             if (sessionId) {
-              console.log('[langGraphAgents] Creating chat message with image:', {
-                messageId: imageChatMessageId,
-                sessionId,
-                libraryId: imageLibraryId
-              });
+              console.log(
+                '[langGraphAgents] Creating chat message with image:',
+                {
+                  messageId: imageChatMessageId,
+                  sessionId,
+                  libraryId: imageLibraryId,
+                }
+              );
 
               // T020: Use originalParams from agent result (FR-008)
               // Agent now returns originalParams in result.data
@@ -481,27 +573,39 @@ router.post('/execute',
                 description: params.prompt || '',
                 imageStyle: 'illustrative',
                 learningGroup: '',
-                subject: ''
+                subject: '',
               };
 
               // T018 & T019: Validate metadata before saving (FR-010c backend enforcement)
-              const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+              const { validateAndStringifyMetadata } = await import(
+                '../utils/metadataValidator'
+              );
               const metadataObject = {
                 type: 'image',
                 image_url: result.data.image_url,
                 title: titleToUse,
-                originalParams: originalParams
+                originalParams: originalParams,
               };
 
-              const validatedMetadata = validateAndStringifyMetadata(metadataObject);
+              const validatedMetadata =
+                validateAndStringifyMetadata(metadataObject);
 
               if (!validatedMetadata) {
                 // T019: Log validation failure (FR-011)
-                logError('[langGraphAgents] Metadata validation failed - saving message without metadata', new Error('Metadata validation failed'), { metadataObject });
-                console.warn('[langGraphAgents] ⚠️ Metadata validation failed - saving with null metadata');
+                logError(
+                  '[langGraphAgents] Metadata validation failed - saving message without metadata',
+                  new Error('Metadata validation failed'),
+                  { metadataObject }
+                );
+                console.warn(
+                  '[langGraphAgents] ⚠️ Metadata validation failed - saving with null metadata'
+                );
               } else {
                 // T019: Log validation success (FR-011)
-                logInfo('[langGraphAgents] Metadata validation successful', { messageId: imageChatMessageId, metadataSize: validatedMetadata.length });
+                logInfo('[langGraphAgents] Metadata validation successful', {
+                  messageId: imageChatMessageId,
+                  metadataSize: validatedMetadata.length,
+                });
               }
 
               // BUG-025 FIX: Add required relationship fields (session_id, user_id)
@@ -514,9 +618,9 @@ router.post('/execute',
                   message_index: 0, // Will be updated by frontend
                   is_edited: false, // BUG-025: Required field
                   metadata: validatedMetadata, // T017: Use validated & stringified metadata (FR-004)
-                  session_id: sessionId,     // BUG-025 FIX: Correct field name
-                  user_id: effectiveUserId   // BUG-025 FIX: Correct field name
-                })
+                  session_id: sessionId, // BUG-025 FIX: Correct field name
+                  user_id: effectiveUserId, // BUG-025 FIX: Correct field name
+                }),
               ]);
 
               messageId = imageChatMessageId;
@@ -524,44 +628,67 @@ router.post('/execute',
                 messageId,
                 sessionId,
                 libraryId,
-                hasMetadata: !!validatedMetadata
+                hasMetadata: !!validatedMetadata,
               });
-              logInfo(`Image chat message created`, { messageId, sessionId, libraryId, metadataValidated: !!validatedMetadata });
+              logInfo(`Image chat message created`, {
+                messageId,
+                sessionId,
+                libraryId,
+                metadataValidated: !!validatedMetadata,
+              });
             } else {
-              console.log('[langGraphAgents] ⚠️ No sessionId - skipping chat message creation');
+              console.log(
+                '[langGraphAgents] ⚠️ No sessionId - skipping chat message creation'
+              );
             }
           } else {
             console.error('[langGraphAgents] ❌ InstantDB not available');
-            logError('InstantDB not available for saving image to library', new Error('DB not initialized'));
+            logError(
+              'InstantDB not available for saving image to library',
+              new Error('DB not initialized')
+            );
           }
         } catch (error) {
-          console.error('[langGraphAgents] ❌ Failed to save to library/message:', {
-            error: (error as Error).message,
-            stack: (error as Error).stack
-          });
+          console.error(
+            '[langGraphAgents] ❌ Failed to save to library/message:',
+            {
+              error: (error as Error).message,
+              stack: (error as Error).stack,
+            }
+          );
           logError('Failed to save image to library/message', error as Error);
           // Continue - don't fail the whole request if library save fails
         }
       }
 
       const statusCode = result.success ? 200 : 400;
-      const response: ApiResponse = {
-        success: result.success,
-        data: result.success ? {
-          ...result.data,
-          library_id: libraryId, // NEW: Library ID for frontend
-          message_id: messageId, // NEW: Message ID for frontend
-          workflow_execution: true,
-          progress_level: progressLevel
-        } : undefined,
-        error: result.success ? undefined : result.error,
-        metadata: {
-          ...result.metadata,
-          langgraph_enabled: true,
-          progress_streaming: true
-        },
-        timestamp: new Date().toISOString()
-      };
+      const response: ApiResponse = result.success
+        ? {
+            success: true,
+            data: {
+              ...result.data,
+              library_id: libraryId, // NEW: Library ID for frontend
+              message_id: messageId, // NEW: Message ID for frontend
+              workflow_execution: true,
+              progress_level: progressLevel,
+            },
+            metadata: {
+              ...result.metadata,
+              langgraph_enabled: true,
+              progress_streaming: true,
+            },
+            timestamp: new Date().toISOString(),
+          }
+        : {
+            success: false,
+            error: result.error || 'Agent execution failed',
+            metadata: {
+              ...result.metadata,
+              langgraph_enabled: true,
+              progress_streaming: true,
+            },
+            timestamp: new Date().toISOString(),
+          };
 
       console.log('[langGraphAgents] Sending response to frontend', {
         timestamp: new Date().toISOString(),
@@ -570,17 +697,18 @@ router.post('/execute',
         hasImageUrl: !!result.data?.image_url,
         hasLibraryId: !!libraryId,
         totalRequestTimeMs: Date.now() - executionStartTime,
-        totalRequestTimeSec: ((Date.now() - executionStartTime) / 1000).toFixed(2)
+        totalRequestTimeSec: ((Date.now() - executionStartTime) / 1000).toFixed(
+          2
+        ),
       });
 
       res.status(statusCode).json(response);
-
     } catch (error) {
       logError('LangGraph agent execution failed', error as Error);
       const response: ApiResponse = {
         success: false,
         error: 'Agent execution failed',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
       res.status(500).json(response);
     }
@@ -591,15 +719,26 @@ router.post('/execute',
  * POST /api/langgraph-agents/image/generate
  * Enhanced image generation with LangGraph workflow
  */
-router.post('/image/generate',
+router.post(
+  '/image/generate',
   [
-    body('prompt').isString().notEmpty().withMessage('Prompt is required')
-      .isLength({ max: 1000 }).withMessage('Prompt must be less than 1000 characters'),
-    body('size').optional().isIn(['1024x1024', '1024x1792', '1792x1024'])
+    body('prompt')
+      .isString()
+      .notEmpty()
+      .withMessage('Prompt is required')
+      .isLength({ max: 1000 })
+      .withMessage('Prompt must be less than 1000 characters'),
+    body('size')
+      .optional()
+      .isIn(['1024x1024', '1024x1792', '1792x1024'])
       .withMessage('Invalid size option'),
-    body('quality').optional().isIn(['standard', 'hd'])
+    body('quality')
+      .optional()
+      .isIn(['standard', 'hd'])
       .withMessage('Invalid quality option'),
-    body('style').optional().isIn(['vivid', 'natural'])
+    body('style')
+      .optional()
+      .isIn(['vivid', 'natural'])
       .withMessage('Invalid style option'),
     body('userId').isString().notEmpty().withMessage('User ID is required'),
     body('sessionId').optional().isString(),
@@ -607,8 +746,10 @@ router.post('/image/generate',
     body('educationalContext').optional().isString().isLength({ max: 200 }),
     body('targetAgeGroup').optional().isString().isLength({ max: 50 }),
     body('subject').optional().isString().isLength({ max: 100 }),
-    body('progressLevel').optional().isIn(['user_friendly', 'detailed', 'debug']),
-    body('confirmExecution').optional().isBoolean()
+    body('progressLevel')
+      .optional()
+      .isIn(['user_friendly', 'detailed', 'debug']),
+    body('confirmExecution').optional().isBoolean(),
   ],
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -619,7 +760,7 @@ router.post('/image/generate',
           success: false,
           error: 'Validation failed',
           details: errors.array(),
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
@@ -637,7 +778,7 @@ router.post('/image/generate',
         targetAgeGroup,
         subject,
         progressLevel = 'user_friendly',
-        confirmExecution = false
+        confirmExecution = false,
       } = req.body;
 
       // Prepare enhanced parameters for LangGraph image generation
@@ -649,10 +790,12 @@ router.post('/image/generate',
         ...(enhancePrompt !== undefined && { enhancePrompt }),
         ...(educationalContext && { educationalContext }),
         ...(targetAgeGroup && { targetAgeGroup }),
-        ...(subject && { subject })
+        ...(subject && { subject }),
       };
 
-      logInfo(`Enhanced image generation request for user ${userId}: "${prompt}"`);
+      logInfo(
+        `Enhanced image generation request for user ${userId}: "${prompt}"`
+      );
 
       // If not confirmed, return execution preview
       if (!confirmExecution) {
@@ -661,10 +804,10 @@ router.post('/image/generate',
           const response: ApiResponse = {
             success: false,
             error: 'LangGraph image generation agent not found',
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           };
           res.status(404).json(response);
-      return;
+          return;
         }
 
         const estimatedCost = agent.estimateCost(params);
@@ -682,19 +825,23 @@ router.post('/image/generate',
               requires_confirmation: true,
               enhanced_features: {
                 prompt_enhancement: enhancePrompt !== false,
-                educational_optimization: !!(educationalContext || targetAgeGroup || subject),
+                educational_optimization: !!(
+                  educationalContext ||
+                  targetAgeGroup ||
+                  subject
+                ),
                 workflow_management: true,
                 progress_streaming: true,
-                error_recovery: true
+                error_recovery: true,
               },
-              progress_level: progressLevel
-            }
+              progress_level: progressLevel,
+            },
           },
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
 
         res.json(response);
-        return;  // ✅ FIX: Add return to prevent execution code from running
+        return; // ✅ FIX: Add return to prevent execution code from running
       }
 
       // Execute enhanced image generation with LangGraph workflow
@@ -719,31 +866,50 @@ router.post('/image/generate',
             const imageLibraryId = db.id();
             const imageChatMessageId = db.id();
 
-            const titleToUse = result.data.title || result.data.dalle_title || 'AI-generiertes Bild';
+            const titleToUse =
+              result.data.title ||
+              result.data.dalle_title ||
+              'AI-generiertes Bild';
 
             // US4 FIX: Prepare and validate metadata for library_materials
             const originalParamsForLibrary = result.data.originalParams || {
               description: params.prompt || '',
               imageStyle: 'illustrative',
               learningGroup: '',
-              subject: ''
+              subject: '',
             };
 
-            const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+            const { validateAndStringifyMetadata } = await import(
+              '../utils/metadataValidator'
+            );
             const libraryMetadataObject = {
               type: 'image',
               image_url: result.data.image_url,
               title: titleToUse,
-              originalParams: originalParamsForLibrary
+              originalParams: originalParamsForLibrary,
             };
 
-            const validatedLibraryMetadata = validateAndStringifyMetadata(libraryMetadataObject);
+            const validatedLibraryMetadata = validateAndStringifyMetadata(
+              libraryMetadataObject
+            );
 
             if (!validatedLibraryMetadata) {
-              logError('[langGraphAgents] Library metadata validation failed - saving without metadata', new Error('Metadata validation failed'), { libraryMetadataObject });
-              console.warn('[langGraphAgents] Library metadata validation failed - saving with null metadata');
+              logError(
+                '[langGraphAgents] Library metadata validation failed - saving without metadata',
+                new Error('Metadata validation failed'),
+                { libraryMetadataObject }
+              );
+              console.warn(
+                '[langGraphAgents] Library metadata validation failed - saving with null metadata'
+              );
             } else {
-              logInfo('[langGraphAgents] Library metadata validation successful', { libraryId: imageLibraryId, metadataSize: validatedLibraryMetadata.length });
+              logInfo(
+                '[langGraphAgents] Library metadata validation successful',
+                {
+                  libraryId: imageLibraryId,
+                  metadataSize: validatedLibraryMetadata.length,
+                }
+              );
             }
 
             // TASK-004: Save image to library_materials with German title
@@ -760,26 +926,41 @@ router.post('/image/generate',
                 is_favorite: false,
                 usage_count: 0,
                 source_session_id: sessionId || null,
-                metadata: validatedLibraryMetadata // US4 FIX: Include originalParams in metadata
-              })
+                metadata: validatedLibraryMetadata, // US4 FIX: Include originalParams in metadata
+              }),
             ]);
 
             libraryId = imageLibraryId;
-            logInfo(`Image saved to library_materials`, { libraryId, userId, title: titleToUse, metadataValidated: !!validatedLibraryMetadata });
+            logInfo(`Image saved to library_materials`, {
+              libraryId,
+              userId,
+              title: titleToUse,
+              metadataValidated: !!validatedLibraryMetadata,
+            });
 
             // T036: Trigger automatic tagging (async, non-blocking)
-            console.log('[ImageAgent] Triggering automatic tagging for:', imageLibraryId);
+            console.log(
+              '[ImageAgent] Triggering automatic tagging for:',
+              imageLibraryId
+            );
 
-            const VisionService = (await import('../services/visionService')).default;
+            const VisionService = (await import('../services/visionService'))
+              .default;
 
             VisionService.tagImage(result.data.image_url, {
               title: titleToUse,
               description: result.data.revised_prompt || params.prompt || '',
               subject: params.subject || originalParamsForLibrary.subject || '',
-              grade: params.targetAgeGroup || originalParamsForLibrary.learningGroup || ''
+              grade:
+                params.targetAgeGroup ||
+                originalParamsForLibrary.learningGroup ||
+                '',
             })
               .then(async (tagResult) => {
-                console.log(`[ImageAgent] Tagging complete for ${imageLibraryId}:`, tagResult.tags);
+                console.log(
+                  `[ImageAgent] Tagging complete for ${imageLibraryId}:`,
+                  tagResult.tags
+                );
 
                 // T037: Update metadata with tags
                 try {
@@ -787,25 +968,31 @@ router.post('/image/generate',
                   const currentMaterial = await db.queryOnce({
                     library_materials: {
                       $: {
-                        where: { id: imageLibraryId }
-                      }
-                    }
+                        where: { id: imageLibraryId },
+                      },
+                    },
                   });
 
                   const material = currentMaterial.library_materials?.[0];
                   if (!material) {
-                    console.warn('[ImageAgent] Material not found for tagging update:', imageLibraryId);
+                    console.warn(
+                      '[ImageAgent] Material not found for tagging update:',
+                      imageLibraryId
+                    );
                     return;
                   }
 
                   // Parse existing metadata
                   let metadata = {};
                   try {
-                    metadata = typeof material.metadata === 'string'
-                      ? JSON.parse(material.metadata)
-                      : (material.metadata || {});
+                    metadata =
+                      typeof material.metadata === 'string'
+                        ? JSON.parse(material.metadata)
+                        : material.metadata || {};
                   } catch (e) {
-                    console.warn('[ImageAgent] Failed to parse metadata, using empty object');
+                    console.warn(
+                      '[ImageAgent] Failed to parse metadata, using empty object'
+                    );
                   }
 
                   // Add tags and tagging info
@@ -816,26 +1003,39 @@ router.post('/image/generate',
                       generatedAt: Date.now(),
                       model: tagResult.model,
                       confidence: tagResult.confidence,
-                      processingTime: tagResult.processingTime
-                    }
+                      processingTime: tagResult.processingTime,
+                    },
                   };
 
                   // Update InstantDB
                   await db.transact([
                     db.tx.library_materials[imageLibraryId].update({
-                      metadata: JSON.stringify(updatedMetadata)
-                    })
+                      metadata: JSON.stringify(updatedMetadata),
+                    }),
                   ]);
 
-                  console.log(`[ImageAgent] ✅ Tags saved for ${imageLibraryId}:`, tagResult.tags.join(', '));
-                  logInfo(`[ImageAgent] Tags saved`, { materialId: imageLibraryId, tags: tagResult.tags, confidence: tagResult.confidence });
+                  console.log(
+                    `[ImageAgent] ✅ Tags saved for ${imageLibraryId}:`,
+                    tagResult.tags.join(', ')
+                  );
+                  logInfo(`[ImageAgent] Tags saved`, {
+                    materialId: imageLibraryId,
+                    tags: tagResult.tags,
+                    confidence: tagResult.confidence,
+                  });
                 } catch (updateError: any) {
-                  console.error('[ImageAgent] Failed to save tags:', updateError.message);
+                  console.error(
+                    '[ImageAgent] Failed to save tags:',
+                    updateError.message
+                  );
                   logError('[ImageAgent] Failed to save tags', updateError);
                 }
               })
               .catch((error) => {
-                console.warn('[ImageAgent] Tagging failed (non-blocking):', error.message);
+                console.warn(
+                  '[ImageAgent] Tagging failed (non-blocking):',
+                  error.message
+                );
                 logError('[ImageAgent] Tagging failed (non-blocking)', error);
                 // Don't throw - image creation already succeeded
               });
@@ -847,25 +1047,44 @@ router.post('/image/generate',
                 description: params.prompt || '',
                 imageStyle: 'illustrative',
                 learningGroup: '',
-                subject: ''
+                subject: '',
               };
 
               // US4 FIX: Validate metadata before saving (same as /execute endpoint)
-              const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+              const { validateAndStringifyMetadata } = await import(
+                '../utils/metadataValidator'
+              );
               const messageMetadataObject = {
                 type: 'image',
                 image_url: result.data.image_url,
-                title: result.data.title || result.data.dalle_title || 'AI-generiertes Bild',
-                originalParams: originalParams
+                title:
+                  result.data.title ||
+                  result.data.dalle_title ||
+                  'AI-generiertes Bild',
+                originalParams: originalParams,
               };
 
-              const validatedMessageMetadata = validateAndStringifyMetadata(messageMetadataObject);
+              const validatedMessageMetadata = validateAndStringifyMetadata(
+                messageMetadataObject
+              );
 
               if (!validatedMessageMetadata) {
-                logError('[langGraphAgents] Message metadata validation failed - saving without metadata', new Error('Metadata validation failed'), { messageMetadataObject });
-                console.warn('[langGraphAgents] Message metadata validation failed - saving with null metadata');
+                logError(
+                  '[langGraphAgents] Message metadata validation failed - saving without metadata',
+                  new Error('Metadata validation failed'),
+                  { messageMetadataObject }
+                );
+                console.warn(
+                  '[langGraphAgents] Message metadata validation failed - saving with null metadata'
+                );
               } else {
-                logInfo('[langGraphAgents] Message metadata validation successful', { messageId: imageChatMessageId, metadataSize: validatedMessageMetadata.length });
+                logInfo(
+                  '[langGraphAgents] Message metadata validation successful',
+                  {
+                    messageId: imageChatMessageId,
+                    metadataSize: validatedMessageMetadata.length,
+                  }
+                );
               }
 
               // BUG-025 FIX: Add required relationship fields (session_id, user_id)
@@ -878,15 +1097,23 @@ router.post('/image/generate',
                   is_edited: false,
                   metadata: validatedMessageMetadata, // US4 FIX: Use validated metadata with originalParams
                   session_id: sessionId, // BUG-025: Link to chat_sessions
-                  user_id: userId        // BUG-025: Link to users
-                })
+                  user_id: userId, // BUG-025: Link to users
+                }),
               ]);
 
               messageId = imageChatMessageId;
-              logInfo(`Image chat message created`, { messageId, sessionId, libraryId, metadataValidated: !!validatedMessageMetadata });
+              logInfo(`Image chat message created`, {
+                messageId,
+                sessionId,
+                libraryId,
+                metadataValidated: !!validatedMessageMetadata,
+              });
             }
           } else {
-            logError('InstantDB not available for saving image to library', new Error('DB not initialized'));
+            logError(
+              'InstantDB not available for saving image to library',
+              new Error('DB not initialized')
+            );
           }
         } catch (error) {
           logError('Failed to save image to library/message', error as Error);
@@ -895,40 +1122,44 @@ router.post('/image/generate',
       }
 
       const statusCode = result.success ? 200 : 400;
-      const response: ApiResponse = {
-        success: result.success,
-        data: result.success ? {
-          executionId: result.metadata?.executionId,  // ✅ FIX: Include executionId for frontend tracking
-          image_url: result.data?.image_url,
-          revised_prompt: result.data?.revised_prompt,
-          enhanced_prompt: result.data?.enhanced_prompt,
-          title: result.data?.title, // German title from ChatGPT
-          dalle_title: result.data?.dalle_title, // English fallback
-          quality_score: result.data?.quality_score,
-          educational_optimized: result.data?.educational_optimized,
-          cost: result.cost,
-          library_id: libraryId, // NEW: Library ID for frontend
-          message_id: messageId, // NEW: Message ID for frontend
-          metadata: {
-            ...result.metadata,
-            langgraph_workflow: true,
-            educational_context: educationalContext,
-            target_age_group: targetAgeGroup,
-            subject: subject
+      const response: ApiResponse = result.success
+        ? {
+            success: true,
+            data: {
+              executionId: result.metadata?.executionId, // ✅ FIX: Include executionId for frontend tracking
+              image_url: result.data?.image_url,
+              revised_prompt: result.data?.revised_prompt,
+              enhanced_prompt: result.data?.enhanced_prompt,
+              title: result.data?.title, // German title from ChatGPT
+              dalle_title: result.data?.dalle_title, // English fallback
+              quality_score: result.data?.quality_score,
+              educational_optimized: result.data?.educational_optimized,
+              cost: result.cost,
+              library_id: libraryId, // NEW: Library ID for frontend
+              message_id: messageId, // NEW: Message ID for frontend
+              metadata: {
+                ...result.metadata,
+                langgraph_workflow: true,
+                educational_context: educationalContext,
+                target_age_group: targetAgeGroup,
+                subject: subject,
+              },
+            },
+            timestamp: new Date().toISOString(),
           }
-        } : undefined,
-        error: result.success ? undefined : result.error,
-        timestamp: new Date().toISOString()
-      };
+        : {
+            success: false,
+            error: result.error || 'Enhanced image generation failed',
+            timestamp: new Date().toISOString(),
+          };
 
       res.status(statusCode).json(response);
-
     } catch (error) {
       logError('Enhanced image generation failed', error as Error);
       const response: ApiResponse = {
         success: false,
         error: 'Enhanced image generation failed',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
       res.status(500).json(response);
     }
@@ -939,9 +1170,13 @@ router.post('/image/generate',
  * GET /api/langgraph-agents/execution/:executionId/status
  * Get execution status and progress
  */
-router.get('/execution/:executionId/status',
+router.get(
+  '/execution/:executionId/status',
   [
-    param('executionId').isString().notEmpty().withMessage('Execution ID is required')
+    param('executionId')
+      .isString()
+      .notEmpty()
+      .withMessage('Execution ID is required'),
   ],
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -951,7 +1186,7 @@ router.get('/execution/:executionId/status',
           success: false,
           error: 'Validation failed',
           details: errors.array(),
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
@@ -964,22 +1199,23 @@ router.get('/execution/:executionId/status',
         const response: ApiResponse = {
           success: false,
           error: 'Execution ID is required',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
       }
 
-      const executionStatus = await langGraphAgentService.getExecutionStatus(executionId);
+      const executionStatus =
+        await langGraphAgentService.getExecutionStatus(executionId);
 
       if (!executionStatus) {
         const response: ApiResponse = {
           success: false,
           error: 'Execution not found',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(404).json(response);
-      return;
+        return;
       }
 
       const response: ApiResponse = {
@@ -987,19 +1223,18 @@ router.get('/execution/:executionId/status',
         data: {
           execution_id: executionId,
           ...executionStatus,
-          langgraph_managed: true
+          langgraph_managed: true,
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       res.json(response);
-
     } catch (error) {
       logError('Failed to get execution status', error as Error);
       const response: ApiResponse = {
         success: false,
         error: 'Failed to retrieve execution status',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
       res.status(500).json(response);
     }
@@ -1010,10 +1245,14 @@ router.get('/execution/:executionId/status',
  * POST /api/langgraph-agents/execution/:executionId/cancel
  * Cancel an ongoing execution
  */
-router.post('/execution/:executionId/cancel',
+router.post(
+  '/execution/:executionId/cancel',
   [
-    param('executionId').isString().notEmpty().withMessage('Execution ID is required'),
-    body('userId').isString().notEmpty().withMessage('User ID is required')
+    param('executionId')
+      .isString()
+      .notEmpty()
+      .withMessage('Execution ID is required'),
+    body('userId').isString().notEmpty().withMessage('User ID is required'),
   ],
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -1023,7 +1262,7 @@ router.post('/execution/:executionId/cancel',
           success: false,
           error: 'Validation failed',
           details: errors.array(),
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
@@ -1037,21 +1276,24 @@ router.post('/execution/:executionId/cancel',
         const response: ApiResponse = {
           success: false,
           error: 'Execution ID is required',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
       }
 
-      logInfo(`Cancellation request for execution ${executionId} by user ${userId}`);
+      logInfo(
+        `Cancellation request for execution ${executionId} by user ${userId}`
+      );
 
-      const cancelled = await langGraphAgentService.cancelExecution(executionId);
+      const cancelled =
+        await langGraphAgentService.cancelExecution(executionId);
 
       if (!cancelled) {
         const response: ApiResponse = {
           success: false,
           error: 'Failed to cancel execution',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         res.status(400).json(response);
         return;
@@ -1063,19 +1305,18 @@ router.post('/execution/:executionId/cancel',
           execution_id: executionId,
           cancelled: true,
           cancelled_by: userId,
-          cancelled_at: new Date().toISOString()
+          cancelled_at: new Date().toISOString(),
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       res.json(response);
-
     } catch (error) {
       logError('Failed to cancel execution', error as Error);
       const response: ApiResponse = {
         success: false,
         error: 'Failed to cancel execution',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
       res.status(500).json(response);
     }
@@ -1086,56 +1327,60 @@ router.post('/execution/:executionId/cancel',
  * GET /api/langgraph-agents/progress/websocket-info
  * Get WebSocket connection information for progress streaming
  */
-router.get('/progress/websocket-info', async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { userId, executionId, level = 'user_friendly' } = req.query;
+router.get(
+  '/progress/websocket-info',
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { userId, executionId, level = 'user_friendly' } = req.query;
 
-    if (!userId) {
+      if (!userId) {
+        const response: ApiResponse = {
+          success: false,
+          error: 'User ID is required',
+          timestamp: new Date().toISOString(),
+        };
+        res.status(400).json(response);
+        return;
+      }
+
+      const wsUrl = new URL(
+        `ws://localhost:${progressStreamingService.getWebSocketPort()}`
+      );
+      wsUrl.searchParams.set('userId', userId as string);
+      wsUrl.searchParams.set('level', level as string);
+
+      if (executionId) {
+        wsUrl.searchParams.set('executionId', executionId as string);
+      }
+
+      const response: ApiResponse = {
+        success: true,
+        data: {
+          websocket_url: wsUrl.toString(),
+          protocols: ['progress-streaming'],
+          connection_info: {
+            user_id: userId,
+            progress_level: level,
+            execution_id: executionId || null,
+            auto_reconnect: true,
+            heartbeat_interval: 30000,
+          },
+        },
+        timestamp: new Date().toISOString(),
+      };
+
+      res.json(response);
+    } catch (error) {
+      logError('Failed to get WebSocket info', error as Error);
       const response: ApiResponse = {
         success: false,
-        error: 'User ID is required',
-        timestamp: new Date().toISOString()
+        error: 'Failed to get WebSocket connection information',
+        timestamp: new Date().toISOString(),
       };
-      res.status(400).json(response);
-      return;
+      res.status(500).json(response);
     }
-
-    const wsUrl = new URL(`ws://localhost:${progressStreamingService.getWebSocketPort()}`);
-    wsUrl.searchParams.set('userId', userId as string);
-    wsUrl.searchParams.set('level', level as string);
-
-    if (executionId) {
-      wsUrl.searchParams.set('executionId', executionId as string);
-    }
-
-    const response: ApiResponse = {
-      success: true,
-      data: {
-        websocket_url: wsUrl.toString(),
-        protocols: ['progress-streaming'],
-        connection_info: {
-          user_id: userId,
-          progress_level: level,
-          execution_id: executionId || null,
-          auto_reconnect: true,
-          heartbeat_interval: 30000
-        }
-      },
-      timestamp: new Date().toISOString()
-    };
-
-    res.json(response);
-
-  } catch (error) {
-    logError('Failed to get WebSocket info', error as Error);
-    const response: ApiResponse = {
-      success: false,
-      error: 'Failed to get WebSocket connection information',
-      timestamp: new Date().toISOString()
-    };
-    res.status(500).json(response);
   }
-});
+);
 
 /**
  * GET /api/langgraph-agents/available
@@ -1144,9 +1389,11 @@ router.get('/progress/websocket-info', async (req: Request, res: Response): Prom
 router.get('/available', async (req: Request, res: Response): Promise<void> => {
   try {
     const allAgents = agentRegistry.getAllAgents();
-    const langGraphAgents = allAgents.filter(agent => 'createWorkflow' in agent);
+    const langGraphAgents = allAgents.filter(
+      (agent) => 'createWorkflow' in agent
+    );
 
-    const availableAgents = langGraphAgents.map(agent => ({
+    const availableAgents = langGraphAgents.map((agent) => ({
       id: agent.id,
       name: agent.name,
       description: agent.description,
@@ -1158,20 +1405,20 @@ router.get('/available', async (req: Request, res: Response): Promise<void> => {
         supports_workflows: true,
         supports_streaming: true,
         supports_checkpoints: true,
-        cost_estimation: true
+        cost_estimation: true,
       },
       capabilities: {
         workflow_management: true,
         progress_tracking: true,
         state_persistence: true,
         error_recovery: true,
-        real_time_updates: true
+        real_time_updates: true,
       },
       metadata: {
         langgraph_version: '0.4.9',
         last_updated: new Date().toISOString(),
-        execution_count: 0 // Could be retrieved from usage stats
-      }
+        execution_count: 0, // Could be retrieved from usage stats
+      },
     }));
 
     const response: ApiResponse = {
@@ -1179,15 +1426,15 @@ router.get('/available', async (req: Request, res: Response): Promise<void> => {
       data: {
         agents: availableAgents,
         total_count: availableAgents.length,
-        enabled_count: availableAgents.filter(agent => agent.enabled).length,
+        enabled_count: availableAgents.filter((agent) => agent.enabled).length,
         system_info: {
           langgraph_enabled: true,
           redis_connected: true, // Should check redis health
           workflow_support: true,
-          streaming_support: true
-        }
+          streaming_support: true,
+        },
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     res.json(response);
@@ -1196,7 +1443,7 @@ router.get('/available', async (req: Request, res: Response): Promise<void> => {
     const response: ApiResponse = {
       success: false,
       error: 'Failed to retrieve available agents',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
     res.status(500).json(response);
   }
@@ -1206,57 +1453,62 @@ router.get('/available', async (req: Request, res: Response): Promise<void> => {
  * GET /api/langgraph-agents/agents/langgraph-compatible
  * Get all LangGraph-compatible agents
  */
-router.get('/agents/langgraph-compatible', async (req: Request, res: Response) => {
-  try {
-    const allAgents = agentRegistry.getEnabledAgents();
-    const langGraphAgents = allAgents.filter(agent => 'createWorkflow' in agent);
+router.get(
+  '/agents/langgraph-compatible',
+  async (req: Request, res: Response) => {
+    try {
+      const allAgents = agentRegistry.getEnabledAgents();
+      const langGraphAgents = allAgents.filter(
+        (agent) => 'createWorkflow' in agent
+      );
 
-    const agentSummaries = langGraphAgents.map(agent => ({
-      id: agent.id,
-      name: agent.name,
-      description: agent.description,
-      type: agent.type,
-      triggers: agent.triggers,
-      enabled: agent.enabled,
-      langgraph_features: {
-        workflow_enabled: true,
-        checkpoint_storage: true,
-        progress_streaming: true,
-        error_recovery: true,
-        state_persistence: true
-      }
-    }));
+      const agentSummaries = langGraphAgents.map((agent) => ({
+        id: agent.id,
+        name: agent.name,
+        description: agent.description,
+        type: agent.type,
+        triggers: agent.triggers,
+        enabled: agent.enabled,
+        langgraph_features: {
+          workflow_enabled: true,
+          checkpoint_storage: true,
+          progress_streaming: true,
+          error_recovery: true,
+          state_persistence: true,
+        },
+      }));
 
-    const response: ApiResponse = {
-      success: true,
-      data: {
-        agents: agentSummaries,
-        total_count: agentSummaries.length,
-        langgraph_system: {
-          enabled: true,
-          version: '0.4.9',
-          features: [
-            'State Management',
-            'Redis Checkpointing',
-            'Progress Streaming',
-            'Error Recovery',
-            'Workflow Orchestration'
-          ]
-        }
-      },
-      timestamp: new Date().toISOString()
-    };
+      const response: ApiResponse = {
+        success: true,
+        data: {
+          agents: agentSummaries,
+          total_count: agentSummaries.length,
+          langgraph_system: {
+            enabled: true,
+            version: '0.4.9',
+            features: [
+              'State Management',
+              'Redis Checkpointing',
+              'Progress Streaming',
+              'Error Recovery',
+              'Workflow Orchestration',
+            ],
+          },
+        },
+        timestamp: new Date().toISOString(),
+      };
 
-    res.json(response);
-  } catch (error) {
-    logError('Failed to get LangGraph-compatible agents', error as Error);
-    const response: ApiResponse = {
-      success: false,
-      error: 'Failed to retrieve LangGraph agents',
-      timestamp: new Date().toISOString()
-    };
-    res.status(500).json(response);
+      res.json(response);
+    } catch (error) {
+      logError('Failed to get LangGraph-compatible agents', error as Error);
+      const response: ApiResponse = {
+        success: false,
+        error: 'Failed to retrieve LangGraph agents',
+        timestamp: new Date().toISOString(),
+      };
+      res.status(500).json(response);
+    }
   }
-});
+);
 
 export default router;

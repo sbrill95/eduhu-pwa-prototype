@@ -67,9 +67,7 @@ export class ChatService {
       }
 
       // Detect agent intent from last user message
-      const lastUserMessage = messages
-        .filter(m => m.role === 'user')
-        .pop();
+      const lastUserMessage = messages.filter((m) => m && m.role === 'user').pop();
 
       let agentSuggestion = null;
       if (lastUserMessage && typeof lastUserMessage.content === 'string') {
@@ -101,8 +99,11 @@ export class ChatService {
           ...(agentSuggestion && {
             agentSuggestion: {
               ...agentSuggestion,
-              prefillData: agentSuggestion.prefillData as Record<string, unknown>
-            }
+              prefillData: agentSuggestion.prefillData as Record<
+                string,
+                unknown
+              >,
+            },
           }),
         },
         timestamp: new Date().toISOString(),
@@ -121,13 +122,15 @@ export class ChatService {
    * @returns Prepared messages array
    */
   private static prepareMessages(messages: ChatMessage[]): ChatMessage[] {
-    const hasSystemMessage = messages.some((msg) => msg.role === 'system');
+    // Filter out undefined/null messages
+    const validMessages = messages.filter((msg) => msg && msg.role && msg.content);
+    const hasSystemMessage = validMessages.some((msg) => msg.role === 'system');
 
     if (!hasSystemMessage) {
-      return [OPENAI_CONFIG.SYSTEM_MESSAGE, ...messages];
+      return [OPENAI_CONFIG.SYSTEM_MESSAGE, ...validMessages];
     }
 
-    return messages;
+    return validMessages;
   }
 
   /**

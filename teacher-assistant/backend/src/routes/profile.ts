@@ -11,8 +11,15 @@
 
 import { Router, Request, Response } from 'express';
 import { profileExtractionService } from '../services/profileExtractionService';
-import { InstantDBService, getInstantDB, isInstantDBAvailable } from '../services/instantdbService';
-import { findSimilarCharacteristics, mergeSimilarCharacteristics } from '../services/profileDeduplicationService';
+import {
+  InstantDBService,
+  getInstantDB,
+  isInstantDBAvailable,
+} from '../services/instantdbService';
+import {
+  findSimilarCharacteristics,
+  mergeSimilarCharacteristics,
+} from '../services/profileDeduplicationService';
 import { logError, logInfo } from '../config/logger';
 
 const router = Router();
@@ -38,7 +45,8 @@ router.post('/update-name', async (req: Request, res: Response) => {
     if (!userId || !name) {
       return res.status(400).json({
         success: false,
-        error: 'Fehlende Pflichtfelder: Benutzer-ID und Name sind erforderlich.',
+        error:
+          'Fehlende Pflichtfelder: Benutzer-ID und Name sind erforderlich.',
       });
     }
 
@@ -58,7 +66,8 @@ router.post('/update-name', async (req: Request, res: Response) => {
       );
       return res.status(503).json({
         success: false,
-        error: 'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
+        error:
+          'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
       });
     }
 
@@ -70,7 +79,7 @@ router.post('/update-name', async (req: Request, res: Response) => {
       db.tx.users[userId].update({
         name: name.trim(),
         last_active: Date.now(),
-      })
+      }),
     ]);
 
     logInfo('User name updated successfully', { userId, name });
@@ -87,7 +96,8 @@ router.post('/update-name', async (req: Request, res: Response) => {
     logError('Failed to update user name', error as Error);
     return res.status(500).json({
       success: false,
-      error: 'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+      error:
+        'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
     });
   }
 });
@@ -113,7 +123,8 @@ router.post('/extract', async (req: Request, res: Response) => {
     if (!userId || !messages) {
       return res.status(400).json({
         success: false,
-        error: 'Fehlende Pflichtfelder: Benutzer-ID und Nachrichten sind erforderlich.',
+        error:
+          'Fehlende Pflichtfelder: Benutzer-ID und Nachrichten sind erforderlich.',
       });
     }
 
@@ -121,14 +132,22 @@ router.post('/extract', async (req: Request, res: Response) => {
     if (!Array.isArray(messages) || messages.length < 2) {
       return res.status(400).json({
         success: false,
-        error: 'Mindestens 2 Nachrichten erforderlich für die Profil-Extraktion.',
+        error:
+          'Mindestens 2 Nachrichten erforderlich für die Profil-Extraktion.',
       });
     }
 
-    logInfo('Starting profile extraction', { userId, messageCount: messages.length });
+    logInfo('Starting profile extraction', {
+      userId,
+      messageCount: messages.length,
+    });
 
     // Fetch existing profile characteristics (all, not filtered)
-    const existingProfile = await InstantDBService.ProfileCharacteristics.getCharacteristics(userId, 0);
+    const existingProfile =
+      await InstantDBService.ProfileCharacteristics.getCharacteristics(
+        userId,
+        0
+      );
 
     // Extract characteristics using AI
     const extracted = await profileExtractionService.extractCharacteristics(
@@ -137,7 +156,10 @@ router.post('/extract', async (req: Request, res: Response) => {
       existingProfile
     );
 
-    logInfo('Profile extraction completed', { userId, extractedCount: extracted.length });
+    logInfo('Profile extraction completed', {
+      userId,
+      extractedCount: extracted.length,
+    });
 
     return res.json({
       success: true,
@@ -150,7 +172,8 @@ router.post('/extract', async (req: Request, res: Response) => {
     logError('Profile extraction failed', error as Error);
     return res.status(500).json({
       success: false,
-      error: 'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+      error:
+        'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
     });
   }
 });
@@ -182,17 +205,21 @@ router.get('/characteristics', async (req: Request, res: Response) => {
 
     // Fetch characteristics with count >= 3 OR manually_added = true
     // Manual tags should always be visible immediately
-    const allCharacteristics = await InstantDBService.ProfileCharacteristics.getCharacteristics(
-      userId,
-      0 // Fetch all first
-    );
+    const allCharacteristics =
+      await InstantDBService.ProfileCharacteristics.getCharacteristics(
+        userId,
+        0 // Fetch all first
+      );
 
     // Filter: count >= 3 OR manually_added
     const characteristics = allCharacteristics.filter(
-      char => char.count >= 3 || char.manually_added
+      (char) => char.count >= 3 || char.manually_added
     );
 
-    logInfo('Profile characteristics fetched', { userId, count: characteristics.length });
+    logInfo('Profile characteristics fetched', {
+      userId,
+      count: characteristics.length,
+    });
 
     return res.json({
       success: true,
@@ -204,7 +231,8 @@ router.get('/characteristics', async (req: Request, res: Response) => {
     logError('Failed to fetch profile characteristics', error as Error);
     return res.status(500).json({
       success: false,
-      error: 'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+      error:
+        'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
     });
   }
 });
@@ -229,12 +257,16 @@ router.post('/characteristics/add', async (req: Request, res: Response) => {
     if (!userId || !characteristic) {
       return res.status(400).json({
         success: false,
-        error: 'Fehlende Pflichtfelder: Benutzer-ID und Merkmal sind erforderlich.',
+        error:
+          'Fehlende Pflichtfelder: Benutzer-ID und Merkmal sind erforderlich.',
       });
     }
 
     // Validation: Check characteristic is not empty
-    if (typeof characteristic !== 'string' || characteristic.trim().length === 0) {
+    if (
+      typeof characteristic !== 'string' ||
+      characteristic.trim().length === 0
+    ) {
       return res.status(400).json({
         success: false,
         error: 'Das Merkmal darf nicht leer sein.',
@@ -249,7 +281,8 @@ router.post('/characteristics/add', async (req: Request, res: Response) => {
       );
       return res.status(503).json({
         success: false,
-        error: 'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
+        error:
+          'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
       });
     }
 
@@ -261,7 +294,10 @@ router.post('/characteristics/add', async (req: Request, res: Response) => {
       characteristic.trim()
     );
 
-    logInfo('Manual characteristic added successfully', { userId, characteristic });
+    logInfo('Manual characteristic added successfully', {
+      userId,
+      characteristic,
+    });
 
     return res.json({
       success: true,
@@ -274,7 +310,8 @@ router.post('/characteristics/add', async (req: Request, res: Response) => {
     logError('Failed to add manual characteristic', error as Error);
     return res.status(500).json({
       success: false,
-      error: 'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+      error:
+        'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
     });
   }
 });
@@ -290,91 +327,112 @@ router.post('/characteristics/add', async (req: Request, res: Response) => {
  * Response:
  * - categorized: number (count of items categorized)
  */
-router.post('/characteristics/categorize', async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.body;
+router.post(
+  '/characteristics/categorize',
+  async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.body;
 
-    // Validation: Check required field
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        error: 'Fehlende Benutzer-ID.',
-      });
-    }
-
-    // Check InstantDB availability
-    if (!isInstantDBAvailable()) {
-      logError(
-        'InstantDB not available for categorization',
-        new Error('InstantDB not initialized')
-      );
-      return res.status(503).json({
-        success: false,
-        error: 'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
-      });
-    }
-
-    logInfo('Starting characteristic categorization', { userId });
-
-    // Fetch all characteristics for this user (no min count filter)
-    const allCharacteristics = await InstantDBService.ProfileCharacteristics.getCharacteristics(userId, 0);
-
-    // Filter for uncategorized items
-    const uncategorized = allCharacteristics.filter((char: any) => char.category === 'uncategorized');
-
-    logInfo('Found uncategorized characteristics', { userId, count: uncategorized.length });
-
-    // Categorize each uncategorized characteristic
-    const db = getInstantDB();
-    let categorizedCount = 0;
-
-    for (const char of uncategorized) {
-      try {
-        // Get category via AI
-        const category = await profileExtractionService.categorizeCharacteristic(char.characteristic);
-
-        // Update in database
-        await db.transact([
-          db.tx.profile_characteristics[char.id].update({
-            category,
-            updated_at: Date.now(),
-          })
-        ]);
-
-        logInfo('Characteristic categorized', {
-          userId,
-          characteristic: char.characteristic,
-          category
+      // Validation: Check required field
+      if (!userId) {
+        return res.status(400).json({
+          success: false,
+          error: 'Fehlende Benutzer-ID.',
         });
-
-        categorizedCount++;
-      } catch (error) {
-        logError('Failed to categorize individual characteristic', error as Error, {
-          userId,
-          characteristicId: char.id,
-          characteristic: char.characteristic
-        });
-        // Continue with next characteristic even if one fails
       }
+
+      // Check InstantDB availability
+      if (!isInstantDBAvailable()) {
+        logError(
+          'InstantDB not available for categorization',
+          new Error('InstantDB not initialized')
+        );
+        return res.status(503).json({
+          success: false,
+          error:
+            'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
+        });
+      }
+
+      logInfo('Starting characteristic categorization', { userId });
+
+      // Fetch all characteristics for this user (no min count filter)
+      const allCharacteristics =
+        await InstantDBService.ProfileCharacteristics.getCharacteristics(
+          userId,
+          0
+        );
+
+      // Filter for uncategorized items
+      const uncategorized = allCharacteristics.filter(
+        (char: any) => char.category === 'uncategorized'
+      );
+
+      logInfo('Found uncategorized characteristics', {
+        userId,
+        count: uncategorized.length,
+      });
+
+      // Categorize each uncategorized characteristic
+      const db = getInstantDB();
+      let categorizedCount = 0;
+
+      for (const char of uncategorized) {
+        try {
+          // Get category via AI
+          const category =
+            await profileExtractionService.categorizeCharacteristic(
+              char.characteristic
+            );
+
+          // Update in database
+          await db.transact([
+            db.tx.profile_characteristics[char.id].update({
+              category,
+              updated_at: Date.now(),
+            }),
+          ]);
+
+          logInfo('Characteristic categorized', {
+            userId,
+            characteristic: char.characteristic,
+            category,
+          });
+
+          categorizedCount++;
+        } catch (error) {
+          logError(
+            'Failed to categorize individual characteristic',
+            error as Error,
+            {
+              userId,
+              characteristicId: char.id,
+              characteristic: char.characteristic,
+            }
+          );
+          // Continue with next characteristic even if one fails
+        }
+      }
+
+      logInfo('Categorization completed', { userId, categorizedCount });
+
+      return res.json({
+        success: true,
+        data: {
+          categorized: categorizedCount,
+          total: uncategorized.length,
+        },
+      });
+    } catch (error) {
+      logError('Categorization failed', error as Error);
+      return res.status(500).json({
+        success: false,
+        error:
+          'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+      });
     }
-
-    logInfo('Categorization completed', { userId, categorizedCount });
-
-    return res.json({
-      success: true,
-      data: {
-        categorized: categorizedCount,
-        total: uncategorized.length,
-      },
-    });
-  } catch (error) {
-    logError('Categorization failed', error as Error);
-    return res.status(500).json({
-      success: false,
-      error: 'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
-    });
   }
-});
+);
 
 /**
  * POST /api/profile/characteristics/deduplicate
@@ -390,111 +448,120 @@ router.post('/characteristics/categorize', async (req: Request, res: Response) =
  * - mergedGroups: number - Number of groups merged (if autoMerge=true)
  * - totalMerged: number - Total characteristics merged (if autoMerge=true)
  */
-router.post('/characteristics/deduplicate', async (req: Request, res: Response) => {
-  try {
-    const { userId, autoMerge = false } = req.body;
+router.post(
+  '/characteristics/deduplicate',
+  async (req: Request, res: Response) => {
+    try {
+      const { userId, autoMerge = false } = req.body;
 
-    // Validation: Check required field
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        error: 'Fehlende Benutzer-ID.',
-      });
-    }
-
-    // Check InstantDB availability
-    if (!isInstantDBAvailable()) {
-      logError(
-        'InstantDB not available for deduplication',
-        new Error('InstantDB not initialized')
-      );
-      return res.status(503).json({
-        success: false,
-        error: 'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
-      });
-    }
-
-    logInfo('Starting characteristic deduplication', { userId, autoMerge });
-
-    // Find similar characteristics
-    const groups = await findSimilarCharacteristics(userId);
-
-    logInfo('Found similarity groups', { userId, groupCount: groups.length });
-
-    // If autoMerge is enabled, merge all groups
-    if (autoMerge && groups.length > 0) {
-      let mergedGroupsCount = 0;
-      let totalMergedCount = 0;
-
-      for (const group of groups) {
-        try {
-          const mergeIds = group.mergeCharacteristics.map((c) => c.id);
-          await mergeSimilarCharacteristics(userId, group.keepCharacteristic.id, mergeIds);
-
-          mergedGroupsCount++;
-          totalMergedCount += mergeIds.length;
-
-          logInfo('Group merged successfully', {
-            userId,
-            keepCharacteristic: group.keepCharacteristic.characteristic,
-            mergedCount: mergeIds.length,
-          });
-        } catch (error) {
-          logError('Failed to merge group', error as Error, {
-            userId,
-            keepCharacteristic: group.keepCharacteristic.characteristic,
-          });
-          // Continue with next group even if one fails
-        }
+      // Validation: Check required field
+      if (!userId) {
+        return res.status(400).json({
+          success: false,
+          error: 'Fehlende Benutzer-ID.',
+        });
       }
 
-      logInfo('Auto-merge completed', {
-        userId,
-        mergedGroupsCount,
-        totalMergedCount,
-      });
+      // Check InstantDB availability
+      if (!isInstantDBAvailable()) {
+        logError(
+          'InstantDB not available for deduplication',
+          new Error('InstantDB not initialized')
+        );
+        return res.status(503).json({
+          success: false,
+          error:
+            'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
+        });
+      }
 
+      logInfo('Starting characteristic deduplication', { userId, autoMerge });
+
+      // Find similar characteristics
+      const groups = await findSimilarCharacteristics(userId);
+
+      logInfo('Found similarity groups', { userId, groupCount: groups.length });
+
+      // If autoMerge is enabled, merge all groups
+      if (autoMerge && groups.length > 0) {
+        let mergedGroupsCount = 0;
+        let totalMergedCount = 0;
+
+        for (const group of groups) {
+          try {
+            const mergeIds = group.mergeCharacteristics.map((c) => c.id);
+            await mergeSimilarCharacteristics(
+              userId,
+              group.keepCharacteristic.id,
+              mergeIds
+            );
+
+            mergedGroupsCount++;
+            totalMergedCount += mergeIds.length;
+
+            logInfo('Group merged successfully', {
+              userId,
+              keepCharacteristic: group.keepCharacteristic.characteristic,
+              mergedCount: mergeIds.length,
+            });
+          } catch (error) {
+            logError('Failed to merge group', error as Error, {
+              userId,
+              keepCharacteristic: group.keepCharacteristic.characteristic,
+            });
+            // Continue with next group even if one fails
+          }
+        }
+
+        logInfo('Auto-merge completed', {
+          userId,
+          mergedGroupsCount,
+          totalMergedCount,
+        });
+
+        return res.json({
+          success: true,
+          data: {
+            mergedGroups: mergedGroupsCount,
+            totalMerged: totalMergedCount,
+            totalGroups: groups.length,
+          },
+        });
+      }
+
+      // Return groups for manual review
       return res.json({
         success: true,
         data: {
-          mergedGroups: mergedGroupsCount,
-          totalMerged: totalMergedCount,
+          groups: groups.map((g) => ({
+            keep: {
+              id: g.keepCharacteristic.id,
+              characteristic: g.keepCharacteristic.characteristic,
+              count: g.keepCharacteristic.count,
+              category: g.keepCharacteristic.category,
+            },
+            merge: g.mergeCharacteristics.map((c) => ({
+              id: c.id,
+              characteristic: c.characteristic,
+              count: c.count,
+              category: c.category,
+            })),
+            similarity: g.similarity,
+            reason: g.reason,
+          })),
           totalGroups: groups.length,
         },
       });
+    } catch (error) {
+      logError('Deduplication failed', error as Error);
+      return res.status(500).json({
+        success: false,
+        error:
+          'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+      });
     }
-
-    // Return groups for manual review
-    return res.json({
-      success: true,
-      data: {
-        groups: groups.map((g) => ({
-          keep: {
-            id: g.keepCharacteristic.id,
-            characteristic: g.keepCharacteristic.characteristic,
-            count: g.keepCharacteristic.count,
-            category: g.keepCharacteristic.category,
-          },
-          merge: g.mergeCharacteristics.map((c) => ({
-            id: c.id,
-            characteristic: c.characteristic,
-            count: c.count,
-            category: c.category,
-          })),
-          similarity: g.similarity,
-          reason: g.reason,
-        })),
-        totalGroups: groups.length,
-      },
-    });
-  } catch (error) {
-    logError('Deduplication failed', error as Error);
-    return res.status(500).json({
-      success: false,
-      error: 'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
-    });
   }
-});
+);
 
 /**
  * POST /api/profile/characteristics/merge
@@ -516,7 +583,8 @@ router.post('/characteristics/merge', async (req: Request, res: Response) => {
     if (!userId || !keepId || !mergeIds) {
       return res.status(400).json({
         success: false,
-        error: 'Fehlende Pflichtfelder: Benutzer-ID, Keep-ID und Merge-IDs sind erforderlich.',
+        error:
+          'Fehlende Pflichtfelder: Benutzer-ID, Keep-ID und Merge-IDs sind erforderlich.',
       });
     }
 
@@ -536,11 +604,16 @@ router.post('/characteristics/merge', async (req: Request, res: Response) => {
       );
       return res.status(503).json({
         success: false,
-        error: 'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
+        error:
+          'Datenbank ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
       });
     }
 
-    logInfo('Starting manual characteristic merge', { userId, keepId, mergeIds });
+    logInfo('Starting manual characteristic merge', {
+      userId,
+      keepId,
+      mergeIds,
+    });
 
     // Merge characteristics
     await mergeSimilarCharacteristics(userId, keepId, mergeIds);
@@ -563,7 +636,8 @@ router.post('/characteristics/merge', async (req: Request, res: Response) => {
     logError('Manual merge failed', error as Error);
     return res.status(500).json({
       success: false,
-      error: 'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+      error:
+        'Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
     });
   }
 });

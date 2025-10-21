@@ -22,19 +22,20 @@ export class AgentIntentService {
    * @param context - Optional teacher knowledge for context-aware extraction
    * @returns AgentIntent if detected, null otherwise
    */
-  static detectAgentIntent(
-    message: string,
-    context?: any
-  ): AgentIntent | null {
+  static detectAgentIntent(message: string, context?: any): AgentIntent | null {
     const lowerMessage = message.toLowerCase().trim();
 
     // Try to detect image generation intent
-    const imageIntent = this.detectImageGenerationIntent(lowerMessage, message, context);
+    const imageIntent = this.detectImageGenerationIntent(
+      lowerMessage,
+      message,
+      context
+    );
     if (imageIntent) {
       const prefillData = imageIntent.prefillData as ImageGenerationPrefillData;
       logInfo('Image generation intent detected', {
         confidence: imageIntent.confidence,
-        description: prefillData.description
+        description: prefillData.description,
       });
       return imageIntent;
     }
@@ -104,7 +105,7 @@ export class AgentIntentService {
       'plakat',
     ];
 
-    const hasImageKeyword = imageKeywords.some(keyword =>
+    const hasImageKeyword = imageKeywords.some((keyword) =>
       lowerMessage.includes(keyword)
     );
 
@@ -120,7 +121,8 @@ export class AgentIntentService {
     return {
       agentType: 'image-generation',
       confidence: 0.85,
-      reasoning: 'Du hast nach einem Bild gefragt. Ich kann dir helfen, eines zu erstellen!',
+      reasoning:
+        'Du hast nach einem Bild gefragt. Ich kann dir helfen, eines zu erstellen!',
       prefillData: {
         description, // Use 'description' to match shared type
         imageStyle: 'realistic',
@@ -152,7 +154,7 @@ export class AgentIntentService {
       'aufgabe erstellen',
     ];
 
-    const hasWorksheetKeyword = worksheetKeywords.some(keyword =>
+    const hasWorksheetKeyword = worksheetKeywords.some((keyword) =>
       lowerMessage.includes(keyword)
     );
 
@@ -166,8 +168,9 @@ export class AgentIntentService {
 
     return {
       agentType: 'worksheet',
-      confidence: 0.80,
-      reasoning: 'Du möchtest ein Arbeitsblatt erstellen. Ich kann dir dabei helfen!',
+      confidence: 0.8,
+      reasoning:
+        'Du möchtest ein Arbeitsblatt erstellen. Ich kann dir dabei helfen!',
       prefillData: {
         theme,
         ...(learningGroup && { learningGroup }),
@@ -197,7 +200,7 @@ export class AgentIntentService {
       'unterrichtseinheit',
     ];
 
-    const hasLessonPlanKeyword = lessonPlanKeywords.some(keyword =>
+    const hasLessonPlanKeyword = lessonPlanKeywords.some((keyword) =>
       lowerMessage.includes(keyword)
     );
 
@@ -211,8 +214,9 @@ export class AgentIntentService {
 
     return {
       agentType: 'lesson-plan',
-      confidence: 0.80,
-      reasoning: 'Du planst eine Unterrichtsstunde. Ich kann dir einen Entwurf erstellen!',
+      confidence: 0.8,
+      reasoning:
+        'Du planst eine Unterrichtsstunde. Ich kann dir einen Entwurf erstellen!',
       prefillData: {
         theme,
         ...(learningGroup && { learningGroup }),
@@ -224,13 +228,22 @@ export class AgentIntentService {
   /**
    * Extract theme/topic from message
    */
-  private static extractTheme(originalMessage: string, lowerMessage: string): string {
+  private static extractTheme(
+    originalMessage: string,
+    lowerMessage: string
+  ): string {
     // Remove common trigger words to get the theme
     let cleaned = originalMessage
       // Remove "erstelle" variants
-      .replace(/erstelle?\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan|übung)\s+(von|über|mit|zu|für)?/gi, '')
+      .replace(
+        /erstelle?\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan|übung)\s+(von|über|mit|zu|für)?/gi,
+        ''
+      )
       // Remove "generiere" variants
-      .replace(/generiere?\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan|übung)\s+(von|über|mit|zu|für)?/gi, '')
+      .replace(
+        /generiere?\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan|übung)\s+(von|über|mit|zu|für)?/gi,
+        ''
+      )
       // Remove "zeichne" variants
       .replace(/zeichne?\s+(mir\s+)?(ein\s+)?(bild|image)?/gi, '')
       // Remove "male" variants
@@ -238,11 +251,23 @@ export class AgentIntentService {
       // Remove "visualisiere" variants
       .replace(/visualisiere?\s+(mir\s+)?(ein\s+)?(bild|image)?/gi, '')
       // Remove "kannst/könntest/würdest du" phrases
-      .replace(/kannst\s+du\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan)/gi, '')
-      .replace(/könntest\s+du\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan)/gi, '')
-      .replace(/würdest\s+du\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan)/gi, '')
+      .replace(
+        /kannst\s+du\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan)/gi,
+        ''
+      )
+      .replace(
+        /könntest\s+du\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan)/gi,
+        ''
+      )
+      .replace(
+        /würdest\s+du\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan)/gi,
+        ''
+      )
       // Remove "mach/mache ein X"
-      .replace(/mache?\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan)/gi, '')
+      .replace(
+        /mache?\s+(mir\s+)?(ein\s+)?(bild|image|arbeitsblatt|unterrichtsplan)/gi,
+        ''
+      )
       // Remove "planen/vorbereiten"
       .replace(/unterricht\s+(planen|vorbereiten)/gi, '')
       .replace(/stunde\s+(planen|vorbereiten)/gi, '')
@@ -252,7 +277,9 @@ export class AgentIntentService {
 
     // If nothing left or too short, try to find content after common prepositions
     if (!cleaned || cleaned.length < 3) {
-      const prepositionMatch = originalMessage.match(/(?:von|über|mit|zu|für)\s+(.+)/i);
+      const prepositionMatch = originalMessage.match(
+        /(?:von|über|mit|zu|für)\s+(.+)/i
+      );
       if (prepositionMatch && prepositionMatch[1]) {
         cleaned = prepositionMatch[1].trim();
       } else {

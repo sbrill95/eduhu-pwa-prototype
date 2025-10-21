@@ -159,37 +159,52 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children, onNaviga
       // Transition to progress phase
       setState(prev => ({ ...prev, phase: 'progress', formData }));
 
-      // Map frontend agent type to backend agent ID
-      // BUG-027 FIX: Backend expects agentType 'image-generation', not 'langgraph-image-generation'
-      const agentIdMap: Record<string, string> = {
-        'image-generation': 'image-generation'
-      };
+      let response: any;
 
-      const agentId = state.agentType ? agentIdMap[state.agentType] : undefined;
+      // PHASE 3 E2E TESTING: Route image-generation to OpenAI SDK endpoint
+      if (state.agentType === 'image-generation') {
+        console.log('[AgentContext] 📡 Calling SDK endpoint for image-generation:', {
+          url: '/api/agents-sdk/image/generate',
+          formData
+        });
 
-      if (!agentId) {
-        throw new Error(`Unknown agent type: ${state.agentType}`);
+        // Call new SDK endpoint directly
+        response = await apiClient.executeImageGenerationSdk({
+          description: formData.description,
+          imageStyle: formData.imageStyle,
+          learningGroup: formData.learningGroup,
+          size: formData.size || '1024x1024',
+          quality: formData.quality || 'standard',
+          style: formData.style || 'vivid'
+        });
+      } else {
+        // For other agent types, use old LangGraph endpoint
+        const agentIdMap: Record<string, string> = {
+          'image-generation': 'image-generation'
+        };
+
+        const agentId = state.agentType ? agentIdMap[state.agentType] : undefined;
+
+        if (!agentId) {
+          throw new Error(`Unknown agent type: ${state.agentType}`);
+        }
+
+        const requestPayload = {
+          agentId,
+          input: formData,
+          context: formData,
+          sessionId: state.sessionId || undefined,
+          userId: user?.id,
+          confirmExecution: true
+        };
+
+        console.log('[AgentContext] 📡 Making API request to executeAgent (LangGraph):', {
+          url: '/api/langgraph/agents/execute',
+          payload: requestPayload
+        });
+
+        response = await apiClient.executeAgent(requestPayload);
       }
-
-      // Execute agent via backend API
-      // BUG-027 FIX: Send formData as object, NOT string (Gemini form format)
-      // Backend expects input as object with description, imageStyle, etc.
-      // BUG-040 FIX: Send userId for library_materials permission check
-      const requestPayload = {
-        agentId,
-        input: formData, // Send as object (Gemini form data)
-        context: formData,
-        sessionId: state.sessionId || undefined,
-        userId: user?.id, // BUG-040 FIX: Required for InstantDB permissions
-        confirmExecution: true  // Tell backend to actually execute (not just preview)
-      };
-
-      console.log('[AgentContext] 📡 Making API request to executeAgent:', {
-        url: '/api/langgraph/agents/execute',
-        payload: requestPayload
-      });
-
-      const response = await apiClient.executeAgent(requestPayload);
 
       console.log('[AgentContext] 📨 API response received:', {
         hasResponse: !!response,

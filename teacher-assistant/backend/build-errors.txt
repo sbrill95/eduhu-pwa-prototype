@@ -1,0 +1,82 @@
+
+> teacher-assistant-backend@1.0.0 build
+> tsc
+
+src/routes/chatTags.test.ts(200,67): error TS2345: Argument of type '{ label: string; category: string; }[]' is not assignable to parameter of type 'ChatTag[]'.
+  Type '{ label: string; category: string; }' is not assignable to type 'ChatTag'.
+    Types of property 'category' are incompatible.
+      Type 'string' is not assignable to type '"subject" | "topic" | "grade_level" | "material_type" | "general"'.
+src/routes/data.test.ts(60,31): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/routes/data.test.ts(147,31): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/routes/data.test.ts(222,31): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/routes/data.test.ts(292,31): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/routes/onboarding.test.ts(13,3): error TS2344: Type '{ initialize: () => boolean; isAvailable: () => boolean; db: () => any; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: ty...' does not satisfy the constraint 'Constructable'.
+  Type '{ initialize: () => boolean; isAvailable: () => boolean; db: () => any; ChatSession: typeof ChatSessionService; Message: typeof MessageService; User: typeof UserService; Artifact: typeof ArtifactService; Analytics: typeof AnalyticsService; ProfileCharacteristics: typeof ProfileCharacteristicsService; FileStorage: ty...' provides no match for the signature 'new (...args: any[]): any'.
+src/routes/onboarding.test.ts(21,34): error TS2749: 'InstantDBService' refers to a value, but is being used as a type here. Did you mean 'typeof InstantDBService'?
+src/routes/onboarding.test.ts(25,25): error TS2351: This expression is not constructable.
+  Type 'MockInstance<any, never, never> & { prototype: never; } & { initialize: () => boolean; isAvailable: () => boolean; db: () => any; ChatSession: typeof ChatSessionService; ... 5 more ...; FileStorage: typeof FileStorageService; }' has no construct signatures.
+src/routes/onboarding.test.ts(25,63): error TS2749: 'InstantDBService' refers to a value, but is being used as a type here. Did you mean 'typeof InstantDBService'?
+src/services/chatTagService.test.ts(229,24): error TS2532: Object is possibly 'undefined'.
+src/services/chatTagService.test.ts(234,14): error TS18048: 'userMessage' is possibly 'undefined'.
+src/services/instantdbService.test.ts(404,43): error TS2339: Property 'updateCharacteristicCategory' does not exist on type 'typeof ProfileCharacteristicsService'.
+src/services/instantdbService.test.ts(417,39): error TS2339: Property 'updateCharacteristicCategory' does not exist on type 'typeof ProfileCharacteristicsService'.
+src/services/instantdbService.test.ts(430,39): error TS2339: Property 'updateCharacteristicCategory' does not exist on type 'typeof ProfileCharacteristicsService'.
+src/services/langGraphAgentService.ts(14,10): error TS2614: Module '"../schemas/instantdb"' has no exported member 'GeneratedArtifact'. Did you mean to use 'import GeneratedArtifact from "../schemas/instantdb"' instead?
+src/services/promptService.test.ts(7,31): error TS2307: Cannot find module './promptService' or its corresponding type declarations.
+src/services/promptService.test.ts(59,23): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(67,47): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(70,45): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(80,23): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(93,26): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(107,28): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(123,15): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(133,29): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(156,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(157,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(176,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(177,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(181,10): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/services/promptService.test.ts(181,14): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/services/promptService.test.ts(200,25): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(229,26): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(245,10): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(254,26): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(270,10): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(283,26): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(299,10): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(315,26): error TS2339: Property 'TeacherProfileService' does not exist on type 'typeof import("C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/backend/src/services/instantdbService")'.
+src/services/promptService.test.ts(332,23): error TS7006: Parameter 'suggestion' implicitly has an 'any' type.
+src/services/promptService.test.ts(346,31): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/services/promptService.test.ts(360,38): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/tests/agentSuggestion.integration.test.ts(368,9): error TS2353: Object literal may only specify known properties, and 'userId' does not exist in type 'ChatRequest'.
+src/tests/errorHandlingService.test.ts(24,48): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(25,43): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(27,48): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(28,42): error TS2345: Argument of type 'null' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(29,54): error TS2345: Argument of type '1' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(30,41): error TS2345: Argument of type 'false' is not assignable to parameter of type 'never'.
+src/tests/errorHandlingService.test.ts(31,41): error TS2345: Argument of type 'true' is not assignable to parameter of type 'never'.
+src/tests/langGraphAgentService.test.ts(26,45): error TS2345: Argument of type '{ data: { url: string; revised_prompt: string; }[]; }' is not assignable to parameter of type 'never'.
+src/tests/langGraphAgentService.test.ts(37,45): error TS2345: Argument of type '{ choices: { message: { content: string; }; }[]; }' is not assignable to parameter of type 'never'.
+src/tests/langGraphAgentService.test.ts(55,42): error TS2345: Argument of type '{}' is not assignable to parameter of type 'never'.
+src/tests/langGraphAgentService.test.ts(56,45): error TS2345: Argument of type 'true' is not assignable to parameter of type 'never'.
+src/tests/langGraphAgentService.test.ts(105,14): error TS2532: Object is possibly 'undefined'.
+src/tests/langGraphAgentService.test.ts(134,16): error TS18048: 'result.metadata' is possibly 'undefined'.
+src/tests/performance.test.ts(42,29): error TS18048: 'stats.min' is possibly 'undefined'.
+src/tests/performance.test.ts(43,29): error TS18048: 'stats.max' is possibly 'undefined'.
+src/tests/performance.test.ts(44,41): error TS18048: 'stats.p95' is possibly 'undefined'.
+src/tests/performance.test.ts(536,90): error TS18048: 'stats.p95' is possibly 'undefined'.
+src/tests/redis.integration.test.ts(17,23): error TS2769: No overload matches this call.
+  Overload 1 of 8, '(options: RedisOptions): Redis', gave the following error.
+    Object literal may only specify known properties, and 'retryDelayOnFailover' does not exist in type 'RedisOptions'.
+  Overload 2 of 8, '(port: number): Redis', gave the following error.
+    Argument of type '{ host: string; port: number; retryDelayOnFailover: number; enableReadyCheck: boolean; maxRetriesPerRequest: number; lazyConnect: boolean; }' is not assignable to parameter of type 'number'.
+  Overload 3 of 8, '(path: string): Redis', gave the following error.
+    Argument of type '{ host: string; port: number; retryDelayOnFailover: number; enableReadyCheck: boolean; maxRetriesPerRequest: number; lazyConnect: boolean; }' is not assignable to parameter of type 'string'.
+src/tests/redis.integration.test.ts(75,32): error TS2769: No overload matches this call.
+  Overload 1 of 8, '(options: RedisOptions): Redis', gave the following error.
+    Object literal may only specify known properties, and 'retryDelayOnFailover' does not exist in type 'RedisOptions'.
+  Overload 2 of 8, '(port: number): Redis', gave the following error.
+    Argument of type '{ host: string; port: number; connectTimeout: number; lazyConnect: boolean; retryDelayOnFailover: number; maxRetriesPerRequest: number; }' is not assignable to parameter of type 'number'.
+  Overload 3 of 8, '(path: string): Redis', gave the following error.
+    Argument of type '{ host: string; port: number; connectTimeout: number; lazyConnect: boolean; retryDelayOnFailover: number; maxRetriesPerRequest: number; }' is not assignable to parameter of type 'string'.

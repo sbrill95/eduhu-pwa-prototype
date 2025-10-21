@@ -12,7 +12,10 @@ import { z } from 'zod';
 
 // Gemini Image Generation Form Data Schema
 const ImageGenerationFormSchema = z.object({
-  theme: z.string().min(3, 'Theme must be at least 3 characters').max(500, 'Theme too long'),
+  theme: z
+    .string()
+    .min(3, 'Theme must be at least 3 characters')
+    .max(500, 'Theme too long'),
   learningGroup: z.string().min(1, 'Learning group is required'),
   dazSupport: z.boolean().optional().default(false),
   learningDifficulties: z.boolean().optional().default(false),
@@ -34,15 +37,16 @@ const LegacyParamsSchema = z.object({
 // Agent Execution Request Schema
 const AgentExecutionRequestSchema = z.object({
   agentId: z.string().min(1, 'Agent ID is required'),
-  input: z.union([
-    z.string(),
-    ImageGenerationFormSchema,
-    LegacyParamsSchema
-  ]).optional(),
+  input: z
+    .union([z.string(), ImageGenerationFormSchema, LegacyParamsSchema])
+    .optional(),
   params: LegacyParamsSchema.optional(),
   userId: z.string().optional(),
   sessionId: z.string().optional(),
-  progressLevel: z.enum(['user_friendly', 'detailed', 'debug']).optional().default('user_friendly'),
+  progressLevel: z
+    .enum(['user_friendly', 'detailed', 'debug'])
+    .optional()
+    .default('user_friendly'),
   confirmExecution: z.boolean().optional().default(false),
 });
 
@@ -55,9 +59,9 @@ describe('LangGraph Agent Validation', () => {
           theme: 'Photosynthese Prozess mit Pflanze',
           learningGroup: 'Klasse 7',
           dazSupport: false,
-          learningDifficulties: false
+          learningDifficulties: false,
         },
-        userId: 'user123'
+        userId: 'user123',
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -67,7 +71,7 @@ describe('LangGraph Agent Validation', () => {
           theme: 'Photosynthese Prozess mit Pflanze',
           learningGroup: 'Klasse 7',
           dazSupport: false,
-          learningDifficulties: false
+          learningDifficulties: false,
         });
       }
     });
@@ -76,9 +80,9 @@ describe('LangGraph Agent Validation', () => {
       const request = {
         agentId: 'langgraph-image-generation',
         input: {
-          learningGroup: 'Klasse 7'
+          learningGroup: 'Klasse 7',
           // theme is missing
-        }
+        },
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -94,15 +98,17 @@ describe('LangGraph Agent Validation', () => {
         agentId: 'langgraph-image-generation',
         input: {
           theme: 'ab', // Too short
-          learningGroup: 'Klasse 7'
-        }
+          learningGroup: 'Klasse 7',
+        },
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
       expect(result.success).toBe(false);
       if (!result.success) {
         const errors = result.error.errors;
-        expect(errors.some(e => e.message.includes('at least 3 characters'))).toBe(true);
+        expect(
+          errors.some((e) => e.message.includes('at least 3 characters'))
+        ).toBe(true);
       }
     });
 
@@ -111,9 +117,9 @@ describe('LangGraph Agent Validation', () => {
         agentId: 'langgraph-image-generation',
         input: {
           theme: 'Photosynthese',
-          learningGroup: 'Klasse 7'
+          learningGroup: 'Klasse 7',
           // dazSupport and learningDifficulties omitted
-        }
+        },
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -133,9 +139,9 @@ describe('LangGraph Agent Validation', () => {
         params: {
           prompt: 'Create an image of photosynthesis',
           size: '1024x1024' as const,
-          quality: 'hd' as const
+          quality: 'hd' as const,
         },
-        userId: 'user123'
+        userId: 'user123',
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -144,7 +150,7 @@ describe('LangGraph Agent Validation', () => {
         expect(result.data.params).toMatchObject({
           prompt: 'Create an image of photosynthesis',
           size: '1024x1024',
-          quality: 'hd'
+          quality: 'hd',
         });
       }
     });
@@ -154,8 +160,8 @@ describe('LangGraph Agent Validation', () => {
         agentId: 'langgraph-image-generation',
         params: {
           prompt: 'Create an image',
-          size: '512x512' // Invalid size
-        }
+          size: '512x512', // Invalid size
+        },
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -166,9 +172,9 @@ describe('LangGraph Agent Validation', () => {
       const request = {
         agentId: 'langgraph-image-generation',
         params: {
-          size: '1024x1024'
+          size: '1024x1024',
           // prompt missing
-        }
+        },
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -180,13 +186,15 @@ describe('LangGraph Agent Validation', () => {
     it('should accept string input', () => {
       const request = {
         agentId: 'langgraph-image-generation',
-        input: 'Create an educational image about photosynthesis'
+        input: 'Create an educational image about photosynthesis',
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.input).toBe('Create an educational image about photosynthesis');
+        expect(result.data.input).toBe(
+          'Create an educational image about photosynthesis'
+        );
       }
     });
 
@@ -195,8 +203,8 @@ describe('LangGraph Agent Validation', () => {
         agentId: 'langgraph-image-generation',
         input: {
           prompt: 'Create an image',
-          size: '1024x1024' as const
-        }
+          size: '1024x1024' as const,
+        },
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -207,20 +215,22 @@ describe('LangGraph Agent Validation', () => {
   describe('Edge Cases', () => {
     it('should reject request without agentId', () => {
       const request = {
-        input: 'Create an image'
+        input: 'Create an image',
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.errors.some(e => e.path.includes('agentId'))).toBe(true);
+        expect(
+          result.error.errors.some((e) => e.path.includes('agentId'))
+        ).toBe(true);
       }
     });
 
     it('should accept request without userId (optional)', () => {
       const request = {
         agentId: 'langgraph-image-generation',
-        input: 'Create an image'
+        input: 'Create an image',
         // userId omitted
       };
 
@@ -231,7 +241,7 @@ describe('LangGraph Agent Validation', () => {
     it('should default progressLevel to user_friendly', () => {
       const request = {
         agentId: 'langgraph-image-generation',
-        input: 'Create an image'
+        input: 'Create an image',
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -244,7 +254,7 @@ describe('LangGraph Agent Validation', () => {
     it('should default confirmExecution to false', () => {
       const request = {
         agentId: 'langgraph-image-generation',
-        input: 'Create an image'
+        input: 'Create an image',
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -259,7 +269,7 @@ describe('LangGraph Agent Validation', () => {
     it('should correctly identify string input', () => {
       const request = {
         agentId: 'langgraph-image-generation',
-        input: 'Simple string'
+        input: 'Simple string',
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -274,8 +284,8 @@ describe('LangGraph Agent Validation', () => {
         agentId: 'langgraph-image-generation',
         input: {
           theme: 'Photosynthese',
-          learningGroup: 'Klasse 7'
-        }
+          learningGroup: 'Klasse 7',
+        },
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -292,8 +302,8 @@ describe('LangGraph Agent Validation', () => {
         input: {
           prompt: 'Create image',
           size: '1024x1024' as const,
-          quality: 'hd' as const
-        }
+          quality: 'hd' as const,
+        },
       };
 
       const result = AgentExecutionRequestSchema.safeParse(request);
@@ -310,26 +320,26 @@ describe('ImageGenerationFormSchema', () => {
   it('should validate theme length', () => {
     const valid = ImageGenerationFormSchema.safeParse({
       theme: 'Valid theme',
-      learningGroup: 'Klasse 7'
+      learningGroup: 'Klasse 7',
     });
     expect(valid.success).toBe(true);
 
     const tooShort = ImageGenerationFormSchema.safeParse({
       theme: 'ab',
-      learningGroup: 'Klasse 7'
+      learningGroup: 'Klasse 7',
     });
     expect(tooShort.success).toBe(false);
 
     const tooLong = ImageGenerationFormSchema.safeParse({
       theme: 'a'.repeat(501),
-      learningGroup: 'Klasse 7'
+      learningGroup: 'Klasse 7',
     });
     expect(tooLong.success).toBe(false);
   });
 
   it('should require learningGroup', () => {
     const missing = ImageGenerationFormSchema.safeParse({
-      theme: 'Valid theme'
+      theme: 'Valid theme',
     });
     expect(missing.success).toBe(false);
   });
@@ -339,7 +349,7 @@ describe('ImageGenerationFormSchema', () => {
       theme: 'Valid theme',
       learningGroup: 'Klasse 7',
       dazSupport: true,
-      learningDifficulties: true
+      learningDifficulties: true,
     });
     expect(withBooleans.success).toBe(true);
   });
@@ -348,7 +358,7 @@ describe('ImageGenerationFormSchema', () => {
 describe('LegacyParamsSchema', () => {
   it('should require prompt', () => {
     const missing = LegacyParamsSchema.safeParse({
-      size: '1024x1024'
+      size: '1024x1024',
     });
     expect(missing.success).toBe(false);
   });
@@ -356,13 +366,13 @@ describe('LegacyParamsSchema', () => {
   it('should validate size enum', () => {
     const valid = LegacyParamsSchema.safeParse({
       prompt: 'Test',
-      size: '1024x1024'
+      size: '1024x1024',
     });
     expect(valid.success).toBe(true);
 
     const invalid = LegacyParamsSchema.safeParse({
       prompt: 'Test',
-      size: '2048x2048'
+      size: '2048x2048',
     });
     expect(invalid.success).toBe(false);
   });
@@ -370,13 +380,13 @@ describe('LegacyParamsSchema', () => {
   it('should validate quality enum', () => {
     const valid = LegacyParamsSchema.safeParse({
       prompt: 'Test',
-      quality: 'hd'
+      quality: 'hd',
     });
     expect(valid.success).toBe(true);
 
     const invalid = LegacyParamsSchema.safeParse({
       prompt: 'Test',
-      quality: 'ultra'
+      quality: 'ultra',
     });
     expect(invalid.success).toBe(false);
   });
@@ -384,13 +394,13 @@ describe('LegacyParamsSchema', () => {
   it('should validate style enum', () => {
     const valid = LegacyParamsSchema.safeParse({
       prompt: 'Test',
-      style: 'vivid'
+      style: 'vivid',
     });
     expect(valid.success).toBe(true);
 
     const invalid = LegacyParamsSchema.safeParse({
       prompt: 'Test',
-      style: 'artistic'
+      style: 'artistic',
     });
     expect(invalid.success).toBe(false);
   });

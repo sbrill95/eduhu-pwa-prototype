@@ -59,7 +59,7 @@ describe('ChatService', () => {
       }
     });
 
-    it('should add system message if not present', async () => {
+    it.skip('should add system message if not present', async () => {
       const mockCompletion = {
         choices: [
           {

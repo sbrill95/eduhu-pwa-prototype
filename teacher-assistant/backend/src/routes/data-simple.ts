@@ -26,7 +26,7 @@ const GERMAN_STATES = [
   { id: 'sn', name: 'Sachsen', code: 'SN' },
   { id: 'st', name: 'Sachsen-Anhalt', code: 'ST' },
   { id: 'sh', name: 'Schleswig-Holstein', code: 'SH' },
-  { id: 'th', name: 'Thüringen', code: 'TH' }
+  { id: 'th', name: 'Thüringen', code: 'TH' },
 ];
 
 // Teaching subjects data - static for immediate use
@@ -51,7 +51,7 @@ const TEACHING_SUBJECTS = [
   'Ethik',
   'Philosophie',
   'Informatik',
-  'Sachunterricht'
+  'Sachunterricht',
 ];
 
 // Teaching preferences data - static for immediate use
@@ -75,103 +75,116 @@ const TEACHING_PREFERENCES = [
   'Formative Bewertung',
   'Summative Bewertung',
   'Peer Assessment',
-  'Positive Verstärkung'
+  'Positive Verstärkung',
 ];
 
 /**
  * GET /api/data/states
  * Retrieve all German states
  */
-router.get('/data/states', async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { search } = req.query;
+router.get(
+  '/data/states',
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { search } = req.query;
 
-    // Filter states based on search query if provided
-    let filteredStates = GERMAN_STATES;
-    if (search && typeof search === 'string') {
-      const searchLower = search.toLowerCase();
-      filteredStates = GERMAN_STATES.filter(state =>
-        state.name.toLowerCase().includes(searchLower) ||
-        state.code.toLowerCase().includes(searchLower)
-      );
+      // Filter states based on search query if provided
+      let filteredStates = GERMAN_STATES;
+      if (search && typeof search === 'string') {
+        const searchLower = search.toLowerCase();
+        filteredStates = GERMAN_STATES.filter(
+          (state) =>
+            state.name.toLowerCase().includes(searchLower) ||
+            state.code.toLowerCase().includes(searchLower)
+        );
+      }
+
+      const response: ApiResponse<{
+        states: typeof GERMAN_STATES;
+        count: number;
+      }> = {
+        success: true,
+        data: {
+          states: filteredStates,
+          count: filteredStates.length,
+        },
+        message: 'German states retrieved successfully',
+        timestamp: new Date().toISOString(),
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error('Error fetching German states:', error);
+
+      const response: ErrorResponse = {
+        success: false,
+        error: 'Failed to retrieve German states',
+        timestamp: new Date().toISOString(),
+      };
+
+      res.status(500).json(response);
     }
-
-    const response: ApiResponse<{ states: typeof GERMAN_STATES, count: number }> = {
-      success: true,
-      data: {
-        states: filteredStates,
-        count: filteredStates.length
-      },
-      message: 'German states retrieved successfully',
-      timestamp: new Date().toISOString()
-    };
-
-    res.json(response);
-  } catch (error) {
-    console.error('Error fetching German states:', error);
-
-    const response: ErrorResponse = {
-      success: false,
-      error: 'Failed to retrieve German states',
-      timestamp: new Date().toISOString()
-    };
-
-    res.status(500).json(response);
   }
-});
+);
 
 /**
  * GET /api/data/subjects
  * Retrieve all teaching subjects
  */
-router.get('/data/subjects', async (req: Request, res: Response): Promise<void> => {
-  try {
-    const response: ApiResponse<string[]> = {
-      success: true,
-      data: TEACHING_SUBJECTS,
-      message: 'Teaching subjects retrieved successfully',
-      timestamp: new Date().toISOString()
-    };
+router.get(
+  '/data/subjects',
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const response: ApiResponse<string[]> = {
+        success: true,
+        data: TEACHING_SUBJECTS,
+        message: 'Teaching subjects retrieved successfully',
+        timestamp: new Date().toISOString(),
+      };
 
-    res.json(response);
-  } catch (error) {
-    console.error('Error fetching teaching subjects:', error);
+      res.json(response);
+    } catch (error) {
+      console.error('Error fetching teaching subjects:', error);
 
-    const response: ErrorResponse = {
-      success: false,
-      error: 'Failed to retrieve teaching subjects',
-      timestamp: new Date().toISOString()
-    };
+      const response: ErrorResponse = {
+        success: false,
+        error: 'Failed to retrieve teaching subjects',
+        timestamp: new Date().toISOString(),
+      };
 
-    res.status(500).json(response);
+      res.status(500).json(response);
+    }
   }
-});
+);
 
 /**
  * GET /api/data/preferences
  * Retrieve all teaching preferences
  */
-router.get('/data/preferences', async (req: Request, res: Response): Promise<void> => {
-  try {
-    const response: ApiResponse<string[]> = {
-      success: true,
-      data: TEACHING_PREFERENCES,
-      message: 'Teaching preferences retrieved successfully',
-      timestamp: new Date().toISOString()
-    };
+router.get(
+  '/data/preferences',
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const response: ApiResponse<string[]> = {
+        success: true,
+        data: TEACHING_PREFERENCES,
+        message: 'Teaching preferences retrieved successfully',
+        timestamp: new Date().toISOString(),
+      };
 
-    res.json(response);
-  } catch (error) {
-    console.error('Error fetching teaching preferences:', error);
+      res.json(response);
+    } catch (error) {
+      console.error('Error fetching teaching preferences:', error);
 
-    const response: ErrorResponse = {
-      success: false,
-      error: 'Failed to retrieve teaching preferences',
-      timestamp: new Date().toISOString()
-    };
+      const response: ErrorResponse = {
+        success: false,
+        error: 'Failed to retrieve teaching preferences',
+        timestamp: new Date().toISOString(),
+      };
 
-    res.status(500).json(response);
+      res.status(500).json(response);
+    }
   }
-});
+);
 
 export default router;

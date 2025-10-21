@@ -15,6 +15,12 @@
  * - Added console error monitoring
  * - Added network request failure monitoring
  * - Screenshots for ALL steps (pass or fail)
+ *
+ * PHASE 3 E2E TESTING (2025-10-20):
+ * - Updated to test OpenAI SDK agent (/api/agents-sdk/image/generate)
+ * - Frontend now routes image-generation to SDK endpoint
+ * - Backend supports test mode bypass (VITE_TEST_MODE=true)
+ * - Tests migration from LangGraph to OpenAI Agents SDK
  */
 
 import { test, expect, Page } from '@playwright/test';
@@ -27,7 +33,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const FRONTEND_URL = 'http://localhost:5173';
-const SCREENSHOT_DIR = path.join(__dirname, '../../docs/testing/screenshots/2025-10-07');
+const SCREENSHOT_DIR = path.join(__dirname, '../../docs/testing/screenshots/2025-10-20');
 
 // Ensure screenshot directory exists
 if (!fs.existsSync(SCREENSHOT_DIR)) {
@@ -239,9 +245,9 @@ test.describe('Complete Image Generation Workflow - 10 Steps', () => {
     console.log('3. Description vorausgefüllt: "Satz des Pythagoras" ✅');
 
     if (hasConfirmation) {
-      // BUG-028 FIX: Debug and fix strict mode violations
-      // Check how many buttons exist
-      const allStartButtons = await page.locator('[data-testid="agent-confirmation-start-button"]').all();
+      // PHASE 3 FIX: Use correct selector for SDK agent confirmation
+      // Component uses data-testid="agent-confirm-button" (not agent-confirmation-start-button)
+      const allStartButtons = await page.locator('[data-testid="agent-confirm-button"]').all();
       console.log(`Found ${allStartButtons.length} "Bild-Generierung starten" buttons`);
 
       // Log details of each button
@@ -251,8 +257,8 @@ test.describe('Complete Image Generation Workflow - 10 Steps', () => {
         console.log(`  Button ${i + 1}: visible=${isVisible}, text="${text}"`);
       }
 
-      // Use .first() to click the first visible button (TEMPORARY FIX)
-      const startButton = page.locator('[data-testid="agent-confirmation-start-button"]').first();
+      // Use .first() to click the first visible button
+      const startButton = page.locator('[data-testid="agent-confirm-button"]').first();
       await startButton.click();
       await page.waitForTimeout(2000);
 
@@ -724,7 +730,7 @@ test.describe('Complete Image Generation Workflow - 10 Steps', () => {
       step_results: testResults,
     };
 
-    const reportPath = path.join(__dirname, '../../docs/testing/test-reports/2025-10-07/e2e-complete-workflow-report.json');
+    const reportPath = path.join(__dirname, '../../docs/testing/test-reports/2025-10-20/e2e-complete-workflow-report.json');
     fs.mkdirSync(path.dirname(reportPath), { recursive: true });
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 

@@ -13,9 +13,9 @@ import { RedisUtils, RedisKeys } from '../config/redis';
  * Progress levels for different user types
  */
 export enum ProgressLevel {
-  USER_FRIENDLY = 'user_friendly',  // Simple progress for end users
-  DETAILED = 'detailed',            // More granular steps for power users
-  DEBUG = 'debug'                   // Full technical details for development
+  USER_FRIENDLY = 'user_friendly', // Simple progress for end users
+  DETAILED = 'detailed', // More granular steps for power users
+  DEBUG = 'debug', // Full technical details for development
 }
 
 /**
@@ -65,42 +65,47 @@ const AGENT_PROGRESS_STEPS: Record<string, ProgressStep[]> = {
       id: 'validation',
       userFriendly: '🔍 Überprüfe deine Anfrage...',
       detailed: '🔍 Validiere Eingabeparameter und Benutzerberechtigungen',
-      debug: 'Validating input parameters, checking user quotas, and verifying API access',
+      debug:
+        'Validating input parameters, checking user quotas, and verifying API access',
       weight: 10,
-      estimatedDuration: 2
+      estimatedDuration: 2,
     },
     {
       id: 'prompt-enhancement',
       userFriendly: '✨ Optimiere deinen Bildwunsch...',
       detailed: '✨ Verbessere Prompt für bessere Bildqualität',
-      debug: 'Enhancing German prompt with educational context using GPT-4o-mini',
+      debug:
+        'Enhancing German prompt with educational context using GPT-4o-mini',
       weight: 15,
-      estimatedDuration: 3
+      estimatedDuration: 3,
     },
     {
       id: 'image-generation',
       userFriendly: '🎨 Erstelle dein Bild...',
       detailed: '🎨 Generiere Bild mit DALL-E 3',
-      debug: 'Calling OpenAI DALL-E 3 API with enhanced prompt and specified parameters',
+      debug:
+        'Calling OpenAI DALL-E 3 API with enhanced prompt and specified parameters',
       weight: 60,
-      estimatedDuration: 15
+      estimatedDuration: 15,
     },
     {
       id: 'processing',
       userFriendly: '📸 Bereite dein Bild vor...',
       detailed: '📸 Verarbeite Bilddaten und erstelle Artefakt',
-      debug: 'Processing image data, creating artifact record, and updating user usage statistics',
+      debug:
+        'Processing image data, creating artifact record, and updating user usage statistics',
       weight: 10,
-      estimatedDuration: 2
+      estimatedDuration: 2,
     },
     {
       id: 'finalization',
       userFriendly: '✅ Fertig! Dein Bild ist bereit.',
       detailed: '✅ Speichere Ergebnis und aktualisiere Bibliothek',
-      debug: 'Storing artifact in InstantDB, updating user library, and cleaning up temporary data',
+      debug:
+        'Storing artifact in InstantDB, updating user library, and cleaning up temporary data',
       weight: 5,
-      estimatedDuration: 1
-    }
+      estimatedDuration: 1,
+    },
   ],
 
   'web-search': [
@@ -108,35 +113,39 @@ const AGENT_PROGRESS_STEPS: Record<string, ProgressStep[]> = {
       id: 'validation',
       userFriendly: '🔍 Überprüfe deine Suchanfrage...',
       detailed: '🔍 Validiere Suchparameter und Benutzerberechtigungen',
-      debug: 'Validating search query, checking rate limits, and preparing Tavily API call',
+      debug:
+        'Validating search query, checking rate limits, and preparing Tavily API call',
       weight: 10,
-      estimatedDuration: 1
+      estimatedDuration: 1,
     },
     {
       id: 'search',
       userFriendly: '🌐 Durchsuche das Internet...',
       detailed: '🌐 Führe Websuche mit Tavily API durch',
-      debug: 'Executing web search via Tavily API with optimized query parameters',
+      debug:
+        'Executing web search via Tavily API with optimized query parameters',
       weight: 50,
-      estimatedDuration: 5
+      estimatedDuration: 5,
     },
     {
       id: 'processing',
       userFriendly: '📊 Verarbeite Suchergebnisse...',
       detailed: '📊 Analysiere und filtere Suchergebnisse',
-      debug: 'Processing search results, filtering for relevance, and extracting key information',
+      debug:
+        'Processing search results, filtering for relevance, and extracting key information',
       weight: 30,
-      estimatedDuration: 3
+      estimatedDuration: 3,
     },
     {
       id: 'finalization',
       userFriendly: '✅ Suchergebnisse bereit!',
       detailed: '✅ Formatiere Antwort und speichere Ergebnisse',
-      debug: 'Formatting response, caching results, and updating search analytics',
+      debug:
+        'Formatting response, caching results, and updating search analytics',
       weight: 10,
-      estimatedDuration: 1
-    }
-  ]
+      estimatedDuration: 1,
+    },
+  ],
 };
 
 /**
@@ -170,7 +179,7 @@ export class ProgressStreamingService {
       try {
         this.wss = new WebSocketServer({
           port: currentPort,
-          verifyClient: this.verifyClient.bind(this)
+          verifyClient: this.verifyClient.bind(this),
         });
 
         this.wss.on('connection', this.handleConnection.bind(this));
@@ -181,26 +190,34 @@ export class ProgressStreamingService {
         // Start cleanup interval
         setInterval(() => this.cleanupConnections(), 30000); // Every 30 seconds
 
-        logInfo(`Progress streaming WebSocket server started on port ${currentPort}`);
+        logInfo(
+          `Progress streaming WebSocket server started on port ${currentPort}`
+        );
         initialized = true;
 
         // Store the actual port used
         this.wsPort = currentPort;
-
       } catch (error) {
         const errorMessage = (error as Error).message;
         if (errorMessage.includes('EADDRINUSE')) {
-          logWarn(`Port ${currentPort} is in use, trying port ${currentPort + 1}`);
+          logWarn(
+            `Port ${currentPort} is in use, trying port ${currentPort + 1}`
+          );
           currentPort++;
         } else {
-          logError('Failed to initialize progress streaming service', error as Error);
+          logError(
+            'Failed to initialize progress streaming service',
+            error as Error
+          );
           throw error;
         }
       }
     }
 
     if (!initialized) {
-      const error = new Error(`Failed to find available port after ${maxRetries} attempts starting from port ${port}`);
+      const error = new Error(
+        `Failed to find available port after ${maxRetries} attempts starting from port ${port}`
+      );
       logError('WebSocket server initialization failed', error);
       throw error;
     }
@@ -227,7 +244,9 @@ export class ProgressStreamingService {
   private handleConnection(ws: WebSocket, request: IncomingMessage): void {
     const url = new URL(request.url || '', `http://${request.headers.host}`);
     const userId = url.searchParams.get('userId');
-    const level = (url.searchParams.get('level') as ProgressLevel) || ProgressLevel.USER_FRIENDLY;
+    const level =
+      (url.searchParams.get('level') as ProgressLevel) ||
+      ProgressLevel.USER_FRIENDLY;
     const executionId = url.searchParams.get('executionId');
 
     if (!userId) {
@@ -239,9 +258,9 @@ export class ProgressStreamingService {
     const client: WSClient = {
       ws,
       userId,
-      executionId: executionId || '',  // Use empty string instead of undefined
+      executionId: executionId || '', // Use empty string instead of undefined
       level,
-      lastPing: Date.now()
+      lastPing: Date.now(),
     };
 
     this.clients.set(clientId, client);
@@ -258,10 +277,12 @@ export class ProgressStreamingService {
       type: 'connected',
       message: 'Mit Progress-Stream verbunden',
       level,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
-    logInfo(`Progress streaming client connected: ${clientId} (level: ${level})`);
+    logInfo(
+      `Progress streaming client connected: ${clientId} (level: ${level})`
+    );
   }
 
   /**
@@ -283,12 +304,14 @@ export class ProgressStreamingService {
         case 'subscribe':
           if (message.executionId) {
             client.executionId = message.executionId;
-            logInfo(`Client ${clientId} subscribed to execution ${message.executionId}`);
+            logInfo(
+              `Client ${clientId} subscribed to execution ${message.executionId}`
+            );
           }
           break;
 
         case 'unsubscribe':
-          client.executionId = '';  // Use empty string instead of undefined
+          client.executionId = ''; // Use empty string instead of undefined
           logInfo(`Client ${clientId} unsubscribed from execution updates`);
           break;
 
@@ -299,10 +322,15 @@ export class ProgressStreamingService {
           break;
 
         default:
-          logWarn(`Unknown message type from client ${clientId}: ${message.type}`);
+          logWarn(
+            `Unknown message type from client ${clientId}: ${message.type}`
+          );
       }
     } catch (error) {
-      logError(`Error handling message from client ${clientId}`, error as Error);
+      logError(
+        `Error handling message from client ${clientId}`,
+        error as Error
+      );
     }
   }
 
@@ -336,13 +364,24 @@ export class ProgressStreamingService {
     userId: string,
     estimatedDuration?: number
   ): ProgressTracker {
-    const steps = AGENT_PROGRESS_STEPS[agentId] || AGENT_PROGRESS_STEPS['image-generation'] || [];
-    const tracker = new ProgressTracker(executionId, agentId, userId, steps, estimatedDuration);
+    const steps =
+      AGENT_PROGRESS_STEPS[agentId] ||
+      AGENT_PROGRESS_STEPS['image-generation'] ||
+      [];
+    const tracker = new ProgressTracker(
+      executionId,
+      agentId,
+      userId,
+      steps,
+      estimatedDuration
+    );
 
     this.activeExecutions.set(executionId, tracker);
 
     // Send initial progress update
-    this.broadcastProgress(tracker.getProgressUpdate(ProgressLevel.USER_FRIENDLY));
+    this.broadcastProgress(
+      tracker.getProgressUpdate(ProgressLevel.USER_FRIENDLY)
+    );
 
     return tracker;
   }
@@ -358,21 +397,22 @@ export class ProgressStreamingService {
    * Broadcast progress update to relevant clients
    */
   public broadcastProgress(update: ProgressUpdate): void {
-    const relevantClients = Array.from(this.clients.values()).filter(client =>
-      client.userId === this.getExecutionUserId(update.executionId) &&
-      (!client.executionId || client.executionId === update.executionId)
+    const relevantClients = Array.from(this.clients.values()).filter(
+      (client) =>
+        client.userId === this.getExecutionUserId(update.executionId) &&
+        (!client.executionId || client.executionId === update.executionId)
     );
 
-    relevantClients.forEach(client => {
+    relevantClients.forEach((client) => {
       const clientUpdate = {
         ...update,
         level: client.level,
-        message: this.getMessageForLevel(update, client.level)
+        message: this.getMessageForLevel(update, client.level),
       };
 
       this.sendToClient(client, {
         type: 'progress',
-        ...clientUpdate
+        ...clientUpdate,
       });
     });
 
@@ -383,7 +423,10 @@ export class ProgressStreamingService {
   /**
    * Get message appropriate for progress level
    */
-  private getMessageForLevel(update: ProgressUpdate, level: ProgressLevel): string {
+  private getMessageForLevel(
+    update: ProgressUpdate,
+    level: ProgressLevel
+  ): string {
     const tracker = this.activeExecutions.get(update.executionId);
     if (!tracker) return update.message;
 
@@ -441,7 +484,7 @@ export class ProgressStreamingService {
           progress: 0,
           estimatedTimeLeft: 0,
           cancelable: false,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
       }
     } catch (error) {
@@ -478,7 +521,7 @@ export class ProgressStreamingService {
       isRunning: this.wss !== null,
       clientCount: this.clients.size,
       activeExecutions: this.activeExecutions.size,
-      port: 3004
+      port: 3004,
     };
   }
 
@@ -525,7 +568,7 @@ export class ProgressTracker {
    * Set specific step by ID
    */
   public setStep(stepId: string): void {
-    const index = this.steps.findIndex(step => step.id === stepId);
+    const index = this.steps.findIndex((step) => step.id === stepId);
     if (index !== -1) {
       this.currentStepIndex = index;
     }
@@ -592,11 +635,14 @@ export class ProgressTracker {
       executionId: this.executionId,
       level,
       step: currentStep?.id || 'unknown',
-      message: currentStep ? this.getMessageForLevel(currentStep, level) : 'Processing...',
+      message: currentStep
+        ? this.getMessageForLevel(currentStep, level)
+        : 'Processing...',
       progress: this.getProgress(),
       estimatedTimeLeft: this.getEstimatedTimeLeft(),
-      cancelable: !this.cancelled && this.currentStepIndex < this.steps.length - 1,
-      timestamp: Date.now()
+      cancelable:
+        !this.cancelled && this.currentStepIndex < this.steps.length - 1,
+      timestamp: Date.now(),
     };
   }
 

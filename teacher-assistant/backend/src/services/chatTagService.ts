@@ -80,8 +80,8 @@ export async function extractChatTags(
           msg.role === 'user'
             ? 'Lehrkraft'
             : msg.role === 'assistant'
-            ? 'Assistent'
-            : 'System';
+              ? 'Assistent'
+              : 'System';
         return `${roleLabel}: ${msg.content}`;
       })
       .join('\n\n');
@@ -132,9 +132,13 @@ export async function extractChatTags(
           typeof tag.label === 'string' &&
           tag.label.length > 0 &&
           typeof tag.category === 'string' &&
-          ['subject', 'topic', 'grade_level', 'material_type', 'general'].includes(
-            tag.category
-          )
+          [
+            'subject',
+            'topic',
+            'grade_level',
+            'material_type',
+            'general',
+          ].includes(tag.category)
         );
       });
 
@@ -149,14 +153,10 @@ export async function extractChatTags(
 
       return limitedTags;
     } catch (parseError) {
-      logError(
-        'Failed to parse tag extraction response',
-        parseError as Error,
-        {
-          chatSessionId,
-          response: responseContent,
-        }
-      );
+      logError('Failed to parse tag extraction response', parseError as Error, {
+        chatSessionId,
+        response: responseContent,
+      });
       return [];
     }
   } catch (error) {
@@ -206,9 +206,13 @@ export async function extractTagsFromText(text: string): Promise<ChatTag[]> {
         typeof tag.label === 'string' &&
         tag.label.length > 0 &&
         typeof tag.category === 'string' &&
-        ['subject', 'topic', 'grade_level', 'material_type', 'general'].includes(
-          tag.category
-        )
+        [
+          'subject',
+          'topic',
+          'grade_level',
+          'material_type',
+          'general',
+        ].includes(tag.category)
       );
     });
 
@@ -222,7 +226,10 @@ export async function extractTagsFromText(text: string): Promise<ChatTag[]> {
 /**
  * Merge and deduplicate tags
  */
-export function mergeTags(existingTags: ChatTag[], newTags: ChatTag[]): ChatTag[] {
+export function mergeTags(
+  existingTags: ChatTag[],
+  newTags: ChatTag[]
+): ChatTag[] {
   const tagMap = new Map<string, ChatTag>();
 
   // Add existing tags

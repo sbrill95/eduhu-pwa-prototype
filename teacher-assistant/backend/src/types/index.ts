@@ -6,7 +6,7 @@ import type {
   AgentSuggestion,
   ImageGenerationPrefillData,
   AgentParams,
-  AgentResult
+  AgentResult,
 } from '../../../shared/types';
 
 // Re-export all shared types
@@ -18,7 +18,7 @@ export type {
   AgentSuggestion,
   ImageGenerationPrefillData,
   AgentParams,
-  AgentResult
+  AgentResult,
 };
 
 // Environment variables interface
@@ -106,4 +106,30 @@ export interface PromptTemplate {
   category: string;
   requiresContext: string[];
   weight: number;
+}
+
+// Teacher Profile Knowledge Extraction Types
+export interface KnowledgeExtractionRequest {
+  messages: ChatMessage[];
+  userId?: string;
+  conversationId?: string;
+}
+
+export interface TeacherKnowledge {
+  subjects: string[];
+  grades: string[];
+  schoolType?: string;
+  teachingMethods: string[];
+  topics: string[];
+  challenges: string[];
+}
+
+export interface KnowledgeExtractionResponse {
+  success: true;
+  data: {
+    extractedKnowledge: TeacherKnowledge;
+    confidence: number;
+    messagesAnalyzed: number;
+  };
+  timestamp: string;
 }

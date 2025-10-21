@@ -8,7 +8,11 @@ import {
   mergeSimilarCharacteristics,
   findSimilarExisting,
 } from './profileDeduplicationService';
-import { InstantDBService, getInstantDB, isInstantDBAvailable } from './instantdbService';
+import {
+  InstantDBService,
+  getInstantDB,
+  isInstantDBAvailable,
+} from './instantdbService';
 import { ProfileCharacteristic } from '../schemas/instantdb';
 
 // Mock dependencies
@@ -40,11 +44,14 @@ describe('profileDeduplicationService', () => {
   const mockDB = {
     transact: jest.fn().mockResolvedValue({}),
     tx: {
-      profile_characteristics: new Proxy({}, {
-        get: (target, prop) => {
-          return createMockUpdate();
+      profile_characteristics: new Proxy(
+        {},
+        {
+          get: (target, prop) => {
+            return createMockUpdate();
+          },
         }
-      })
+      ),
     },
   };
 
@@ -80,9 +87,9 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       const groups = await findSimilarCharacteristics(mockUserId);
 
@@ -118,9 +125,9 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       const groups = await findSimilarCharacteristics(mockUserId);
 
@@ -154,9 +161,9 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       const groups = await findSimilarCharacteristics(mockUserId);
 
@@ -190,9 +197,9 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       const groups = await findSimilarCharacteristics(mockUserId);
 
@@ -234,9 +241,9 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       const groups = await findSimilarCharacteristics(mockUserId);
 
@@ -269,9 +276,9 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       const groups = await findSimilarCharacteristics(mockUserId);
 
@@ -281,7 +288,9 @@ describe('profileDeduplicationService', () => {
     it('should throw error when InstantDB is not available', async () => {
       (isInstantDBAvailable as jest.Mock).mockReturnValue(false);
 
-      await expect(findSimilarCharacteristics(mockUserId)).rejects.toThrow('InstantDB not initialized');
+      await expect(findSimilarCharacteristics(mockUserId)).rejects.toThrow(
+        'InstantDB not initialized'
+      );
     });
   });
 
@@ -320,13 +329,16 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       mockDB.transact.mockResolvedValue({});
 
-      await mergeSimilarCharacteristics(mockUserId, 'keep-id', ['merge-id-1', 'merge-id-2']);
+      await mergeSimilarCharacteristics(mockUserId, 'keep-id', [
+        'merge-id-1',
+        'merge-id-2',
+      ]);
 
       // Verify transact was called twice (once for update, once for deletes)
       expect(mockDB.transact).toHaveBeenCalledTimes(2);
@@ -340,11 +352,13 @@ describe('profileDeduplicationService', () => {
     });
 
     it('should throw error if keep characteristic not found', async () => {
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue([]);
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue([]);
 
-      await expect(mergeSimilarCharacteristics(mockUserId, 'non-existent', [])).rejects.toThrow(
-        'Keep characteristic not found'
-      );
+      await expect(
+        mergeSimilarCharacteristics(mockUserId, 'non-existent', [])
+      ).rejects.toThrow('Keep characteristic not found');
     });
 
     it('should throw error if merge characteristics not found', async () => {
@@ -361,21 +375,24 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       await expect(
-        mergeSimilarCharacteristics(mockUserId, 'keep-id', ['non-existent-1', 'non-existent-2'])
+        mergeSimilarCharacteristics(mockUserId, 'keep-id', [
+          'non-existent-1',
+          'non-existent-2',
+        ])
       ).rejects.toThrow('Some merge characteristics not found');
     });
 
     it('should throw error when InstantDB is not available', async () => {
       (isInstantDBAvailable as jest.Mock).mockReturnValue(false);
 
-      await expect(mergeSimilarCharacteristics(mockUserId, 'keep-id', ['merge-id'])).rejects.toThrow(
-        'InstantDB not initialized'
-      );
+      await expect(
+        mergeSimilarCharacteristics(mockUserId, 'keep-id', ['merge-id'])
+      ).rejects.toThrow('InstantDB not initialized');
     });
   });
 
@@ -394,11 +411,14 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
-      const result = await findSimilarExisting(mockUserId, 'selbstorganisiertes lernen');
+      const result = await findSimilarExisting(
+        mockUserId,
+        'selbstorganisiertes lernen'
+      );
 
       expect(result).toBe('existing-id');
     });
@@ -417,9 +437,9 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       const result = await findSimilarExisting(mockUserId, 'SOL');
 
@@ -440,11 +460,14 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
-      const result = await findSimilarExisting(mockUserId, 'Selbstorganisiretes lernen'); // Typo
+      const result = await findSimilarExisting(
+        mockUserId,
+        'Selbstorganisiretes lernen'
+      ); // Typo
 
       expect(result).toBe('existing-id');
     });
@@ -463,9 +486,9 @@ describe('profileDeduplicationService', () => {
         },
       ];
 
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockResolvedValue(
-        mockCharacteristics
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockResolvedValue(mockCharacteristics);
 
       const result = await findSimilarExisting(mockUserId, 'Deutsch');
 
@@ -481,9 +504,9 @@ describe('profileDeduplicationService', () => {
     });
 
     it('should handle errors gracefully', async () => {
-      (InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock).mockRejectedValue(
-        new Error('DB Error')
-      );
+      (
+        InstantDBService.ProfileCharacteristics.getCharacteristics as jest.Mock
+      ).mockRejectedValue(new Error('DB Error'));
 
       const result = await findSimilarExisting(mockUserId, 'Test');
 

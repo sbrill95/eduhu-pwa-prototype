@@ -8,7 +8,8 @@ import profileRouter from './profile';
 import filesRouter from './files';
 import storageProxyRouter from './storageProxy';
 import visionTaggingRouter from './visionTagging';
-// import langGraphAgentsRouter from './langGraphAgents'; // TODO: Fix TypeScript errors (ApiResponse type issues)
+import agentsSdkRouter from './agentsSdk';
+import langGraphAgentsRouter from './langGraphAgents';
 // import promptsRouter from './prompts'; // Disabled - prompts.ts.disabled
 // import teacherProfileRouter from './teacher-profile'; // TODO: Fix TypeScript errors
 
@@ -40,6 +41,12 @@ router.use('/', storageProxyRouter);
 
 // Mount vision tagging routes (for automatic image tagging)
 router.use('/vision', visionTaggingRouter);
+
+// Mount OpenAI Agents SDK routes
+router.use('/agents-sdk', agentsSdkRouter);
+
+// Mount LangGraph agents routes
+router.use('/langgraph-agents', langGraphAgentsRouter);
 
 // Mount prompts routes
 // router.use('/prompts', promptsRouter); // Disabled - prompts.ts.disabled

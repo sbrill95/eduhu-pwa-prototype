@@ -43,13 +43,17 @@ router.get('/storage-proxy', async (req: Request, res: Response) => {
   }
 
   try {
-    logInfo('[StorageProxy] Fetching image', { url: imageUrl.substring(0, 100) + '...' });
+    logInfo('[StorageProxy] Fetching image', {
+      url: imageUrl.substring(0, 100) + '...',
+    });
 
     // Fetch the image from S3
     const response = await fetch(imageUrl);
 
     if (!response.ok) {
-      throw new Error(`S3 fetch failed: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `S3 fetch failed: ${response.status} ${response.statusText}`
+      );
     }
 
     // Get image as buffer
@@ -72,7 +76,6 @@ router.get('/storage-proxy', async (req: Request, res: Response) => {
 
     // Send the image
     return res.send(buffer);
-
   } catch (error) {
     logError('[StorageProxy] Failed to fetch image', error as Error);
 

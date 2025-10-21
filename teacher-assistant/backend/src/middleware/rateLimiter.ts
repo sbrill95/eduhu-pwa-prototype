@@ -16,6 +16,10 @@ export const generalLimiter = rateLimit({
   } as ChatErrorResponse,
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  // Skip rate limiting in test environment
+  skip: (_req: Request): boolean => {
+    return process.env.NODE_ENV === 'test';
+  },
 });
 
 /**
@@ -55,6 +59,10 @@ export const authLimiter = rateLimit({
   } as ChatErrorResponse,
   standardHeaders: true,
   legacyHeaders: false,
+  // Skip rate limiting in test environment
+  skip: (_req: Request): boolean => {
+    return process.env.NODE_ENV === 'test';
+  },
   // Longer delay for auth attempts
   skipSuccessfulRequests: true, // Don't count successful requests
   skipFailedRequests: false, // Count failed requests

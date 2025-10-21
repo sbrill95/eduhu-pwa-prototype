@@ -89,10 +89,7 @@ export class VisionService {
           temperature: 0.3, // Lower for more consistent tags
         }),
         new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error('Vision API timeout (30s)')),
-            30000
-          )
+          setTimeout(() => reject(new Error('Vision API timeout (30s)')), 30000)
         ),
       ])) as OpenAI.Chat.Completions.ChatCompletion;
 

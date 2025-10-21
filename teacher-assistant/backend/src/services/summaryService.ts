@@ -39,10 +39,16 @@ export class SummaryService {
    * @returns Summary string
    * @throws Error if generation fails
    */
-  private async generateSummaryInternal(messages: SummaryMessage[], retryCount: number = 0): Promise<string> {
+  private async generateSummaryInternal(
+    messages: SummaryMessage[],
+    retryCount: number = 0
+  ): Promise<string> {
     // Validate input
     if (!messages || messages.length === 0) {
-      logError('Cannot generate summary with empty messages', new Error('Empty messages array'));
+      logError(
+        'Cannot generate summary with empty messages',
+        new Error('Empty messages array')
+      );
       return 'Neuer Chat';
     }
 
@@ -51,14 +57,18 @@ export class SummaryService {
 
     const prompt = this.buildPrompt(relevantMessages);
 
-    logInfo('Generating chat summary', { messageCount: relevantMessages.length, retryCount });
+    logInfo('Generating chat summary', {
+      messageCount: relevantMessages.length,
+      retryCount,
+    });
 
     const response = await openaiClient.chat.completions.create({
       model: 'gpt-4o-mini', // Cost-effective model
       messages: [
         {
           role: 'system',
-          content: 'Du bist ein Assistent, der SEHR kurze Zusammenfassungen erstellt. WICHTIG: Maximal 20 Zeichen! Antworte NUR mit der Zusammenfassung. Keine Anführungszeichen. Kürze aggressiv.',
+          content:
+            'Du bist ein Assistent, der SEHR kurze Zusammenfassungen erstellt. WICHTIG: Maximal 20 Zeichen! Antworte NUR mit der Zusammenfassung. Keine Anführungszeichen. Kürze aggressiv.',
         },
         {
           role: 'user',
@@ -78,7 +88,7 @@ export class SummaryService {
     if (summary.length > 20 && retryCount < 1) {
       logInfo('Summary too long, retrying with stricter prompt', {
         length: summary.length,
-        summary
+        summary,
       });
       return this.generateSummaryInternal(messages, retryCount + 1);
     }
@@ -103,7 +113,7 @@ export class SummaryService {
       originalLength: summary.length,
       finalLength: finalSummary.length,
       summary: finalSummary,
-      wasTruncated: summary.length > 20
+      wasTruncated: summary.length > 20,
     });
 
     return finalSummary;

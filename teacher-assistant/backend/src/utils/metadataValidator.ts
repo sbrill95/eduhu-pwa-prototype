@@ -45,40 +45,50 @@ const SanitizedString = z.string().transform(sanitizeString);
 /**
  * Image metadata schema (for agent-generated images)
  */
-export const ImageMetadataSchema = z.object({
-  type: z.literal('image'),
-  image_url: z.string().url('Invalid image URL'),
-  title: SanitizedString.optional(),
-  originalParams: z.object({
-    description: SanitizedString.optional(),
-    imageStyle: SanitizedString.optional(),
-    learningGroup: SanitizedString.optional(),
-    subject: SanitizedString.optional(),
-  }).optional(),
-}).strict();
+export const ImageMetadataSchema = z
+  .object({
+    type: z.literal('image'),
+    image_url: z.string().url('Invalid image URL'),
+    title: SanitizedString.optional(),
+    originalParams: z
+      .object({
+        description: SanitizedString.optional(),
+        imageStyle: SanitizedString.optional(),
+        learningGroup: SanitizedString.optional(),
+        subject: SanitizedString.optional(),
+      })
+      .optional(),
+  })
+  .strict();
 
 /**
  * Text message metadata schema
  */
-export const TextMetadataSchema = z.object({
-  type: z.literal('text'),
-  content: SanitizedString.optional(),
-}).strict();
+export const TextMetadataSchema = z
+  .object({
+    type: z.literal('text'),
+    content: SanitizedString.optional(),
+  })
+  .strict();
 
 /**
  * Agent result metadata schema
  */
-export const AgentResultMetadataSchema = z.object({
-  type: z.literal('agent_result'),
-  image_url: z.string().url('Invalid image URL').optional(),
-  title: SanitizedString.optional(),
-  originalParams: z.object({
-    description: SanitizedString.optional(),
-    imageStyle: SanitizedString.optional(),
-    learningGroup: SanitizedString.optional(),
-    subject: SanitizedString.optional(),
-  }).optional(),
-}).strict();
+export const AgentResultMetadataSchema = z
+  .object({
+    type: z.literal('agent_result'),
+    image_url: z.string().url('Invalid image URL').optional(),
+    title: SanitizedString.optional(),
+    originalParams: z
+      .object({
+        description: SanitizedString.optional(),
+        imageStyle: SanitizedString.optional(),
+        learningGroup: SanitizedString.optional(),
+        subject: SanitizedString.optional(),
+      })
+      .optional(),
+  })
+  .strict();
 
 /**
  * Union of all metadata types
@@ -107,7 +117,9 @@ export interface ValidationResult<T> {
  * @param metadata - Metadata object to validate
  * @returns Validation result with sanitized data or error details
  */
-export function validateMetadata(metadata: unknown): ValidationResult<z.infer<typeof MetadataSchema>> {
+export function validateMetadata(
+  metadata: unknown
+): ValidationResult<z.infer<typeof MetadataSchema>> {
   try {
     // Parse and validate with Zod
     const result = MetadataSchema.safeParse(metadata);
@@ -117,44 +129,48 @@ export function validateMetadata(metadata: unknown): ValidationResult<z.infer<ty
         success: false,
         error: {
           message: 'Metadata validation failed',
-          details: result.error.errors.map(err => ({
+          details: result.error.errors.map((err) => ({
             field: err.path.join('.'),
-            message: err.message
-          }))
-        }
+            message: err.message,
+          })),
+        },
       };
     }
 
     // Check serialized size (FR-010d: <10KB)
     const serialized = JSON.stringify(result.data);
-    if (serialized.length >= 10240) { // 10KB = 10240 bytes
+    if (serialized.length >= 10240) {
+      // 10KB = 10240 bytes
       return {
         success: false,
         error: {
           message: 'Metadata too large',
-          details: [{
-            field: 'metadata',
-            message: `Serialized JSON size ${serialized.length} bytes exceeds 10KB limit`
-          }]
-        }
+          details: [
+            {
+              field: 'metadata',
+              message: `Serialized JSON size ${serialized.length} bytes exceeds 10KB limit`,
+            },
+          ],
+        },
       };
     }
 
     return {
       success: true,
-      data: result.data
+      data: result.data,
     };
-
   } catch (error) {
     return {
       success: false,
       error: {
         message: 'Metadata validation error',
-        details: [{
-          field: 'metadata',
-          message: error instanceof Error ? error.message : String(error)
-        }]
-      }
+        details: [
+          {
+            field: 'metadata',
+            message: error instanceof Error ? error.message : String(error),
+          },
+        ],
+      },
     };
   }
 }

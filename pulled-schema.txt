@@ -1,7 +1,0 @@
-npm warn exec The following package was not found and will be installed: instant-cli@0.22.9
-[dotenv-flow@4.1.0]: ".env*" files loading failed: no ".env*" files matching pattern ".env[.node_env][.local]" in "c:\Users\steff\Desktop\eduhu-pwa-prototype" dir undefined
-Checking for an Instant SDK...
-Found @instantdb/admin in your package.json.
-Pulling schema...
-[32m?[39m [1mThis will overwrite your local instant.schema file, OK to proceed?[22m no / yes[?25l[78G
-[?25h

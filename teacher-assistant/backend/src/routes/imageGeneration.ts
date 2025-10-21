@@ -20,16 +20,16 @@ router.get('/agents/available', async (req: Request, res: Response) => {
             name: 'Bild-Generierung',
             description: 'Erstellt hochwertige Bilder für den Unterricht',
             type: 'image-generation',
-            available: true
-          }
-        ]
-      }
+            available: true,
+          },
+        ],
+      },
     });
   } catch (error: any) {
     logError('[ImageGen] Error fetching available agents', error);
     return res.status(500).json({
       success: false,
-      error: error.message || 'Failed to fetch available agents'
+      error: error.message || 'Failed to fetch available agents',
     });
   }
 });
@@ -52,8 +52,8 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
     contentType: req.get('Content-Type'),
     headers: {
       origin: req.get('Origin'),
-      referer: req.get('Referer')
-    }
+      referer: req.get('Referer'),
+    },
   });
 
   try {
@@ -66,7 +66,7 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
       parameters: legacyParameters,
       input: newInput,
       sessionId,
-      userId
+      userId,
     } = req.body;
 
     // Accept either agentType (legacy) or agentId (new)
@@ -75,12 +75,17 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
     // Accept either parameters (legacy) or input (new)
     const inputData = legacyParameters || newInput;
 
-    logInfo('[ImageGen] Request received', { agentType, inputData, sessionId, userId });
+    logInfo('[ImageGen] Request received', {
+      agentType,
+      inputData,
+      sessionId,
+      userId,
+    });
 
     if (agentType !== 'image-generation') {
       return res.status(400).json({
         success: false,
-        error: 'Only image-generation agent is supported'
+        error: 'Only image-generation agent is supported',
       });
     }
 
@@ -88,13 +93,17 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
     // New format: { description, imageStyle, learningGroup }
     // Legacy format: { theme, style, educationalLevel }
     const theme = (inputData as any)?.description || (inputData as any)?.theme;
-    const style = (inputData as any)?.imageStyle || (inputData as any)?.style || 'realistic';
-    const educationalLevel = (inputData as any)?.learningGroup || (inputData as any)?.educationalLevel;
+    const style =
+      (inputData as any)?.imageStyle ||
+      (inputData as any)?.style ||
+      'realistic';
+    const educationalLevel =
+      (inputData as any)?.learningGroup || (inputData as any)?.educationalLevel;
 
     if (!theme) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required parameter: theme'
+        error: 'Missing required parameter: theme',
       });
     }
 
@@ -128,26 +137,39 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
       imageUrl = url;
       revisedPrompt = response.data[0]?.revised_prompt;
 
-      logInfo('[ImageGen] Image generated successfully (temporary URL)', { imageUrl: imageUrl.substring(0, 60) + '...' });
+      logInfo('[ImageGen] Image generated successfully (temporary URL)', {
+        imageUrl: imageUrl.substring(0, 60) + '...',
+      });
 
       // Upload to permanent storage with public read permissions
       // Schema configured with: $files.view = "true" (public read), $files.create = "auth.id != null" (authenticated write)
       try {
-        const { InstantDBService } = await import('../services/instantdbService');
+        const { InstantDBService } = await import(
+          '../services/instantdbService'
+        );
         const filename = `image-${crypto.randomUUID()}.png`;
 
         logInfo('[ImageGen] Uploading to permanent storage...', { filename });
-        const permanentUrl = await InstantDBService.FileStorage.uploadImageFromUrl(imageUrl, filename);
+        const permanentUrl =
+          await InstantDBService.FileStorage.uploadImageFromUrl(
+            imageUrl,
+            filename
+          );
         imageUrl = permanentUrl; // Replace temporary URL with permanent URL
 
         logInfo('[ImageGen] ✅ Image uploaded to permanent storage', {
           filename,
           permanentUrl: permanentUrl.substring(0, 60) + '...',
-          expiryNote: 'Permanent (no expiry)'
+          expiryNote: 'Permanent (no expiry)',
         });
       } catch (uploadError) {
-        logError('[ImageGen] ⚠️  Failed to upload to permanent storage, using temporary URL', uploadError as Error);
-        logInfo('[ImageGen] Fallback: Using temporary DALL-E URL (expires in 2 hours)');
+        logError(
+          '[ImageGen] ⚠️  Failed to upload to permanent storage, using temporary URL',
+          uploadError as Error
+        );
+        logInfo(
+          '[ImageGen] Fallback: Using temporary DALL-E URL (expires in 2 hours)'
+        );
         // Continue with temporary URL as fallback
       }
     } catch (dalleError: any) {
@@ -176,24 +198,35 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
           description: theme || '',
           imageStyle: style || 'realistic',
           learningGroup: educationalLevel || '',
-          subject: ''
+          subject: '',
         };
 
         // US4 FIX: Validate and stringify metadata before saving
-        const { validateAndStringifyMetadata } = await import('../utils/metadataValidator');
+        const { validateAndStringifyMetadata } = await import(
+          '../utils/metadataValidator'
+        );
         const libraryMetadataObject = {
           type: 'image' as const,
           image_url: imageUrl,
           title: theme || 'Generiertes Bild',
-          originalParams: originalParams
+          originalParams: originalParams,
         };
 
-        const validatedLibraryMetadata = validateAndStringifyMetadata(libraryMetadataObject);
+        const validatedLibraryMetadata = validateAndStringifyMetadata(
+          libraryMetadataObject
+        );
 
         if (!validatedLibraryMetadata) {
-          logError('[ImageGen] Library metadata validation failed - saving without metadata', new Error('Metadata validation failed'), { libraryMetadataObject });
+          logError(
+            '[ImageGen] Library metadata validation failed - saving without metadata',
+            new Error('Metadata validation failed'),
+            { libraryMetadataObject }
+          );
         } else {
-          logInfo('[ImageGen] Library metadata validation successful', { libraryId: libId, metadataSize: validatedLibraryMetadata.length });
+          logInfo('[ImageGen] Library metadata validation successful', {
+            libraryId: libId,
+            metadataSize: validatedLibraryMetadata.length,
+          });
         }
 
         // BUG-029 FIX: Save to library_materials (not artifacts)
@@ -210,17 +243,22 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
             usage_count: 0,
             user_id: userId,
             source_session_id: sessionId || null,
-            metadata: validatedLibraryMetadata // US4 FIX: Add metadata field
-          })
+            metadata: validatedLibraryMetadata, // US4 FIX: Add metadata field
+          }),
         ]);
 
-        logInfo('[ImageGen] Saved to library_materials', { libraryMaterialId: libId, metadataValidated: !!validatedLibraryMetadata });
+        logInfo('[ImageGen] Saved to library_materials', {
+          libraryMaterialId: libId,
+          metadataValidated: !!validatedLibraryMetadata,
+        });
 
         // 2. Save to messages (if sessionId provided)
         if (sessionId) {
           // BUG-025 FIX: Validate required fields for InstantDB relationships
           if (!userId) {
-            throw new Error('Missing userId - required for message author relationship');
+            throw new Error(
+              'Missing userId - required for message author relationship'
+            );
           }
 
           const msgId = crypto.randomUUID();
@@ -231,7 +269,7 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
             description: theme || '',
             imageStyle: style || 'realistic',
             learningGroup: educationalLevel || '',
-            subject: ''
+            subject: '',
           };
 
           // BUG-025 FIX: Add required relationship fields (session, author)
@@ -249,14 +287,18 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
                 revised_prompt: revisedPrompt,
                 dalle_title: theme,
                 title: theme,
-                originalParams: originalParams  // BUG-023: Added for re-generation
+                originalParams: originalParams, // BUG-023: Added for re-generation
               }),
-              session: sessionId,   // BUG-025: Link to chat_sessions (use 'session' not 'session_id')
-              author: userId          // BUG-025: Link to users (use 'author' not 'user_id')
-            })
+              session: sessionId, // BUG-025: Link to chat_sessions (use 'session' not 'session_id')
+              author: userId, // BUG-025: Link to users (use 'author' not 'user_id')
+            }),
           ]);
 
-          logInfo('[ImageGen] Saved to messages', { messageId, sessionId, userId });
+          logInfo('[ImageGen] Saved to messages', {
+            messageId,
+            sessionId,
+            userId,
+          });
         }
       } catch (dbError: any) {
         logError('[ImageGen] InstantDB storage error', dbError);
@@ -286,8 +328,8 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
           model: 'dall-e-3',
           size: '1024x1024',
           quality: 'standard',
-        }
-      }
+        },
+      },
     };
 
     // If storage failed, return 207 Multi-Status
@@ -295,21 +337,19 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
       return res.status(207).json({
         ...responseData,
         warning: 'Image generated but storage failed',
-        storageError: storageError.message
+        storageError: storageError.message,
       });
     }
 
     return res.json(responseData);
-
   } catch (error: any) {
     logError('[ImageGen] Error', error);
     return res.status(500).json({
       success: false,
       error: error.message || 'Image generation failed',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });
 
 export default router;
-

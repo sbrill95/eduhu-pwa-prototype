@@ -37,7 +37,7 @@ export enum ErrorType {
   MONTHLY_QUOTA_EXCEEDED = 'monthly_quota_exceeded',
 
   // Unknown errors
-  UNKNOWN = 'unknown'
+  UNKNOWN = 'unknown',
 }
 
 /**
@@ -80,7 +80,9 @@ export interface ErrorRecoveryConfig {
 /**
  * Default error recovery configurations for different error types
  */
-const DEFAULT_RECOVERY_CONFIGS: Partial<Record<ErrorType, ErrorRecoveryConfig>> = {
+const DEFAULT_RECOVERY_CONFIGS: Partial<
+  Record<ErrorType, ErrorRecoveryConfig>
+> = {
   [ErrorType.RATE_LIMIT]: {
     retryStrategy: {
       maxRetries: 3,
@@ -88,21 +90,23 @@ const DEFAULT_RECOVERY_CONFIGS: Partial<Record<ErrorType, ErrorRecoveryConfig>> 
       maxDelay: 60000, // 1 minute
       backoffType: 'exponential',
       jitter: true,
-      retryableErrors: [ErrorType.RATE_LIMIT]
+      retryableErrors: [ErrorType.RATE_LIMIT],
     },
     fallbackStrategy: {
       enabled: true,
-      fallbackMessage: 'OpenAI ist momentan überlastet. Wir versuchen es automatisch erneut.',
+      fallbackMessage:
+        'OpenAI ist momentan überlastet. Wir versuchen es automatisch erneut.',
       preserveCredits: true,
       notifyUser: true,
-      escalateAfterAttempts: 3
+      escalateAfterAttempts: 3,
     },
     userNotification: {
       immediate: 'Die KI ist momentan stark ausgelastet. Einen Moment bitte...',
       retry: 'Versuche erneut in {delay} Sekunden...',
       fallback: 'OpenAI ist überlastet. Versuche es in 5 Minuten wieder.',
-      escalation: 'Anhaltende Probleme mit OpenAI. Bitte kontaktiere den Support.'
-    }
+      escalation:
+        'Anhaltende Probleme mit OpenAI. Bitte kontaktiere den Support.',
+    },
   },
 
   [ErrorType.QUOTA_EXCEEDED]: {
@@ -112,21 +116,23 @@ const DEFAULT_RECOVERY_CONFIGS: Partial<Record<ErrorType, ErrorRecoveryConfig>> 
       maxDelay: 0,
       backoffType: 'fixed',
       jitter: false,
-      retryableErrors: []
+      retryableErrors: [],
     },
     fallbackStrategy: {
       enabled: false,
       fallbackMessage: '',
       preserveCredits: true,
       notifyUser: true,
-      escalateAfterAttempts: 1
+      escalateAfterAttempts: 1,
     },
     userNotification: {
-      immediate: 'OpenAI-Kontingent erschöpft. Bitte versuche es später wieder.',
+      immediate:
+        'OpenAI-Kontingent erschöpft. Bitte versuche es später wieder.',
       retry: '',
       fallback: '',
-      escalation: 'OpenAI-Kontingent dauerhaft erschöpft. Bitte wende dich an den Administrator.'
-    }
+      escalation:
+        'OpenAI-Kontingent dauerhaft erschöpft. Bitte wende dich an den Administrator.',
+    },
   },
 
   [ErrorType.NETWORK_ERROR]: {
@@ -136,21 +142,24 @@ const DEFAULT_RECOVERY_CONFIGS: Partial<Record<ErrorType, ErrorRecoveryConfig>> 
       maxDelay: 10000, // 10 seconds
       backoffType: 'exponential',
       jitter: true,
-      retryableErrors: [ErrorType.NETWORK_ERROR, ErrorType.TIMEOUT]
+      retryableErrors: [ErrorType.NETWORK_ERROR, ErrorType.TIMEOUT],
     },
     fallbackStrategy: {
       enabled: true,
-      fallbackMessage: 'Netzwerkprobleme erkannt. Automatischer Wiederholungsversuch...',
+      fallbackMessage:
+        'Netzwerkprobleme erkannt. Automatischer Wiederholungsversuch...',
       preserveCredits: true,
       notifyUser: true,
-      escalateAfterAttempts: 3
+      escalateAfterAttempts: 3,
     },
     userNotification: {
       immediate: 'Verbindungsprobleme erkannt. Versuche automatisch erneut...',
       retry: 'Wiederholung in {delay} Sekunden...',
-      fallback: 'Anhaltende Verbindungsprobleme. Bitte überprüfe deine Internetverbindung.',
-      escalation: 'Schwerwiegende Netzwerkprobleme. Bitte kontaktiere den Support.'
-    }
+      fallback:
+        'Anhaltende Verbindungsprobleme. Bitte überprüfe deine Internetverbindung.',
+      escalation:
+        'Schwerwiegende Netzwerkprobleme. Bitte kontaktiere den Support.',
+    },
   },
 
   [ErrorType.INVALID_INPUT]: {
@@ -160,21 +169,21 @@ const DEFAULT_RECOVERY_CONFIGS: Partial<Record<ErrorType, ErrorRecoveryConfig>> 
       maxDelay: 0,
       backoffType: 'fixed',
       jitter: false,
-      retryableErrors: []
+      retryableErrors: [],
     },
     fallbackStrategy: {
       enabled: false,
       fallbackMessage: '',
       preserveCredits: true,
       notifyUser: true,
-      escalateAfterAttempts: 1
+      escalateAfterAttempts: 1,
     },
     userNotification: {
       immediate: 'Ungültige Eingabe erkannt. Bitte überprüfe deine Anfrage.',
       retry: '',
       fallback: '',
-      escalation: ''
-    }
+      escalation: '',
+    },
   },
 
   [ErrorType.USER_LIMIT_EXCEEDED]: {
@@ -184,21 +193,22 @@ const DEFAULT_RECOVERY_CONFIGS: Partial<Record<ErrorType, ErrorRecoveryConfig>> 
       maxDelay: 0,
       backoffType: 'fixed',
       jitter: false,
-      retryableErrors: []
+      retryableErrors: [],
     },
     fallbackStrategy: {
       enabled: false,
       fallbackMessage: '',
       preserveCredits: true,
       notifyUser: true,
-      escalateAfterAttempts: 1
+      escalateAfterAttempts: 1,
     },
     userNotification: {
-      immediate: 'Monatliches Limit erreicht. Du kannst nächsten Monat wieder Bilder generieren.',
+      immediate:
+        'Monatliches Limit erreicht. Du kannst nächsten Monat wieder Bilder generieren.',
       retry: '',
       fallback: '',
-      escalation: ''
-    }
+      escalation: '',
+    },
   },
 
   // Default for all other error types
@@ -209,26 +219,30 @@ const DEFAULT_RECOVERY_CONFIGS: Partial<Record<ErrorType, ErrorRecoveryConfig>> 
       maxDelay: 15000,
       backoffType: 'exponential',
       jitter: true,
-      retryableErrors: [ErrorType.UNKNOWN, ErrorType.INTERNAL_ERROR]
+      retryableErrors: [ErrorType.UNKNOWN, ErrorType.INTERNAL_ERROR],
     },
     fallbackStrategy: {
       enabled: true,
-      fallbackMessage: 'Ein unerwarteter Fehler ist aufgetreten. Versuche automatisch erneut...',
+      fallbackMessage:
+        'Ein unerwarteter Fehler ist aufgetreten. Versuche automatisch erneut...',
       preserveCredits: true,
       notifyUser: true,
-      escalateAfterAttempts: 2
+      escalateAfterAttempts: 2,
     },
     userNotification: {
-      immediate: 'Ein unerwarteter Fehler ist aufgetreten. Einen Moment bitte...',
+      immediate:
+        'Ein unerwarteter Fehler ist aufgetreten. Einen Moment bitte...',
       retry: 'Wiederholung in {delay} Sekunden...',
-      fallback: 'Anhaltende Probleme. Bitte versuche es in einigen Minuten erneut.',
-      escalation: 'Schwerwiegender Systemfehler. Bitte kontaktiere den Support.'
-    }
-  }
+      fallback:
+        'Anhaltende Probleme. Bitte versuche es in einigen Minuten erneut.',
+      escalation:
+        'Schwerwiegender Systemfehler. Bitte kontaktiere den Support.',
+    },
+  },
 };
 
 // Copy default config for other error types
-Object.values(ErrorType).forEach(errorType => {
+Object.values(ErrorType).forEach((errorType) => {
   if (!DEFAULT_RECOVERY_CONFIGS[errorType]) {
     DEFAULT_RECOVERY_CONFIGS[errorType] = {
       retryStrategy: {
@@ -237,21 +251,21 @@ Object.values(ErrorType).forEach(errorType => {
         maxDelay: 10000,
         backoffType: 'exponential',
         jitter: false,
-        retryableErrors: []
+        retryableErrors: [],
       },
       fallbackStrategy: {
         enabled: false,
         fallbackMessage: 'Operation failed. Using default fallback.',
         preserveCredits: true,
         notifyUser: true,
-        escalateAfterAttempts: 1
+        escalateAfterAttempts: 1,
       },
       userNotification: {
         immediate: 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.',
         retry: 'Versuche es erneut in {delay} Sekunden...',
         fallback: 'Verwende alternative Methode...',
-        escalation: 'Operation fehlgeschlagen. Bitte kontaktiere den Support.'
-      }
+        escalation: 'Operation fehlgeschlagen. Bitte kontaktiere den Support.',
+      },
     };
   }
 });
@@ -324,7 +338,11 @@ export class ErrorHandlingService {
     }
 
     // Network errors
-    if (message.includes('network') || message.includes('enotfound') || message.includes('econnrefused')) {
+    if (
+      message.includes('network') ||
+      message.includes('enotfound') ||
+      message.includes('econnrefused')
+    ) {
       return ErrorType.NETWORK_ERROR;
     }
     if (message.includes('timeout') || name.includes('timeout')) {
@@ -379,7 +397,7 @@ export class ErrorHandlingService {
         shouldFallback: false,
         userMessage: `Unbekannter Fehler: ${error.message}`,
         creditsPreserved: false,
-        escalate: true
+        escalate: true,
       };
     }
 
@@ -394,16 +412,24 @@ export class ErrorHandlingService {
       timestamp: Date.now(),
       errorType,
       originalError: error,
-      retryable: config.retryStrategy?.retryableErrors.includes(errorType) || false,
-      creditsPreserved: config.fallbackStrategy?.preserveCredits || false
+      retryable:
+        config.retryStrategy?.retryableErrors.includes(errorType) || false,
+      creditsPreserved: config.fallbackStrategy?.preserveCredits || false,
     };
 
     // Store error context for analysis
     await this.storeErrorContext(context);
 
     // Check if we should retry
-    if (context.retryable && config.retryStrategy && attemptNumber <= config.retryStrategy.maxRetries) {
-      const delay = this.calculateRetryDelay(config.retryStrategy, attemptNumber);
+    if (
+      context.retryable &&
+      config.retryStrategy &&
+      attemptNumber <= config.retryStrategy.maxRetries
+    ) {
+      const delay = this.calculateRetryDelay(
+        config.retryStrategy,
+        attemptNumber
+      );
 
       // Track retry attempt
       await this.trackRetryAttempt(operationId, attemptNumber);
@@ -413,21 +439,30 @@ export class ErrorHandlingService {
         shouldRetry: true,
         shouldFallback: false,
         delayMs: delay,
-        userMessage: config.userNotification?.retry?.replace('{delay}', Math.ceil(delay / 1000).toString()) || 'Retrying operation...',
+        userMessage:
+          config.userNotification?.retry?.replace(
+            '{delay}',
+            Math.ceil(delay / 1000).toString()
+          ) || 'Retrying operation...',
         creditsPreserved: true,
-        escalate: false
+        escalate: false,
       };
     }
 
     // Check if we should fallback
-    if (config.fallbackStrategy?.enabled && config.fallbackStrategy.escalateAfterAttempts && attemptNumber <= config.fallbackStrategy.escalateAfterAttempts) {
+    if (
+      config.fallbackStrategy?.enabled &&
+      config.fallbackStrategy.escalateAfterAttempts &&
+      attemptNumber <= config.fallbackStrategy.escalateAfterAttempts
+    ) {
       return {
         success: false,
         shouldRetry: false,
         shouldFallback: true,
-        userMessage: config.userNotification?.fallback || 'Using fallback strategy...',
+        userMessage:
+          config.userNotification?.fallback || 'Using fallback strategy...',
         creditsPreserved: config.fallbackStrategy?.preserveCredits || false,
-        escalate: false
+        escalate: false,
       };
     }
 
@@ -438,16 +473,22 @@ export class ErrorHandlingService {
       success: false,
       shouldRetry: false,
       shouldFallback: false,
-      userMessage: config.userNotification?.escalation || config.userNotification?.immediate || 'Operation failed. Please try again later.',
+      userMessage:
+        config.userNotification?.escalation ||
+        config.userNotification?.immediate ||
+        'Operation failed. Please try again later.',
       creditsPreserved: config.fallbackStrategy?.preserveCredits || false,
-      escalate: true
+      escalate: true,
     };
   }
 
   /**
    * Calculate retry delay with backoff and jitter
    */
-  private calculateRetryDelay(strategy: RetryStrategy, attemptNumber: number): number {
+  private calculateRetryDelay(
+    strategy: RetryStrategy,
+    attemptNumber: number
+  ): number {
     let delay: number;
 
     switch (strategy.backoffType) {
@@ -484,10 +525,14 @@ export class ErrorHandlingService {
       await RedisUtils.setWithExpiry(key, context, 86400); // 24 hours
 
       // Update error metrics
-      const errorMetricKey = RedisKeys.metrics(`error:${context.errorType}:${new Date().toISOString().slice(0, 10)}`);
+      const errorMetricKey = RedisKeys.metrics(
+        `error:${context.errorType}:${new Date().toISOString().slice(0, 10)}`
+      );
       await RedisUtils.incrementWithExpiry(errorMetricKey, 86400);
 
-      logInfo(`Stored error context: ${context.operationId} - ${context.errorType}`);
+      logInfo(
+        `Stored error context: ${context.operationId} - ${context.errorType}`
+      );
     } catch (error) {
       logError('Failed to store error context', error as Error);
     }
@@ -496,7 +541,10 @@ export class ErrorHandlingService {
   /**
    * Track retry attempts
    */
-  private async trackRetryAttempt(operationId: string, attemptNumber: number): Promise<void> {
+  private async trackRetryAttempt(
+    operationId: string,
+    attemptNumber: number
+  ): Promise<void> {
     try {
       const key = RedisKeys.retryCount(operationId);
       await RedisUtils.setWithExpiry(key, attemptNumber, 3600); // 1 hour
@@ -508,7 +556,9 @@ export class ErrorHandlingService {
   /**
    * Get error statistics for monitoring
    */
-  public async getErrorStatistics(timeRange: 'day' | 'week' | 'month' = 'day'): Promise<Record<string, number>> {
+  public async getErrorStatistics(
+    timeRange: 'day' | 'week' | 'month' = 'day'
+  ): Promise<Record<string, number>> {
     try {
       const stats: Record<string, number> = {};
       const days = timeRange === 'day' ? 1 : timeRange === 'week' ? 7 : 30;
@@ -520,7 +570,7 @@ export class ErrorHandlingService {
 
         for (const errorType of Object.values(ErrorType)) {
           const key = RedisKeys.metrics(`error:${errorType}:${dateStr}`);
-          const count = await RedisUtils.getJSON<number>(key) || 0;
+          const count = (await RedisUtils.getJSON<number>(key)) || 0;
           stats[errorType] = (stats[errorType] || 0) + count;
         }
       }
@@ -535,10 +585,13 @@ export class ErrorHandlingService {
   /**
    * Check if operation should be rate limited due to recent errors
    */
-  public async shouldRateLimit(userId: string, agentId: string): Promise<boolean> {
+  public async shouldRateLimit(
+    userId: string,
+    agentId: string
+  ): Promise<boolean> {
     try {
       const key = RedisKeys.rateLimit(userId, agentId);
-      const errorCount = await RedisUtils.getJSON<number>(key) || 0;
+      const errorCount = (await RedisUtils.getJSON<number>(key)) || 0;
 
       // Rate limit if more than 5 errors in the last 10 minutes
       return errorCount > 5;
@@ -551,7 +604,10 @@ export class ErrorHandlingService {
   /**
    * Increment error count for rate limiting
    */
-  public async incrementErrorCount(userId: string, agentId: string): Promise<void> {
+  public async incrementErrorCount(
+    userId: string,
+    agentId: string
+  ): Promise<void> {
     try {
       const key = RedisKeys.rateLimit(userId, agentId);
       await RedisUtils.incrementWithExpiry(key, 600); // 10 minutes

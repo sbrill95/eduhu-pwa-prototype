@@ -7,11 +7,11 @@ import {
   IAgent,
   AgentParams,
   AgentResult,
-  agentRegistry
+  agentRegistry,
+  GeneratedArtifact,
 } from './agentService';
 import { logInfo, logError, logWarn } from '../config/logger';
 import { InstantDBService } from './instantdbService';
-import { GeneratedArtifact } from '../schemas/instantdb';
 
 /**
  * Basic workflow state interface
@@ -91,33 +91,46 @@ export class LangGraphAgentService {
       if (!agent) {
         return {
           success: false,
-          error: `Agent not found: ${agentId}`
+          error: `Agent not found: ${agentId}`,
         };
       }
 
       if (!agent.enabled) {
         return {
           success: false,
-          error: `Agent is disabled: ${agentId}`
+          error: `Agent is disabled: ${agentId}`,
         };
       }
 
       // Create execution record
-      const executionRecord = await this.createExecutionRecord(agent, params, userId, executionId);
+      const executionRecord = await this.createExecutionRecord(
+        agent,
+        params,
+        userId,
+        executionId
+      );
       if (!executionRecord) {
         throw new Error('Failed to create execution record');
       }
 
       // Validate parameters
       if (!agent.validateParams(params)) {
-        await this.updateExecutionStatus(executionId, 'failed', 'Invalid parameters');
+        await this.updateExecutionStatus(
+          executionId,
+          'failed',
+          'Invalid parameters'
+        );
         throw new Error('Invalid parameters provided');
       }
 
       // Check user limits
       const canExecute = await agent.canExecute(userId);
       if (!canExecute) {
-        await this.updateExecutionStatus(executionId, 'failed', 'User limit exceeded');
+        await this.updateExecutionStatus(
+          executionId,
+          'failed',
+          'User limit exceeded'
+        );
         throw new Error('User limit exceeded for this agent');
       }
 
@@ -128,7 +141,7 @@ export class LangGraphAgentService {
       if (result.success) {
         await this.updateExecutionStatus(executionId, 'completed', undefined, {
           output_data: result.data || {},
-          cost: result.cost || 0
+          cost: result.cost || 0,
         });
 
         // Store artifacts if any
@@ -144,17 +157,20 @@ export class LangGraphAgentService {
         ...result,
         metadata: {
           ...result.metadata,
-          executionId
-        }
+          executionId,
+        },
       };
-
     } catch (error) {
       logError(`Agent execution failed: ${agentId}`, error as Error);
-      await this.updateExecutionStatus(executionId, 'failed', (error as Error).message);
+      await this.updateExecutionStatus(
+        executionId,
+        'failed',
+        (error as Error).message
+      );
 
       return {
         success: false,
-        error: (error as Error).message
+        error: (error as Error).message,
       };
     }
   }
@@ -177,16 +193,18 @@ export class LangGraphAgentService {
         input_params: JSON.stringify(params),
         started_at: Date.now(),
         user_id: userId,
-        agent_name: agent.name
+        agent_name: agent.name,
       };
 
       this.inMemoryExecutions.set(executionId, executionData);
-      logInfo(`Created in-memory execution record: ${executionId} for agent ${agent.id}`);
+      logInfo(
+        `Created in-memory execution record: ${executionId} for agent ${agent.id}`
+      );
       return true;
     }
 
     try {
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logInfo('InstantDB not available, using in-memory fallback');
         return this.createInMemoryExecution(executionId, agent, params, userId);
@@ -199,16 +217,19 @@ export class LangGraphAgentService {
         input_params: JSON.stringify(params),
         started_at: Date.now(),
         user: userId,
-        agent: agent.id
+        agent: agent.id,
       };
 
       await db.transact([
-        db.tx.agent_executions[executionId].update(executionData)
+        db.tx.agent_executions[executionId].update(executionData),
       ]);
 
       return true;
     } catch (error) {
-      logError('Failed to create execution record in InstantDB, using in-memory fallback', error as Error);
+      logError(
+        'Failed to create execution record in InstantDB, using in-memory fallback',
+        error as Error
+      );
       return this.createInMemoryExecution(executionId, agent, params, userId);
     }
   }
@@ -229,11 +250,13 @@ export class LangGraphAgentService {
       input_params: JSON.stringify(params),
       started_at: Date.now(),
       user_id: userId,
-      agent_name: agent.name
+      agent_name: agent.name,
     };
 
     this.inMemoryExecutions.set(executionId, executionData);
-    logInfo(`Created in-memory execution record: ${executionId} for agent ${agent.id}`);
+    logInfo(
+      `Created in-memory execution record: ${executionId} for agent ${agent.id}`
+    );
     return true;
   }
 
@@ -256,16 +279,18 @@ export class LangGraphAgentService {
           updated_at: Date.now(),
           ...(errorMessage && { error_message: errorMessage }),
           ...(status === 'completed' && { completed_at: Date.now() }),
-          ...additionalData
+          ...additionalData,
         };
         this.inMemoryExecutions.set(executionId, updateData);
-        logInfo(`Updated in-memory execution ${executionId} status to: ${status}`);
+        logInfo(
+          `Updated in-memory execution ${executionId} status to: ${status}`
+        );
       }
       return;
     }
 
     try {
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logInfo('InstantDB not available for status update');
         return;
@@ -276,11 +301,11 @@ export class LangGraphAgentService {
         updated_at: Date.now(),
         ...(errorMessage && { error_message: errorMessage }),
         ...(status === 'completed' && { completed_at: Date.now() }),
-        ...additionalData
+        ...additionalData,
       };
 
       await db.transact([
-        db.tx.agent_executions[executionId].update(updateData)
+        db.tx.agent_executions[executionId].update(updateData),
       ]);
     } catch (error) {
       logError('Failed to update execution status', error as Error);
@@ -297,27 +322,29 @@ export class LangGraphAgentService {
   ): Promise<void> {
     if (this.bypassInstantDB) {
       logInfo(`Bypassing artifact storage for ${artifacts.length} artifacts`);
-      artifacts.forEach(artifact => {
+      artifacts.forEach((artifact) => {
         logInfo(`Generated artifact: ${artifact.title} (${artifact.type})`);
       });
       return;
     }
 
     try {
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logInfo('InstantDB not available for artifact storage');
         return;
       }
 
-      const transactions = artifacts.map(artifact => {
+      const transactions = artifacts.map((artifact) => {
         const artifactData = {
           ...artifact,
           creator: userId,
-          ...(sessionId && { session: sessionId })
+          ...(sessionId && { session: sessionId }),
         };
 
-        return db.tx.generated_artifacts[artifact.id || crypto.randomUUID()].update(artifactData);
+        return db.tx.generated_artifacts[
+          artifact.id || crypto.randomUUID()
+        ].update(artifactData);
       });
 
       await db.transact(transactions);
@@ -342,14 +369,14 @@ export class LangGraphAgentService {
           status: execution.status,
           progress: execution.progress || 0,
           error: execution.error_message,
-          result: execution.output_data
+          result: execution.output_data,
         };
       }
       return null;
     }
 
     try {
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logInfo('InstantDB not available for execution status retrieval');
         return null;
@@ -358,9 +385,9 @@ export class LangGraphAgentService {
       const query = await db.query({
         agent_executions: {
           $: {
-            where: { id: executionId }
-          }
-        }
+            where: { id: executionId },
+          },
+        },
       });
 
       const execution = query.agent_executions?.[0];
@@ -372,7 +399,7 @@ export class LangGraphAgentService {
         status: execution.status,
         progress: execution.progress || 0,
         error: execution.error_message,
-        result: execution.output_data
+        result: execution.output_data,
       };
     } catch (error) {
       logError('Failed to get execution status', error as Error);
@@ -385,7 +412,11 @@ export class LangGraphAgentService {
    */
   public async cancelExecution(executionId: string): Promise<boolean> {
     try {
-      await this.updateExecutionStatus(executionId, 'failed', 'Cancelled by user');
+      await this.updateExecutionStatus(
+        executionId,
+        'failed',
+        'Cancelled by user'
+      );
       logInfo(`Execution cancelled: ${executionId}`);
       return true;
     } catch (error) {

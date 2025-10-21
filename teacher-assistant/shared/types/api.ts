@@ -12,6 +12,8 @@ export interface ApiResponse<T = Record<string, unknown>> {
   data?: T;
   message?: string;
   error?: string;
+  details?: unknown; // For validation errors or additional error details
+  metadata?: Record<string, unknown>; // For additional metadata (execution info, etc.)
   timestamp: string;
 }
 
