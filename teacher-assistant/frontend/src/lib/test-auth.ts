@@ -11,9 +11,10 @@
 /**
  * Test user mock data for Playwright testing
  * Email: s.brill@eduhu.de (test user)
+ * IMPORTANT: This ID must match the user ID in E2E tests AND backend test mode
  */
 export const TEST_USER = {
-  id: 'test-user-playwright-id-12345',
+  id: '38eb3d27-dd97-4ed4-9e80-08fafe18115f',
   email: 's.brill@eduhu.de',
   refresh_token: 'test-refresh-token-playwright',
   created_at: Date.now(),

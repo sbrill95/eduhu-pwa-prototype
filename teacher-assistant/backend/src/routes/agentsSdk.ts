@@ -7,6 +7,7 @@ import {
 } from '../agents/imageGenerationAgent';
 import { logInfo, logError } from '../config/logger';
 import { body, validationResult } from 'express-validator';
+import { InstantDBService } from '../services/instantdbService';
 
 /**
  * OpenAI Agents SDK API Routes
@@ -337,9 +338,13 @@ router.post(
         return;
       }
 
-      // Extract userId from request (assuming auth middleware sets this)
-      // For now, use a test user ID (replace with actual auth implementation)
-      const userId = (req as any).userId || 'test-user-id';
+      // Extract userId from request (auth middleware sets this)
+      // In TEST MODE, use the Playwright test user ID
+      const userId =
+        (req as any).userId ||
+        (process.env.VITE_TEST_MODE === 'true'
+          ? '38eb3d27-dd97-4ed4-9e80-08fafe18115f'
+          : 'test-user-id');
       const sessionId = (req as any).sessionId || undefined;
 
       logInfo('POST /api/agents-sdk/image/generate - Request received', {
@@ -396,9 +401,108 @@ router.post(
           durationMs: requestDuration,
         });
 
+        // CRITICAL FIX: Save to library_materials in InstantDB
+        // Backend must persist images so they appear in Chat and Library
+        // IMPORTANT: Generate library_id FIRST, before try/catch, so it's always defined
+        const library_id = crypto.randomUUID();
+        console.log('[Backend] ✅ Generated library_id:', library_id);
+
+        try {
+          console.log('[Backend] 🔍 DEBUG: About to call InstantDBService.db()...');
+          const db = InstantDBService.db();
+          console.log('[Backend] 🔍 DEBUG: InstantDB db() result:', {
+            hasDb: !!db,
+            dbType: db ? typeof db : 'null',
+            dbKeys: db ? Object.keys(db) : []
+          });
+
+          if (db) {
+            console.log('[Backend] ✅ DB instance is available, will save to library_materials');
+            console.log('[Backend] 🔍 DEBUG: result.data BEFORE adding library_id:', {
+              resultDataKeys: Object.keys(result.data || {}),
+              hasResultData: !!result.data
+            });
+
+            // Prepare metadata for regeneration (FR-008)
+            const originalParams = result.data?.originalParams || {
+              description: req.body.description || req.body.prompt || '',
+              imageStyle: req.body.imageStyle || 'illustrative',
+              learningGroup: req.body.learningGroup || '',
+              subject: req.body.subject || '',
+            };
+
+            const metadata = {
+              originalParams,
+              generatedAt: Date.now(),
+              agentId: 'image-generation-agent',
+              cost: result.cost || 0,
+            };
+
+            // Save to library_materials with proper schema
+            await db.transact([
+              db.tx.library_materials[library_id].update({
+                user_id: userId,
+                title: result.data?.title || 'Generiertes Bild',
+                type: 'image',
+                content: result.data?.image_url || '',
+                description: result.data?.revised_prompt || '',
+                tags: Array.isArray(result.data?.tags)
+                  ? result.data.tags.join(', ')
+                  : '',
+                metadata: JSON.stringify(metadata),
+                created_at: Date.now(),
+                updated_at: Date.now(),
+                is_favorite: false,
+                usage_count: 0,
+                source_session_id: sessionId || null,
+              }),
+            ]);
+
+            logInfo('Image saved to library_materials', {
+              library_id,
+              userId,
+              title: result.data?.title,
+            });
+          } else {
+            console.log('[Backend] ⚠️ DB instance is NULL - image will NOT be saved to library_materials');
+            logError(
+              'InstantDB not available - image will not persist',
+              new Error('InstantDB db() returned null')
+            );
+          }
+        } catch (dbError) {
+          console.log('[Backend] ❌ EXCEPTION in database save:', dbError);
+          logError(
+            'Failed to save image to library_materials',
+            dbError as Error
+          );
+          // Don't fail the request - image generation succeeded
+        }
+
+        console.log('[Backend] 🔍 DEBUG: After try/catch, library_id =', library_id);
+
+        // Return success response with library_id
+        console.log('[Backend] 🔍 DEBUG: Preparing response with library_id:', {
+          library_id,
+          hasLibraryId: !!library_id,
+          resultDataKeys: Object.keys(result.data || {}),
+          willIncludeLibraryId: library_id !== undefined
+        });
+
+        const responseData = {
+          ...result.data,
+          library_id, // Include library_id for frontend to track
+        };
+
+        console.log('[Backend] 🔍 DEBUG: Response data object:', {
+          responseDataKeys: Object.keys(responseData),
+          library_id: responseData.library_id,
+          hasLibraryIdInResponse: 'library_id' in responseData
+        });
+
         res.status(200).json({
           success: true,
-          data: result.data,
+          data: responseData,
           cost: result.cost,
           metadata: result.metadata,
           artifacts: result.artifacts,
@@ -434,3 +538,5 @@ router.post(
 );
 
 export default router;
+
+ 

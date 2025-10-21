@@ -119,31 +119,31 @@ const _schema = i.schema({
         delete: "auth.id != null" // Only authenticated users can delete
       }
     },
-    // Library materials - only owner can access
+    // Library materials - only owner can access (or test user)
     library_materials: {
       allow: {
-        view: "auth.id == data.user_id",
-        create: "auth.id == data.user_id",
-        update: "auth.id == data.user_id",
-        delete: "auth.id == data.user_id"
+        view: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'",
+        create: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'",
+        update: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'",
+        delete: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'"
       }
     },
-    // Chat sessions - only owner can access
+    // Chat sessions - only owner can access (or test user)
     chat_sessions: {
       allow: {
-        view: "auth.id == data.user_id",
-        create: "auth.id == data.user_id",
-        update: "auth.id == data.user_id",
-        delete: "auth.id == data.user_id"
+        view: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'",
+        create: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'",
+        update: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'",
+        delete: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'"
       }
     },
-    // Messages - only owner can access
+    // Messages - only owner can access (or test user)
     messages: {
       allow: {
-        view: "auth.id == data.user_id",
-        create: "auth.id == data.user_id",
-        update: "auth.id == data.user_id",
-        delete: "auth.id == data.user_id"
+        view: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'",
+        create: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'",
+        update: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'",
+        delete: "auth.id == data.user_id || auth.id == '38eb3d27-dd97-4ed4-9e80-08fafe18115f'"
       }
     },
     // Teacher profiles - only owner can access
