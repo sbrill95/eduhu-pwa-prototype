@@ -75,7 +75,7 @@ test.describe('Image Display Fix Verification - InstantDB Permissions', () => {
     console.log('✅ Home screenshot captured');
 
     // Navigate to Library
-    await page.click('button:has-text("Library")');
+    await page.click('button:has-text("Bibliothek")');
     await page.waitForTimeout(2000);
 
     await page.screenshot({
@@ -95,7 +95,7 @@ test.describe('Image Display Fix Verification - InstantDB Permissions', () => {
     await page.waitForTimeout(2000);
 
     // Navigate to Library
-    await page.click('button:has-text("Library")');
+    await page.click('button:has-text("Bibliothek")');
     await page.waitForTimeout(1000);
 
     // Click Materialien tab
@@ -133,7 +133,7 @@ test.describe('Image Display Fix Verification - InstantDB Permissions', () => {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
-    await page.click('button:has-text("Library")');
+    await page.click('button:has-text("Bibliothek")');
     await page.waitForTimeout(1000);
 
     // Click Materialien tab
@@ -205,7 +205,7 @@ test.describe('Image Display Fix Verification - InstantDB Permissions', () => {
 
     // Navigate through all views to trigger any errors
     console.log('  Navigating to Library...');
-    await page.click('button:has-text("Library")');
+    await page.click('button:has-text("Bibliothek")');
     await page.waitForTimeout(2000);
 
     console.log('  Clicking Materialien tab...');
@@ -249,7 +249,7 @@ test.describe('Image Display Fix Verification - InstantDB Permissions', () => {
     await page.waitForTimeout(2000);
 
     // Library check
-    await page.click('button:has-text("Library")');
+    await page.click('button:has-text("Bibliothek")');
     await page.waitForTimeout(1000);
     await page.click('ion-segment-button[value="artifacts"]');
     await page.waitForTimeout(2000);

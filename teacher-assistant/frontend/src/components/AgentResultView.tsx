@@ -45,7 +45,11 @@ export const AgentResultView: React.FC = () => {
     hasImageUrl: !!state.result?.data?.imageUrl,
     imageUrl: state.result?.data?.imageUrl ? state.result.data.imageUrl.substring(0, 60) + '...' : 'NO IMAGE URL',
     phase: state.phase,
-    isOpen: state.isOpen
+    isOpen: state.isOpen,
+    'state.result.data': state.result?.data,
+    'state.result.metadata': state.result?.metadata,
+    'state.result.data.library_id': state.result?.data?.library_id,
+    'state.result.metadata.library_id': state.result?.metadata?.library_id
   });
 
   // Auto-save on mount

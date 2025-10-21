@@ -237,6 +237,10 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children, onNaviga
       if (response.image_url) {
         const { image_url, revised_prompt, title, library_id } = response;
 
+        console.log('[AgentContext] 🔍 DEBUG: Full response object:', response);
+        console.log('[AgentContext] 🔍 DEBUG: Extracted library_id:', library_id);
+        console.log('[AgentContext] 🔍 DEBUG: response.library_id direct access:', response.library_id);
+
         console.log('[AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase', {
           executionId,
           hasImageUrl: !!image_url,
@@ -296,10 +300,17 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children, onNaviga
             hasResult: !!newState.result,
             resultData: newState.result?.data,
             isOpen: newState.isOpen,
-            libraryId: library_id
+            libraryId: library_id,
+            'result.data.library_id': newState.result?.data?.library_id,
+            'result.metadata.library_id': newState.result?.metadata?.library_id
           });
 
           return newState;
+        });
+
+        console.log('[AgentContext] 🔍 DEBUG: State after setState should have library_id:', {
+          'state.result.data.library_id': state.result?.data?.library_id,
+          'state.result.metadata.library_id': state.result?.metadata?.library_id
         });
       } else {
         // Async execution or preview - set executionId and wait for updates

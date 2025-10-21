@@ -600,6 +600,15 @@ class ApiClient {
         cost: response.cost
       });
 
+      console.log('[ApiClient] 🔍 DEBUG: Full backend response structure:', {
+        responseKeys: Object.keys(response),
+        dataKeys: response.data ? Object.keys(response.data) : [],
+        hasLibraryIdInData: 'library_id' in (response.data || {}),
+        libraryIdValue: response.data?.library_id
+      });
+
+      console.log('[ApiClient] 🔍 DEBUG: response.data object:', response.data);
+
       return response.data;
     } catch (error) {
       console.error('[ApiClient] ❌ executeImageGenerationSdk ERROR', {
