@@ -416,6 +416,13 @@ User Reviews:
 // MINIMUM Test Structure für jedes Feature
 test.describe('Feature Name', () => {
   test.beforeEach(async ({ page }) => {
+    // 🔑 CRITICAL: Inject TEST_MODE flag for auth bypass (MANDATORY!)
+    // Without this, tests will hit login screens and fail
+    await page.addInitScript(() => {
+      (window as any).__VITE_TEST_MODE__ = true;
+      console.log('🔧 TEST_MODE injected via Playwright addInitScript');
+    });
+
     // Setup: Listen for console errors
     page.on('console', msg => {
       if (msg.type() === 'error') {
@@ -458,8 +465,52 @@ test.describe('Feature Name', () => {
 });
 ```
 
+### 🔑 CRITICAL: Auth Bypass Pattern (MANDATORY)
+
+**ALLE Playwright Tests MÜSSEN den Auth Bypass aktivieren!**
+
+```typescript
+test.beforeEach(async ({ page }) => {
+  // CRITICAL: Auth bypass - NIEMALS weglassen!
+  await page.addInitScript(() => {
+    (window as any).__VITE_TEST_MODE__ = true;
+  });
+});
+```
+
+**Warum?**
+- Ohne diesen Code landen Tests auf Login-Screens
+- Tests können Features nicht erreichen
+- Tests schlagen mit Timeouts fehl
+- Falsche Test-Failures entstehen
+
+**Verification**: Test-Log muss zeigen:
+```
+🔧 TEST_MODE injected via Playwright addInitScript
+Authentication is bypassed with test user
+```
+
+**FALSCH** ❌:
+```typescript
+// Nur prüfen ob Auth nötig ist - FIXT ES NICHT!
+const isAuthRequired = await page.locator('text=Anmelden').isVisible();
+```
+
+**RICHTIG** ✅:
+```typescript
+// Flag injizieren - FIXT ES!
+await page.addInitScript(() => {
+  (window as any).__VITE_TEST_MODE__ = true;
+});
+```
+
+**Details**: Siehe `docs/testing/playwright-auth-bypass-pattern.md`
+
+---
+
 ### 🚫 NEVER Skip These Checks:
 
+- ❌ **NO** Auth Bypass vergessen (Test wird fehlschlagen!)
 - ❌ **NO** "Tests kommen später"
 - ❌ **NO** "Manuell getestet, Tests nicht nötig"
 - ❌ **NO** Commits ohne Tests

@@ -57,7 +57,7 @@ export const useLibraryMaterials = () => {
     } : null
   );
 
-  const materials: LibraryMaterial[] = materialsData?.library_materials?.map(material => {
+  const materials: LibraryMaterial[] = materialsData?.library_materials?.map((material: any) => {
     // T041: Parse metadata JSON string from InstantDB for MaterialPreviewModal
     // US4 DEBUG: Log raw material data from InstantDB
     console.log('🔍 [DEBUG US4] Raw material from InstantDB:', {

@@ -168,7 +168,34 @@ export default defineConfig({
   // Output directories
   outputDir: 'test-results',
 
-  // Global setup and teardown (commented out - files don't exist)
-  // globalSetup: './e2e-tests/global-setup.ts',
-  // globalTeardown: './e2e-tests/global-teardown.ts',
+  // Global setup and teardown
+  // Global setup initializes test environment and logs auth bypass info
+  globalSetup: './e2e-tests/global-setup.ts',
+
+  /**
+   * 🔑 AUTH BYPASS IMPLEMENTATION (Option 2: Global Setup)
+   *
+   * All tests automatically inherit auth bypass via custom fixture.
+   *
+   * Usage in tests:
+   * ```typescript
+   * import { test, expect } from './fixtures';
+   *
+   * test('my test', async ({ page }) => {
+   *   // Auth bypass already active - no manual injection needed!
+   * });
+   * ```
+   *
+   * Old pattern (NO LONGER NEEDED):
+   * ```typescript
+   * test.beforeEach(async ({ page }) => {
+   *   await page.addInitScript(() => {
+   *     (window as any).__VITE_TEST_MODE__ = true; // ❌ Not needed anymore!
+   *   });
+   * });
+   * ```
+   *
+   * See: docs/testing/playwright-auth-bypass-pattern.md
+   * Fixture: e2e-tests/fixtures.ts
+   */
 });

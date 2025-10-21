@@ -168,7 +168,7 @@ export const useChat = () => {
     if (sessionData?.messages) {
       console.log('[useChat BUG-003 DEBUG] InstantDB query returned messages:', {
         count: sessionData.messages.length,
-        allMessages: sessionData.messages.map(m => ({
+        allMessages: sessionData.messages.map((m: any) => ({
           id: m.id,
           role: m.role,
           content: m.content.substring(0, 50),
@@ -1217,7 +1217,7 @@ export const useChat = () => {
 
     // Add database messages (using stable reference)
     if (stableMessages && stableMessages.length > 0) {
-      const dbMessages = stableMessages.map(msg => ({
+      const dbMessages = stableMessages.map((msg: any) => ({
         id: msg.id,
         role: msg.role as 'user' | 'assistant',
         content: msg.content,
@@ -1264,7 +1264,7 @@ export const useChat = () => {
 
   // Get conversation history
   const conversationHistory: ConversationSummary[] = sessionsData?.chat_sessions
-    ? sessionsData.chat_sessions.map(session => ({
+    ? sessionsData.chat_sessions.map((session: any) => ({
         id: session.id,
         title: session.title,
         lastMessage: '', // We'd need to query the last message separately

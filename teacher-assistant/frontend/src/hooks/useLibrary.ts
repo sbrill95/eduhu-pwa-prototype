@@ -24,7 +24,7 @@ export const useLibrary = () => {
 
   // Get formatted materials for UI
   const materials: MaterialSummary[] = materialsData?.library_materials
-    ? materialsData.library_materials.map(material => ({
+    ? materialsData.library_materials.map((material: any) => ({
         id: material.id,
         title: material.title,
         type: material.type as LibraryMaterial['type'],
@@ -177,7 +177,7 @@ export const useLibrary = () => {
   // Get materials created from specific chat session
   const getMaterialsFromSession = useCallback((sessionId: string) => {
     return materialsData?.library_materials?.filter(
-      material => material.source_session_id === sessionId
+      (material: any) => material.source_session_id === sessionId
     ) || [];
   }, [materialsData]);
 

@@ -144,7 +144,7 @@ const Library: React.FC<LibraryProps> = React.memo(({ onChatSelect, onTabChange 
   });
 
   // Filter chat history based on search and actual messages
-  const filteredChats = chatHistory.filter(chat => {
+  const filteredChats = chatHistory.filter((chat: any) => {
     // Only show chats that have actual messages (minimum 1 user message)
     const hasMessages = (chat.message_count || 0) > 0;
     const matchesSearch = !searchQuery ||
@@ -338,7 +338,7 @@ const Library: React.FC<LibraryProps> = React.memo(({ onChatSelect, onTabChange 
 
               {filteredChats.length > 0 ? (
                 <IonList>
-                  {filteredChats.map((chat) => (
+                  {filteredChats.map((chat: any) => (
                     <IonCard key={chat.id} button onClick={() => handleChatClick(chat.id)}>
                       <IonCardContent>
                         <div style={{ display: 'flex', alignItems: 'start', gap: '12px' }}>
