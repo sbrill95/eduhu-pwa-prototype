@@ -1,0 +1,18 @@
+{
+    "success": true,
+    "data": {
+        "system": {
+            "langgraph_enabled": true,
+            "redis_status": "memory_mode",
+            "agent_service": {
+                "initialized": true
+            }
+        },
+        "agents": {
+            "total": 1,
+            "enabled": 1,
+            "langgraph_compatible": 1
+        }
+    },
+    "timestamp": "2025-10-21T10:06:06.433Z"
+}

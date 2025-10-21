@@ -1,0 +1,11 @@
+{
+    "success": true,
+    "data": {
+        "intent": "edit_image",
+        "confidence": 0.95,
+        "entities": {},
+        "reasoning": "The prompt asks to make the background blue, which implies modifying an existing image's background color.",
+        "overridden": false
+    },
+    "timestamp": 1761041192567
+}
