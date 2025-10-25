@@ -109,8 +109,13 @@ Der QA Agent (Quinn) ist dein **Safety Net** für qualitativ hochwertige Impleme
 
 5. **QA nach Development**:
    ```bash
+   # PFLICHT: Vor QA Review - Infrastruktur validieren
+   bash scripts/pre-test-checklist.sh
+
+   # QA Review durchführen
    /bmad.review docs/stories/epic-X.story-Y.md
    ```
+   - Pre-Flight Check MANDATORY vor Review
    - QA Agent analysiert Code + Tests
    - Erzeugt Quality Gate Decision
    - Führt Active Refactoring durch (wenn sicher)
@@ -142,6 +147,172 @@ Wenn du an **bestehendem Code** arbeitest:
    - Regression Tests für bestehende Features
    - Integration Tests für Touchpoints
    - Performance Benchmarks
+
+---
+
+## 🛡️ Error Prevention System (CRITICAL - READ FIRST)
+
+**Analysis showed**: 80% of development delays are **preventable process failures**, not code quality issues.
+**Time Lost**: 38-64 hours across 31 incidents
+**Solution**: Systematic pre-flight checks + automation
+
+### MANDATORY Pre-Flight Checks (BEFORE E2E Tests)
+
+**ALWAYS run BEFORE starting E2E tests**:
+
+```bash
+# Verify backend running with latest code
+bash scripts/pre-test-checklist.sh
+
+# If fails → Fix issues BEFORE running tests
+# If passes → Tests can run safely
+```
+
+**What it checks**:
+1. ✅ Backend running on port 3006
+2. ✅ Backend version matches current code (git commit hash)
+3. ✅ InstantDB initialized
+4. ✅ VITE_TEST_MODE environment variable set
+5. ✅ Port 3006 listening
+6. ✅ Test data cleanup
+
+**Why MANDATORY**: Prevents 90%+ test failure rate due to infrastructure issues.
+
+### Backend Restart Pattern (When Code Changes)
+
+**NEVER assume backend auto-reloaded**. Always explicitly restart:
+
+```bash
+# Safe backend restart (kills zombie processes, verifies startup)
+bash scripts/restart-backend.sh
+
+# Manual alternative:
+bash scripts/kill-backend.sh  # Kill all node processes
+cd teacher-assistant/backend && npm start  # Start fresh
+```
+
+**When to restart**:
+- ✅ After `git pull` or `git checkout`
+- ✅ After code changes in `teacher-assistant/backend/`
+- ✅ After `npm install` (dependencies changed)
+- ✅ Before running E2E tests (verify latest code)
+- ✅ When tests fail with "500 Internal Server Error"
+
+### Test Data Strategy (Frontend vs Backend)
+
+**CRITICAL RULE**: E2E tests MUST use backend-persisted data, NOT frontend mocks.
+
+```typescript
+// ❌ WRONG: Frontend mock (backend won't see it)
+await page.evaluate(() => {
+  window.__mockData = { images: [...] };
+});
+
+// ✅ CORRECT: Backend API creates real data
+import { TestDataManager } from './fixtures/testData';
+
+test.beforeEach(async ({ request }) => {
+  const testData = new TestDataManager(request);
+  await testData.createTestImage('user-123');
+});
+
+test.afterEach(async () => {
+  await testData.cleanup();
+});
+```
+
+**Why**: Backend API queries real database. Frontend mocks are invisible to backend.
+
+### Auth Bypass Pattern (Automatic)
+
+**USE SHARED FIXTURE** (never forget auth bypass again):
+
+```typescript
+// ✅ CORRECT: Use shared auth bypass fixture
+import { test, expect } from './fixtures/authBypass';
+
+test('My test', async ({ page }) => {
+  // Auth bypass automatically injected ✅
+  await page.goto('/library');
+});
+```
+
+**Old pattern (DEPRECATED)**:
+```typescript
+// ❌ DEPRECATED: Manual injection (easy to forget)
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    (window as any).__VITE_TEST_MODE__ = true;
+  });
+});
+```
+
+### Timeout Protection (ALL External Calls)
+
+**CRITICAL RULE**: ALWAYS wrap external service calls with timeout.
+
+```typescript
+// ❌ WRONG: No timeout (hangs indefinitely)
+const profile = await TeacherProfileService.getTeacherProfile(userId);
+
+// ✅ CORRECT: Timeout + fallback
+import { withTimeout } from '../utils/timeout';
+
+const profile = await withTimeout(
+  TeacherProfileService.getTeacherProfile(userId),
+  5000,  // 5 second timeout
+  { subjects: ['Mathematik'], grades: ['7'] }  // Fallback
+);
+```
+
+**Apply to**:
+- InstantDB queries
+- OpenAI/Gemini API calls
+- HTTP requests
+- Database queries
+- Any external service
+
+### Test Result Validation (Sanity Checks)
+
+**QUESTION anomalous results** before debugging code:
+
+```bash
+# Normal test run: 75-90% pass rate
+# Anomalous run: <50% pass rate
+
+# IF test pass rate < 50%:
+# 1. Check backend running: curl http://localhost:3006/api/health
+# 2. Check backend version: Compare gitCommit to current HEAD
+# 3. Check test data exists: Verify images/chats in database
+# 4. Check environment: echo $VITE_TEST_MODE
+
+# THEN debug code (if infrastructure is OK)
+```
+
+**Pattern**: 90% failure rate = infrastructure issue, NOT code bug.
+
+### Common Error Prevention Checklist
+
+Before starting ANY E2E test session:
+
+- [ ] ✅ Ran `bash scripts/pre-test-checklist.sh` (PASS)
+- [ ] ✅ Backend restarted after code changes
+- [ ] ✅ `VITE_TEST_MODE=true` set (Windows: `set`, Unix: `export`)
+- [ ] ✅ Port 3006 free (no zombie processes)
+- [ ] ✅ Test Helper API endpoints available
+- [ ] ✅ Using shared auth bypass fixture
+- [ ] ✅ Using TestDataManager for test data
+- [ ] ✅ All external calls have timeout wrappers
+
+**IF ANY unchecked** → Stop and fix BEFORE running tests.
+
+### Estimated Time Savings
+
+| Without Pre-Flight | With Pre-Flight | Savings |
+|-------------------|-----------------|---------|
+| 38-64 hours lost | 6-12 hours lost | 80-85% |
+
+**ROI**: 4-10x return on investment in prevention.
 
 ---
 

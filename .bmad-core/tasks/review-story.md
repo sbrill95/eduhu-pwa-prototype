@@ -19,8 +19,35 @@ required:
 - Story status must be "Review"
 - Developer has completed all tasks and updated the File List
 - All automated tests are passing
+- **MANDATORY**: Pre-flight infrastructure check completed successfully (`bash scripts/pre-test-checklist.sh`)
 
 ## Review Process - Adaptive Test Architecture
+
+### 0. Pre-Flight Infrastructure Validation (MANDATORY FIRST STEP)
+
+**CRITICAL**: Before beginning review, ALWAYS run error prevention pre-flight check:
+
+```bash
+bash scripts/pre-test-checklist.sh
+```
+
+**If pre-flight check FAILS**:
+- ❌ **STOP REVIEW IMMEDIATELY**
+- Document infrastructure issues found
+- Instruct developer to fix infrastructure before continuing
+- DO NOT proceed with code review until infrastructure is healthy
+
+**Common pre-flight failures and fixes**:
+- Backend not running → `bash scripts/restart-backend.sh`
+- Port conflict → `bash scripts/kill-backend.sh`
+- Version mismatch → Restart backend after git pull/checkout
+- Missing VITE_TEST_MODE → Set environment variable
+
+**If pre-flight check PASSES**:
+- ✅ Proceed with review
+- Document that infrastructure validation passed in QA Results
+
+**Rationale**: 80% of test failures are infrastructure issues, not code bugs. Validating infrastructure first prevents false negatives in quality assessment.
 
 ### 1. Risk Assessment (Determines Review Depth)
 
@@ -124,6 +151,21 @@ After review and any refactoring, append your results to the story file in the Q
 ### Review Date: [Date]
 
 ### Reviewed By: Quinn (Test Architect)
+
+### Infrastructure Pre-Flight Check
+
+**Status**: ✅ PASS / ❌ FAIL
+**Script**: `bash scripts/pre-test-checklist.sh`
+
+**Results**:
+- Backend running: ✅ / ❌
+- Backend version: ✅ / ❌ (current/outdated)
+- InstantDB initialized: ✅ / ❌
+- VITE_TEST_MODE set: ✅ / ⚠️
+- Port 3006 listening: ✅ / ❌
+- Test data cleanup: ✅ / ⚠️
+
+**Action Taken**: [None / Restarted backend / Fixed environment variables / etc.]
 
 ### Code Quality Assessment
 

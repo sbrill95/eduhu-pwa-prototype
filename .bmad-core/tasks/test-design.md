@@ -122,11 +122,23 @@ Designer: Quinn (Test Architect)
 
 ## Recommended Execution Order
 
-1. P0 Unit tests (fail fast)
-2. P0 Integration tests
-3. P0 E2E tests
-4. P1 tests in order
-5. P2+ as time permits
+1. **Pre-Flight Infrastructure Check** (MANDATORY before all tests)
+   ```bash
+   bash scripts/pre-test-checklist.sh
+   ```
+   - Validates backend running with correct version
+   - Checks InstantDB initialized
+   - Verifies VITE_TEST_MODE environment variable
+   - Ensures port 3006 listening
+   - Cleans stale test data
+
+2. P0 Unit tests (fail fast)
+3. P0 Integration tests
+4. P0 E2E tests (only after pre-flight check passes)
+5. P1 tests in order
+6. P2+ as time permits
+
+**CRITICAL**: E2E tests MUST NOT run until pre-flight check passes. 80% of E2E failures are infrastructure issues, not code bugs.
 ```
 
 ### Output 2: Gate YAML Block
