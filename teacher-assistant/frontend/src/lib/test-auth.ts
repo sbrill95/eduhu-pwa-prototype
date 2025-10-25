@@ -64,15 +64,17 @@ export const testAuthMethods = {
 
 /**
  * Check if test mode is enabled
- * @returns true if VITE_TEST_MODE environment variable is set to "true" OR window.__VITE_TEST_MODE__ is true
+ * @returns true if VITE_TEST_MODE environment variable is set to "true" OR window.__VITE_TEST_MODE__ is true OR __VITE_TEST_MODE__ global is true
  */
 export function isTestMode(): boolean {
-  // Check Vite env (build-time)
+  // Priority 1: Check Vite env (most reliable - from .env.test file)
+  // This is loaded automatically when dev server starts with --mode test
   if (import.meta.env.VITE_TEST_MODE === 'true') {
     return true;
   }
 
-  // Check window global (runtime - Playwright injection)
+  // Priority 2: Check window global (runtime - Playwright injection)
+  // This is set by addInitScript() in Playwright tests
   if (typeof window !== 'undefined' && (window as any).__VITE_TEST_MODE__ === true) {
     return true;
   }

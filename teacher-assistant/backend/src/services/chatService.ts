@@ -67,7 +67,9 @@ export class ChatService {
       }
 
       // Detect agent intent from last user message
-      const lastUserMessage = messages.filter((m) => m && m.role === 'user').pop();
+      const lastUserMessage = messages
+        .filter((m) => m && m.role === 'user')
+        .pop();
 
       let agentSuggestion = null;
       if (lastUserMessage && typeof lastUserMessage.content === 'string') {
@@ -123,7 +125,9 @@ export class ChatService {
    */
   private static prepareMessages(messages: ChatMessage[]): ChatMessage[] {
     // Filter out undefined/null messages
-    const validMessages = messages.filter((msg) => msg && msg.role && msg.content);
+    const validMessages = messages.filter(
+      (msg) => msg && msg.role && msg.content
+    );
     const hasSystemMessage = validMessages.some((msg) => msg.role === 'system');
 
     if (!hasSystemMessage) {

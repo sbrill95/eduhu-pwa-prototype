@@ -58,6 +58,10 @@ export interface HealthCheckResponse {
   version: string;
   environment: string;
   uptime: number;
+  // ENHANCED: Version tracking for pre-test validation
+  gitCommit?: string; // Git commit hash (for version verification)
+  startupTimestamp?: number; // Unix timestamp when server started
+  instantdb?: string; // InstantDB connection status
 }
 
 // Request/Response types

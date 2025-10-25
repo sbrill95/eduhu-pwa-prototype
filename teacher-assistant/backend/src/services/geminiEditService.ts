@@ -57,7 +57,9 @@ export class GeminiEditService {
     // Check daily limit
     const usage = await this.checkDailyLimit(userId);
     if (!usage.canEdit) {
-      throw new Error(`Tägliches Limit erreicht (${usage.limit} Bilder). Verfügbar ab ${usage.resetTime.toLocaleTimeString('de-DE')}`);
+      throw new Error(
+        `Tägliches Limit erreicht (${usage.limit} Bilder). Verfügbar ab ${usage.resetTime.toLocaleTimeString('de-DE')}`
+      );
     }
 
     try {
@@ -65,8 +67,8 @@ export class GeminiEditService {
       const imagePart = {
         inlineData: {
           data: imageBase64.replace(/^data:image\/\w+;base64,/, ''),
-          mimeType: this.detectMimeType(imageBase64)
-        }
+          mimeType: this.detectMimeType(imageBase64),
+        },
       };
 
       // Create the edit prompt in German
@@ -76,7 +78,11 @@ export class GeminiEditService {
       const result = await this.model.generateContent([prompt, imagePart]);
       const response = await result.response;
 
-      if (!response || !response.candidates || response.candidates.length === 0) {
+      if (
+        !response ||
+        !response.candidates ||
+        response.candidates.length === 0
+      ) {
         throw new Error('Keine Antwort von Gemini API erhalten');
       }
 
@@ -85,7 +91,10 @@ export class GeminiEditService {
       const editedImageData = response.candidates[0].content;
 
       // Save to InstantDB storage
-      const editedImageUrl = await this.saveEditedImage(editedImageData, userId);
+      const editedImageUrl = await this.saveEditedImage(
+        editedImageData,
+        userId
+      );
 
       // Track usage
       await this.trackUsage(userId, imageId, instruction);
@@ -102,12 +111,14 @@ export class GeminiEditService {
           originalImageId: imageId,
           editInstruction: instruction,
           version,
-          createdAt: new Date()
-        }
+          createdAt: new Date(),
+        },
       };
     } catch (error) {
       console.error('Gemini edit error:', error);
-      throw new Error('Bildbearbeitung fehlgeschlagen. Bitte versuchen Sie es erneut.');
+      throw new Error(
+        'Bildbearbeitung fehlgeschlagen. Bitte versuchen Sie es erneut.'
+      );
     }
   }
 
@@ -134,7 +145,7 @@ export class GeminiEditService {
       used,
       limit: this.DAILY_LIMIT,
       canEdit: used < this.DAILY_LIMIT,
-      resetTime: tomorrow
+      resetTime: tomorrow,
     };
   }
 
@@ -173,17 +184,21 @@ export class GeminiEditService {
   /**
    * Save edited image to InstantDB storage
    */
-  private async saveEditedImage(imageData: any, userId: string): Promise<string> {
+  private async saveEditedImage(
+    imageData: any,
+    userId: string
+  ): Promise<string> {
     // Convert to base64 if needed
-    const base64Data = typeof imageData === 'string'
-      ? imageData
-      : Buffer.from(imageData).toString('base64');
+    const base64Data =
+      typeof imageData === 'string'
+        ? imageData
+        : Buffer.from(imageData).toString('base64');
 
     // Save to InstantDB storage
     const storageUrl = await db.storage.upload({
       data: base64Data,
       fileName: `edited_${Date.now()}.png`,
-      userId
+      userId,
     });
 
     return storageUrl;
@@ -192,7 +207,11 @@ export class GeminiEditService {
   /**
    * Track usage in database
    */
-  private async trackUsage(userId: string, imageId: string, instruction: string): Promise<void> {
+  private async trackUsage(
+    userId: string,
+    imageId: string,
+    instruction: string
+  ): Promise<void> {
     await db.transact([
       db.tx.image_usage.create({
         userId,
@@ -200,8 +219,8 @@ export class GeminiEditService {
         type: 'edit',
         instruction,
         service: 'gemini',
-        createdAt: new Date().toISOString()
-      })
+        createdAt: new Date().toISOString(),
+      }),
     ]);
   }
 
@@ -218,9 +237,9 @@ export class GeminiEditService {
         cost: this.COST_PER_IMAGE,
         metadata: {
           instruction,
-          model: 'gemini-2.5-flash-image'
-        }
-      })
+          model: 'gemini-2.5-flash-image',
+        },
+      }),
     ]);
   }
 
@@ -233,10 +252,11 @@ export class GeminiEditService {
       .where('metadata.originalImageId', '==', originalImageId)
       .get();
 
-    const maxVersion = versions?.reduce((max: number, item: any) => {
-      const version = item.metadata?.version || 0;
-      return version > max ? version : max;
-    }, 0) || 0;
+    const maxVersion =
+      versions?.reduce((max: number, item: any) => {
+        const version = item.metadata?.version || 0;
+        return version > max ? version : max;
+      }, 0) || 0;
 
     return maxVersion + 1;
   }
@@ -244,7 +264,10 @@ export class GeminiEditService {
   /**
    * Resolve image reference from natural language
    */
-  async resolveImageReference(userId: string, reference: string): Promise<{
+  async resolveImageReference(
+    userId: string,
+    reference: string
+  ): Promise<{
     needsClarification: boolean;
     recentImages?: any[];
     resolvedImageId?: string;
@@ -263,7 +286,7 @@ export class GeminiEditService {
       if (images && images.length > 0) {
         return {
           needsClarification: false,
-          resolvedImageId: images[0].id
+          resolvedImageId: images[0].id,
         };
       }
     }
@@ -289,7 +312,7 @@ export class GeminiEditService {
       if (images && images.length === 1) {
         return {
           needsClarification: false,
-          resolvedImageId: images[0].id
+          resolvedImageId: images[0].id,
         };
       }
 
@@ -297,7 +320,7 @@ export class GeminiEditService {
         // Multiple images from that day - need clarification
         return {
           needsClarification: true,
-          recentImages: images.slice(0, 4)
+          recentImages: images.slice(0, 4),
         };
       }
     }
@@ -313,7 +336,7 @@ export class GeminiEditService {
 
     return {
       needsClarification: true,
-      recentImages: recentImages || []
+      recentImages: recentImages || [],
     };
   }
 }

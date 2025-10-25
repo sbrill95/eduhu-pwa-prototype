@@ -620,6 +620,84 @@ class ApiClient {
       throw error;
     }
   }
+
+  /**
+   * Edit an existing image using Gemini 2.5 Flash Image model
+   * @param imageId - Original image ID
+   * @param instruction - German instruction (e.g., "Füge 'Klasse 5b' oben rechts hinzu")
+   * @param userId - User ID
+   * @returns Edited image data with usage information
+   */
+  async editImage(params: {
+    imageId: string;
+    instruction: string;
+    userId: string;
+  }): Promise<{
+    editedImage: {
+      id: string;
+      url: string;
+      originalImageId: string;
+      editInstruction: string;
+      version: number;
+      createdAt: Date;
+    };
+    usage: {
+      used: number;
+      limit: number;
+      remaining: number;
+    };
+  }> {
+    const endpoint = '/images/edit';
+
+    console.log('[ApiClient] 🎨 editImage REQUEST', {
+      timestamp: new Date().toISOString(),
+      endpoint,
+      imageId: params.imageId,
+      instructionLength: params.instruction.length,
+      userId: params.userId,
+    });
+
+    try {
+      const response = await this.request<{
+        success: boolean;
+        data: {
+          editedImage: {
+            id: string;
+            url: string;
+            originalImageId: string;
+            editInstruction: string;
+            version: number;
+            createdAt: Date;
+          };
+          usage: {
+            used: number;
+            limit: number;
+            remaining: number;
+          };
+        };
+      }>(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      console.log('[ApiClient] ✅ editImage SUCCESS', {
+        timestamp: new Date().toISOString(),
+        editedImageId: response.data?.editedImage?.id,
+        version: response.data?.editedImage?.version,
+        usageRemaining: response.data?.usage?.remaining,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('[ApiClient] ❌ editImage ERROR', {
+        timestamp: new Date().toISOString(),
+        errorType: error?.constructor?.name,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStatus: (error as any)?.status,
+      });
+      throw error;
+    }
+  }
 }
 
 export const apiClient = new ApiClient();

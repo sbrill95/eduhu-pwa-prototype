@@ -408,20 +408,27 @@ router.post(
         console.log('[Backend] ✅ Generated library_id:', library_id);
 
         try {
-          console.log('[Backend] 🔍 DEBUG: About to call InstantDBService.db()...');
+          console.log(
+            '[Backend] 🔍 DEBUG: About to call InstantDBService.db()...'
+          );
           const db = InstantDBService.db();
           console.log('[Backend] 🔍 DEBUG: InstantDB db() result:', {
             hasDb: !!db,
             dbType: db ? typeof db : 'null',
-            dbKeys: db ? Object.keys(db) : []
+            dbKeys: db ? Object.keys(db) : [],
           });
 
           if (db) {
-            console.log('[Backend] ✅ DB instance is available, will save to library_materials');
-            console.log('[Backend] 🔍 DEBUG: result.data BEFORE adding library_id:', {
-              resultDataKeys: Object.keys(result.data || {}),
-              hasResultData: !!result.data
-            });
+            console.log(
+              '[Backend] ✅ DB instance is available, will save to library_materials'
+            );
+            console.log(
+              '[Backend] 🔍 DEBUG: result.data BEFORE adding library_id:',
+              {
+                resultDataKeys: Object.keys(result.data || {}),
+                hasResultData: !!result.data,
+              }
+            );
 
             // Prepare metadata for regeneration (FR-008)
             const originalParams = result.data?.originalParams || {
@@ -464,7 +471,9 @@ router.post(
               title: result.data?.title,
             });
           } else {
-            console.log('[Backend] ⚠️ DB instance is NULL - image will NOT be saved to library_materials');
+            console.log(
+              '[Backend] ⚠️ DB instance is NULL - image will NOT be saved to library_materials'
+            );
             logError(
               'InstantDB not available - image will not persist',
               new Error('InstantDB db() returned null')
@@ -479,14 +488,17 @@ router.post(
           // Don't fail the request - image generation succeeded
         }
 
-        console.log('[Backend] 🔍 DEBUG: After try/catch, library_id =', library_id);
+        console.log(
+          '[Backend] 🔍 DEBUG: After try/catch, library_id =',
+          library_id
+        );
 
         // Return success response with library_id
         console.log('[Backend] 🔍 DEBUG: Preparing response with library_id:', {
           library_id,
           hasLibraryId: !!library_id,
           resultDataKeys: Object.keys(result.data || {}),
-          willIncludeLibraryId: library_id !== undefined
+          willIncludeLibraryId: library_id !== undefined,
         });
 
         const responseData = {
@@ -497,7 +509,7 @@ router.post(
         console.log('[Backend] 🔍 DEBUG: Response data object:', {
           responseDataKeys: Object.keys(responseData),
           library_id: responseData.library_id,
-          hasLibraryIdInResponse: 'library_id' in responseData
+          hasLibraryIdInResponse: 'library_id' in responseData,
         });
 
         res.status(200).json({
@@ -538,5 +550,3 @@ router.post(
 );
 
 export default router;
-
- 

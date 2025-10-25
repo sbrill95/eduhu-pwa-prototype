@@ -42,7 +42,7 @@ export default defineConfig({
   // Global test configuration
   use: {
     // Base URL for all tests
-    baseURL: 'http://localhost:5173', // Updated port
+    baseURL: 'http://localhost:5174', // FIXED: Match actual dev server port
 
     // Browser context options
     trace: 'retain-on-failure', // Capture trace on failure
@@ -160,7 +160,7 @@ export default defineConfig({
     // CRITICAL: Use --mode test to load .env.test automatically
     // This ensures VITE_TEST_MODE=true is properly injected into the browser
     command: 'npm run dev -- --mode test',
-    url: 'http://localhost:5173',
+    url: 'http://localhost:5174',
     reuseExistingServer: !process.env.CI, // Reuse in dev, fresh in CI
     timeout: 120000, // 2 minutes to start dev server
   },

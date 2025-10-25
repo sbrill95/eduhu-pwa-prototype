@@ -6,6 +6,7 @@ import { formatRelativeDate } from '../../lib/formatRelativeDate';
 import { logger } from '../../lib/logger';
 import { MaterialPreviewModal, UnifiedMaterial } from '../../components/MaterialPreviewModal';
 import { convertArtifactToUnifiedMaterial, ArtifactItem as MappedArtifactItem } from '../../lib/materialMappers';
+import ImageEditModal from '../../components/ImageEditModal';
 
 interface ChatHistoryItem {
   id: string;
@@ -46,6 +47,10 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
   // T003: Modal state for MaterialPreviewModal integration
   const [selectedMaterial, setSelectedMaterial] = useState<UnifiedMaterial | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  // Story 3.1.2: Modal state for ImageEditModal integration
+  const [selectedImageForEdit, setSelectedImageForEdit] = useState<ArtifactItem | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
   // Get chat sessions from InstantDB with messages for lastMessage display
   const { data: chatData } = db.useQuery(
@@ -332,6 +337,31 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
     setSelectedMaterial(null);
   }, []);
 
+  // Story 3.1.2: Handle "Bearbeiten" button click - open ImageEditModal
+  const handleEditClick = useCallback((artifact: ArtifactItem, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    console.log('[Library] Edit button clicked:', artifact.id);
+
+    setSelectedImageForEdit(artifact);
+    setIsEditModalOpen(true);
+  }, []);
+
+  // Story 3.1.2: Handle edit modal close
+  const handleEditModalClose = useCallback(() => {
+    setIsEditModalOpen(false);
+    setSelectedImageForEdit(null);
+  }, []);
+
+  // Story 3.1.2: Handle edited image save
+  const handleEditedImageSave = useCallback((editedImage: any) => {
+    console.log('[Library] Edited image saved:', editedImage);
+
+    // TODO: Save editedImage to InstantDB library_materials
+    // This will be implemented in Phase 3
+
+    handleEditModalClose();
+  }, [handleEditModalClose]);
+
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto">
       {/* Header */}
@@ -514,6 +544,21 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
                         <span>{artifact.type}</span>
                       </div>
                     </div>
+                    {/* Story 3.1.2: "Bearbeiten" button for images */}
+                    {isImage && (
+                      <button
+                        onClick={(e) => handleEditClick(artifact, e)}
+                        className="px-3 py-1.5 text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
+                        data-testid="edit-image-button"
+                      >
+                        <span className="flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                          Bearbeiten
+                        </span>
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -559,6 +604,21 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
         isOpen={isModalOpen}
         onClose={handleModalClose}
       />
+
+      {/* Story 3.1.2: ImageEditModal integration */}
+      {selectedImageForEdit && (
+        <ImageEditModal
+          image={{
+            ...selectedImageForEdit,
+            imageUrl: selectedImageForEdit.description,
+            url: selectedImageForEdit.description,
+            createdAt: selectedImageForEdit.dateCreated,
+          }}
+          isOpen={isEditModalOpen}
+          onClose={handleEditModalClose}
+          onSave={handleEditedImageSave}
+        />
+      )}
     </div>
   );
 };
