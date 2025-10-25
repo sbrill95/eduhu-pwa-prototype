@@ -3,6 +3,7 @@ import healthRouter from './health';
 import chatRouter from './chat';
 import chatTagsRouter from './chatTags';
 import imageGenerationRouter from './imageGeneration';
+import imageEditRouter from './imageEdit';
 import chatSummaryRouter from './chat-summary';
 import profileRouter from './profile';
 import filesRouter from './files';
@@ -10,6 +11,8 @@ import storageProxyRouter from './storageProxy';
 import visionTaggingRouter from './visionTagging';
 import agentsSdkRouter from './agentsSdk';
 import langGraphAgentsRouter from './langGraphAgents';
+import libraryRouter from './library';
+import testHelpersRouter from './testHelpers';
 // import promptsRouter from './prompts'; // Disabled - prompts.ts.disabled
 // import teacherProfileRouter from './teacher-profile'; // TODO: Fix TypeScript errors
 
@@ -26,6 +29,8 @@ router.use('/chat', chatTagsRouter);
 
 // Mount LangGraph image generation routes (includes timeout fix)
 router.use('/langgraph', imageGenerationRouter);
+// Mount image editing routes
+router.use('/images', imageEditRouter);
 
 // Mount chat summary routes
 router.use('/chat', chatSummaryRouter);
@@ -47,6 +52,12 @@ router.use('/agents-sdk', agentsSdkRouter);
 
 // Mount LangGraph agents routes
 router.use('/langgraph-agents', langGraphAgentsRouter);
+
+// Mount library routes (test mode support)
+router.use('/library', libraryRouter);
+
+// Mount test helper routes (dev/test mode only)
+router.use('/test', testHelpersRouter);
 
 // Mount prompts routes
 // router.use('/prompts', promptsRouter); // Disabled - prompts.ts.disabled

@@ -30,6 +30,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@openai/agents": "0.1.10",
     "@types/multer": "^2.0.0",
     "@types/string-similarity": "^4.0.2",

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { X, Wand2, Type, Palette, Image, Trash2, Loader2, Save, RefreshCw } from 'lucide-react';
+import { apiClient } from '../lib/api';
+import { useAuth } from '../lib/auth-context';
 
 interface MaterialItem {
   id: string;
@@ -35,6 +37,7 @@ const ImageEditModal: React.FC<ImageEditModalProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [currentEditedImage, setCurrentEditedImage] = useState<MaterialItem | null>(null);
 
   if (!isOpen) return null;
 
@@ -54,9 +57,16 @@ const ImageEditModal: React.FC<ImageEditModalProps> = ({
     setInstruction(preset);
   };
 
+  const { user } = useAuth();
+
   const handleProcessEdit = async () => {
     if (!instruction.trim()) {
       setError('Bitte geben Sie eine Bearbeitungsanweisung ein');
+      return;
+    }
+
+    if (!user) {
+      setError('Sie müssen angemeldet sein um Bilder zu bearbeiten');
       return;
     }
 
@@ -64,26 +74,31 @@ const ImageEditModal: React.FC<ImageEditModalProps> = ({
     setError(null);
 
     try {
-      // Call to backend API for Gemini edit
-      const response = await fetch('/api/images/edit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          imageId: image.id,
-          imageUrl: imageUrl,
-          instruction: instruction,
-        }),
+      const result = await apiClient.editImage({
+        imageId: image.id,
+        instruction: instruction,
+        userId: user.id,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Bearbeitung fehlgeschlagen');
-      }
+      setPreviewImage(result.editedImage.url);
 
-      const result = await response.json();
-      setPreviewImage(result.editedImageUrl);
+      // Store the edited image data for saving
+      const editedImageData: MaterialItem = {
+        ...image,
+        id: result.editedImage.id,
+        imageUrl: result.editedImage.url,
+        url: result.editedImage.url,
+        title: `${image.title} (Bearbeitet)`,
+        createdAt: new Date(),
+        metadata: {
+          originalImageId: result.editedImage.originalImageId,
+          editInstruction: result.editedImage.editInstruction,
+          version: result.editedImage.version,
+        },
+      };
+
+      // Update preview and allow user to save
+      setCurrentEditedImage(editedImageData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ein Fehler ist aufgetreten');
     } finally {
@@ -92,21 +107,8 @@ const ImageEditModal: React.FC<ImageEditModalProps> = ({
   };
 
   const handleSave = () => {
-    if (previewImage) {
-      const editedImage: MaterialItem = {
-        ...image,
-        id: `${image.id}_edit_${Date.now()}`,
-        imageUrl: previewImage,
-        url: previewImage,
-        title: `${image.title} (Bearbeitet)`,
-        createdAt: new Date(),
-        metadata: {
-          originalImageId: image.metadata?.originalImageId || image.id,
-          editInstruction: instruction,
-          version: (image.metadata?.version || 0) + 1,
-        },
-      };
-      onSave(editedImage);
+    if (currentEditedImage) {
+      onSave(currentEditedImage);
       onClose();
     }
   };
@@ -117,7 +119,10 @@ const ImageEditModal: React.FC<ImageEditModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      data-testid="edit-modal"
+    >
       <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-6 flex justify-between items-center">
@@ -143,11 +148,14 @@ const ImageEditModal: React.FC<ImageEditModalProps> = ({
           <div className="w-[40%] p-6 border-r bg-gray-50">
             <h3 className="text-sm font-semibold text-gray-600 mb-3">Original</h3>
             <div className="relative rounded-lg overflow-hidden bg-white shadow-md">
-              <img
-                src={imageUrl}
-                alt={image.title}
-                className="w-full h-auto object-contain"
-              />
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt={image.title}
+                  className="w-full h-auto object-contain"
+                  data-testid="original-image"
+                />
+              )}
               {image.metadata?.version && (
                 <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
                   Version {image.metadata.version}
@@ -169,7 +177,7 @@ const ImageEditModal: React.FC<ImageEditModalProps> = ({
                 {/* Preset Buttons */}
                 <div className="mb-4">
                   <h3 className="text-sm font-semibold text-gray-600 mb-3">Schnellaktionen</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2" data-testid="preset-buttons">
                     {presetOperations.map((preset, index) => {
                       const Icon = preset.icon;
                       return (
@@ -202,6 +210,7 @@ const ImageEditModal: React.FC<ImageEditModalProps> = ({
                     className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg
                              focus:outline-none focus:ring-2 focus:ring-purple-500
                              resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    data-testid="edit-instruction"
                   />
                   <p className="text-xs text-gray-500 mt-2">
                     Beispiel: "Füge einen blauen Himmel hinzu" oder "Entferne die Person im Hintergrund"
@@ -244,12 +253,15 @@ const ImageEditModal: React.FC<ImageEditModalProps> = ({
               /* Preview Section */
               <div className="flex flex-col h-full">
                 <h3 className="text-sm font-semibold text-gray-600 mb-3">Vorschau</h3>
-                <div className="flex-1 relative rounded-lg overflow-hidden bg-white shadow-md">
-                  <img
-                    src={previewImage}
-                    alt="Bearbeitete Version"
-                    className="w-full h-full object-contain"
-                  />
+                <div className="flex-1 relative rounded-lg overflow-hidden bg-white shadow-md" data-testid="edit-preview">
+                  {previewImage && (
+                    <img
+                      src={previewImage}
+                      alt="Bearbeitete Version"
+                      className="w-full h-full object-contain"
+                      data-testid="preview-image"
+                    />
+                  )}
                   <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
                     Neu bearbeitet
                   </div>
