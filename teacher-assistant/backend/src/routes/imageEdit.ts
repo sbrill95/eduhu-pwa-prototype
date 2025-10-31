@@ -191,6 +191,37 @@ router.post('/edit', async (req: Request, res: Response) => {
 
     const updatedUsage = await checkCombinedDailyLimit(db, userId);
 
+    // Log usage and cost events for admin dashboards (Story 3.1.5)
+    try {
+      const usageId = db.id ? db.id() : crypto.randomUUID();
+      const costId = db.id ? db.id() : crypto.randomUUID();
+      await db.transact([
+        db.tx.image_usage?.[usageId]?.update
+          ? db.tx.image_usage[usageId].update({
+              user_id: userId,
+              image_id: editedImageId,
+              type: 'edit',
+              service: 'gemini',
+              created_at: now,
+            })
+          : db.tx.library_materials[editedImageId].update({}), // no-op fallback if collection missing
+        db.tx.api_costs?.[costId]?.update
+          ? db.tx.api_costs[costId].update({
+              timestamp: now,
+              user_id: userId,
+              service: 'gemini',
+              operation: 'image_edit',
+              cost: 0.039,
+              metadata: JSON.stringify({ model: 'gemini-2.5-flash-image' }),
+            })
+          : db.tx.library_materials[editedImageId].update({}), // no-op fallback
+      ]);
+    } catch (e) {
+      // Non-fatal: dashboards may miss this event, editing result still returned
+    }
+
+    const alert80 = updatedUsage.used >= Math.floor(updatedUsage.limit * 0.8);
+
     return res.json({
       success: true,
       data: {
@@ -206,6 +237,7 @@ router.post('/edit', async (req: Request, res: Response) => {
           used: updatedUsage.used,
           limit: updatedUsage.limit,
           remaining: updatedUsage.limit - updatedUsage.used,
+          alert80,
         },
       },
     });

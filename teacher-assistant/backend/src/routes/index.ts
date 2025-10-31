@@ -13,6 +13,7 @@ import agentsSdkRouter from './agentsSdk';
 import langGraphAgentsRouter from './langGraphAgents';
 import libraryRouter from './library';
 import testHelpersRouter from './testHelpers';
+import adminRouter from './admin';
 // import promptsRouter from './prompts'; // Disabled - prompts.ts.disabled
 // import teacherProfileRouter from './teacher-profile'; // TODO: Fix TypeScript errors
 
@@ -58,6 +59,9 @@ router.use('/library', libraryRouter);
 
 // Mount test helper routes (dev/test mode only)
 router.use('/test', testHelpersRouter);
+
+// Mount admin routes (usage and cost dashboards)
+router.use('/admin', adminRouter);
 
 // Mount prompts routes
 // router.use('/prompts', promptsRouter); // Disabled - prompts.ts.disabled

@@ -11,7 +11,9 @@ describe('AgentIntentService', () => {
         expect(intent).not.toBeNull();
         expect(intent?.agentType).toBe('image-generation');
         expect(intent?.confidence).toBeGreaterThan(0.7);
-        expect((intent?.prefillData as any).description).toContain('Photosynthese');
+        expect((intent?.prefillData as any).description).toContain(
+          'Photosynthese'
+        );
       });
 
       it('should detect "generiere bild" intent', () => {
@@ -30,7 +32,9 @@ describe('AgentIntentService', () => {
 
         expect(intent).not.toBeNull();
         expect(intent?.agentType).toBe('image-generation');
-        expect((intent?.prefillData as any).description).toContain('Photosynthese');
+        expect((intent?.prefillData as any).description).toContain(
+          'Photosynthese'
+        );
       });
 
       it('should detect "visualisiere" intent', () => {
@@ -39,7 +43,9 @@ describe('AgentIntentService', () => {
 
         expect(intent).not.toBeNull();
         expect(intent?.agentType).toBe('image-generation');
-        expect((intent?.prefillData as any).description).toContain('Wasserkreislauf');
+        expect((intent?.prefillData as any).description).toContain(
+          'Wasserkreislauf'
+        );
       });
 
       it('should extract learning group from message', () => {
@@ -99,7 +105,9 @@ describe('AgentIntentService', () => {
 
         expect(intent).not.toBeNull();
         expect(intent?.agentType).toBe('worksheet');
-        expect((intent?.prefillData as any).description).toContain('Bruchrechnung');
+        expect((intent?.prefillData as any).description).toContain(
+          'Bruchrechnung'
+        );
       });
 
       it('should detect "übungen" intent', () => {
@@ -117,7 +125,9 @@ describe('AgentIntentService', () => {
 
         expect(intent).not.toBeNull();
         expect(intent?.agentType).toBe('worksheet');
-        expect((intent?.prefillData as any).description).toContain('Prozentrechnung');
+        expect((intent?.prefillData as any).description).toContain(
+          'Prozentrechnung'
+        );
         expect(intent?.prefillData.learningGroup).toBe('Klasse 8');
       });
     });
@@ -130,7 +140,9 @@ describe('AgentIntentService', () => {
 
         expect(intent).not.toBeNull();
         expect(intent?.agentType).toBe('lesson-plan');
-        expect((intent?.prefillData as any).description).toContain('Photosynthese');
+        expect((intent?.prefillData as any).description).toContain(
+          'Photosynthese'
+        );
       });
 
       it('should detect "stundenentwurf" intent', () => {
@@ -148,7 +160,9 @@ describe('AgentIntentService', () => {
 
         expect(intent).not.toBeNull();
         expect(intent?.agentType).toBe('lesson-plan');
-        expect((intent?.prefillData as any).description).toContain('Französische Revolution');
+        expect((intent?.prefillData as any).description).toContain(
+          'Französische Revolution'
+        );
       });
     });
 
@@ -180,16 +194,22 @@ describe('AgentIntentService', () => {
         const message = 'Erstelle ein Bild zur Photosynthese';
         const intent = AgentIntentService.detectAgentIntent(message);
 
-        expect((intent?.prefillData as any).description).not.toContain('erstelle');
+        expect((intent?.prefillData as any).description).not.toContain(
+          'erstelle'
+        );
         expect((intent?.prefillData as any).description).not.toContain('bild');
-        expect((intent?.prefillData as any).description).toContain('Photosynthese');
+        expect((intent?.prefillData as any).description).toContain(
+          'Photosynthese'
+        );
       });
 
       it('should extract description after "zum Thema"', () => {
         const message = 'Erstelle ein Bild zum Thema Bruchrechnung';
         const intent = AgentIntentService.detectAgentIntent(message);
 
-        expect((intent?.prefillData as any).description).toContain('Bruchrechnung');
+        expect((intent?.prefillData as any).description).toContain(
+          'Bruchrechnung'
+        );
       });
 
       it('should handle complex themes', () => {
@@ -197,7 +217,9 @@ describe('AgentIntentService', () => {
           'Erstelle ein Bild zum Thema "Der Wasserkreislauf in der Natur"';
         const intent = AgentIntentService.detectAgentIntent(message);
 
-        expect((intent?.prefillData as any).description).toContain('Wasserkreislauf');
+        expect((intent?.prefillData as any).description).toContain(
+          'Wasserkreislauf'
+        );
       });
 
       it('should remove trailing punctuation and politeness', () => {

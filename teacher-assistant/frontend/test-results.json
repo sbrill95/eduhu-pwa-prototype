@@ -4,15 +4,13 @@
     "rootDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
     "forbidOnly": false,
     "fullyParallel": false,
-    "globalSetup": null,
+    "globalSetup": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\global-setup.ts",
     "globalTeardown": null,
     "globalTimeout": 0,
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {
-      "actualWorkers": 1
-    },
+    "metadata": {},
     "preserveOutput": "always",
     "reporter": [
       [
@@ -43,9 +41,7 @@
         "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
         "repeatEach": 1,
         "retries": 1,
-        "metadata": {
-          "actualWorkers": 1
-        },
+        "metadata": {},
         "id": "Mock Tests (Fast)",
         "name": "Mock Tests (Fast)",
         "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
@@ -61,9 +57,7 @@
         "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
         "repeatEach": 1,
         "retries": 1,
-        "metadata": {
-          "actualWorkers": 1
-        },
+        "metadata": {},
         "id": "Real API Tests (Smoke)",
         "name": "Real API Tests (Smoke)",
         "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
@@ -81,226 +75,27 @@
     "workers": 1,
     "webServer": {
       "command": "npm run dev -- --mode test",
-      "url": "http://localhost:5173",
+      "url": "http://localhost:5174",
       "reuseExistingServer": true,
       "timeout": 120000
     }
   },
   "suites": [
     {
-      "title": "openai-agents-sdk-story-3.0.1.spec.ts",
-      "file": "openai-agents-sdk-story-3.0.1.spec.ts",
+      "title": "router-classification.spec.ts",
+      "file": "router-classification.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Story 3.0.1: OpenAI Agents SDK Setup - E2E Tests",
-          "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-          "line": 7,
+          "title": "Story 3.1.3 - Router Classification",
+          "file": "router-classification.spec.ts",
+          "line": 18,
           "column": 6,
           "specs": [
             {
-              "title": "AC1: SDK npm package installed and accessible",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 150000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mock Tests (Fast)",
-                  "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 3465,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:29:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 29
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 27 |\u001b[39m\n \u001b[90m 28 |\u001b[39m     \u001b[90m// Take screenshot of API documentation showing SDK installation\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 29 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5174'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 30 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({\n \u001b[90m 31 |\u001b[39m       path\u001b[33m:\u001b[39m \u001b[32m`${SCREENSHOT_DIR}/ac1-sdk-installed.png`\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 32 |\u001b[39m       fullPage\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 29
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n\n  27 |\n  28 |     // Take screenshot of API documentation showing SDK installation\n> 29 |     await page.goto('http://localhost:5174');\n     |                ^\n  30 |     await page.screenshot({\n  31 |       path: `${SCREENSHOT_DIR}/ac1-sdk-installed.png`,\n  32 |       fullPage: true\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:29:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => page.goto started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= page.goto failed []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:54:00.889Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a01f4-ge-installed-and-accessible-Mock-Tests-Fast-\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a01f4-ge-installed-and-accessible-Mock-Tests-Fast-\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a01f4-ge-installed-and-accessible-Mock-Tests-Fast-\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a01f4-ge-installed-and-accessible-Mock-Tests-Fast-\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 29
-                      }
-                    },
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 3364,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:29:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 29
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 27 |\u001b[39m\n \u001b[90m 28 |\u001b[39m     \u001b[90m// Take screenshot of API documentation showing SDK installation\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 29 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5174'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 30 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({\n \u001b[90m 31 |\u001b[39m       path\u001b[33m:\u001b[39m \u001b[32m`${SCREENSHOT_DIR}/ac1-sdk-installed.png`\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 32 |\u001b[39m       fullPage\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 29
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n\n  27 |\n  28 |     // Take screenshot of API documentation showing SDK installation\n> 29 |     await page.goto('http://localhost:5174');\n     |                ^\n  30 |     await page.screenshot({\n  31 |       path: `${SCREENSHOT_DIR}/ac1-sdk-installed.png`,\n  32 |       fullPage: true\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:29:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => page.goto started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= page.goto failed []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-10-20T17:54:07.058Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a01f4-ge-installed-and-accessible-Mock-Tests-Fast--retry1\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a01f4-ge-installed-and-accessible-Mock-Tests-Fast--retry1\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a01f4-ge-installed-and-accessible-Mock-Tests-Fast--retry1\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a01f4-ge-installed-and-accessible-Mock-Tests-Fast--retry1\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 29
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "ee1f4e3c29c23f3b4618-394a2547bd5e0e9dd06d",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 18,
-              "column": 3
-            },
-            {
-              "title": "AC2: SDK initialized with OpenAI API key from environment",
+              "title": "AC1: High confidence creation - auto-routes without confirmation",
               "ok": true,
               "tags": [],
               "tests": [
@@ -310,614 +105,17 @@
                   "expectedStatus": "passed",
                   "projectId": "Mock Tests (Fast)",
                   "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 4105,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:54:12.677Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
-              "id": "ee1f4e3c29c23f3b4618-9b257d92403b411d4388",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 36,
+              "id": "f6b36b0de3ce4ca9fbbd-812a55a07a1812d5bf09",
+              "file": "router-classification.spec.ts",
+              "line": 48,
               "column": 3
             },
             {
-              "title": "AC3: Basic test agent executes successfully",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 150000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mock Tests (Fast)",
-                  "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 4372,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/chat\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/chat\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/chat\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/chat\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:81:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 81
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 79 |\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[90m// Navigate to frontend to show integration\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5174/chat'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 82 |\u001b[39m\n \u001b[90m 83 |\u001b[39m     \u001b[90m// Take screenshot showing successful test agent execution\u001b[39m\n \u001b[90m 84 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 81
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/chat\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/chat\", waiting until \"load\"\u001b[22m\n\n\n  79 |\n  80 |     // Navigate to frontend to show integration\n> 81 |     await page.goto('http://localhost:5174/chat');\n     |                ^\n  82 |\n  83 |     // Take screenshot showing successful test agent execution\n  84 |     await page.screenshot({\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:81:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => page.goto started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= page.goto failed []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:54:17.214Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-fb474-agent-executes-successfully-Mock-Tests-Fast-\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-fb474-agent-executes-successfully-Mock-Tests-Fast-\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-fb474-agent-executes-successfully-Mock-Tests-Fast-\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-fb474-agent-executes-successfully-Mock-Tests-Fast-\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 81
-                      }
-                    },
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 3524,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m2000\u001b[39m\nReceived:   \u001b[31m2630\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m2000\u001b[39m\nReceived:   \u001b[31m2630\u001b[39m\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:78:26",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 26,
-                          "line": 78
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 76 |\u001b[39m\n \u001b[90m 77 |\u001b[39m     \u001b[90m// Performance check: response should be fast\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 78 |\u001b[39m     expect(responseTime)\u001b[33m.\u001b[39mtoBeLessThan(\u001b[35m2000\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// Under 2 seconds\u001b[39m\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 79 |\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[90m// Navigate to frontend to show integration\u001b[39m\n \u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5174/chat'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 26,
-                            "line": 78
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m2000\u001b[39m\nReceived:   \u001b[31m2630\u001b[39m\n\n  76 |\n  77 |     // Performance check: response should be fast\n> 78 |     expect(responseTime).toBeLessThan(2000); // Under 2 seconds\n     |                          ^\n  79 |\n  80 |     // Navigate to frontend to show integration\n  81 |     await page.goto('http://localhost:5174/chat');\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:78:26"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-10-20T17:54:23.568Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-fb474-agent-executes-successfully-Mock-Tests-Fast--retry1\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-fb474-agent-executes-successfully-Mock-Tests-Fast--retry1\\video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-fb474-agent-executes-successfully-Mock-Tests-Fast--retry1\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 26,
-                        "line": 78
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "ee1f4e3c29c23f3b4618-712a65c5ca6f2acbee0f",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 55,
-              "column": 3
-            },
-            {
-              "title": "AC4: SDK tracing configured (disabled by default for GDPR)",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 150000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mock Tests (Fast)",
-                  "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 4,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 3105,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:95:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 95
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 93 |\u001b[39m\n \u001b[90m 94 |\u001b[39m     \u001b[90m// Navigate to the app\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 95 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5174'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 96 |\u001b[39m\n \u001b[90m 97 |\u001b[39m     \u001b[90m// Check that no console errors about tracing appear\u001b[39m\n \u001b[90m 98 |\u001b[39m     \u001b[36mconst\u001b[39m consoleErrors\u001b[33m:\u001b[39m string[] \u001b[33m=\u001b[39m []\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 95
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n\n  93 |\n  94 |     // Navigate to the app\n> 95 |     await page.goto('http://localhost:5174');\n     |                ^\n  96 |\n  97 |     // Check that no console errors about tracing appear\n  98 |     const consoleErrors: string[] = [];\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:95:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => page.goto started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= page.goto failed []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:54:29.371Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a39bf-sabled-by-default-for-GDPR--Mock-Tests-Fast-\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a39bf-sabled-by-default-for-GDPR--Mock-Tests-Fast-\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a39bf-sabled-by-default-for-GDPR--Mock-Tests-Fast-\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a39bf-sabled-by-default-for-GDPR--Mock-Tests-Fast-\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 95
-                      }
-                    },
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 3638,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:95:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 95
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 93 |\u001b[39m\n \u001b[90m 94 |\u001b[39m     \u001b[90m// Navigate to the app\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 95 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5174'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 96 |\u001b[39m\n \u001b[90m 97 |\u001b[39m     \u001b[90m// Check that no console errors about tracing appear\u001b[39m\n \u001b[90m 98 |\u001b[39m     \u001b[36mconst\u001b[39m consoleErrors\u001b[33m:\u001b[39m string[] \u001b[33m=\u001b[39m []\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 95
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n\n  93 |\n  94 |     // Navigate to the app\n> 95 |     await page.goto('http://localhost:5174');\n     |                ^\n  96 |\n  97 |     // Check that no console errors about tracing appear\n  98 |     const consoleErrors: string[] = [];\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:95:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => page.goto started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= page.goto failed []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-10-20T17:54:34.731Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a39bf-sabled-by-default-for-GDPR--Mock-Tests-Fast--retry1\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a39bf-sabled-by-default-for-GDPR--Mock-Tests-Fast--retry1\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a39bf-sabled-by-default-for-GDPR--Mock-Tests-Fast--retry1\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-a39bf-sabled-by-default-for-GDPR--Mock-Tests-Fast--retry1\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 95
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "ee1f4e3c29c23f3b4618-90e6c22d720a733ec1da",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 90,
-              "column": 3
-            },
-            {
-              "title": "AC5: Documentation exists and is accessible",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 150000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mock Tests (Fast)",
-                  "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 6,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 676,
-                      "error": {
-                        "message": "ReferenceError: require is not defined",
-                        "stack": "ReferenceError: require is not defined\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:129:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 129
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 127 |\u001b[39m   test(\u001b[32m'AC5: Documentation exists and is accessible'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 128 |\u001b[39m     \u001b[90m// Check that the documentation file exists\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 129 |\u001b[39m     \u001b[36mconst\u001b[39m fs \u001b[33m=\u001b[39m require(\u001b[32m'fs'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 130 |\u001b[39m     \u001b[36mconst\u001b[39m docPath \u001b[33m=\u001b[39m \u001b[32m'C:\\\\Users\\\\steff\\\\Desktop\\\\eduhu-pwa-prototype\\\\docs\\\\architecture\\\\api-documentation\\\\openai-agents-sdk.md'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 131 |\u001b[39m\n \u001b[90m 132 |\u001b[39m     \u001b[90m// Verify documentation file exists\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 129
-                          },
-                          "message": "ReferenceError: require is not defined\n\n  127 |   test('AC5: Documentation exists and is accessible', async ({ page }) => {\n  128 |     // Check that the documentation file exists\n> 129 |     const fs = require('fs');\n      |                ^\n  130 |     const docPath = 'C:\\\\Users\\\\steff\\\\Desktop\\\\eduhu-pwa-prototype\\\\docs\\\\architecture\\\\api-documentation\\\\openai-agents-sdk.md';\n  131 |\n  132 |     // Verify documentation file exists\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:129:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:54:40.745Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3a7c-on-exists-and-is-accessible-Mock-Tests-Fast-\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3a7c-on-exists-and-is-accessible-Mock-Tests-Fast-\\video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3a7c-on-exists-and-is-accessible-Mock-Tests-Fast-\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 129
-                      }
-                    },
-                    {
-                      "workerIndex": 7,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 642,
-                      "error": {
-                        "message": "ReferenceError: require is not defined",
-                        "stack": "ReferenceError: require is not defined\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:129:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 129
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 127 |\u001b[39m   test(\u001b[32m'AC5: Documentation exists and is accessible'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 128 |\u001b[39m     \u001b[90m// Check that the documentation file exists\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 129 |\u001b[39m     \u001b[36mconst\u001b[39m fs \u001b[33m=\u001b[39m require(\u001b[32m'fs'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 130 |\u001b[39m     \u001b[36mconst\u001b[39m docPath \u001b[33m=\u001b[39m \u001b[32m'C:\\\\Users\\\\steff\\\\Desktop\\\\eduhu-pwa-prototype\\\\docs\\\\architecture\\\\api-documentation\\\\openai-agents-sdk.md'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 131 |\u001b[39m\n \u001b[90m 132 |\u001b[39m     \u001b[90m// Verify documentation file exists\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 129
-                          },
-                          "message": "ReferenceError: require is not defined\n\n  127 |   test('AC5: Documentation exists and is accessible', async ({ page }) => {\n  128 |     // Check that the documentation file exists\n> 129 |     const fs = require('fs');\n      |                ^\n  130 |     const docPath = 'C:\\\\Users\\\\steff\\\\Desktop\\\\eduhu-pwa-prototype\\\\docs\\\\architecture\\\\api-documentation\\\\openai-agents-sdk.md';\n  131 |\n  132 |     // Verify documentation file exists\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:129:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-10-20T17:54:43.271Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3a7c-on-exists-and-is-accessible-Mock-Tests-Fast--retry1\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3a7c-on-exists-and-is-accessible-Mock-Tests-Fast--retry1\\video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3a7c-on-exists-and-is-accessible-Mock-Tests-Fast--retry1\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 129
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "ee1f4e3c29c23f3b4618-a7851a3f8ae5c22d9f87",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 127,
-              "column": 3
-            },
-            {
-              "title": "Error Handling: Invalid JSON returns proper error",
+              "title": "AC2: High confidence editing - auto-routes without confirmation",
               "ok": true,
               "tags": [],
               "tests": [
@@ -927,51 +125,18 @@
                   "expectedStatus": "passed",
                   "projectId": "Mock Tests (Fast)",
                   "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 8,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 622,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:54:45.701Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
-              "id": "ee1f4e3c29c23f3b4618-4fca9fe62a2e30181343",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 148,
+              "id": "f6b36b0de3ce4ca9fbbd-7e4d6b8ef0b4d9a8863d",
+              "file": "router-classification.spec.ts",
+              "line": 79,
               "column": 3
             },
             {
-              "title": "Error Handling: Missing Content-Type header",
-              "ok": false,
+              "title": "AC3: Low confidence - shows manual override UI",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -980,175 +145,18 @@
                   "expectedStatus": "passed",
                   "projectId": "Mock Tests (Fast)",
                   "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 8,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1667,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:172:31",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 31,
-                          "line": 172
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 170 |\u001b[39m\n \u001b[90m 171 |\u001b[39m     \u001b[90m// Should handle gracefully\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 172 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m400\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 173 |\u001b[39m\n \u001b[90m 174 |\u001b[39m     \u001b[36mconst\u001b[39m data \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\n \u001b[90m 175 |\u001b[39m     expect(data\u001b[33m.\u001b[39msuccess)\u001b[33m.\u001b[39mtoBe(\u001b[36mfalse\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 31,
-                            "line": 172
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n  170 |\n  171 |     // Should handle gracefully\n> 172 |     expect(response.status()).toBe(400);\n      |                               ^\n  173 |\n  174 |     const data = await response.json();\n  175 |     expect(data.success).toBe(false);\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:172:31"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:54:46.650Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-e2723-Missing-Content-Type-header-Mock-Tests-Fast-\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-e2723-Missing-Content-Type-header-Mock-Tests-Fast-\\video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-e2723-Missing-Content-Type-header-Mock-Tests-Fast-\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 31,
-                        "line": 172
-                      }
-                    },
-                    {
-                      "workerIndex": 9,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1675,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:172:31",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 31,
-                          "line": 172
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 170 |\u001b[39m\n \u001b[90m 171 |\u001b[39m     \u001b[90m// Should handle gracefully\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 172 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m400\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 173 |\u001b[39m\n \u001b[90m 174 |\u001b[39m     \u001b[36mconst\u001b[39m data \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\n \u001b[90m 175 |\u001b[39m     expect(data\u001b[33m.\u001b[39msuccess)\u001b[33m.\u001b[39mtoBe(\u001b[36mfalse\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 31,
-                            "line": 172
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n  170 |\n  171 |     // Should handle gracefully\n> 172 |     expect(response.status()).toBe(400);\n      |                               ^\n  173 |\n  174 |     const data = await response.json();\n  175 |     expect(data.success).toBe(false);\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:172:31"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-10-20T17:54:50.337Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-e2723-Missing-Content-Type-header-Mock-Tests-Fast--retry1\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-e2723-Missing-Content-Type-header-Mock-Tests-Fast--retry1\\video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-e2723-Missing-Content-Type-header-Mock-Tests-Fast--retry1\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 31,
-                        "line": 172
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
-              "id": "ee1f4e3c29c23f3b4618-6fad1fe7b7b4b0c4285b",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 165,
+              "id": "f6b36b0de3ce4ca9fbbd-0f145839e2c3f67f57b6",
+              "file": "router-classification.spec.ts",
+              "line": 108,
               "column": 3
             },
             {
-              "title": "Performance: API responds within acceptable time",
-              "ok": false,
+              "title": "AC4: Manual override - user selects creation",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1157,175 +165,18 @@
                   "expectedStatus": "passed",
                   "projectId": "Mock Tests (Fast)",
                   "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 10,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 8040,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m1000\u001b[39m\nReceived:   \u001b[31m1335.4\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m1000\u001b[39m\nReceived:   \u001b[31m1335.4\u001b[39m\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:206:21",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 21,
-                          "line": 206
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 204 |\u001b[39m     \u001b[90m// Average should be well under 1 second\u001b[39m\n \u001b[90m 205 |\u001b[39m     \u001b[36mconst\u001b[39m avgTime \u001b[33m=\u001b[39m times\u001b[33m.\u001b[39mreduce((a\u001b[33m,\u001b[39m b) \u001b[33m=>\u001b[39m a \u001b[33m+\u001b[39m b\u001b[33m,\u001b[39m \u001b[35m0\u001b[39m) \u001b[33m/\u001b[39m times\u001b[33m.\u001b[39mlength\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 206 |\u001b[39m     expect(avgTime)\u001b[33m.\u001b[39mtoBeLessThan(\u001b[35m1000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 207 |\u001b[39m\n \u001b[90m 208 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m`Performance Test Results: Avg: ${avgTime}ms, Min: ${Math.min(...times)}ms, Max: ${Math.max(...times)}ms`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 209 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 21,
-                            "line": 206
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m1000\u001b[39m\nReceived:   \u001b[31m1335.4\u001b[39m\n\n  204 |     // Average should be well under 1 second\n  205 |     const avgTime = times.reduce((a, b) => a + b, 0) / times.length;\n> 206 |     expect(avgTime).toBeLessThan(1000);\n      |                     ^\n  207 |\n  208 |     console.log(`Performance Test Results: Avg: ${avgTime}ms, Min: ${Math.min(...times)}ms, Max: ${Math.max(...times)}ms`);\n  209 |   });\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:206:21"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:54:53.901Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-50b59-onds-within-acceptable-time-Mock-Tests-Fast-\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-50b59-onds-within-acceptable-time-Mock-Tests-Fast-\\video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-50b59-onds-within-acceptable-time-Mock-Tests-Fast-\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 21,
-                        "line": 206
-                      }
-                    },
-                    {
-                      "workerIndex": 11,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 6643,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m1000\u001b[39m\nReceived:   \u001b[31m1091\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m1000\u001b[39m\nReceived:   \u001b[31m1091\u001b[39m\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:206:21",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 21,
-                          "line": 206
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 204 |\u001b[39m     \u001b[90m// Average should be well under 1 second\u001b[39m\n \u001b[90m 205 |\u001b[39m     \u001b[36mconst\u001b[39m avgTime \u001b[33m=\u001b[39m times\u001b[33m.\u001b[39mreduce((a\u001b[33m,\u001b[39m b) \u001b[33m=>\u001b[39m a \u001b[33m+\u001b[39m b\u001b[33m,\u001b[39m \u001b[35m0\u001b[39m) \u001b[33m/\u001b[39m times\u001b[33m.\u001b[39mlength\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 206 |\u001b[39m     expect(avgTime)\u001b[33m.\u001b[39mtoBeLessThan(\u001b[35m1000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 207 |\u001b[39m\n \u001b[90m 208 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m`Performance Test Results: Avg: ${avgTime}ms, Min: ${Math.min(...times)}ms, Max: ${Math.max(...times)}ms`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 209 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 21,
-                            "line": 206
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m1000\u001b[39m\nReceived:   \u001b[31m1091\u001b[39m\n\n  204 |     // Average should be well under 1 second\n  205 |     const avgTime = times.reduce((a, b) => a + b, 0) / times.length;\n> 206 |     expect(avgTime).toBeLessThan(1000);\n      |                     ^\n  207 |\n  208 |     console.log(`Performance Test Results: Avg: ${avgTime}ms, Min: ${Math.min(...times)}ms, Max: ${Math.max(...times)}ms`);\n  209 |   });\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:206:21"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-10-20T17:55:04.242Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-50b59-onds-within-acceptable-time-Mock-Tests-Fast--retry1\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-50b59-onds-within-acceptable-time-Mock-Tests-Fast--retry1\\video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-50b59-onds-within-acceptable-time-Mock-Tests-Fast--retry1\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 21,
-                        "line": 206
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
-              "id": "ee1f4e3c29c23f3b4618-2a666687847698361a07",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 179,
+              "id": "f6b36b0de3ce4ca9fbbd-803452752df3c02a0066",
+              "file": "router-classification.spec.ts",
+              "line": 145,
               "column": 3
             },
             {
-              "title": "Integration: No regression to existing endpoints",
-              "ok": false,
+              "title": "AC5: Manual override - user selects editing",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1334,175 +185,18 @@
                   "expectedStatus": "passed",
                   "projectId": "Mock Tests (Fast)",
                   "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 12,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 877,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"healthy\"\u001b[39m\nReceived: \u001b[31m\"ok\"\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"healthy\"\u001b[39m\nReceived: \u001b[31m\"ok\"\u001b[39m\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:218:36",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 36,
-                          "line": 218
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 216 |\u001b[39m     \u001b[36mconst\u001b[39m healthData \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m healthResponse\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\n \u001b[90m 217 |\u001b[39m     expect(healthData\u001b[33m.\u001b[39msuccess)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 218 |\u001b[39m     expect(healthData\u001b[33m.\u001b[39mdata\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'healthy'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 219 |\u001b[39m\n \u001b[90m 220 |\u001b[39m     \u001b[90m// Verify LangGraph endpoints still accessible (if they exist)\u001b[39m\n \u001b[90m 221 |\u001b[39m     \u001b[36mconst\u001b[39m langGraphResponse \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39m\u001b[36mget\u001b[39m(\u001b[32m`${API_BASE_URL}/langgraph/health`\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 36,
-                            "line": 218
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"healthy\"\u001b[39m\nReceived: \u001b[31m\"ok\"\u001b[39m\n\n  216 |     const healthData = await healthResponse.json();\n  217 |     expect(healthData.success).toBe(true);\n> 218 |     expect(healthData.data.status).toBe('healthy');\n      |                                    ^\n  219 |\n  220 |     // Verify LangGraph endpoints still accessible (if they exist)\n  221 |     const langGraphResponse = await request.get(`${API_BASE_URL}/langgraph/health`);\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:218:36"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:55:13.121Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-eac3c-ssion-to-existing-endpoints-Mock-Tests-Fast-\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-eac3c-ssion-to-existing-endpoints-Mock-Tests-Fast-\\video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-eac3c-ssion-to-existing-endpoints-Mock-Tests-Fast-\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 36,
-                        "line": 218
-                      }
-                    },
-                    {
-                      "workerIndex": 13,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 712,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"healthy\"\u001b[39m\nReceived: \u001b[31m\"ok\"\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"healthy\"\u001b[39m\nReceived: \u001b[31m\"ok\"\u001b[39m\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:218:36",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 36,
-                          "line": 218
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 216 |\u001b[39m     \u001b[36mconst\u001b[39m healthData \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m healthResponse\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\n \u001b[90m 217 |\u001b[39m     expect(healthData\u001b[33m.\u001b[39msuccess)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 218 |\u001b[39m     expect(healthData\u001b[33m.\u001b[39mdata\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'healthy'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 219 |\u001b[39m\n \u001b[90m 220 |\u001b[39m     \u001b[90m// Verify LangGraph endpoints still accessible (if they exist)\u001b[39m\n \u001b[90m 221 |\u001b[39m     \u001b[36mconst\u001b[39m langGraphResponse \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39m\u001b[36mget\u001b[39m(\u001b[32m`${API_BASE_URL}/langgraph/health`\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 36,
-                            "line": 218
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"healthy\"\u001b[39m\nReceived: \u001b[31m\"ok\"\u001b[39m\n\n  216 |     const healthData = await healthResponse.json();\n  217 |     expect(healthData.success).toBe(true);\n> 218 |     expect(healthData.data.status).toBe('healthy');\n      |                                    ^\n  219 |\n  220 |     // Verify LangGraph endpoints still accessible (if they exist)\n  221 |     const langGraphResponse = await request.get(`${API_BASE_URL}/langgraph/health`);\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:218:36"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-10-20T17:55:16.257Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-eac3c-ssion-to-existing-endpoints-Mock-Tests-Fast--retry1\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-eac3c-ssion-to-existing-endpoints-Mock-Tests-Fast--retry1\\video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-eac3c-ssion-to-existing-endpoints-Mock-Tests-Fast--retry1\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 36,
-                        "line": 218
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
-              "id": "ee1f4e3c29c23f3b4618-b5fc8c47ac6ed62a99b6",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 211,
+              "id": "f6b36b0de3ce4ca9fbbd-1fc4d13ed6c2cdf995f2",
+              "file": "router-classification.spec.ts",
+              "line": 189,
               "column": 3
             },
             {
-              "title": "Full Workflow: Complete SDK test agent execution",
-              "ok": false,
+              "title": "AC6: Image reference detection - latest image",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1511,223 +205,18 @@
                   "expectedStatus": "passed",
                   "projectId": "Mock Tests (Fast)",
                   "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 14,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 4579,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/chat\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/chat\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/chat\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/chat\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:250:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 250
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 248 |\u001b[39m\n \u001b[90m 249 |\u001b[39m     \u001b[90m// Step 3: Navigate to frontend\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 250 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5174/chat'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 251 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 252 |\u001b[39m\n \u001b[90m 253 |\u001b[39m     \u001b[90m// Step 4: Take final screenshot\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 250
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/chat\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/chat\", waiting until \"load\"\u001b[22m\n\n\n  248 |\n  249 |     // Step 3: Navigate to frontend\n> 250 |     await page.goto('http://localhost:5174/chat');\n      |                ^\n  251 |     await page.waitForLoadState('networkidle');\n  252 |\n  253 |     // Step 4: Take final screenshot\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:250:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "Starting full workflow test...\n"
-                        },
-                        {
-                          "text": "✓ SDK health check passed\n"
-                        },
-                        {
-                          "text": "✓ Test agent executed successfully\n"
-                        },
-                        {
-                          "text": "[info] api: => page.goto started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= page.goto failed []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:55:18.841Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3b6b-te-SDK-test-agent-execution-Mock-Tests-Fast-\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3b6b-te-SDK-test-agent-execution-Mock-Tests-Fast-\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3b6b-te-SDK-test-agent-execution-Mock-Tests-Fast-\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3b6b-te-SDK-test-agent-execution-Mock-Tests-Fast-\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 250
-                      }
-                    },
-                    {
-                      "workerIndex": 15,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 4147,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/chat\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/chat\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/chat\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/chat\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:250:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 250
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 248 |\u001b[39m\n \u001b[90m 249 |\u001b[39m     \u001b[90m// Step 3: Navigate to frontend\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 250 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5174/chat'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 251 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 252 |\u001b[39m\n \u001b[90m 253 |\u001b[39m     \u001b[90m// Step 4: Take final screenshot\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 250
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/chat\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/chat\", waiting until \"load\"\u001b[22m\n\n\n  248 |\n  249 |     // Step 3: Navigate to frontend\n> 250 |     await page.goto('http://localhost:5174/chat');\n      |                ^\n  251 |     await page.waitForLoadState('networkidle');\n  252 |\n  253 |     // Step 4: Take final screenshot\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:250:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[info] api: => browser.newContext started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.newContext succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.newPage started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                        },
-                        {
-                          "text": "Starting full workflow test...\n"
-                        },
-                        {
-                          "text": "✓ SDK health check passed\n"
-                        },
-                        {
-                          "text": "✓ Test agent executed successfully\n"
-                        },
-                        {
-                          "text": "[info] api: => page.goto started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= page.goto failed []\n"
-                        },
-                        {
-                          "text": "[info] api: => browserContext.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browserContext.close succeeded []\n"
-                        },
-                        {
-                          "text": "[info] api: => browser.close started []\n"
-                        },
-                        {
-                          "text": "[info] api: <= browser.close succeeded []\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-10-20T17:55:25.569Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3b6b-te-SDK-test-agent-execution-Mock-Tests-Fast--retry1\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3b6b-te-SDK-test-agent-execution-Mock-Tests-Fast--retry1\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3b6b-te-SDK-test-agent-execution-Mock-Tests-Fast--retry1\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-b3b6b-te-SDK-test-agent-execution-Mock-Tests-Fast--retry1\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 250
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
-              "id": "ee1f4e3c29c23f3b4618-62a009b97314a9b40ce9",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 226,
+              "id": "f6b36b0de3ce4ca9fbbd-5b357028e33550fb45cf",
+              "file": "router-classification.spec.ts",
+              "line": 233,
               "column": 3
-            }
-          ]
-        },
-        {
-          "title": "Story 3.0.1: Acceptance Criteria Summary",
-          "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-          "line": 274,
-          "column": 6,
-          "specs": [
+            },
             {
-              "title": "All 5 Acceptance Criteria Met",
-              "ok": false,
+              "title": "AC7: Context-aware classification - dative article",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1736,132 +225,53 @@
                   "expectedStatus": "passed",
                   "projectId": "Mock Tests (Fast)",
                   "projectName": "Mock Tests (Fast)",
-                  "results": [
-                    {
-                      "workerIndex": 16,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1359,
-                      "error": {
-                        "message": "ReferenceError: require is not defined",
-                        "stack": "ReferenceError: require is not defined\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:302:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 302
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 300 |\u001b[39m\n \u001b[90m 301 |\u001b[39m     \u001b[90m// AC5: Documentation exists\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 302 |\u001b[39m     \u001b[36mconst\u001b[39m fs \u001b[33m=\u001b[39m require(\u001b[32m'fs'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 303 |\u001b[39m     \u001b[36mconst\u001b[39m docExists \u001b[33m=\u001b[39m fs\u001b[33m.\u001b[39mexistsSync(\u001b[32m'C:\\\\Users\\\\steff\\\\Desktop\\\\eduhu-pwa-prototype\\\\docs\\\\architecture\\\\api-documentation\\\\openai-agents-sdk.md'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 304 |\u001b[39m     expect(docExists)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 305 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'✅ AC5: Documentation added to docs/architecture/api-documentation/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 302
-                          },
-                          "message": "ReferenceError: require is not defined\n\n  300 |\n  301 |     // AC5: Documentation exists\n> 302 |     const fs = require('fs');\n      |                ^\n  303 |     const docExists = fs.existsSync('C:\\\\Users\\\\steff\\\\Desktop\\\\eduhu-pwa-prototype\\\\docs\\\\architecture\\\\api-documentation\\\\openai-agents-sdk.md');\n  304 |     expect(docExists).toBe(true);\n  305 |     console.log('✅ AC5: Documentation added to docs/architecture/api-documentation/');\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:302:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "=== ACCEPTANCE CRITERIA VALIDATION ===\n"
-                        },
-                        {
-                          "text": "✅ AC1: SDK npm package installed (@openai/agents@0.1.10)\n"
-                        },
-                        {
-                          "text": "✅ AC2: SDK initialized with OpenAI API key\n"
-                        },
-                        {
-                          "text": "✅ AC3: Basic agent executes task successfully\n"
-                        },
-                        {
-                          "text": "✅ AC4: SDK tracing configured (DISABLED by default for GDPR)\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T17:55:32.203Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-65847-l-5-Acceptance-Criteria-Met-Mock-Tests-Fast-\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 302
-                      }
-                    },
-                    {
-                      "workerIndex": 17,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1422,
-                      "error": {
-                        "message": "ReferenceError: require is not defined",
-                        "stack": "ReferenceError: require is not defined\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:302:16",
-                        "location": {
-                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                          "column": 16,
-                          "line": 302
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 300 |\u001b[39m\n \u001b[90m 301 |\u001b[39m     \u001b[90m// AC5: Documentation exists\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 302 |\u001b[39m     \u001b[36mconst\u001b[39m fs \u001b[33m=\u001b[39m require(\u001b[32m'fs'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 303 |\u001b[39m     \u001b[36mconst\u001b[39m docExists \u001b[33m=\u001b[39m fs\u001b[33m.\u001b[39mexistsSync(\u001b[32m'C:\\\\Users\\\\steff\\\\Desktop\\\\eduhu-pwa-prototype\\\\docs\\\\architecture\\\\api-documentation\\\\openai-agents-sdk.md'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 304 |\u001b[39m     expect(docExists)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 305 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'✅ AC5: Documentation added to docs/architecture/api-documentation/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                            "column": 16,
-                            "line": 302
-                          },
-                          "message": "ReferenceError: require is not defined\n\n  300 |\n  301 |     // AC5: Documentation exists\n> 302 |     const fs = require('fs');\n      |                ^\n  303 |     const docExists = fs.existsSync('C:\\\\Users\\\\steff\\\\Desktop\\\\eduhu-pwa-prototype\\\\docs\\\\architecture\\\\api-documentation\\\\openai-agents-sdk.md');\n  304 |     expect(docExists).toBe(true);\n  305 |     console.log('✅ AC5: Documentation added to docs/architecture/api-documentation/');\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts:302:16"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "=== ACCEPTANCE CRITERIA VALIDATION ===\n"
-                        },
-                        {
-                          "text": "✅ AC1: SDK npm package installed (@openai/agents@0.1.10)\n"
-                        },
-                        {
-                          "text": "✅ AC2: SDK initialized with OpenAI API key\n"
-                        },
-                        {
-                          "text": "✅ AC3: Basic agent executes task successfully\n"
-                        },
-                        {
-                          "text": "✅ AC4: SDK tracing configured (DISABLED by default for GDPR)\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-10-20T17:55:35.107Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\openai-agents-sdk-story-3.-65847-l-5-Acceptance-Criteria-Met-Mock-Tests-Fast--retry1\\trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\openai-agents-sdk-story-3.0.1.spec.ts",
-                        "column": 16,
-                        "line": 302
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
-              "id": "ee1f4e3c29c23f3b4618-c5402e9580e2f8410990",
-              "file": "openai-agents-sdk-story-3.0.1.spec.ts",
-              "line": 275,
+              "id": "f6b36b0de3ce4ca9fbbd-11b211958fa3fdd72b22",
+              "file": "router-classification.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "Performance: Classification completes in <500ms",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-85614259b1e9e7e237a1",
+              "file": "router-classification.spec.ts",
+              "line": 264,
+              "column": 3
+            },
+            {
+              "title": "Error: Zero console errors during classification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-5ac536ef92c3e9841098",
+              "file": "router-classification.spec.ts",
+              "line": 289,
               "column": 3
             }
           ]
@@ -1871,11 +281,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-10-20T17:53:55.292Z",
-    "duration": 101827.51999999999,
-    "expected": 2,
-    "skipped": 0,
-    "unexpected": 9,
+    "startTime": "2025-10-31T08:57:11.835Z",
+    "duration": 51.25700000000006,
+    "expected": 0,
+    "skipped": 9,
+    "unexpected": 0,
     "flaky": 0
   }
 }

@@ -34,9 +34,8 @@ jest.mock('../config/logger', () => ({
 }));
 
 describe('ChatTagService', () => {
-  const mockCreate = openaiClient.chat.completions.create as jest.MockedFunction<
-    typeof openaiClient.chat.completions.create
-  >;
+  const mockCreate = openaiClient.chat.completions
+    .create as jest.MockedFunction<typeof openaiClient.chat.completions.create>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -103,9 +102,7 @@ describe('ChatTagService', () => {
         { role: 'user', content: 'Test message' },
       ];
 
-      mockCreate.mockRejectedValue(
-        new Error('API Error')
-      );
+      mockCreate.mockRejectedValue(new Error('API Error'));
 
       const result = await extractChatTags('test-chat-id', mockMessages);
 
@@ -229,9 +226,10 @@ describe('ChatTagService', () => {
 
       await extractChatTags('test-chat-id', mockMessages);
 
-      const callArgs = mockCreate.mock
-        .calls[0]?.[0];
-      const userMessage = callArgs?.messages.find((m: any) => m.role === 'user');
+      const callArgs = mockCreate.mock.calls[0]?.[0];
+      const userMessage = callArgs?.messages.find(
+        (m: any) => m.role === 'user'
+      );
 
       // Should only include 10 messages in the analysis
       expect(userMessage?.content).not.toContain('Message 11');

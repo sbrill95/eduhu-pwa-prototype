@@ -31,10 +31,18 @@ jest.mock('../config/redis', () => ({
     delete: jest.fn<() => Promise<boolean>>().mockResolvedValue(true),
   },
   RedisKeys: {
-    errorRecovery: jest.fn<(id: string) => string>((id: string) => `error:recovery:${id}`),
-    retryCount: jest.fn<(id: string) => string>((id: string) => `retry:count:${id}`),
-    metrics: jest.fn<(metric: string) => string>((metric: string) => `metrics:${metric}`),
-    rateLimit: jest.fn<(userId: string, agentId: string) => string>((userId: string, agentId: string) => `rate:limit:${userId}:${agentId}`),
+    errorRecovery: jest.fn<(id: string) => string>(
+      (id: string) => `error:recovery:${id}`
+    ),
+    retryCount: jest.fn<(id: string) => string>(
+      (id: string) => `retry:count:${id}`
+    ),
+    metrics: jest.fn<(metric: string) => string>(
+      (metric: string) => `metrics:${metric}`
+    ),
+    rateLimit: jest.fn<(userId: string, agentId: string) => string>(
+      (userId: string, agentId: string) => `rate:limit:${userId}:${agentId}`
+    ),
   },
 }));
 

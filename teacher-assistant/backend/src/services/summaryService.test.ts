@@ -209,9 +209,7 @@ describe('SummaryService', () => {
           }),
           expect.objectContaining({
             role: 'user',
-            content: expect.stringContaining(
-              'Zusammenfassung (≤20 Zeichen)'
-            ),
+            content: expect.stringContaining('Zusammenfassung (≤20 Zeichen)'),
           }),
         ]),
         max_tokens: 10,

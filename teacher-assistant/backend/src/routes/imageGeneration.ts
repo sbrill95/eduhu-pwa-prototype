@@ -252,7 +252,36 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
           metadataValidated: !!validatedLibraryMetadata,
         });
 
-        // 2. Save to messages (if sessionId provided)
+        // 2. Log usage and cost events (Story 3.1.5)
+        try {
+          const usageId = db.id ? db.id() : crypto.randomUUID();
+          const costId = db.id ? db.id() : crypto.randomUUID();
+          await db.transact([
+            db.tx.image_usage?.[usageId]?.update
+              ? db.tx.image_usage[usageId].update({
+                  user_id: userId,
+                  image_id: libId,
+                  type: 'create',
+                  service: 'dalle',
+                  created_at: now,
+                })
+              : db.tx.library_materials[libId].update({}),
+            db.tx.api_costs?.[costId]?.update
+              ? db.tx.api_costs[costId].update({
+                  timestamp: now,
+                  user_id: userId,
+                  service: 'dalle',
+                  operation: 'image_create',
+                  cost: 0.04,
+                  metadata: JSON.stringify({ model: 'dall-e-3', size: '1024x1024' }),
+                })
+              : db.tx.library_materials[libId].update({}),
+          ]);
+        } catch (e) {
+          // Non-fatal if analytics collections are missing
+        }
+
+        // 3. Save to messages (if sessionId provided)
         if (sessionId) {
           // BUG-025 FIX: Validate required fields for InstantDB relationships
           if (!userId) {

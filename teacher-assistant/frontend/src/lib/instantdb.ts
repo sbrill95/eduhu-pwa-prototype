@@ -193,21 +193,31 @@ function createMockInstantClient() {
       },
       user: null
     },
-    // Add tx namespace for transactions (used by useTeacherProfile)
-    tx: {
-      teacher_profiles: new Proxy({}, {
-        get: (target, profileId) => {
-          return {
-            update: (data: any) => {
-              if (import.meta.env.DEV) {
-                console.log(`[TEST MODE] tx.teacher_profiles[${String(profileId)}].update() bypassed:`, Object.keys(data));
+    // BUG-001 FIX: Add tx namespace for ALL entities (not just teacher_profiles)
+    // This Proxy dynamically handles ANY entity (chat_sessions, messages, teacher_profiles, etc.)
+    tx: new Proxy({}, {
+      get: (target, entityName) => {
+        // Return a Proxy for the entity (e.g., tx.chat_sessions, tx.messages)
+        return new Proxy({}, {
+          get: (entityTarget, entityId) => {
+            // Return an object with update() method for the specific entity ID
+            return {
+              update: (data: any) => {
+                if (import.meta.env.DEV) {
+                  console.log(`[TEST MODE] tx.${String(entityName)}[${String(entityId)}].update() bypassed:`, Object.keys(data));
+                }
+                return {
+                  entityName: String(entityName),
+                  entityId: String(entityId),
+                  action: 'update',
+                  data
+                };
               }
-              return { profileId: String(profileId), action: 'update', data };
-            }
-          };
-        }
-      })
-    }
+            };
+          }
+        });
+      }
+    })
   };
 }
 
