@@ -35,20 +35,33 @@ if "%TEST_MODE%"=="true" (
 )
 
 REM ==============================================================================
-REM STEP 1: Kill Old Processes
+REM STEP 1: Kill Old Processes (PORT-SPECIFIC - Safer)
 REM ==============================================================================
 echo [93mStep 1: Stopping existing backend processes[0m
 echo ==============================================
 
-echo   Killing all node.exe processes...
-taskkill /F /IM node.exe >nul 2>&1
-if %ERRORLEVEL% equ 0 (
-    echo   [92m✓[0m Killed node.exe processes
-) else (
-    echo   No node.exe processes found
+echo   Finding process using port 3006...
+REM Find PID using port 3006
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":3006"') do (
+    set PORT_PID=%%a
+    goto FOUND_PID
 )
 
-REM Wait for processes to die
+:FOUND_PID
+if defined PORT_PID (
+    echo   Found PID %PORT_PID% using port 3006
+    echo   Killing PID %PORT_PID%...
+    taskkill /F /PID %PORT_PID% >nul 2>&1
+    if %ERRORLEVEL% equ 0 (
+        echo   [92m✓[0m Killed backend process (PID: %PORT_PID%)
+    ) else (
+        echo   [93m⚠ Could not kill PID %PORT_PID%[0m
+    )
+) else (
+    echo   No process found using port 3006
+)
+
+REM Wait for process to die
 timeout /t 2 /nobreak >nul
 
 echo.

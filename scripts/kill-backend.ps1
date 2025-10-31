@@ -1,25 +1,33 @@
-# Kill Backend Script (PowerShell)
-# Kills all Node.js processes and frees port 3006
-# Prevents "EADDRINUSE" port conflict errors
+# Kill Backend Script (PowerShell) - PORT-SPECIFIC (Safer)
+# Kills ONLY the process using port 3006 (not all Node.js processes)
+# Prevents "EADDRINUSE" port conflict errors while protecting other Node processes
 
-Write-Host "🔪 Killing all Node.js backend processes..." -ForegroundColor Cyan
+Write-Host "🔪 Killing backend process on port 3006..." -ForegroundColor Cyan
 Write-Host ""
 
-# Kill all node.exe processes
-Write-Host "Killing node.exe processes..." -ForegroundColor Yellow
-$nodeProcesses = Get-Process -Name "node" -ErrorAction SilentlyContinue
+# Find and kill process using port 3006 (PORT-SPECIFIC - Safer)
+Write-Host "Finding process using port 3006..." -ForegroundColor Yellow
 
-if ($nodeProcesses) {
-    $nodeProcesses | ForEach-Object {
-        Write-Host "  Killing PID: $($_.Id)" -ForegroundColor Gray
-        Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue
+$portCheck = netstat -ano | Select-String ":3006" | Select-String "LISTENING"
+
+if ($portCheck) {
+    $portCheck | ForEach-Object {
+        $line = $_.Line
+        $parts = $line -split '\s+' | Where-Object { $_ -ne '' }
+        $pid = $parts[-1]
+
+        if ($pid -match '^\d+$') {
+            Write-Host "  Found PID $pid using port 3006" -ForegroundColor Gray
+            Write-Host "  Killing PID: $pid" -ForegroundColor Gray
+            Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+            Write-Host "  ✓ Killed backend process (PID: $pid)" -ForegroundColor Green
+        }
     }
-    Write-Host "  Killed $($nodeProcesses.Count) node.exe process(es)" -ForegroundColor Green
 } else {
-    Write-Host "  No node.exe processes found" -ForegroundColor Gray
+    Write-Host "  No process found using port 3006" -ForegroundColor Gray
 }
 
-# Wait for processes to die
+# Wait for process to die
 Start-Sleep -Seconds 2
 
 # Check if port 3006 is free

@@ -156,16 +156,71 @@ Wenn du an **bestehendem Code** arbeitest:
 **Time Lost**: 38-64 hours across 31 incidents
 **Solution**: Systematic pre-flight checks + automation
 
+---
+
+## 🚨 CRITICAL: Windows Script Execution Limitation
+
+**Claude Code CRASHES when executing external scripts on Windows.**
+
+### ❌ NEVER DO THIS (Through Claude Code):
+```bash
+# These commands WILL CRASH Claude Code on Windows:
+bash scripts/any-script.sh          # ❌ CRASHES
+bash scripts/restart-backend.sh     # ❌ CRASHES
+bash scripts/pre-test-checklist.sh  # ❌ CRASHES
+cmd /c scripts\any-script.bat       # ❌ CRASHES
+./any-script.sh                     # ❌ CRASHES
+```
+
+### ✅ ALWAYS DO THIS INSTEAD:
+
+**For Backend Restart:**
+1. **ASK USER** to restart backend in external terminal
+2. **USER OPENS** separate CMD or PowerShell window
+3. **USER RUNS** (in external terminal):
+   ```cmd
+   cd C:\Users\steff\Desktop\eduhu-pwa-prototype
+   scripts\restart-backend.bat
+   ```
+   OR in PowerShell:
+   ```powershell
+   .\scripts\restart-backend.ps1
+   ```
+4. **VERIFY** through Claude Code (this is safe):
+   ```bash
+   curl http://localhost:3006/api/health
+   ```
+
+**Why**: Claude Code has a Windows limitation where subprocess spawning (script execution) causes crashes. All bash scripts are archived in `scripts/archived-sh-scripts-UNSAFE/` to prevent accidental execution.
+
+**Safe Commands** (through Claude Code):
+- ✅ `curl http://localhost:3006/api/health` - Check backend
+- ✅ `netstat -ano | findstr ":3006"` - Check port
+- ✅ `taskkill //F //IM node.exe` - Kill backend
+- ✅ Simple inline commands (ls, cat, cd, etc.)
+
+**Documentation**: See `scripts/README.md` and `docs/troubleshooting/CRITICAL-WINDOWS-LIMITATION.md` for full details.
+
+---
+
 ### MANDATORY Pre-Flight Checks (BEFORE E2E Tests)
 
 **ALWAYS run BEFORE starting E2E tests**:
 
-```bash
-# Verify backend running with latest code
-bash scripts/pre-test-checklist.sh
+**Step 1: Backend Restart** (USER does this in external terminal):
+```cmd
+# In separate CMD window:
+scripts\restart-backend.bat
 
-# If fails → Fix issues BEFORE running tests
-# If passes → Tests can run safely
+# Wait for: "SUCCESS: Backend restart complete!"
+```
+
+**Step 2: Verify** (Claude Code can do this):
+```bash
+# Check backend health
+curl http://localhost:3006/api/health
+
+# Expected response: {"status":"ok","gitCommit":"..."}
 ```
 
 **What it checks**:
@@ -182,13 +237,19 @@ bash scripts/pre-test-checklist.sh
 
 **NEVER assume backend auto-reloaded**. Always explicitly restart:
 
-```bash
-# Safe backend restart (kills zombie processes, verifies startup)
-bash scripts/restart-backend.sh
+**⚠️ IMPORTANT**: Backend restart MUST be done by USER in external terminal (see Windows limitation above).
 
-# Manual alternative:
-bash scripts/kill-backend.sh  # Kill all node processes
-cd teacher-assistant/backend && npm start  # Start fresh
+**Claude Code should**:
+1. **Tell user**: "Please restart backend using `scripts\restart-backend.bat` in a separate terminal"
+2. **Wait**: For user confirmation "backend restarted"
+3. **Verify**: Using `curl http://localhost:3006/api/health`
+
+**If Claude Code needs to kill backend** (usually safe):
+```bash
+# Kill backend processes (through Claude Code is OK)
+taskkill //F //IM node.exe
+
+# Then ask user to start it in external terminal
 ```
 
 **When to restart**:
