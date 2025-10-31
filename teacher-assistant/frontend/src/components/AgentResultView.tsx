@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { flushSync } from 'react-dom';
 import { IonSpinner } from '@ionic/react';
+import debounce from 'lodash.debounce';
 import { useAgent } from '../lib/AgentContext';
+import { logger } from '../lib/logger';
+import db from '../lib/instantdb';
+import { useAuth } from '../lib/auth-context';
+import { id } from '@instantdb/react';
+import { getProxiedImageUrl } from '../lib/imageProxy';
 
 /**
  * AgentResultView - Result Display and Actions
@@ -26,10 +33,24 @@ import { useAgent } from '../lib/AgentContext';
  * TASK-017: Preview-Modal Implementation
  */
 export const AgentResultView: React.FC = () => {
-  const { state, closeModal, saveToLibrary } = useAgent();
+  const { state, closeModal, saveToLibrary, openModal, navigateToTab } = useAgent();
+  const { user } = useAuth();
+
   const [saving, setSaving] = useState(true);
   const [saved, setSaved] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+
+  console.log('[AgentResultView] 🎉 COMPONENT MOUNTED/RENDERED', {
+    hasResult: !!state.result,
+    hasImageUrl: !!state.result?.data?.imageUrl,
+    imageUrl: state.result?.data?.imageUrl ? state.result.data.imageUrl.substring(0, 60) + '...' : 'NO IMAGE URL',
+    phase: state.phase,
+    isOpen: state.isOpen,
+    'state.result.data': state.result?.data,
+    'state.result.metadata': state.result?.metadata,
+    'state.result.data.library_id': state.result?.data?.library_id,
+    'state.result.metadata.library_id': state.result?.metadata?.library_id
+  });
 
   // Auto-save on mount
   useEffect(() => {
@@ -182,11 +203,210 @@ export const AgentResultView: React.FC = () => {
     };
   };
 
-  const handleContinueChat = () => {
-    // Trigger animation before closing
-    console.log('[AgentResultView] Triggering fly-to-library animation');
-    animateToLibrary();
-    // Modal closes in animation's onfinish callback
+  // T031: Create debounced navigation handler with 300ms cooldown
+  // T032: useMemo ensures debounced function is only created once and cleanup works properly
+  // FIX BUG-030: Remove handleContinueChat dependency to prevent recreation on every render
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedHandleContinueChat = useMemo(
+    () => debounce(async () => {
+      const callId = crypto.randomUUID();
+      console.log(`[AgentResultView] 💬 handleContinueChat CALLED [ID:${callId}] - Button: "Weiter im Chat"`);
+      console.trace('[AgentResultView] handleContinueChat call stack');
+
+      // DEBUG: Log condition values
+      console.log(`[AgentResultView] DEBUG Condition check [ID:${callId}]`, {
+        hasResult: !!state.result,
+        hasUser: !!user,
+        userId: user?.id,
+        hasSessionId: !!state.sessionId,
+        sessionId: state.sessionId,
+        willCreateMessage: !!(state.result && user && state.sessionId)
+      });
+
+      // TASK-006: Create chat message with image metadata
+      // Only create message if backend didn't already create one (US2 BUG-025 fix)
+      if (state.result && user && state.sessionId && !state.result.data?.message_id) {
+        try {
+          const imageUrl = state.result.data?.imageUrl;
+          const title = state.result.data?.title || 'AI-generiertes Bild';
+          const libraryId = state.result.data?.library_id || state.result.metadata?.library_id;
+          const revisedPrompt = state.result.data?.revisedPrompt;
+          const originalParams = state.result.metadata?.originalParams;
+
+          console.log(`[AgentResultView] Creating chat message with image metadata [ID:${callId}]`, {
+            imageUrl: imageUrl?.substring(0, 60),
+            title,
+            libraryId,
+            sessionId: state.sessionId
+          });
+
+          if (imageUrl && libraryId) {
+            const messageId = id();
+            const now = Date.now();
+
+            // Get current message count in session
+            const { data: sessionData } = await db.queryOnce({
+              chat_sessions: {
+                $: {
+                  where: { id: state.sessionId }
+                }
+              }
+            });
+
+            const messageIndex = sessionData?.chat_sessions?.[0]?.message_count || 0;
+
+            // Create chat message with image metadata
+            const metadata = {
+              type: 'image',
+              image_url: imageUrl,
+              library_id: libraryId,
+              title: title,
+              description: revisedPrompt,
+              originalParams: originalParams
+            };
+
+            console.log(`[AgentResultView] Saving message to InstantDB [ID:${callId}]`, {
+              messageId,
+              sessionId: state.sessionId,
+              messageIndex,
+              metadata
+            });
+
+            const transactResult = await db.transact([
+              db.tx.messages[messageId].update({
+                content: 'Ich habe ein Bild für dich erstellt.',
+                role: 'assistant',
+                timestamp: now,
+                message_index: messageIndex,
+                is_edited: false,
+                metadata: JSON.stringify(metadata),
+                session_id: state.sessionId,
+                user_id: user.id
+              }),
+              // Update session message count
+              db.tx.chat_sessions[state.sessionId].update({
+                updated_at: now,
+                message_count: messageIndex + 1
+              })
+            ]);
+
+            console.log(`[AgentResultView] ✅ Chat message created successfully [ID:${callId}]`, {
+              messageId,
+              transactResult,
+              messageData: {
+                content: 'Ich habe ein Bild für dich erstellt.',
+                role: 'assistant',
+                session_id: state.sessionId,
+                user_id: user.id,
+                message_index: messageIndex,
+                metadata: JSON.stringify(metadata)
+              }
+            });
+
+            // CHAT-MESSAGE-FIX: Wait for InstantDB to sync the message (200ms buffer)
+            // This ensures ChatView query will find the message when we navigate
+            console.log(`[AgentResultView] ⏳ Waiting for InstantDB sync [ID:${callId}]`);
+            await new Promise(resolve => setTimeout(resolve, 200));
+            console.log(`[AgentResultView] ✅ InstantDB sync complete [ID:${callId}]`);
+          } else {
+            console.warn(`[AgentResultView] Cannot create chat message - missing data [ID:${callId}]`, {
+              hasImageUrl: !!imageUrl,
+              hasLibraryId: !!libraryId
+            });
+          }
+        } catch (error) {
+          console.error(`[AgentResultView] Failed to create chat message [ID:${callId}]`, error);
+          // Continue with navigation even if message creation fails
+        }
+      }
+
+      // T034: Log navigation event before navigating
+      logger.navigation('TabChange', {
+        source: 'agent-result',
+        destination: 'chat',
+        trigger: 'user-click'
+      });
+
+      // BUG-030 FIX: Close modal FIRST, then navigate
+      // This ensures modal animations don't interfere with tab state
+      console.log(`[AgentResultView] 🚪 Closing modal FIRST [ID:${callId}]`);
+      closeModal();
+      console.log(`[AgentResultView] ✅ closeModal() completed [ID:${callId}]`);
+
+      // Small delay to let modal close completely
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Now navigate with flushSync to force immediate state update
+      // CHAT-MESSAGE-FIX: Pass sessionId to ensure Chat loads correct session
+      console.log(`[AgentResultView] 📍 Calling navigateToTab("chat") with sessionId: ${state.sessionId} [ID:${callId}]`);
+      flushSync(() => {
+        navigateToTab('chat', { sessionId: state.sessionId || undefined });
+      });
+      console.log(`[AgentResultView] ✅ navigateToTab("chat") flushed synchronously [ID:${callId}]`);
+    }, 300, {
+      leading: true,  // Execute immediately on first click
+      trailing: false  // Ignore subsequent clicks within cooldown
+    }),
+    [] // Empty deps - capture state/user/navigateToTab from closure
+  );
+
+  // T032: Cleanup debounced function to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      debouncedHandleContinueChat.cancel();
+    };
+  }, [debouncedHandleContinueChat]);
+
+  const handleOpenInLibrary = () => {
+    const callId = crypto.randomUUID();
+    console.log(`[AgentResultView] 📚 handleOpenInLibrary CALLED [ID:${callId}] - Button: "In Library öffnen"`);
+    console.trace('[AgentResultView] handleOpenInLibrary call stack');
+
+    // T014: Extract materialId from agent result
+    const materialId = state.result?.data?.library_id || state.result?.metadata?.library_id;
+    console.log(`[AgentResultView] materialId extracted: ${materialId} [ID:${callId}]`);
+
+    // T014: Dispatch custom event with materialId to auto-open modal (US2)
+    if (materialId) {
+      window.dispatchEvent(new CustomEvent('navigate-library-tab', {
+        detail: {
+          tab: 'materials',
+          materialId: materialId,
+          source: 'AgentResultView'
+        }
+      }));
+      console.log(`[AgentResultView] ✅ Dispatched navigate-library-tab event with materialId: ${materialId} [ID:${callId}]`);
+    } else {
+      console.warn(`[AgentResultView] ⚠️ No materialId found, event dispatched without materialId [ID:${callId}]`);
+      window.dispatchEvent(new CustomEvent('navigate-library-tab', {
+        detail: {
+          tab: 'materials',
+          source: 'AgentResultView'
+        }
+      }));
+    }
+
+    // BUG-030 FIX: Use flushSync to force navigation
+    console.log(`[AgentResultView] 📍 Calling navigateToTab("library") with flushSync [ID:${callId}]`);
+    flushSync(() => {
+      navigateToTab('library');
+    });
+    console.log(`[AgentResultView] ✅ navigateToTab("library") flushed synchronously [ID:${callId}]`);
+
+    // Now close modal
+    console.log(`[AgentResultView] 🚪 Closing modal NOW [ID:${callId}]`);
+    closeModal();
+    console.log(`[AgentResultView] ✅ closeModal() completed [ID:${callId}]`);
+  };
+
+  const handleRegenerate = () => {
+    console.log('[AgentResultView] Regenerating image with original params');
+
+    // Get original params from result metadata
+    const originalParams = state.result?.metadata?.originalParams || state.formData;
+
+    // Re-open form with same params
+    openModal('image-generation', originalParams);
   };
 
 
@@ -199,17 +419,18 @@ export const AgentResultView: React.FC = () => {
   }
 
   const imageUrl = state.result.data?.imageUrl;
+  const proxiedImageUrl = getProxiedImageUrl(imageUrl);
 
   return (
-    <div className="relative min-h-screen bg-background-teal flex flex-col">
+    <div className="relative min-h-screen bg-background-teal flex flex-col" data-testid="agent-result-view">
       {/* Main Content - Fullscreen Image */}
       <div className="flex-1 flex items-center justify-center p-4 pt-6">
-        <div className="max-w-4xl w-full">
+        <div className="max-w-2xl w-full">
           {/* Image Display */}
           <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-white">
             {imageUrl ? (
               <img
-                src={imageUrl}
+                src={proxiedImageUrl}
                 alt="AI-generiertes Bild"
                 className="agent-result-image w-full h-auto max-h-[70vh] object-contain"
                 onError={(e) => {
@@ -258,26 +479,35 @@ export const AgentResultView: React.FC = () => {
           </div>
         )}
 
-        {/* 2-Button Grid - Gemini Design per TASK-017 */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* Button 1: Teilen */}
+        {/* 3-Button Layout - T013: User Story 5 - Result View Design System Consistency */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          {/* Button 1: Weiter im Chat (PRIMARY) - T013: Updated styles */}
           <button
-            onClick={handleShare}
-            disabled={isSharing}
-            className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            data-testid="continue-in-chat-button"
+            onClick={() => {
+              console.log('🔴🔴🔴 BUTTON CLICKED - FRESH CODE LOADED 🔴🔴🔴');
+              // T033: Use debounced handler to prevent duplicate clicks
+              debouncedHandleContinueChat();
+            }}
+            className="flex-1 bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-6 rounded-lg transition-colors"
           >
-            <span className="mr-2">🔗</span>
-            {isSharing ? 'Teilen...' : 'Teilen'}
+            Weiter im Chat 💬
           </button>
 
-          {/* Button 2: Weiter im Chat - Triggers fly-to-library animation */}
+          {/* Button 2: In Library öffnen (SECONDARY) - T013: Updated styles */}
           <button
-            onClick={handleContinueChat}
-            className="flex items-center justify-center px-4 py-3 bg-primary text-white font-medium rounded-xl hover:bg-primary-600 transition-colors"
-            style={{ backgroundColor: '#FB6542' }}
+            onClick={handleOpenInLibrary}
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors"
           >
-            <span className="mr-2">💬</span>
-            Weiter im Chat
+            In Library öffnen 📚
+          </button>
+
+          {/* Button 3: Neu generieren (TERTIARY) - T013: Updated styles */}
+          <button
+            onClick={handleRegenerate}
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors"
+          >
+            Neu generieren 🔄
           </button>
         </div>
       </div>

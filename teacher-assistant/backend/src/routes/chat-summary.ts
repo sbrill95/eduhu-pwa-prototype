@@ -63,7 +63,8 @@ router.post('/summary', async (req: Request, res: Response) => {
       if (!msg.role || !msg.content) {
         return res.status(400).json({
           success: false,
-          error: 'Ungültiges Nachrichtenformat. Jede Nachricht muss "role" und "content" enthalten.',
+          error:
+            'Ungültiges Nachrichtenformat. Jede Nachricht muss "role" und "content" enthalten.',
           timestamp: new Date().toISOString(),
         });
       }
@@ -71,28 +72,40 @@ router.post('/summary', async (req: Request, res: Response) => {
       if (!['user', 'assistant', 'system'].includes(msg.role)) {
         return res.status(400).json({
           success: false,
-          error: 'Ungültige Nachrichtenrolle. Erlaubt sind: user, assistant, system.',
+          error:
+            'Ungültige Nachrichtenrolle. Erlaubt sind: user, assistant, system.',
           timestamp: new Date().toISOString(),
         });
       }
     }
 
-    logInfo('Generating chat summary', { chatId, messageCount: messages.length });
+    logInfo('Generating chat summary', {
+      chatId,
+      messageCount: messages.length,
+    });
 
     // Take only first 4 messages for summary generation
     const relevantMessages: SummaryMessage[] = messages.slice(0, 4);
 
     // Generate summary with retry logic
-    const summary = await summaryService.generateSummaryWithRetry(relevantMessages);
+    const summary =
+      await summaryService.generateSummaryWithRetry(relevantMessages);
 
     // Store summary in InstantDB using the dedicated method
-    const updateSuccess = await ChatSessionService.updateSummary(chatId, summary);
+    const updateSuccess = await ChatSessionService.updateSummary(
+      chatId,
+      summary
+    );
 
     if (!updateSuccess) {
-      logError('Failed to store summary in database', new Error('InstantDB update failed'), {
-        chatId,
-        summary,
-      });
+      logError(
+        'Failed to store summary in database',
+        new Error('InstantDB update failed'),
+        {
+          chatId,
+          summary,
+        }
+      );
       // Note: We still return the summary even if DB update fails
       // This allows the frontend to use it temporarily
     }
@@ -118,7 +131,8 @@ router.post('/summary', async (req: Request, res: Response) => {
 
     return res.status(500).json({
       success: false,
-      error: 'Fehler bei der Zusammenfassungserstellung. Bitte versuchen Sie es später erneut.',
+      error:
+        'Fehler bei der Zusammenfassungserstellung. Bitte versuchen Sie es später erneut.',
       timestamp: new Date().toISOString(),
     });
   }

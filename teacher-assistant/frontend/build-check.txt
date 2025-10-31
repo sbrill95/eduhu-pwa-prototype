@@ -1,0 +1,26 @@
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+🔧 Vite starting in mode: "production"
+[36mvite v7.1.7 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 2119 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                         [39m[1m[2m    1.47 kB[22m[1m[22m[2m │ gzip:   0.77 kB[22m
+[2mdist/[22m[35massets/index-DBb_B9hi.css          [39m[1m[2m   59.07 kB[22m[1m[22m[2m │ gzip:  11.35 kB[22m
+[2mdist/[22m[36massets/status-tap-C43B2LiZ.js      [39m[1m[2m    0.48 kB[22m[1m[22m[2m │ gzip:   0.34 kB[22m
+[2mdist/[22m[36massets/swipe-back-DUR99a7c.js      [39m[1m[2m    0.68 kB[22m[1m[22m[2m │ gzip:   0.48 kB[22m
+[2mdist/[22m[36massets/focus-visible-supuXXMI.js   [39m[1m[2m    0.99 kB[22m[1m[22m[2m │ gzip:   0.51 kB[22m
+[2mdist/[22m[36massets/md.transition-CsApjE7_.js   [39m[1m[2m    1.02 kB[22m[1m[22m[2m │ gzip:   0.56 kB[22m
+[2mdist/[22m[36massets/index7-NxA3VbBc.js          [39m[1m[2m    1.63 kB[22m[1m[22m[2m │ gzip:   0.84 kB[22m
+[2mdist/[22m[36massets/input-shims-T01M5X2R.js     [39m[1m[2m    4.97 kB[22m[1m[22m[2m │ gzip:   2.13 kB[22m
+[2mdist/[22m[36massets/ios.transition-C5axn0dL.js  [39m[1m[2m   10.45 kB[22m[1m[22m[2m │ gzip:   3.07 kB[22m
+[2mdist/[22m[36massets/index-DIAa1pNg.js           [39m[1m[33m1,067.95 kB[39m[22m[2m │ gzip: 288.90 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 16.29s[39m

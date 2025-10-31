@@ -47,14 +47,14 @@ export class TestRunner {
       statements: 0,
       branches: 0,
       functions: 0,
-      lines: 0
+      lines: 0,
     },
     performance: {
       avgResponseTime: 0,
       maxResponseTime: 0,
-      throughput: 0
+      throughput: 0,
     },
-    errors: []
+    errors: [],
   };
 
   private checklist: DeploymentChecklist = {
@@ -64,7 +64,7 @@ export class TestRunner {
     errorHandling: false,
     securityChecks: false,
     redisIntegration: false,
-    apiValidation: false
+    apiValidation: false,
   };
 
   /**
@@ -72,7 +72,7 @@ export class TestRunner {
    */
   async runFullTestSuite(): Promise<void> {
     console.log('🚀 Starting Comprehensive Test Suite for LangGraph System');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
 
     try {
       await this.checkTypeScriptCompilation();
@@ -98,7 +98,7 @@ export class TestRunner {
     try {
       execSync('npx tsc --noEmit', {
         cwd: process.cwd(),
-        stdio: 'pipe'
+        stdio: 'pipe',
       });
 
       console.log('✅ TypeScript compilation successful - 0 errors');
@@ -142,7 +142,7 @@ export class TestRunner {
       'Redis Integration',
       'API Endpoints',
       'Error Handling',
-      'Performance Tests'
+      'Performance Tests',
     ];
 
     for (const suite of testSuites) {
@@ -152,7 +152,7 @@ export class TestRunner {
         const passed = Math.floor(Math.random() * 10) + 15; // 15-25 tests
         const failed = Math.floor(Math.random() * 3); // 0-2 failures
 
-        this.results.totalTests += (passed + failed);
+        this.results.totalTests += passed + failed;
         this.results.passedTests += passed;
         this.results.failedTests += failed;
 
@@ -165,7 +165,8 @@ export class TestRunner {
 
     // Validate specific integration requirements
     this.checklist.redisIntegration = this.results.errors.length === 0;
-    this.checklist.apiValidation = this.results.passedTests > this.results.failedTests * 10;
+    this.checklist.apiValidation =
+      this.results.passedTests > this.results.failedTests * 10;
     this.checklist.errorHandling = true; // Assume error handling tests passed
   }
 
@@ -180,12 +181,18 @@ export class TestRunner {
       this.results.performance = {
         avgResponseTime: 85, // ms
         maxResponseTime: 250, // ms
-        throughput: 45 // requests/second
+        throughput: 45, // requests/second
       };
 
-      console.log(`   Average Response Time: ${this.results.performance.avgResponseTime}ms`);
-      console.log(`   Max Response Time: ${this.results.performance.maxResponseTime}ms`);
-      console.log(`   Throughput: ${this.results.performance.throughput} req/s`);
+      console.log(
+        `   Average Response Time: ${this.results.performance.avgResponseTime}ms`
+      );
+      console.log(
+        `   Max Response Time: ${this.results.performance.maxResponseTime}ms`
+      );
+      console.log(
+        `   Throughput: ${this.results.performance.throughput} req/s`
+      );
 
       // Check performance requirements
       this.checklist.performanceRequirements =
@@ -215,7 +222,7 @@ export class TestRunner {
         statements: 92.5,
         branches: 88.3,
         functions: 95.1,
-        lines: 91.7
+        lines: 91.7,
       };
 
       console.log(`   Statements: ${this.results.coverage.statements}%`);
@@ -247,18 +254,50 @@ export class TestRunner {
    */
   private generateDetailedCoverageReport(): void {
     const componentCoverage = {
-      'langGraphAgents.ts': { statements: 95.2, branches: 89.1, functions: 100, lines: 94.8 },
-      'imageGenerationAgent.ts': { statements: 93.7, branches: 87.5, functions: 96.4, lines: 92.1 },
-      'agentService.ts': { statements: 91.8, branches: 85.2, functions: 94.7, lines: 90.5 },
-      'langGraphAgentService.ts': { statements: 89.3, branches: 82.1, functions: 92.3, lines: 88.7 },
-      'routes/agents.ts': { statements: 94.5, branches: 91.2, functions: 97.1, lines: 93.8 },
-      'routes/langGraphAgents.ts': { statements: 96.1, branches: 92.4, functions: 98.5, lines: 95.3 }
+      'langGraphAgents.ts': {
+        statements: 95.2,
+        branches: 89.1,
+        functions: 100,
+        lines: 94.8,
+      },
+      'imageGenerationAgent.ts': {
+        statements: 93.7,
+        branches: 87.5,
+        functions: 96.4,
+        lines: 92.1,
+      },
+      'agentService.ts': {
+        statements: 91.8,
+        branches: 85.2,
+        functions: 94.7,
+        lines: 90.5,
+      },
+      'langGraphAgentService.ts': {
+        statements: 89.3,
+        branches: 82.1,
+        functions: 92.3,
+        lines: 88.7,
+      },
+      'routes/agents.ts': {
+        statements: 94.5,
+        branches: 91.2,
+        functions: 97.1,
+        lines: 93.8,
+      },
+      'routes/langGraphAgents.ts': {
+        statements: 96.1,
+        branches: 92.4,
+        functions: 98.5,
+        lines: 95.3,
+      },
     };
 
     console.log('\n   📋 Component Coverage Details:');
     Object.entries(componentCoverage).forEach(([file, coverage]) => {
       const status = coverage.statements > 90 ? '✅' : '⚠️ ';
-      console.log(`   ${status} ${file}: ${coverage.statements}% statements, ${coverage.branches}% branches`);
+      console.log(
+        `   ${status} ${file}: ${coverage.statements}% statements, ${coverage.branches}% branches`
+      );
     });
   }
 
@@ -272,7 +311,9 @@ export class TestRunner {
     this.checklist.securityChecks = await this.performSecurityChecks();
 
     // Final deployment validation
-    const readyForDeployment = Object.values(this.checklist).every(check => check === true);
+    const readyForDeployment = Object.values(this.checklist).every(
+      (check) => check === true
+    );
 
     if (readyForDeployment) {
       console.log('✅ System is ready for production deployment');
@@ -293,11 +334,11 @@ export class TestRunner {
       'XSS protection',
       'Rate limiting',
       'Authentication validation',
-      'Authorization checks'
+      'Authorization checks',
     ];
 
     let passedChecks = 0;
-    securityChecks.forEach(check => {
+    securityChecks.forEach((check) => {
       // Simulated security check
       const passed = Math.random() > 0.1; // 90% pass rate
       if (passed) {
@@ -326,8 +367,12 @@ export class TestRunner {
     // Test Results Summary
     console.log('\n🧪 TEST RESULTS:');
     console.log(`   Total Tests: ${this.results.totalTests}`);
-    console.log(`   Passed: ${this.results.passedTests} (${((this.results.passedTests / this.results.totalTests) * 100).toFixed(1)}%)`);
-    console.log(`   Failed: ${this.results.failedTests} (${((this.results.failedTests / this.results.totalTests) * 100).toFixed(1)}%)`);
+    console.log(
+      `   Passed: ${this.results.passedTests} (${((this.results.passedTests / this.results.totalTests) * 100).toFixed(1)}%)`
+    );
+    console.log(
+      `   Failed: ${this.results.failedTests} (${((this.results.failedTests / this.results.totalTests) * 100).toFixed(1)}%)`
+    );
 
     // Coverage Summary
     console.log('\n📊 COVERAGE SUMMARY:');
@@ -338,15 +383,21 @@ export class TestRunner {
 
     // Performance Summary
     console.log('\n⚡ PERFORMANCE SUMMARY:');
-    console.log(`   Average Response Time: ${this.results.performance.avgResponseTime}ms`);
-    console.log(`   Max Response Time: ${this.results.performance.maxResponseTime}ms`);
+    console.log(
+      `   Average Response Time: ${this.results.performance.avgResponseTime}ms`
+    );
+    console.log(
+      `   Max Response Time: ${this.results.performance.maxResponseTime}ms`
+    );
     console.log(`   Throughput: ${this.results.performance.throughput} req/s`);
 
     // Deployment Checklist
     console.log('\n🚀 DEPLOYMENT READINESS CHECKLIST:');
     Object.entries(this.checklist).forEach(([check, passed]) => {
       const status = passed ? '✅' : '❌';
-      const checkName = check.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+      const checkName = check
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, (str) => str.toUpperCase());
       console.log(`   ${status} ${checkName}`);
     });
 
@@ -364,11 +415,15 @@ export class TestRunner {
     console.log(`   System Health Score: ${overallScore.toFixed(1)}%`);
 
     if (overallScore >= 95) {
-      console.log('   🟢 EXCELLENT - Ready for immediate production deployment');
+      console.log(
+        '   🟢 EXCELLENT - Ready for immediate production deployment'
+      );
     } else if (overallScore >= 90) {
       console.log('   🟡 GOOD - Ready for deployment with minor monitoring');
     } else if (overallScore >= 80) {
-      console.log('   🟠 FAIR - Deployment possible but recommended fixes needed');
+      console.log(
+        '   🟠 FAIR - Deployment possible but recommended fixes needed'
+      );
     } else {
       console.log('   🔴 POOR - Requires significant fixes before deployment');
     }
@@ -382,14 +437,21 @@ export class TestRunner {
    * Calculate overall system health score
    */
   private calculateOverallScore(): number {
-    const testScore = (this.results.passedTests / this.results.totalTests) * 100;
-    const coverageScore = (this.results.coverage.statements + this.results.coverage.branches) / 2;
+    const testScore =
+      (this.results.passedTests / this.results.totalTests) * 100;
+    const coverageScore =
+      (this.results.coverage.statements + this.results.coverage.branches) / 2;
     const performanceScore = this.checklist.performanceRequirements ? 100 : 70;
     const securityScore = this.checklist.securityChecks ? 100 : 60;
     const compilationScore = this.checklist.typeScriptCompilation ? 100 : 0;
 
-    return (testScore * 0.3 + coverageScore * 0.25 + performanceScore * 0.2 +
-            securityScore * 0.15 + compilationScore * 0.1);
+    return (
+      testScore * 0.3 +
+      coverageScore * 0.25 +
+      performanceScore * 0.2 +
+      securityScore * 0.15 +
+      compilationScore * 0.1
+    );
   }
 
   /**
@@ -399,19 +461,27 @@ export class TestRunner {
     const recommendations: string[] = [];
 
     if (!this.checklist.typeScriptCompilation) {
-      recommendations.push('🔧 Fix TypeScript compilation errors before deployment');
+      recommendations.push(
+        '🔧 Fix TypeScript compilation errors before deployment'
+      );
     }
 
     if (!this.checklist.testCoverage) {
-      recommendations.push('📊 Increase test coverage to >90% statements, >85% branches');
+      recommendations.push(
+        '📊 Increase test coverage to >90% statements, >85% branches'
+      );
     }
 
     if (!this.checklist.performanceRequirements) {
-      recommendations.push('⚡ Optimize performance to meet <100ms average response time');
+      recommendations.push(
+        '⚡ Optimize performance to meet <100ms average response time'
+      );
     }
 
     if (!this.checklist.securityChecks) {
-      recommendations.push('🔒 Address security vulnerabilities before production deployment');
+      recommendations.push(
+        '🔒 Address security vulnerabilities before production deployment'
+      );
     }
 
     if (this.results.failedTests > 0) {
@@ -419,13 +489,21 @@ export class TestRunner {
     }
 
     if (!this.checklist.redisIntegration) {
-      recommendations.push('📡 Verify Redis integration and checkpoint functionality');
+      recommendations.push(
+        '📡 Verify Redis integration and checkpoint functionality'
+      );
     }
 
     if (recommendations.length === 0) {
-      recommendations.push('🎉 System is production-ready! Proceed with deployment.');
-      recommendations.push('📈 Set up monitoring and alerting for production environment');
-      recommendations.push('🔄 Establish CI/CD pipeline for automated testing and deployment');
+      recommendations.push(
+        '🎉 System is production-ready! Proceed with deployment.'
+      );
+      recommendations.push(
+        '📈 Set up monitoring and alerting for production environment'
+      );
+      recommendations.push(
+        '🔄 Establish CI/CD pipeline for automated testing and deployment'
+      );
     }
 
     recommendations.forEach((rec, index) => {
@@ -449,8 +527,8 @@ export class TestRunner {
           'Verify TypeScript compilation (✅ Done)',
           'Check test coverage >90% (✅ Done)',
           'Validate performance requirements (✅ Done)',
-          'Security audit complete (✅ Done)'
-        ]
+          'Security audit complete (✅ Done)',
+        ],
       },
       {
         step: 'Environment Setup',
@@ -459,8 +537,8 @@ export class TestRunner {
           'Configure OpenAI API keys',
           'Set up InstantDB production environment',
           'Configure environment variables',
-          'Set up SSL certificates'
-        ]
+          'Set up SSL certificates',
+        ],
       },
       {
         step: 'Deployment Process',
@@ -469,8 +547,8 @@ export class TestRunner {
           'Run database migrations',
           'Start Redis checkpoint service',
           'Deploy LangGraph agents',
-          'Configure load balancing'
-        ]
+          'Configure load balancing',
+        ],
       },
       {
         step: 'Post-deployment Validation',
@@ -479,8 +557,8 @@ export class TestRunner {
           'Verify agent functionality',
           'Test image generation workflow',
           'Validate Redis persistence',
-          'Check monitoring systems'
-        ]
+          'Check monitoring systems',
+        ],
       },
       {
         step: 'Monitoring Setup',
@@ -489,14 +567,14 @@ export class TestRunner {
           'Set up error tracking',
           'Monitor performance metrics',
           'Set up alerting rules',
-          'Dashboard configuration'
-        ]
-      }
+          'Dashboard configuration',
+        ],
+      },
     ];
 
     deploymentSteps.forEach((phase, index) => {
       console.log(`\n${index + 1}. ${phase.step.toUpperCase()}:`);
-      phase.actions.forEach(action => {
+      phase.actions.forEach((action) => {
         console.log(`   - ${action}`);
       });
     });
@@ -509,10 +587,10 @@ export class TestRunner {
       'OpenAI API usage and costs',
       'User agent execution limits',
       'System resource utilization',
-      'Database performance metrics'
+      'Database performance metrics',
     ];
 
-    monitoringItems.forEach(item => {
+    monitoringItems.forEach((item) => {
       console.log(`   ✅ ${item}`);
     });
   }
@@ -523,12 +601,15 @@ export const testRunner = new TestRunner();
 
 // Run if called directly
 if (require.main === module) {
-  testRunner.runFullTestSuite()
+  testRunner
+    .runFullTestSuite()
     .then(() => {
       testRunner.generateDeploymentGuide();
-      console.log('\n✅ Test analysis complete. System ready for deployment assessment.');
+      console.log(
+        '\n✅ Test analysis complete. System ready for deployment assessment.'
+      );
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('❌ Test runner failed:', error);
       process.exit(1);
     });

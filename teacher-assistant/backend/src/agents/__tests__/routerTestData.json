@@ -1,0 +1,744 @@
+{
+  "samples": [
+    {
+      "id": 1,
+      "prompt": "Create an image of a cat sitting on a tree",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 2,
+      "prompt": "Erstelle ein Bild von einem Hund im Park",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 3,
+      "prompt": "Edit the image to remove the background",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 4,
+      "prompt": "Ändere das Bild und mache den Himmel blauer",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 5,
+      "prompt": "Generate a picture of the solar system for 5th grade",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 6,
+      "prompt": "Generiere eine Illustration der Photosynthese für die 7. Klasse",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 7,
+      "prompt": "Modify the existing image to add more colors",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 8,
+      "prompt": "Bearbeite das vorhandene Bild und füge einen Rahmen hinzu",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 9,
+      "prompt": "Draw a diagram of the water cycle",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 10,
+      "prompt": "Zeichne eine Karte von Europa mit allen Hauptstädten",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 11,
+      "prompt": "Change the color scheme of the current image",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 12,
+      "prompt": "Verändere die Größe des aktuellen Bildes",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 13,
+      "prompt": "Make an illustration showing cell division",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 14,
+      "prompt": "Mache eine Zeichnung vom menschlichen Skelett",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 15,
+      "prompt": "Update the image to show more detail",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 16,
+      "prompt": "Aktualisiere das Bild mit besserer Beleuchtung",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 17,
+      "prompt": "Create a cartoon-style image of a volcano eruption",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 18,
+      "prompt": "Erstelle ein realistisches Bild von einem Regenbogen",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 19,
+      "prompt": "Remove the text from the existing image",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 20,
+      "prompt": "Entferne die Person aus dem vorhandenen Bild",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 21,
+      "prompt": "Produce an image of ancient Egyptian pyramids",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 22,
+      "prompt": "Produziere ein Bild vom Eiffelturm bei Nacht",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 23,
+      "prompt": "Adjust the brightness of the current image",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 24,
+      "prompt": "Passe den Kontrast des aktuellen Bildes an",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 25,
+      "prompt": "Design a poster about recycling for elementary school",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 26,
+      "prompt": "Entwirf ein Plakat über gesunde Ernährung für die Grundschule",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 27,
+      "prompt": "Replace the sky in the existing image with sunset colors",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 28,
+      "prompt": "Ersetze den Hintergrund im vorhandenen Bild",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 29,
+      "prompt": "Show me a picture of the human heart with labels",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 30,
+      "prompt": "Zeig mir ein Bild vom Periodensystem der Elemente",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 31,
+      "prompt": "Add arrows to the existing diagram",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 32,
+      "prompt": "Füge Beschriftungen zum vorhandenen Diagramm hinzu",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 33,
+      "prompt": "Illustrate the process of metamorphosis in butterflies",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 34,
+      "prompt": "Illustriere den Kreislauf der Jahreszeiten",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 35,
+      "prompt": "Transform the image into black and white",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 36,
+      "prompt": "Transformiere das Bild in Sepia-Töne",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 37,
+      "prompt": "Craft a new image showing the layers of Earth",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 38,
+      "prompt": "Erstelle ein neues Bild von den Phasen des Mondes",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 39,
+      "prompt": "Alter the image to make it more child-friendly",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 40,
+      "prompt": "Ändere das Bild, um es altersgerechter zu machen",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 41,
+      "prompt": "Generate a new picture of a rainforest ecosystem",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 42,
+      "prompt": "Generiere ein neues Bild vom menschlichen Verdauungssystem",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 43,
+      "prompt": "Crop the existing image to focus on the center",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 44,
+      "prompt": "Beschneide das vorhandene Bild auf das Wesentliche",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 45,
+      "prompt": "Create a visual representation of fractions for Grade 3",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 46,
+      "prompt": "Erstelle eine visuelle Darstellung von Bruchrechnung für die 3. Klasse",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 47,
+      "prompt": "Enhance the existing image quality",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 48,
+      "prompt": "Verbessere die Qualität des vorhandenen Bildes",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 49,
+      "prompt": "Produce a diagram of the nitrogen cycle",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 50,
+      "prompt": "Produziere ein Diagramm vom Wasserkreislauf",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 51,
+      "prompt": "Rotate the existing image 90 degrees",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 52,
+      "prompt": "Drehe das vorhandene Bild um 180 Grad",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 53,
+      "prompt": "Show me an image of DNA structure double helix",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 54,
+      "prompt": "Zeig mir ein Bild von verschiedenen Wolkentypen",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 55,
+      "prompt": "Flip the image horizontally",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 56,
+      "prompt": "Spiegle das Bild vertikal",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 57,
+      "prompt": "Make a watercolor painting of a mountain landscape",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 58,
+      "prompt": "Mache eine Aquarell-Malerei von einem Sonnenuntergang am Meer",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 59,
+      "prompt": "Blur the background of the existing photo",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 60,
+      "prompt": "Verwische den Hintergrund des vorhandenen Fotos",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 61,
+      "prompt": "Create an infographic about the planets in our solar system",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 62,
+      "prompt": "Erstelle eine Infografik über erneuerbare Energien",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 63,
+      "prompt": "Sharpen the details in the existing image",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 64,
+      "prompt": "Schärfe die Details im vorhandenen Bild",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 65,
+      "prompt": "Draw a timeline of historical events for history class",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 66,
+      "prompt": "Zeichne eine Zeitleiste der deutschen Geschichte",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 67,
+      "prompt": "Add filters to the current image to make it warmer",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 68,
+      "prompt": "Füge Filter zum aktuellen Bild hinzu, um es kühler wirken zu lassen",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 69,
+      "prompt": "Generate an image of a food chain in the ocean",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 70,
+      "prompt": "Generiere ein Bild von einem Nahrungsnetz im Wald",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 71,
+      "prompt": "Resize the existing image to be smaller",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 72,
+      "prompt": "Ändere die Größe des vorhandenen Bildes",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 73,
+      "prompt": "Create a sketch-style drawing of the human brain",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 74,
+      "prompt": "Erstelle eine Skizze des menschlichen Nervensystems",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 75,
+      "prompt": "Brighten the dark areas of the existing photo",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 76,
+      "prompt": "Helle die dunklen Bereiche des vorhandenen Fotos auf",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 77,
+      "prompt": "Illustrate geometric shapes for math class",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 78,
+      "prompt": "Illustriere verschiedene geometrische Körper für Mathe",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 79,
+      "prompt": "Apply vintage effect to the existing image",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 80,
+      "prompt": "Wende einen Vintage-Effekt auf das vorhandene Bild an",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 81,
+      "prompt": "Make a picture showing different types of rocks",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 82,
+      "prompt": "Mache ein Bild von verschiedenen Baumarten",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 83,
+      "prompt": "Overlay text on the existing image",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 84,
+      "prompt": "Überlagere Text auf dem vorhandenen Bild",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 85,
+      "prompt": "Design a minimalist icon set for science topics",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 86,
+      "prompt": "Entwirf minimalistische Icons für verschiedene Schulfächer",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 87,
+      "prompt": "Straighten the horizon in the existing landscape photo",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 88,
+      "prompt": "Richte den Horizont im vorhandenen Landschaftsfoto gerade",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 89,
+      "prompt": "Create an educational poster about the life cycle of a frog",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 90,
+      "prompt": "Erstelle ein Lernposter über den Lebenszyklus eines Schmetterlings",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 91,
+      "prompt": "Invert the colors of the existing image",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 92,
+      "prompt": "Invertiere die Farben des vorhandenen Bildes",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 93,
+      "prompt": "Produce a realistic image of a coral reef ecosystem",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 94,
+      "prompt": "Produziere ein realistisches Bild vom Aufbau eines Atoms",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 95,
+      "prompt": "Add a border around the existing image",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 96,
+      "prompt": "Füge einen Schatten zum vorhandenen Bild hinzu",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 97,
+      "prompt": "Generate a picture of electrical circuits for physics",
+      "expectedIntent": "create_image",
+      "language": "en"
+    },
+    {
+      "id": 98,
+      "prompt": "Generiere ein Bild von magnetischen Feldlinien für Physik",
+      "expectedIntent": "create_image",
+      "language": "de"
+    },
+    {
+      "id": 99,
+      "prompt": "Increase the saturation of the existing photo",
+      "expectedIntent": "edit_image",
+      "language": "en"
+    },
+    {
+      "id": 100,
+      "prompt": "Erhöhe die Sättigung des vorhandenen Fotos",
+      "expectedIntent": "edit_image",
+      "language": "de"
+    },
+    {
+      "id": 101,
+      "prompt": "Ändere das letzte Bild",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 102,
+      "prompt": "Bearbeite das Bild von gestern",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 103,
+      "prompt": "Füge dem Dinosaurier-Bild einen Vulkan hinzu",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 104,
+      "prompt": "Mache es bunter",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "ambiguous"
+    },
+    {
+      "id": 105,
+      "prompt": "Füge einen Dinosaurier hinzu",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "ambiguous"
+    },
+    {
+      "id": 106,
+      "prompt": "Ändere dem Hintergrund zu einem Klassenzimmer",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "edit_context"
+    },
+    {
+      "id": 107,
+      "prompt": "Entferne den Text oben rechts",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "edit_context"
+    },
+    {
+      "id": 108,
+      "prompt": "Mache die Person links größer",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "edit_context"
+    },
+    {
+      "id": 109,
+      "prompt": "Erstelle ein neues Bild von einem Dinosaurier",
+      "expectedIntent": "create_image",
+      "language": "de",
+      "category": "clear_creation"
+    },
+    {
+      "id": 110,
+      "prompt": "Edit the last image I generated",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "image_reference"
+    },
+    {
+      "id": 111,
+      "prompt": "Change the dinosaur image background",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "image_reference"
+    },
+    {
+      "id": 112,
+      "prompt": "Make it more colorful",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "ambiguous"
+    },
+    {
+      "id": 113,
+      "prompt": "Add a volcano",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "ambiguous"
+    },
+    {
+      "id": 114,
+      "prompt": "Change the background to a classroom",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "edit_context"
+    },
+    {
+      "id": 115,
+      "prompt": "Remove the text at the top",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "edit_context"
+    },
+    {
+      "id": 116,
+      "prompt": "Ein Dinosaurier",
+      "expectedIntent": "unknown",
+      "language": "de",
+      "category": "ambiguous"
+    },
+    {
+      "id": 117,
+      "prompt": "Bunter",
+      "expectedIntent": "unknown",
+      "language": "de",
+      "category": "ambiguous"
+    },
+    {
+      "id": 118,
+      "prompt": "Mein letztes Bild bunter machen",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 119,
+      "prompt": "Das erste Bild ändern",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 120,
+      "prompt": "Create ein Bild with ein dinosaur",
+      "expectedIntent": "create_image",
+      "language": "mixed",
+      "category": "multilingual"
+    }
+  ]
+}

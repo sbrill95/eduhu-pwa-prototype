@@ -1,0 +1,3318 @@
+
+> teacher-assistant-backend@1.0.0 test
+> jest
+
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mLogger initialized[32m[39m{
+  "transports": [
+    "Console",
+    "ExceptionStream",
+    "RejectionStream"
+  ]
+}
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mChatService error occurred[31m[39m{
+  "error": "401 {\"error\":{\"message\":\"Invalid API key\"}}",
+  "request": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Test message"
+      }
+    ]
+  }
+}
+Error: 401 {"error":{"message":"Invalid API key"}}
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\services\chatService.test.ts:152:24)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mChatService error occurred[31m[39m{
+  "error": "429 {\"error\":{\"message\":\"Rate limit exceeded\"}}",
+  "request": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Test message"
+      }
+    ]
+  }
+}
+Error: 429 {"error":{"message":"Rate limit exceeded"}}
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\services\chatService.test.ts:178:24)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mChatService error occurred[31m[39m{
+  "error": "Network error",
+  "request": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Test message"
+      }
+    ]
+  }
+}
+Error: Network error
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\services\chatService.test.ts:204:28)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mChatService error occurred[31m[39m{
+  "error": "Generic error",
+  "request": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Test message"
+      }
+    ]
+  }
+}
+Error: Generic error
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\services\chatService.test.ts:230:28)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mChatService error occurred[31m[39m{
+  "error": "500 {\"error\":{\"message\":\"Test error\"}}",
+  "request": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Say \"Hello\" to test the service."
+      }
+    ],
+    "model": "gpt-4o-mini",
+    "max_tokens": 10,
+    "temperature": 0
+  }
+}
+Error: 500 {"error":{"message":"Test error"}}
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\services\chatService.test.ts:274:24)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mAgent error [quota_exceeded] on attempt 1[31m[39m{
+  "error": "Quota exceeded"
+}
+Error: Quota exceeded
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:130:26)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mStored error context: test-operation-123 - quota_exceeded[32m[39m
+2025-10-20 22:52:04 [[33m[33mwarn[33m[39m]: [33m[33mError escalated after 1 attempts: quota_exceeded[33m[39m
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mAgent error [invalid_input] on attempt 1[31m[39m{
+  "error": "Invalid input provided"
+}
+Error: Invalid input provided
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:147:26)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mStored error context: test-operation-123 - invalid_input[32m[39m
+2025-10-20 22:52:04 [[33m[33mwarn[33m[39m]: [33m[33mError escalated after 1 attempts: invalid_input[33m[39m
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mAgent error [network_error] on attempt 4[31m[39m{
+  "error": "Network error"
+}
+Error: Network error
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:164:28)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mStored error context: test-operation-123 - network_error[32m[39m
+2025-10-20 22:52:04 [[33m[33mwarn[33m[39m]: [33m[33mError escalated after 4 attempts: network_error[33m[39m
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mAgent error [unknown] on attempt 2[31m[39m{
+  "error": "Unknown error"
+}
+Error: Unknown error
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:182:28)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mStored error context: test-operation-123 - unknown[32m[39m
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mFailed to check rate limit[31m[39m{
+  "error": "Redis connection failed"
+}
+Error: Redis connection failed
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:238:9)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mFailed to get error statistics[31m[39m{
+  "error": "Redis connection failed"
+}
+Error: Redis connection failed
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:274:9)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mAgent error [network_error] on attempt 1[31m[39m{
+  "error": "Network error"
+}
+Error: Network error
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:315:28)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mStored error context: test-operation-123 - network_error[32m[39m
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mAgent error [unknown] on attempt 1[31m[39m{
+  "error": "Test error for context storage"
+}
+Error: Test error for context storage
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:336:25)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mStored error context: test-operation-123 - unknown[32m[39m
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mAgent error [network_error] on attempt 2[31m[39m{
+  "error": "Network error"
+}
+Error: Network error
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:362:25)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mStored error context: test-operation-123 - network_error[32m[39m
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mAgent error [unknown] on attempt 1[31m[39m{
+  "error": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+}
+Error: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:399:25)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mStored error context: test-operation-123 - unknown[32m[39m
+2025-10-20 22:52:04 [[31m[31merror[31m[39m]: [31m[31mAgent error [unknown] on attempt 1[31m[39m{
+  "error": "Test error"
+}
+Error: Test error
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\tests\errorHandlingService.test.ts:414:25)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:04 [[32m[32minfo[32m[39m]: [32m[32mStored error context:  - unknown[32m[39m
+2025-10-20 22:52:05 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:05 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:05 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:05 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:05 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:06 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mTestAgent initialized[32m[39m{
+  "id": "test-agent",
+  "name": "Test Agent"
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mAgentExecutionService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mImageGenerationAgent initialized (OpenAI SDK)[32m[39m{
+  "id": "image-generation-agent",
+  "name": "Bildgenerierung",
+  "monthlyLimit": 10
+}
+2025-10-20 22:52:07 [[32m[32minfo[32m[39m]: [32m[32mLangGraphAgentService initialized with InstantDB bypass mode[32m[39m
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 24,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 3
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 35,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 32,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 3
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 2
+}
+2025-10-20 22:52:08 [[31m[31merror[31m[39m]: [31m[31mFailed to cleanup Redis test data[31m[39m{
+  "error": "Reached the max retries per request limit (which is 1). Refer to \"maxRetriesPerRequest\" option for details."
+}
+MaxRetriesPerRequestError: Reached the max retries per request limit (which is 1). Refer to "maxRetriesPerRequest" option for details.
+    at Socket.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\ioredis\built\redis\event_handler.js:182:37)
+    at Object.onceWrapper (node:events:633:26)
+    at Socket.emit (node:events:518:28)
+    at TCP.<anonymous> (node:net:351:12)
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 31,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 34,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 14,
+  "hasOverride": true
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 1,
+  "overridden": true,
+  "durationMs": 3
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 15,
+  "hasOverride": true
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "edit_image",
+  "confidence": 1,
+  "overridden": true,
+  "durationMs": 6
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 15,
+  "hasOverride": true
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "unknown",
+  "confidence": 1,
+  "overridden": true,
+  "durationMs": 0
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 11,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[31m[31merror[31m[39m]: [31m[31mPOST /api/agents-sdk/router/classify - Agent execution failed[31m[39m{
+  "error": "Test error"
+}
+Error: Test error
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\routes\agentsSdk.ts:224:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 15,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 15,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 24,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 0
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 14,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 0
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 14,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 14,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 14,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 0
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 14,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 45,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 2
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mAgent registered: langgraph-image-generation (Erweiterte Bildgenerierung)[32m[39m
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 3,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 1
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Request received[32m[39m{
+  "promptLength": 1998,
+  "hasOverride": false
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mPOST /api/agents-sdk/router/classify - Success[32m[39m{
+  "intent": "create_image",
+  "confidence": 0.95,
+  "overridden": false,
+  "durationMs": 0
+}
+2025-10-20 22:52:08 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m{
+  "appId": "39f14e13..."
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to messages[32m[39m{
+  "entity": "messages",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to library_materials[32m[39m{
+  "entity": "library_materials",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mAgent registered: langgraph-image-generation (Erweiterte Bildgenerierung)[32m[39m
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m{
+  "appId": "39f14e13..."
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to messages[32m[39m{
+  "entity": "messages",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to library_materials[32m[39m{
+  "entity": "library_materials",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mAgent registered: langgraph-image-generation (Erweiterte Bildgenerierung)[32m[39m
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m{
+  "appId": "39f14e13..."
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to messages[32m[39m{
+  "entity": "messages",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to library_materials[32m[39m{
+  "entity": "library_materials",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mAgent registered: langgraph-image-generation (Erweiterte Bildgenerierung)[32m[39m
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mAgent registered: langgraph-image-generation (Erweiterte Bildgenerierung)[32m[39m
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m{
+  "appId": "39f14e13..."
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to messages[32m[39m{
+  "entity": "messages",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to library_materials[32m[39m{
+  "entity": "library_materials",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m{
+  "appId": "39f14e13..."
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to messages[32m[39m{
+  "entity": "messages",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to library_materials[32m[39m{
+  "entity": "library_materials",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 3
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 2
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 43,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 63,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.905,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 57,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 33,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8300000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.875,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 45,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 36,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 50,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 2
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 45,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 29
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 53,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 61,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 56,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 43,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 48,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 49,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 34,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 50,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.75,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 54,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8300000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8450000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 36,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 45,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 49,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.92,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 48,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 48,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 58,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 50,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 55,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.935,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 70,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.905,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 34,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 43,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 36,
+  "hasOverride": false
+}
+2025-10-20 22:52:09 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 37,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 47,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 27,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 25,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 50,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 61,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 41,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 47,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.875,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 59,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.905,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 50,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 41,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mProcessing file with filename[32m[39m{
+  "original": "test.txt",
+  "hasUmlauts": false,
+  "byteLength": 8,
+  "charLength": 8
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 54,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 48,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 50,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 67,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 49,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 48,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.92,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 51,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 45,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.7,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8300000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 54,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8450000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 53,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 47,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 34,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 47,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 58,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 54,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 57,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mFile validation successful[32m[39m{
+  "filename": "test.txt",
+  "hasUmlauts": false,
+  "byteLength": 8,
+  "charLength": 8
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mProcessing file upload: test.txt (20 bytes)[32m[39m
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 59,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.905,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 66,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mUploading file to OpenAI with German umlaut support[32m[39m{
+  "originalFilename": "test.txt",
+  "normalizedFilename": "test.txt",
+  "hasUmlauts": false,
+  "fileSize": 20,
+  "byteLength": 8
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.92,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 51,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 56,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 38,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 53,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 57,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 45,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.7,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 63,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.905,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 33,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8300000000000001,
+  "executionTimeMs": 2
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.875,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 45,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 50,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 43,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 57,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 36,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 43,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 63,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.905,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 57,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8300000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 45,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 33,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.875,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 36,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 50,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 43,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 63,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.905,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 57,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 33,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8300000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 40,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 42,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.875,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 45,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 36,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 2
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 50,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 44,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mAgent registered: langgraph-image-generation (Erweiterte Bildgenerierung)[32m[39m
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "r Photosynthese"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "einem Vulkan"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "Ich brauche ein Bild für meine 7. Klasse zum Thema Photosynthese"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mOpenAI Agents SDK initialized (tracing disabled for GDPR compliance)[32m[39m{
+  "environment": "test"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "den Wasserkreislauf für mich"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "r Photosynthese für Klasse 7a"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m{
+  "appId": "39f14e13..."
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to messages[32m[39m{
+  "entity": "messages",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to library_materials[32m[39m{
+  "entity": "library_materials",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "Bild für 9. Klasse zum Thema Zellaufbau"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "r Photosynthese"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "r Photosynthese"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 24,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 3
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "r Photosynthese"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 32,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "m Thema Bruchrechnung"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "m Thema \"Der Wasserkreislauf in der Natur\""
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 2
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "r Photosynthese"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "Klasse 7 zur Photosynthese"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "7. Klasse zum Thema Zellaufbau"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 35,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "Klasse 7a"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "Jahrgangsstufe 9 zum Thema Französische Revolution"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 35,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "edit_image",
+  "confidence": 0.95,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 34,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "unknown",
+  "confidence": 0.3,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "r Bruchrechnung"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "Klasse 7 zur Photosynthese"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 31,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "r Photosynthese"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 33,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mImage generation intent detected[32m[39m{
+  "confidence": 0.85,
+  "description": "R PHOTOSYNTHESE"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 41,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 35,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 46,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 39,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 13,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 83,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 24,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 36,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 17,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "unknown",
+  "confidence": 0.3,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 14,
+  "hasOverride": true
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent using manual override[32m[39m{
+  "overrideIntent": "create_image"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 15,
+  "hasOverride": true
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent using manual override[32m[39m{
+  "overrideIntent": "edit_image"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 15,
+  "hasOverride": true
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent using manual override[32m[39m{
+  "overrideIntent": "unknown"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 28,
+  "hasOverride": true
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent using manual override[32m[39m{
+  "overrideIntent": "create_image"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 0,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[31m[31merror[31m[39m]: [31m[31mRouterAgent execution failed[31m[39m{
+  "error": "Prompt cannot be empty"
+}
+Error: Prompt cannot be empty
+    at RouterAgent.execute (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\agents\routerAgent.ts:108:15)
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\agents\__tests__\routerAgent.test.ts:303:40)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 3,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[31m[31merror[31m[39m]: [31m[31mRouterAgent execution failed[31m[39m{
+  "error": "Prompt cannot be empty"
+}
+Error: Prompt cannot be empty
+    at RouterAgent.execute (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\agents\routerAgent.ts:108:15)
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\agents\__tests__\routerAgent.test.ts:315:40)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 0,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[31m[31merror[31m[39m]: [31m[31mRouterAgent execution failed[31m[39m{
+  "error": "Prompt cannot be empty"
+}
+Error: Prompt cannot be empty
+    at RouterAgent.execute (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\agents\routerAgent.ts:108:15)
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\agents\__tests__\routerAgent.test.ts:326:40)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 619,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 52,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mAgent registered: langgraph-image-generation (Erweiterte Bildgenerierung)[32m[39m
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 30,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 0
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 41,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.8600000000000001,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 49,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.89,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m{
+  "appId": "39f14e13..."
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to messages[32m[39m{
+  "entity": "messages",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to library_materials[32m[39m{
+  "entity": "library_materials",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent initialized[32m[39m{
+  "id": "router-agent",
+  "name": "Router Agent",
+  "confidenceThreshold": 0.7
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution started[32m[39m{
+  "promptLength": 55,
+  "hasOverride": false
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mRouterAgent execution completed[32m[39m{
+  "success": true,
+  "intent": "create_image",
+  "confidence": 0.92,
+  "executionTimeMs": 1
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mAgent registered: langgraph-image-generation (Erweiterte Bildgenerierung)[32m[39m
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m{
+  "appId": "39f14e13..."
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to messages[32m[39m{
+  "entity": "messages",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to library_materials[32m[39m{
+  "entity": "library_materials",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mAgent registered: langgraph-image-generation (Erweiterte Bildgenerierung)[32m[39m
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m{
+  "appId": "39f14e13..."
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to messages[32m[39m{
+  "entity": "messages",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32m[Schema Migration] Fields added to library_materials[32m[39m{
+  "entity": "library_materials",
+  "fields": [
+    "metadata (json)"
+  ],
+  "action": "add"
+}
+2025-10-20 22:52:10 [[32m[32minfo[32m[39m]: [32m[32mInstantDB initialized successfully[32m[39m
+2025-10-20 22:52:10 [[31m[31merror[31m[39m]: [31m[31mChat health check error[31m[39m{
+  "error": "Test error"
+}
+Error: Test error
+    at Object.<anonymous> (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\routes\chat.test.ts:196:55)
+    at Promise.finally.completed (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1556:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1496:10)
+    at _callCircusTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1006:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:829:11)
+    at run (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\jestAdapterInit.js:1917:21)
+    at jestAdapter (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-10-20 22:52:11 [[32m[32minfo[32m[39m]: [32m[32mFile uploaded to OpenAI successfully with German umlauts[32m[39m{
+  "fileId": "file-4cu5mfNmy1jS1bPLK7pwto",
+  "openaiFilename": "test.txt",
+  "originalFilename": "test.txt",
+  "status": "processed"
+}
+2025-10-20 22:52:11 [[32m[32minfo[32m[39m]: [32m[32mFile uploaded successfully: file-4cu5mfNmy1jS1bPLK7pwto[32m[39m
+2025-10-20 22:52:11 [[31m[31merror[31m[39m]: [31m[31mFile upload failed: No file provided[31m[39m{
+  "error": "No file uploaded"
+}
+Error: No file uploaded
+    at processFileUpload (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\routes\files.ts:99:9)
+    at Layer.handleRequest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\route.js:157:13)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\routes\files.ts:89:5
+    at multerMiddleware (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\multer\lib\make-middleware.js:19:41)
+    at handleFileUpload (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\src\routes\files.ts:63:24)
+    at Layer.handleRequest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:295:15
+    at processParams (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:186:3)
+    at router (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:60:12)
+    at Layer.handleRequest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:342:13)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:291:5)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:688:15
+    at next (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:276:14)
+    at Function.handle (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:186:3)
+    at router (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:60:12)
+    at Layer.handleRequest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:342:13)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:291:5)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:688:15
+    at next (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:276:14)
+    at Function.handle (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:186:3)
+    at router (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:60:12)
+    at Layer.handleRequest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:342:13)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:186:3)
+    at router (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:60:12)
+    at Layer.handleRequest (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:342:13)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\router\index.js:291:5)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\express-rate-limit\dist\index.cjs:797:9
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\backend\node_modules\express-rate-limit\dist\index.cjs:782:5

@@ -2,7 +2,6 @@
  * Integration Tests for Chat Tags API Routes
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import request from 'supertest';
 import express, { Express } from 'express';
 import chatTagsRouter from './chatTags';
@@ -10,11 +9,11 @@ import * as chatTagService from '../services/chatTagService';
 import * as instantdbService from '../services/instantdbService';
 
 // Mock services
-vi.mock('../services/chatTagService');
-vi.mock('../services/instantdbService');
-vi.mock('../config/logger', () => ({
-  logError: vi.fn(),
-  logInfo: vi.fn(),
+jest.mock('../services/chatTagService');
+jest.mock('../services/instantdbService');
+jest.mock('../config/logger', () => ({
+  logError: jest.fn(),
+  logInfo: jest.fn(),
 }));
 
 describe('Chat Tags API Routes', () => {
@@ -26,11 +25,11 @@ describe('Chat Tags API Routes', () => {
     app.use(express.json());
     app.use('/api/chat', chatTagsRouter);
 
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('POST /api/chat/:chatId/tags', () => {
@@ -48,26 +47,26 @@ describe('Chat Tags API Routes', () => {
       ];
 
       const mockTags = [
-        { label: 'Mathematik', category: 'subject' },
-        { label: 'Klasse 5', category: 'grade_level' },
-        { label: 'Arbeitsblatt', category: 'material_type' },
+        { label: 'Mathematik', category: 'subject' as const },
+        { label: 'Klasse 5', category: 'grade_level' as const },
+        { label: 'Arbeitsblatt', category: 'material_type' as const },
       ];
 
       // Mock InstantDB availability
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
 
       // Mock message retrieval
-      vi.mocked(instantdbService.MessageService.getSessionMessages).mockResolvedValue(
-        mockMessages as any
-      );
+      jest
+        .mocked(instantdbService.MessageService.getSessionMessages)
+        .mockResolvedValue(mockMessages as any);
 
       // Mock tag extraction
-      vi.mocked(chatTagService.extractChatTags).mockResolvedValue(mockTags);
+      jest.mocked(chatTagService.extractChatTags).mockResolvedValue(mockTags);
 
       // Mock session update
-      vi.mocked(instantdbService.ChatSessionService.updateSession).mockResolvedValue(
-        true
-      );
+      jest
+        .mocked(instantdbService.ChatSessionService.updateSession)
+        .mockResolvedValue(true);
 
       const response = await request(app)
         .post(`/api/chat/${mockChatId}/tags`)
@@ -85,15 +84,12 @@ describe('Chat Tags API Routes', () => {
 
       expect(chatTagService.extractChatTags).toHaveBeenCalledWith(
         mockChatId,
-        expect.arrayContaining([
-          { role: 'user', content: expect.any(String) },
-        ])
+        expect.arrayContaining([{ role: 'user', content: expect.any(String) }])
       );
 
-      expect(instantdbService.ChatSessionService.updateSession).toHaveBeenCalledWith(
-        mockChatId,
-        { tags: JSON.stringify(mockTags) }
-      );
+      expect(
+        instantdbService.ChatSessionService.updateSession
+      ).toHaveBeenCalledWith(mockChatId, { tags: JSON.stringify(mockTags) });
     });
 
     it('should return 400 when chat ID is missing', async () => {
@@ -103,7 +99,7 @@ describe('Chat Tags API Routes', () => {
     });
 
     it('should return 503 when InstantDB is unavailable', async () => {
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(false);
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(false);
 
       const response = await request(app)
         .post('/api/chat/test-chat-123/tags')
@@ -117,10 +113,10 @@ describe('Chat Tags API Routes', () => {
     });
 
     it('should return 404 when chat session is not found', async () => {
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
-      vi.mocked(instantdbService.MessageService.getSessionMessages).mockResolvedValue(
-        null
-      );
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest
+        .mocked(instantdbService.MessageService.getSessionMessages)
+        .mockResolvedValue(null);
 
       const response = await request(app)
         .post('/api/chat/nonexistent-chat/tags')
@@ -134,10 +130,10 @@ describe('Chat Tags API Routes', () => {
     });
 
     it('should return 400 when chat has no messages', async () => {
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
-      vi.mocked(instantdbService.MessageService.getSessionMessages).mockResolvedValue(
-        []
-      );
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest
+        .mocked(instantdbService.MessageService.getSessionMessages)
+        .mockResolvedValue([]);
 
       const response = await request(app)
         .post('/api/chat/empty-chat/tags')
@@ -162,11 +158,11 @@ describe('Chat Tags API Routes', () => {
         },
       ];
 
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
-      vi.mocked(instantdbService.MessageService.getSessionMessages).mockResolvedValue(
-        mockMessages as any
-      );
-      vi.mocked(chatTagService.extractChatTags).mockResolvedValue([]);
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest
+        .mocked(instantdbService.MessageService.getSessionMessages)
+        .mockResolvedValue(mockMessages as any);
+      jest.mocked(chatTagService.extractChatTags).mockResolvedValue([]);
 
       const response = await request(app)
         .post('/api/chat/test-chat-123/tags')
@@ -194,16 +190,16 @@ describe('Chat Tags API Routes', () => {
         },
       ];
 
-      const mockTags = [{ label: 'Test', category: 'general' }];
+      const mockTags = [{ label: 'Test', category: 'general' as const }];
 
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
-      vi.mocked(instantdbService.MessageService.getSessionMessages).mockResolvedValue(
-        mockMessages as any
-      );
-      vi.mocked(chatTagService.extractChatTags).mockResolvedValue(mockTags);
-      vi.mocked(instantdbService.ChatSessionService.updateSession).mockResolvedValue(
-        false
-      );
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest
+        .mocked(instantdbService.MessageService.getSessionMessages)
+        .mockResolvedValue(mockMessages as any);
+      jest.mocked(chatTagService.extractChatTags).mockResolvedValue(mockTags);
+      jest
+        .mocked(instantdbService.ChatSessionService.updateSession)
+        .mockResolvedValue(false);
 
       const response = await request(app)
         .post('/api/chat/test-chat-123/tags')
@@ -221,14 +217,14 @@ describe('Chat Tags API Routes', () => {
     it('should manually update tags', async () => {
       const mockChatId = 'test-chat-123';
       const mockTags = [
-        { label: 'Mathematik', category: 'subject' },
-        { label: 'Klasse 5', category: 'grade_level' },
+        { label: 'Mathematik', category: 'subject' as const },
+        { label: 'Klasse 5', category: 'grade_level' as const },
       ];
 
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
-      vi.mocked(instantdbService.ChatSessionService.updateSession).mockResolvedValue(
-        true
-      );
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest
+        .mocked(instantdbService.ChatSessionService.updateSession)
+        .mockResolvedValue(true);
 
       const response = await request(app)
         .put(`/api/chat/${mockChatId}/tags`)
@@ -270,24 +266,25 @@ describe('Chat Tags API Routes', () => {
       expect(response.status).toBe(400);
       expect(response.body).toMatchObject({
         success: false,
-        error: 'Invalid tag structure. Each tag must have label and category fields',
+        error:
+          'Invalid tag structure. Each tag must have label and category fields',
       });
     });
 
     it('should limit tags to 5', async () => {
       const sixTags = [
-        { label: 'Tag1', category: 'subject' },
-        { label: 'Tag2', category: 'topic' },
-        { label: 'Tag3', category: 'grade_level' },
-        { label: 'Tag4', category: 'material_type' },
-        { label: 'Tag5', category: 'general' },
-        { label: 'Tag6', category: 'general' },
+        { label: 'Tag1', category: 'subject' as const },
+        { label: 'Tag2', category: 'topic' as const },
+        { label: 'Tag3', category: 'grade_level' as const },
+        { label: 'Tag4', category: 'material_type' as const },
+        { label: 'Tag5', category: 'general' as const },
+        { label: 'Tag6', category: 'general' as const },
       ];
 
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
-      vi.mocked(instantdbService.ChatSessionService.updateSession).mockResolvedValue(
-        true
-      );
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest
+        .mocked(instantdbService.ChatSessionService.updateSession)
+        .mockResolvedValue(true);
 
       const response = await request(app)
         .put('/api/chat/test-chat-123/tags')
@@ -303,12 +300,14 @@ describe('Chat Tags API Routes', () => {
     it('should remove tags from chat session', async () => {
       const mockChatId = 'test-chat-123';
 
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
-      vi.mocked(instantdbService.ChatSessionService.updateSession).mockResolvedValue(
-        true
-      );
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest
+        .mocked(instantdbService.ChatSessionService.updateSession)
+        .mockResolvedValue(true);
 
-      const response = await request(app).delete(`/api/chat/${mockChatId}/tags`);
+      const response = await request(app).delete(
+        `/api/chat/${mockChatId}/tags`
+      );
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -319,27 +318,30 @@ describe('Chat Tags API Routes', () => {
         },
       });
 
-      expect(instantdbService.ChatSessionService.updateSession).toHaveBeenCalledWith(
-        mockChatId,
-        { tags: undefined }
-      );
+      expect(
+        instantdbService.ChatSessionService.updateSession
+      ).toHaveBeenCalledWith(mockChatId, { tags: undefined });
     });
 
     it('should return 503 when InstantDB is unavailable', async () => {
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(false);
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(false);
 
-      const response = await request(app).delete('/api/chat/test-chat-123/tags');
+      const response = await request(app).delete(
+        '/api/chat/test-chat-123/tags'
+      );
 
       expect(response.status).toBe(503);
     });
 
     it('should return 500 when deletion fails', async () => {
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
-      vi.mocked(instantdbService.ChatSessionService.updateSession).mockResolvedValue(
-        false
-      );
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest
+        .mocked(instantdbService.ChatSessionService.updateSession)
+        .mockResolvedValue(false);
 
-      const response = await request(app).delete('/api/chat/test-chat-123/tags');
+      const response = await request(app).delete(
+        '/api/chat/test-chat-123/tags'
+      );
 
       expect(response.status).toBe(500);
       expect(response.body).toMatchObject({
@@ -351,7 +353,7 @@ describe('Chat Tags API Routes', () => {
 
   describe('GET /api/chat/:chatId/tags', () => {
     it('should retrieve tags for chat session', async () => {
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(true);
 
       const response = await request(app).get('/api/chat/test-chat-123/tags');
 
@@ -365,7 +367,7 @@ describe('Chat Tags API Routes', () => {
     });
 
     it('should return 503 when InstantDB is unavailable', async () => {
-      vi.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(false);
+      jest.mocked(instantdbService.isInstantDBAvailable).mockReturnValue(false);
 
       const response = await request(app).get('/api/chat/test-chat-123/tags');
 

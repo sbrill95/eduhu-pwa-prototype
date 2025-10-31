@@ -1,0 +1,538 @@
+
+Running 4 tests using 1 worker
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+🚀 Starting User Story 2: Regenerate image with original parameters
+⏱️ Expected duration: 90-120 seconds (includes TWO real OpenAI generations)
+
+📍 PREREQUISITE: Generate first image
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+✅ Test auth successful
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.fill started []
+[info] api: <= elementHandle.fill succeeded []
+[info] api: => keyboard.press started []
+[info] api: <= keyboard.press succeeded []
+✅ Message sent
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+✅ First generation started...
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+✅ First image generated and automatically saved!
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+
+📍 TEST: Navigate to Library
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 TEST: Click "Neu generieren" button
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+✅ "Neu generieren" button found
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+✅ "Neu generieren" button clicked - waiting for modals to transition...
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 TEST: Verify AgentFormView opened with pre-filled form
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector failed []
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  1 [Desktop Chrome - Chat Agent Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters (58.1s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+🚀 Starting User Story 2: Regenerate image with original parameters
+⏱️ Expected duration: 90-120 seconds (includes TWO real OpenAI generations)
+
+📍 PREREQUISITE: Generate first image
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+✅ Test auth successful
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.fill started []
+[info] api: <= elementHandle.fill succeeded []
+[info] api: => keyboard.press started []
+[info] api: <= keyboard.press succeeded []
+✅ Message sent
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+✅ First generation started...
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+✅ First image generated and automatically saved!
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+
+📍 TEST: Navigate to Library
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 TEST: Click "Neu generieren" button
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+✅ "Neu generieren" button found
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+✅ "Neu generieren" button clicked - waiting for modals to transition...
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 TEST: Verify AgentFormView opened with pre-filled form
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector failed []
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  2 [Desktop Chrome - Chat Agent Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters (retry #1) (55.4s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+🚀 Starting User Story 2: Regenerate image with original parameters
+⏱️ Expected duration: 90-120 seconds (includes TWO real OpenAI generations)
+
+📍 PREREQUISITE: Generate first image
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+✅ Test auth successful
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.fill started []
+[info] api: <= elementHandle.fill succeeded []
+[info] api: => keyboard.press started []
+[info] api: <= keyboard.press succeeded []
+✅ Message sent
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+✅ First generation started...
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+✅ First image generated and automatically saved!
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+
+📍 TEST: Navigate to Library
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 TEST: Click "Neu generieren" button
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+✅ "Neu generieren" button found
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+✅ "Neu generieren" button clicked - waiting for modals to transition...
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 TEST: Verify AgentFormView opened with pre-filled form
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector failed []
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  3 [Mobile Safari - Touch Interface Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters (1.0m)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+🚀 Starting User Story 2: Regenerate image with original parameters
+⏱️ Expected duration: 90-120 seconds (includes TWO real OpenAI generations)
+
+📍 PREREQUISITE: Generate first image
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+[info] api: => locator.count started []
+[info] api: <= locator.count succeeded []
+✅ Test auth successful
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.fill started []
+[info] api: <= elementHandle.fill succeeded []
+[info] api: => keyboard.press started []
+[info] api: <= keyboard.press succeeded []
+✅ Message sent
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+✅ First generation started...
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+✅ First image generated and automatically saved!
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+
+📍 TEST: Navigate to Library
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.click started []
+[info] api: <= page.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 TEST: Click "Neu generieren" button
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+✅ "Neu generieren" button found
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+✅ "Neu generieren" button clicked - waiting for modals to transition...
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+
+📍 TEST: Verify AgentFormView opened with pre-filled form
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector failed []
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  4 [Mobile Safari - Touch Interface Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters (retry #1) (54.9s)
+  ✘  5 [Desktop Firefox - Cross-browser Validation] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters (0ms)
+  ✘  6 [Desktop Firefox - Cross-browser Validation] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters (retry #1) (0ms)
+  ✘  7 [Mobile Chrome - Android Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters (0ms)
+  ✘  8 [Mobile Chrome - Android Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters (retry #1) (0ms)
+
+
+  1) [Desktop Chrome - Chat Agent Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters 
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('textarea#description-input') to be visible[22m
+
+
+      301 |
+      302 |     // Wait for AgentFormView to fully load by checking for the description field
+    > 303 |     const descriptionInput = await page.waitForSelector('textarea#description-input', { timeout: 10000 });
+          |                                         ^
+      304 |     const descriptionValue = await descriptionInput.inputValue();
+      305 |
+      306 |     console.log('  Description field value:', descriptionValue);
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\library-modal-integration.spec.ts:303:41
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('textarea#description-input') to be visible[22m
+
+
+      301 |
+      302 |     // Wait for AgentFormView to fully load by checking for the description field
+    > 303 |     const descriptionInput = await page.waitForSelector('textarea#description-input', { timeout: 10000 });
+          |                                         ^
+      304 |     const descriptionValue = await descriptionInput.inputValue();
+      305 |
+      306 |     console.log('  Description field value:', descriptionValue);
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\library-modal-integration.spec.ts:303:41
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\library-modal-integration--a76e1-ge-with-original-parameters-Desktop-Chrome---Chat-Agent-Testing-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [Mobile Safari - Touch Interface Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters 
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('textarea#description-input') to be visible[22m
+
+
+      301 |
+      302 |     // Wait for AgentFormView to fully load by checking for the description field
+    > 303 |     const descriptionInput = await page.waitForSelector('textarea#description-input', { timeout: 10000 });
+          |                                         ^
+      304 |     const descriptionValue = await descriptionInput.inputValue();
+      305 |
+      306 |     console.log('  Description field value:', descriptionValue);
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\library-modal-integration.spec.ts:303:41
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Mobile-Safari---Touch-Interface-Testing\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Mobile-Safari---Touch-Interface-Testing\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\library-modal-integration--a76e1-ge-with-original-parameters-Mobile-Safari---Touch-Interface-Testing\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Mobile-Safari---Touch-Interface-Testing\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\library-modal-integration--a76e1-ge-with-original-parameters-Mobile-Safari---Touch-Interface-Testing\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('textarea#description-input') to be visible[22m
+
+
+      301 |
+      302 |     // Wait for AgentFormView to fully load by checking for the description field
+    > 303 |     const descriptionInput = await page.waitForSelector('textarea#description-input', { timeout: 10000 });
+          |                                         ^
+      304 |     const descriptionValue = await descriptionInput.inputValue();
+      305 |
+      306 |     console.log('  Description field value:', descriptionValue);
+        at C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\e2e-tests\library-modal-integration.spec.ts:303:41
+
+    Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, open 'C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\test-results\.playwright-artifacts-3\traces\resources\737ea7e92c65f70928527a7aa30ee86151b8f1f5.xml'
+
+    Error: ENOENT: no such file or directory, open 'C:\Users\steff\Desktop\eduhu-pwa-prototype\teacher-assistant\frontend\test-results\.playwright-artifacts-3\60c8f0b1b8d49954f269edff3db26a46.zip'
+
+    [31mTest timeout of 180000ms exceeded.[39m
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\library-modal-integration--a76e1-ge-with-original-parameters-Mobile-Safari---Touch-Interface-Testing-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\library-modal-integration--a76e1-ge-with-original-parameters-Mobile-Safari---Touch-Interface-Testing-retry1\error-context.md
+
+  3) [Desktop Firefox - Cross-browser Validation] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+  4) [Mobile Chrome - Android Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+
+  4 failed
+    [Desktop Chrome - Chat Agent Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters 
+    [Mobile Safari - Touch Interface Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters 
+    [Desktop Firefox - Cross-browser Validation] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters 
+    [Mobile Chrome - Android Testing] › e2e-tests\library-modal-integration.spec.ts:215:3 › Library UX Fixes - Material Preview Modal Integration › User Story 2: Regenerate image with original parameters 

@@ -33,7 +33,10 @@ describe('Chat Summary API Routes', () => {
     const validRequest = {
       chatId: 'test-chat-123',
       messages: [
-        { role: 'user', content: 'Ich brauche ein Arbeitsblatt zur Bruchrechnung' },
+        {
+          role: 'user',
+          content: 'Ich brauche ein Arbeitsblatt zur Bruchrechnung',
+        },
         { role: 'assistant', content: 'Gerne! Für welche Klassenstufe?' },
         { role: 'user', content: 'Klasse 7' },
       ],
@@ -42,7 +45,9 @@ describe('Chat Summary API Routes', () => {
     it('should generate and store a summary successfully', async () => {
       // Mock successful summary generation
       const mockSummary = 'Bruchrechnung Kl. 7';
-      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(mockSummary);
+      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(
+        mockSummary
+      );
 
       // Mock successful database update
       (ChatSessionService.updateSummary as jest.Mock).mockResolvedValue(true);
@@ -63,7 +68,10 @@ describe('Chat Summary API Routes', () => {
 
       expect(summaryService.generateSummaryWithRetry).toHaveBeenCalledWith(
         expect.arrayContaining([
-          expect.objectContaining({ role: 'user', content: expect.any(String) }),
+          expect.objectContaining({
+            role: 'user',
+            content: expect.any(String),
+          }),
         ])
       );
 
@@ -140,7 +148,8 @@ describe('Chat Summary API Routes', () => {
 
       expect(response.body).toEqual({
         success: false,
-        error: 'Ungültiges Nachrichtenformat. Jede Nachricht muss "role" und "content" enthalten.',
+        error:
+          'Ungültiges Nachrichtenformat. Jede Nachricht muss "role" und "content" enthalten.',
         timestamp: expect.any(String),
       });
     });
@@ -156,14 +165,17 @@ describe('Chat Summary API Routes', () => {
 
       expect(response.body).toEqual({
         success: false,
-        error: 'Ungültige Nachrichtenrolle. Erlaubt sind: user, assistant, system.',
+        error:
+          'Ungültige Nachrichtenrolle. Erlaubt sind: user, assistant, system.',
         timestamp: expect.any(String),
       });
     });
 
     it('should limit messages to first 4 for summary generation', async () => {
       const mockSummary = 'Test summary';
-      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(mockSummary);
+      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(
+        mockSummary
+      );
       (ChatSessionService.updateSummary as jest.Mock).mockResolvedValue(true);
 
       const manyMessages = [
@@ -198,14 +210,17 @@ describe('Chat Summary API Routes', () => {
 
       expect(response.body).toEqual({
         success: false,
-        error: 'Fehler bei der Zusammenfassungserstellung. Bitte versuchen Sie es später erneut.',
+        error:
+          'Fehler bei der Zusammenfassungserstellung. Bitte versuchen Sie es später erneut.',
         timestamp: expect.any(String),
       });
     });
 
     it('should still return summary even if database update fails', async () => {
       const mockSummary = 'Test summary';
-      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(mockSummary);
+      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(
+        mockSummary
+      );
 
       // Mock database update failure
       (ChatSessionService.updateSummary as jest.Mock).mockResolvedValue(false);
@@ -227,7 +242,9 @@ describe('Chat Summary API Routes', () => {
 
     it('should handle summary with special characters', async () => {
       const mockSummary = 'Übung für Klasse 7';
-      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(mockSummary);
+      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(
+        mockSummary
+      );
       (ChatSessionService.updateSummary as jest.Mock).mockResolvedValue(true);
 
       const response = await request(app)
@@ -243,7 +260,9 @@ describe('Chat Summary API Routes', () => {
     it('should return placeholder response (endpoint implementation pending)', async () => {
       const chatId = 'test-chat-123';
 
-      const response = await request(app).get(`/chat/${chatId}/summary`).expect(200);
+      const response = await request(app)
+        .get(`/chat/${chatId}/summary`)
+        .expect(200);
 
       expect(response.body).toEqual({
         success: true,
@@ -268,7 +287,9 @@ describe('Chat Summary API Routes', () => {
   describe('Integration Flow', () => {
     it('should handle complete flow: validate -> generate -> store -> respond', async () => {
       const mockSummary = 'Quiz Klasse 8';
-      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(mockSummary);
+      (summaryService.generateSummaryWithRetry as jest.Mock).mockResolvedValue(
+        mockSummary
+      );
       (ChatSessionService.updateSummary as jest.Mock).mockResolvedValue(true);
 
       const response = await request(app)

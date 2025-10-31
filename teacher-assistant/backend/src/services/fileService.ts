@@ -1,4 +1,3 @@
-
 import { openaiClient } from '../config/openai';
 import { toFile } from 'openai';
 import { logError, logInfo } from '../config/logger';
@@ -6,11 +5,15 @@ import { logError, logInfo } from '../config/logger';
 export const validateFile = (file: Express.Multer.File): string | null => {
   // File type validation
   const allowedMimeTypes = [
-    'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/webp',
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
     'application/msword', // DOC
-    'text/plain'
+    'text/plain',
   ];
 
   if (!allowedMimeTypes.includes(file.mimetype)) {
@@ -47,7 +50,16 @@ export const validateFile = (file: Express.Multer.File): string | null => {
   }
 
   // Check for dangerous file extensions (security check with German locale support)
-  const dangerousExtensions = ['.exe', '.bat', '.cmd', '.com', '.scr', '.vbs', '.js', '.jar'];
+  const dangerousExtensions = [
+    '.exe',
+    '.bat',
+    '.cmd',
+    '.com',
+    '.scr',
+    '.vbs',
+    '.js',
+    '.jar',
+  ];
   const fileExtension = normalizedFilename.toLowerCase().split('.').pop();
   if (fileExtension && dangerousExtensions.includes(`.${fileExtension}`)) {
     return 'Dateityp aus Sicherheitsgründen nicht erlaubt.';
@@ -58,10 +70,10 @@ export const validateFile = (file: Express.Multer.File): string | null => {
     /^\.+$/, // Only dots
     /^CON$|^PRN$|^AUX$|^NUL$|^COM[1-9]$|^LPT[1-9]$/i, // Windows reserved names
     /[\x00-\x1f\x7f]/, // Control characters
-    /[<>:"|?*]/ // Windows invalid characters
+    /[<>:"|?*]/, // Windows invalid characters
   ];
 
-  if (invalidPatterns.some(pattern => pattern.test(normalizedFilename))) {
+  if (invalidPatterns.some((pattern) => pattern.test(normalizedFilename))) {
     return 'Dateiname enthält ungültige oder reservierte Zeichen.';
   }
 
@@ -69,7 +81,7 @@ export const validateFile = (file: Express.Multer.File): string | null => {
     filename: normalizedFilename,
     hasUmlauts: /[äöüÄÖÜßÀ-ÿ]/.test(normalizedFilename),
     byteLength: Buffer.byteLength(normalizedFilename, 'utf8'),
-    charLength: normalizedFilename.length
+    charLength: normalizedFilename.length,
   });
 
   return null; // No validation errors
@@ -85,7 +97,7 @@ export const handleUpload = async (file: Express.Multer.File) => {
       normalizedFilename: normalizedFilename,
       hasUmlauts: /[äöüÄÖÜßÀ-ÿ]/.test(normalizedFilename),
       fileSize: file.size,
-      byteLength: Buffer.byteLength(normalizedFilename, 'utf8')
+      byteLength: Buffer.byteLength(normalizedFilename, 'utf8'),
     });
 
     // Create OpenAI file with proper UTF-8 filename handling
@@ -98,7 +110,7 @@ export const handleUpload = async (file: Express.Multer.File) => {
       fileId: uploadedFile.id,
       openaiFilename: uploadedFile.filename,
       originalFilename: normalizedFilename,
-      status: uploadedFile.status
+      status: uploadedFile.status,
     });
 
     return {
@@ -107,15 +119,24 @@ export const handleUpload = async (file: Express.Multer.File) => {
       originalFilename: normalizedFilename, // Preserve original for UI
       bytes: uploadedFile.bytes,
       purpose: uploadedFile.purpose,
-      status: uploadedFile.status
+      status: uploadedFile.status,
     };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    logError(`Error uploading file to OpenAI: ${errorMessage}`, error instanceof Error ? error : new Error(String(error)));
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+    logError(
+      `Error uploading file to OpenAI: ${errorMessage}`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     // Enhanced error handling for filename encoding issues
-    if (errorMessage.includes('filename') || errorMessage.includes('encoding')) {
-      throw new Error('Filename encoding error - German umlauts may not be supported by OpenAI');
+    if (
+      errorMessage.includes('filename') ||
+      errorMessage.includes('encoding')
+    ) {
+      throw new Error(
+        'Filename encoding error - German umlauts may not be supported by OpenAI'
+      );
     }
 
     // Re-throw with more specific error message
@@ -123,7 +144,10 @@ export const handleUpload = async (file: Express.Multer.File) => {
       throw new Error('File size exceeds OpenAI limits');
     }
 
-    if (errorMessage.includes('invalid file type') || errorMessage.includes('unsupported file type')) {
+    if (
+      errorMessage.includes('invalid file type') ||
+      errorMessage.includes('unsupported file type')
+    ) {
       throw new Error('Unsupported file type for OpenAI');
     }
 

@@ -18,16 +18,22 @@ const router = Router();
 const validateExtractionRequest = [
   body('messages')
     .isArray({ min: 1 })
-    .withMessage('Messages array is required and must contain at least one message'),
+    .withMessage(
+      'Messages array is required and must contain at least one message'
+    ),
 
   body('messages.*.role')
     .isIn(['system', 'user', 'assistant'])
-    .withMessage('Each message must have a valid role: system, user, or assistant'),
+    .withMessage(
+      'Each message must have a valid role: system, user, or assistant'
+    ),
 
   body('messages.*.content')
     .isString()
     .isLength({ min: 1, max: 10000 })
-    .withMessage('Each message content must be a non-empty string (max 10000 characters)'),
+    .withMessage(
+      'Each message content must be a non-empty string (max 10000 characters)'
+    ),
 
   body('userId')
     .optional()
@@ -54,7 +60,10 @@ const handleValidationErrors = (
   if (!errors.isEmpty()) {
     const errorMessages = errors
       .array()
-      .map((error) => `${error.msg} (field: ${error.type === 'field' ? error.path : 'unknown'})`)
+      .map(
+        (error) =>
+          `${error.msg} (field: ${error.type === 'field' ? error.path : 'unknown'})`
+      )
       .join('; ');
 
     const response: ChatErrorResponse = {
@@ -63,13 +72,18 @@ const handleValidationErrors = (
       error_type: 'validation',
       error_code: 'invalid_input',
       user_message: 'Ungültige Eingabedaten für die Wissensextraktion',
-      suggested_action: 'Überprüfen Sie die Nachrichtenstruktur und versuchen Sie es erneut',
+      suggested_action:
+        'Überprüfen Sie die Nachrichtenstruktur und versuchen Sie es erneut',
       timestamp: new Date().toISOString(),
     };
 
-    logError('Validation error in teacher profile extraction', new Error(errorMessages), {
-      body: req.body,
-    });
+    logError(
+      'Validation error in teacher profile extraction',
+      new Error(errorMessages),
+      {
+        body: req.body,
+      }
+    );
 
     res.status(400).json(response);
     return;
@@ -116,21 +130,27 @@ router.post(
           error_type: 'validation',
           error_code: 'content_too_long',
           user_message: 'Der Gesprächsinhalt ist zu lang für die Analyse',
-          suggested_action: 'Teilen Sie die Analyse in mehrere kleinere Anfragen auf',
+          suggested_action:
+            'Teilen Sie die Analyse in mehrere kleinere Anfragen auf',
           timestamp: new Date().toISOString(),
         };
 
-        logError('Content too long for extraction', new Error('Content length exceeded'), {
-          totalLength: totalContentLength,
-          maxLength: 50000,
-        });
+        logError(
+          'Content too long for extraction',
+          new Error('Content length exceeded'),
+          {
+            totalLength: totalContentLength,
+            maxLength: 50000,
+          }
+        );
 
         res.status(400).json(response);
         return;
       }
 
       // Call the teacher profile service for knowledge extraction
-      const result = await TeacherProfileService.extractKnowledge(extractionRequest);
+      const result =
+        await TeacherProfileService.extractKnowledge(extractionRequest);
 
       // Handle successful extraction
       if (result.success) {
@@ -143,9 +163,11 @@ router.post(
             subjects: successResponse.data.extractedKnowledge.subjects.length,
             grades: successResponse.data.extractedKnowledge.grades.length,
             schoolType: !!successResponse.data.extractedKnowledge.schoolType,
-            methods: successResponse.data.extractedKnowledge.teachingMethods.length,
+            methods:
+              successResponse.data.extractedKnowledge.teachingMethods.length,
             topics: successResponse.data.extractedKnowledge.topics.length,
-            challenges: successResponse.data.extractedKnowledge.challenges.length,
+            challenges:
+              successResponse.data.extractedKnowledge.challenges.length,
           },
         });
 
@@ -188,9 +210,13 @@ router.post(
       res.status(statusCode).json(errorResponse);
     } catch (error) {
       // Catch any unexpected errors
-      logError('Unexpected error in teacher profile extraction endpoint', error as Error, {
-        body: req.body,
-      });
+      logError(
+        'Unexpected error in teacher profile extraction endpoint',
+        error as Error,
+        {
+          body: req.body,
+        }
+      );
 
       const response: ChatErrorResponse = {
         success: false,
@@ -198,7 +224,8 @@ router.post(
         error_type: 'server_error',
         error_code: 'unexpected_error',
         user_message: 'Ein unerwarteter Serverfehler ist aufgetreten',
-        suggested_action: 'Bitte versuchen Sie es erneut oder kontaktieren Sie den Support',
+        suggested_action:
+          'Bitte versuchen Sie es erneut oder kontaktieren Sie den Support',
         timestamp: new Date().toISOString(),
       };
 
@@ -234,16 +261,21 @@ router.get(
       } else {
         res.status(503).json({
           success: false,
-          error: 'Teacher profile extraction service is not responding correctly',
+          error:
+            'Teacher profile extraction service is not responding correctly',
           error_type: 'server_error',
           error_code: 'service_unhealthy',
-          user_message: 'Der Wissensextraktionsservice ist momentan nicht verfügbar',
+          user_message:
+            'Der Wissensextraktionsservice ist momentan nicht verfügbar',
           suggested_action: 'Bitte versuchen Sie es später erneut',
           timestamp: new Date().toISOString(),
         });
       }
     } catch (error) {
-      logError('Health check failed for teacher profile extraction', error as Error);
+      logError(
+        'Health check failed for teacher profile extraction',
+        error as Error
+      );
 
       res.status(503).json({
         success: false,
@@ -277,7 +309,7 @@ router.get(
             'schoolType',
             'teachingMethods',
             'topics',
-            'challenges'
+            'challenges',
           ],
           maxMessagesPerRequest: 100,
           maxContentLength: 50000,

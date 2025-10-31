@@ -1,0 +1,338 @@
+# Quality Gate: Story 3.1.3 - Router Classification (UPDATED)
+# BMad Quality Gate Decision (YAML Format)
+
+story:
+  id: epic-3.1.story-3
+  title: "Router Logic - Creation vs. Editing Detection"
+  priority: P0
+  epic: epic-3.1
+
+gate:
+  decision: CONCERNS
+  date: 2025-10-26
+  reviewer: QA Agent (Quinn)
+  review_document: docs/qa/assessments/epic-3.1.story-3-review-20251026.md
+  previous_review: docs/qa/assessments/epic-3.1.story-3-review-20251025.md
+  changes_since_last_review: "E2E pass rate improved from 44% to 55%, but core bugs remain unresolved"
+
+# Quality Gate Decision: CONCERNS (UNCHANGED from 2025-10-25)
+# Rationale: Implementation complete, but application bugs prevent full E2E validation.
+# Minor improvements in E2E pass rate, but BUG-002, BUG-003, BUG-004 still present.
+
+status:
+  implementation: COMPLETE
+  tests_passing: PARTIAL
+  build_clean: YES
+  deployment_ready: NO
+
+comparison_with_baseline:
+  baseline_date: 2025-10-25
+  e2e_pass_rate:
+    baseline: 44% # 4/9
+    current: 55%  # 5/9
+    change: +11%
+    status: IMPROVED
+  backend_tests:
+    baseline: 100% # 48/48
+    current: 100%  # 48/48
+    change: 0%
+    status: STABLE
+  frontend_component_tests:
+    baseline: 100% # 15/15
+    current: 100%  # 15/15
+    change: 0%
+    status: STABLE
+  console_errors:
+    baseline: 4
+    current: 5
+    change: +1
+    status: WORSENED
+
+metrics:
+  backend_tests:
+    total: 48
+    passing: 48
+    pass_rate: 100%
+    status: PASS
+    execution_time: "<2 seconds"
+
+  frontend_component_tests:
+    total: 15
+    passing: 15
+    pass_rate: 100%
+    status: PASS
+    execution_time: "166ms"
+
+  e2e_tests:
+    total: 9
+    passing: 5
+    failing: 3
+    flaky: 1
+    pass_rate: 55%
+    status: CONCERNS
+    reason: "Router confidence bug blocks manual override tests"
+    tests_passed:
+      - "AC1: High confidence creation - auto-routes"
+      - "AC2: High confidence editing - auto-routes"
+      - "AC4: User selects creation (manual override button)"
+      - "AC6: Image reference (latest)"
+      - "AC7: Context-aware (dative detection)"
+    tests_failed:
+      - "AC3: Low confidence shows RouterOverride"
+      - "Performance: <500ms classification"
+      - "Error: Zero console errors (5 errors detected)"
+    tests_flaky:
+      - "AC5: User selects editing (RouterOverride not appearing)"
+
+  build:
+    typescript_errors: 0
+    warnings: 0
+    status: PASS
+
+  code_quality:
+    architecture: EXCELLENT
+    type_safety: EXCELLENT
+    error_handling: GOOD
+    maintainability: EXCELLENT
+    testability: EXCELLENT
+    overall: EXCELLENT
+
+acceptance_criteria:
+  AC1_keyword_detection:
+    status: IMPLEMENTED
+    backend_tested: YES
+    component_tested: YES
+    e2e_tested: YES
+    overall: PASS
+    confidence: HIGH
+
+  AC2_context_aware:
+    status: IMPLEMENTED
+    backend_tested: YES
+    component_tested: YES
+    e2e_tested: YES
+    overall: PASS
+    confidence: HIGH
+
+  AC3_accuracy_95:
+    status: IMPLEMENTED
+    backend_tested: YES
+    component_tested: YES
+    e2e_tested: PARTIAL
+    overall: PARTIAL
+    confidence: MEDIUM
+    notes: "Backend accuracy ≥95% validated, E2E validation blocked by BUG-002"
+
+  AC4_confidence_scores:
+    status: IMPLEMENTED
+    backend_tested: YES
+    component_tested: YES
+    e2e_tested: PARTIAL
+    overall: PARTIAL
+    confidence: MEDIUM
+    notes: "High confidence scenarios work (AC1, AC2 pass), low confidence blocked by BUG-002"
+
+  AC5_manual_override:
+    status: IMPLEMENTED
+    backend_tested: YES
+    component_tested: YES
+    e2e_tested: FLAKY
+    overall: PARTIAL
+    confidence: MEDIUM
+    notes: "UI component works, E2E workflow flaky due to BUG-002"
+
+  AC6_image_reference:
+    status: IMPLEMENTED
+    backend_tested: YES
+    component_tested: YES
+    e2e_tested: YES
+    overall: PASS
+    confidence: HIGH
+
+  AC7_router_prompt:
+    status: IMPLEMENTED
+    backend_tested: YES
+    component_tested: YES
+    e2e_tested: YES
+    overall: PASS
+    confidence: HIGH
+
+issues:
+  critical: []
+
+  high_priority:
+    - id: BUG-002
+      title: "Router Confidence Too High for Ambiguous Prompts"
+      severity: HIGH
+      blocking: YES
+      location: "teacher-assistant/backend/src/agents/routerAgent.ts"
+      description: "Ambiguous prompts classified with confidence ≥0.9 instead of <0.7"
+      impact: "Manual override UI not triggered, AC3, AC5 tests failing/flaky"
+      baseline_status: PRESENT
+      current_status: STILL_PRESENT
+      recommendation: "Tune confidence scoring algorithm for ambiguous prompts"
+      estimated_effort: "2-3 hours"
+
+  medium_priority:
+    - id: BUG-003
+      title: "Performance Below Target"
+      severity: MEDIUM
+      blocking: NO
+      location: "Classification workflow"
+      description: "Classification slower than 500ms target"
+      impact: "Performance test failing, user experience degraded"
+      baseline_status: PRESENT
+      current_status: STILL_PRESENT
+      recommendation: "Add caching, optimize OpenAI API calls, consider async processing"
+      estimated_effort: "3-4 hours"
+
+    - id: BUG-004
+      title: "Console Errors During Execution"
+      severity: MEDIUM
+      blocking: NO
+      location: "InstantDB queries"
+      description: "5 console errors detected during E2E test execution (was 4 on 2025-10-25)"
+      impact: "Error handling not working correctly, noisy logs"
+      baseline_status: PRESENT
+      current_status: WORSENED
+      baseline_count: 4
+      current_count: 5
+      recommendation: "Add defensive programming, error boundaries, improved logging"
+      estimated_effort: "2 hours"
+
+  low_priority: []
+
+  resolved_or_unclear:
+    - id: BUG-001
+      title: "Chat Session Creation Errors"
+      severity: HIGH
+      location: "teacher-assistant/frontend/src/hooks/useChat.ts:173"
+      description: "InstantDB undefined property access causing session creation failures"
+      baseline_status: BLOCKING
+      current_status: APPEARS_RESOLVED_OR_NOT_BLOCKING
+      evidence: "E2E tests successfully navigating, filling input, submitting messages without session errors"
+      confidence: MEDIUM
+      notes: "Tests passing but no documented code fix. May have been transient or environment-specific."
+      recommendation: "Monitor in future test runs"
+
+strengths:
+  - "All 7 acceptance criteria implemented and functional"
+  - "Backend test coverage excellent (48/48 passing, 100%)"
+  - "Frontend component test coverage excellent (15/15 passing, 100%)"
+  - "Clean builds with 0 TypeScript errors"
+  - "Classification accuracy ≥95% validated on 120-prompt dataset"
+  - "E2E test infrastructure working correctly"
+  - "E2E pass rate improved +11% since last review (44% → 55%)"
+  - "RouterOverride UI component well-designed and tested"
+  - "Code quality excellent (architecture, type safety, maintainability)"
+  - "Proper error handling in backend"
+  - "German language support comprehensive"
+
+weaknesses:
+  - "E2E tests 55% passing (improved but still below 80% target)"
+  - "Router confidence tuning needed for ambiguous prompts (BUG-002)"
+  - "Performance slower than target (BUG-003)"
+  - "Console errors increased (4 → 5, BUG-004 worsened)"
+  - "Manual override workflow not fully validated in E2E (AC3, AC5)"
+
+recommendations:
+  immediate:
+    - priority: HIGH
+      action: "Fix BUG-002: Tune router confidence scoring for ambiguous prompts"
+      effort: "2-3 hours"
+      impact: "Validates manual override UX (AC3-AC5), increases E2E pass rate to ~77%"
+      expected_outcome: "AC3 and AC5 tests pass, E2E pass rate 7/9 (77%)"
+
+    - priority: MEDIUM
+      action: "Fix BUG-003: Optimize classification performance to <500ms"
+      effort: "3-4 hours"
+      impact: "Meets performance requirements, E2E pass rate increases to ~88%"
+      expected_outcome: "Performance test passes, E2E pass rate 8/9 (88%)"
+
+    - priority: MEDIUM
+      action: "Fix BUG-004: Eliminate console errors with defensive programming"
+      effort: "2 hours"
+      impact: "Improves reliability, error handling, E2E pass rate 100%"
+      expected_outcome: "Console error test passes, E2E pass rate 9/9 (100%)"
+
+    - priority: LOW
+      action: "Investigate BUG-001 resolution"
+      effort: "30 minutes"
+      impact: "Understand if fix was applied or issue was transient"
+      expected_outcome: "Document resolution or confirm transient issue"
+
+  future:
+    - priority: LOW
+      action: "Machine learning enhancement (train on user corrections)"
+      effort: "8-16 hours"
+      impact: "Improves classification accuracy over time"
+
+    - priority: LOW
+      action: "Multi-language support (English, French, Spanish)"
+      effort: "4-6 hours"
+      impact: "Expands user base"
+
+    - priority: LOW
+      action: "Context from conversation history"
+      effort: "6-8 hours"
+      impact: "Better intent detection"
+
+deployment:
+  production_ready: NO
+  blockers:
+    - "BUG-002: Router confidence tuning (HIGH priority)"
+    - "BUG-003: Performance optimization (MEDIUM priority)"
+    - "BUG-004: Console errors (MEDIUM priority)"
+
+  estimated_fix_time: "7-9 hours" # 2-3 + 3-4 + 2 hours
+  estimated_improvement:
+    after_bug_002_fix: "E2E pass rate 77% (7/9)"
+    after_bug_003_fix: "E2E pass rate 88% (8/9)"
+    after_bug_004_fix: "E2E pass rate 100% (9/9)"
+
+  next_actions:
+    - "Fix HIGH priority BUG-002 (router confidence tuning)"
+    - "Re-run E2E tests to validate fix (expect 77% pass rate)"
+    - "Fix MEDIUM priority BUG-003 (performance optimization)"
+    - "Re-run E2E tests (expect 88% pass rate)"
+    - "Fix MEDIUM priority BUG-004 (console errors)"
+    - "Re-run E2E tests (expect 100% pass rate)"
+    - "Re-submit for QA review with updated metrics"
+
+test_evidence:
+  backend_tests: "teacher-assistant/backend/src/agents/__tests__/routerAgent.test.ts (48/48 passing)"
+  frontend_tests: "teacher-assistant/frontend/src/components/RouterOverride.test.tsx (15/15 passing)"
+  e2e_tests: "teacher-assistant/frontend/e2e-tests/router-classification.spec.ts (5/9 passing, 1 flaky)"
+  screenshots: "docs/testing/screenshots/2025-10-26/*.png"
+  build_output: "0 TypeScript errors (both frontend and backend)"
+  console_errors: "5 errors detected (InstantDB-related)"
+
+conclusion: |
+  Story 3.1.3 implementation remains COMPLETE and FUNCTIONAL with excellent code quality.
+  E2E pass rate improved from 44% (2025-10-25) to 55% (2025-10-26), showing progress.
+
+  However, three application bugs continue to prevent full E2E validation:
+  - BUG-002 (Router Confidence): STILL BLOCKING manual override tests (AC3, AC5)
+  - BUG-003 (Performance): STILL PRESENT, classification slower than 500ms target
+  - BUG-004 (Console Errors): WORSENED from 4 to 5 errors
+
+  BUG-001 (Chat Session Creation) appears resolved or non-blocking, as tests now pass
+  without session errors. This should be investigated to confirm resolution.
+
+  These issues are NON-BLOCKING for Story 3.1.3 completion but REQUIRE FIXES before
+  production deployment.
+
+  ESTIMATED TIME TO 100% E2E PASS RATE: 7-9 hours
+  - BUG-002 fix: +22% (55% → 77%)
+  - BUG-003 fix: +11% (77% → 88%)
+  - BUG-004 fix: +12% (88% → 100%)
+
+  RECOMMENDATION: Fix bugs in sequence (BUG-002 → BUG-003 → BUG-004), re-testing
+  after each fix to validate improvement. Story 3.1.4 can start in parallel.
+
+signature:
+  reviewer: "QA Agent (Quinn)"
+  role: "BMad Test Architect"
+  date: "2025-10-26"
+  next_review: "After BUG-002, BUG-003, BUG-004 fixes applied"
+  comparison_baseline: "2025-10-25 review"

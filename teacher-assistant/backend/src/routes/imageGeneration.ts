@@ -1,10 +1,9 @@
 import { Router, Request, Response } from 'express';
-import OpenAI from 'openai';
-import { getInstantDB, isInstantDBAvailable } from '../services/instantdbService';
+import { openaiClient as openai } from '../config/openai'; // Use shared client with 90s timeout
+import { isInstantDBAvailable } from '../services/instantdbService';
 import { logInfo, logError } from '../config/logger';
 
 const router = Router();
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 /**
  * GET /api/langgraph/agents/available
@@ -21,16 +20,16 @@ router.get('/agents/available', async (req: Request, res: Response) => {
             name: 'Bild-Generierung',
             description: 'Erstellt hochwertige Bilder für den Unterricht',
             type: 'image-generation',
-            available: true
-          }
-        ]
-      }
+            available: true,
+          },
+        ],
+      },
     });
   } catch (error: any) {
     logError('[ImageGen] Error fetching available agents', error);
     return res.status(500).json({
       success: false,
-      error: error.message || 'Failed to fetch available agents'
+      error: error.message || 'Failed to fetch available agents',
     });
   }
 });
@@ -40,24 +39,71 @@ router.get('/agents/available', async (req: Request, res: Response) => {
  * POST /api/agents/execute
  */
 router.post('/agents/execute', async (req: Request, res: Response) => {
-  try {
-    const { agentType, parameters, sessionId } = req.body;
+  // 🔍 DIAGNOSTIC LOGGING (BUG-027)
+  console.log('[ImageGen] 🎯 ROUTE HIT - /agents/execute', {
+    timestamp: new Date().toISOString(),
+    method: req.method,
+    url: req.url,
+    path: req.path,
+    baseUrl: req.baseUrl,
+    originalUrl: req.originalUrl,
+    hasBody: !!req.body,
+    bodyKeys: req.body ? Object.keys(req.body) : [],
+    contentType: req.get('Content-Type'),
+    headers: {
+      origin: req.get('Origin'),
+      referer: req.get('Referer'),
+    },
+  });
 
-    logInfo('[ImageGen] Request received', { agentType, parameters, sessionId });
+  try {
+    // BUG-027 FIX: Support BOTH API contracts
+    // Legacy format: { agentType, parameters }
+    // New format: { agentId, input }
+    const {
+      agentType: legacyAgentType,
+      agentId: newAgentId,
+      parameters: legacyParameters,
+      input: newInput,
+      sessionId,
+      userId,
+    } = req.body;
+
+    // Accept either agentType (legacy) or agentId (new)
+    const agentType = legacyAgentType || newAgentId;
+
+    // Accept either parameters (legacy) or input (new)
+    const inputData = legacyParameters || newInput;
+
+    logInfo('[ImageGen] Request received', {
+      agentType,
+      inputData,
+      sessionId,
+      userId,
+    });
 
     if (agentType !== 'image-generation') {
       return res.status(400).json({
         success: false,
-        error: 'Only image-generation agent is supported'
+        error: 'Only image-generation agent is supported',
       });
     }
 
-    const { theme, style = 'realistic', educationalLevel } = parameters || {};
+    // Map new format fields to legacy fields
+    // New format: { description, imageStyle, learningGroup }
+    // Legacy format: { theme, style, educationalLevel }
+    const theme = (inputData as any)?.description || (inputData as any)?.theme;
+    const style =
+      (inputData as any)?.imageStyle ||
+      (inputData as any)?.style ||
+      'realistic';
+    const educationalLevel =
+      (inputData as any)?.learningGroup || (inputData as any)?.educationalLevel;
 
     if (!theme) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required parameter: theme'
+        error: 'Missing required parameter: theme',
       });
     }
 
@@ -91,7 +137,41 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
       imageUrl = url;
       revisedPrompt = response.data[0]?.revised_prompt;
 
-      logInfo('[ImageGen] Image generated successfully', { imageUrl });
+      logInfo('[ImageGen] Image generated successfully (temporary URL)', {
+        imageUrl: imageUrl.substring(0, 60) + '...',
+      });
+
+      // Upload to permanent storage with public read permissions
+      // Schema configured with: $files.view = "true" (public read), $files.create = "auth.id != null" (authenticated write)
+      try {
+        const { InstantDBService } = await import(
+          '../services/instantdbService'
+        );
+        const filename = `image-${crypto.randomUUID()}.png`;
+
+        logInfo('[ImageGen] Uploading to permanent storage...', { filename });
+        const permanentUrl =
+          await InstantDBService.FileStorage.uploadImageFromUrl(
+            imageUrl,
+            filename
+          );
+        imageUrl = permanentUrl; // Replace temporary URL with permanent URL
+
+        logInfo('[ImageGen] ✅ Image uploaded to permanent storage', {
+          filename,
+          permanentUrl: permanentUrl.substring(0, 60) + '...',
+          expiryNote: 'Permanent (no expiry)',
+        });
+      } catch (uploadError) {
+        logError(
+          '[ImageGen] ⚠️  Failed to upload to permanent storage, using temporary URL',
+          uploadError as Error
+        );
+        logInfo(
+          '[ImageGen] Fallback: Using temporary DALL-E URL (expires in 2 hours)'
+        );
+        // Continue with temporary URL as fallback
+      }
     } catch (dalleError: any) {
       logError('[ImageGen] DALL-E error', dalleError);
       throw new Error(`DALL-E generation failed: ${dalleError.message}`);
@@ -104,56 +184,150 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
 
     if (isInstantDBAvailable()) {
       try {
+        // BUG-024 FIX: Use crypto.randomUUID() for ID generation (matches langGraphImageGenerationAgent.ts:701)
+        const { getInstantDB } = await import('../services/instantdbService');
         const db = getInstantDB();
 
         // 1. Save to library_materials
-        const libId = db.id();
+        const libId = crypto.randomUUID();
         libraryMaterialId = libId;
+        const now = Date.now();
 
+        // US4 FIX: Extract originalParams for metadata (same as messages line 204-209)
+        const originalParams = {
+          description: theme || '',
+          imageStyle: style || 'realistic',
+          learningGroup: educationalLevel || '',
+          subject: '',
+        };
+
+        // US4 FIX: Validate and stringify metadata before saving
+        const { validateAndStringifyMetadata } = await import(
+          '../utils/metadataValidator'
+        );
+        const libraryMetadataObject = {
+          type: 'image' as const,
+          image_url: imageUrl,
+          title: theme || 'Generiertes Bild',
+          originalParams: originalParams,
+        };
+
+        const validatedLibraryMetadata = validateAndStringifyMetadata(
+          libraryMetadataObject
+        );
+
+        if (!validatedLibraryMetadata) {
+          logError(
+            '[ImageGen] Library metadata validation failed - saving without metadata',
+            new Error('Metadata validation failed'),
+            { libraryMetadataObject }
+          );
+        } else {
+          logInfo('[ImageGen] Library metadata validation successful', {
+            libraryId: libId,
+            metadataSize: validatedLibraryMetadata.length,
+          });
+        }
+
+        // BUG-029 FIX: Save to library_materials (not artifacts)
         await db.transact([
           db.tx.library_materials[libId].update({
             title: theme || 'Generiertes Bild',
             type: 'image',
-            url: imageUrl,
-            description: revisedPrompt || enhancedPrompt,
-            created_at: Date.now(),
-            metadata: JSON.stringify({
-              dalle_title: theme,
-              revised_prompt: revisedPrompt,
-              enhanced_prompt: enhancedPrompt,
-              model: 'dall-e-3',
-              size: '1024x1024',
-              quality: 'standard',
-              style: style || 'realistic',
-              educationalLevel: educationalLevel,
-            })
-          })
+            content: imageUrl,
+            description: revisedPrompt || theme || '',
+            tags: JSON.stringify([]),
+            created_at: now,
+            updated_at: now,
+            is_favorite: false,
+            usage_count: 0,
+            user_id: userId,
+            source_session_id: sessionId || null,
+            metadata: validatedLibraryMetadata, // US4 FIX: Add metadata field
+          }),
         ]);
 
-        logInfo('[ImageGen] Saved to library_materials', { libraryMaterialId });
+        logInfo('[ImageGen] Saved to library_materials', {
+          libraryMaterialId: libId,
+          metadataValidated: !!validatedLibraryMetadata,
+        });
 
-        // 2. Save to messages (if sessionId provided)
+        // 2. Log usage and cost events (Story 3.1.5)
+        try {
+          const usageId = db.id ? db.id() : crypto.randomUUID();
+          const costId = db.id ? db.id() : crypto.randomUUID();
+          await db.transact([
+            db.tx.image_usage?.[usageId]?.update
+              ? db.tx.image_usage[usageId].update({
+                  user_id: userId,
+                  image_id: libId,
+                  type: 'create',
+                  service: 'dalle',
+                  created_at: now,
+                })
+              : db.tx.library_materials[libId].update({}),
+            db.tx.api_costs?.[costId]?.update
+              ? db.tx.api_costs[costId].update({
+                  timestamp: now,
+                  user_id: userId,
+                  service: 'dalle',
+                  operation: 'image_create',
+                  cost: 0.04,
+                  metadata: JSON.stringify({ model: 'dall-e-3', size: '1024x1024' }),
+                })
+              : db.tx.library_materials[libId].update({}),
+          ]);
+        } catch (e) {
+          // Non-fatal if analytics collections are missing
+        }
+
+        // 3. Save to messages (if sessionId provided)
         if (sessionId) {
-          const msgId = db.id();
+          // BUG-025 FIX: Validate required fields for InstantDB relationships
+          if (!userId) {
+            throw new Error(
+              'Missing userId - required for message author relationship'
+            );
+          }
+
+          const msgId = crypto.randomUUID();
           messageId = msgId;
 
+          // BUG-023 FIX: Extract originalParams for re-generation (matches langGraphAgents.ts:375-382)
+          const originalParams = {
+            description: theme || '',
+            imageStyle: style || 'realistic',
+            learningGroup: educationalLevel || '',
+            subject: '',
+          };
+
+          // BUG-025 FIX: Add required relationship fields (session, author)
           await db.transact([
             db.tx.messages[msgId].update({
               content: `Bild generiert: ${theme}`,
               role: 'assistant',
-              chat_session_id: sessionId,
-              created_at: Date.now(),
+              timestamp: now,
+              message_index: 0,
+              is_edited: false, // BUG-025: Required field
               metadata: JSON.stringify({
                 type: 'image',
                 image_url: imageUrl,
                 library_id: libraryMaterialId,
                 revised_prompt: revisedPrompt,
                 dalle_title: theme,
-              })
-            })
+                title: theme,
+                originalParams: originalParams, // BUG-023: Added for re-generation
+              }),
+              session: sessionId, // BUG-025: Link to chat_sessions (use 'session' not 'session_id')
+              author: userId, // BUG-025: Link to users (use 'author' not 'user_id')
+            }),
           ]);
 
-          logInfo('[ImageGen] Saved to messages', { messageId, sessionId });
+          logInfo('[ImageGen] Saved to messages', {
+            messageId,
+            sessionId,
+            userId,
+          });
         }
       } catch (dbError: any) {
         logError('[ImageGen] InstantDB storage error', dbError);
@@ -183,8 +357,8 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
           model: 'dall-e-3',
           size: '1024x1024',
           quality: 'standard',
-        }
-      }
+        },
+      },
     };
 
     // If storage failed, return 207 Multi-Status
@@ -192,21 +366,19 @@ router.post('/agents/execute', async (req: Request, res: Response) => {
       return res.status(207).json({
         ...responseData,
         warning: 'Image generated but storage failed',
-        storageError: storageError.message
+        storageError: storageError.message,
       });
     }
 
     return res.json(responseData);
-
   } catch (error: any) {
     logError('[ImageGen] Error', error);
     return res.status(500).json({
       success: false,
       error: error.message || 'Image generation failed',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });
 
 export default router;
-

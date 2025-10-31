@@ -19,9 +19,13 @@ export const teacherAssistantSchema = i.schema({
       name: i.string(),
       role: i.string(), // 'teacher', 'admin', 'student'
       school: i.string().optional(),
+      german_state: i.string().optional(), // German state/Bundesland
       grade_levels: i.string().optional(), // JSON array of grade levels taught
       subjects: i.string().optional(), // JSON array of subjects taught
+      teaching_preferences: i.string().optional(), // JSON array of teaching preferences
       preferences: i.string().optional(), // JSON object for UI preferences
+      onboarding_completed: i.boolean().optional(), // Onboarding completion flag
+      onboarding_completed_at: i.number().optional(), // Onboarding completion timestamp
       created_at: i.number(),
       last_active: i.number(),
       is_active: i.boolean(),
@@ -57,6 +61,8 @@ export const teacherAssistantSchema = i.schema({
       title: i.string(),
       type: i.string(), // 'lesson_plan', 'quiz', 'worksheet', 'template', 'resource', 'image'
       content: i.string(), // Markdown or structured content
+      artifact_data: i.string().optional(), // Additional data for artifacts (JSON stringified)
+      metadata: i.string().optional(), // Metadata for artifacts (JSON stringified)
       grade_level: i.string().optional(),
       subject: i.string().optional(),
       created_at: i.number(),
@@ -85,6 +91,49 @@ export const teacherAssistantSchema = i.schema({
       feedback_type: i.string(), // 'chat_response', 'artifact', 'general'
       created_at: i.number(),
     }),
+
+    // BUG-025 FIX: Library materials for storing generated images and resources
+    library_materials: i.entity({
+      user_id: i.string().indexed(),
+      title: i.string(),
+      type: i.string(), // 'image', 'document', 'resource'
+      content: i.string(), // URL or content
+      description: i.string().optional(),
+      tags: i.string().optional(), // JSON array of tags
+      created_at: i.number(),
+      updated_at: i.number(),
+      is_favorite: i.boolean(),
+      usage_count: i.number(),
+      source_session_id: i.string().optional(),
+      metadata: i.string().optional(), // BUG-019 FIX: JSON string for image generation parameters
+    }),
+
+    // User usage tracking for agent executions
+    user_usage: i.entity({
+      user_id: i.string().indexed(),
+      agent_id: i.string().indexed(),
+      month: i.string().indexed(), // Format: "YYYY-MM"
+      usage_count: i.number(),
+      total_cost: i.number(), // USD cents
+      last_used: i.number(),
+      created_at: i.number(),
+      updated_at: i.number(),
+    }),
+
+    // Agent execution tracking and history
+    agent_executions: i.entity({
+      agent_id: i.string().indexed(),
+      user_id: i.string().indexed(),
+      status: i.string(), // 'pending' | 'in_progress' | 'completed' | 'failed'
+      input_params: i.string(), // JSON stringified
+      output_data: i.string().optional(), // JSON stringified
+      error_message: i.string().optional(),
+      started_at: i.number(),
+      completed_at: i.number().optional(),
+      updated_at: i.number(),
+      processing_time: i.number().optional(),
+      cost: i.number().optional(), // USD cents
+    }),
   },
 
   links: {
@@ -93,13 +142,13 @@ export const teacherAssistantSchema = i.schema({
       forward: {
         on: 'chat_sessions',
         has: 'one',
-        label: 'owner'
+        label: 'owner',
       },
       reverse: {
         on: 'users',
         has: 'many',
-        label: 'chat_sessions'
-      }
+        label: 'chat_sessions',
+      },
     },
 
     // Session -> Messages (one session contains many messages)
@@ -107,13 +156,13 @@ export const teacherAssistantSchema = i.schema({
       forward: {
         on: 'messages',
         has: 'one',
-        label: 'session'
+        label: 'session',
       },
       reverse: {
         on: 'chat_sessions',
         has: 'many',
-        label: 'messages'
-      }
+        label: 'messages',
+      },
     },
 
     // User -> Messages (track message authorship for analytics)
@@ -121,13 +170,13 @@ export const teacherAssistantSchema = i.schema({
       forward: {
         on: 'messages',
         has: 'one',
-        label: 'author'
+        label: 'author',
       },
       reverse: {
         on: 'users',
         has: 'many',
-        label: 'authored_messages'
-      }
+        label: 'authored_messages',
+      },
     },
 
     // Session -> Artifacts (artifacts generated from specific sessions)
@@ -135,13 +184,13 @@ export const teacherAssistantSchema = i.schema({
       forward: {
         on: 'artifacts',
         has: 'one',
-        label: 'source_session'
+        label: 'source_session',
       },
       reverse: {
         on: 'chat_sessions',
         has: 'many',
-        label: 'generated_artifacts'
-      }
+        label: 'generated_artifacts',
+      },
     },
 
     // User -> Artifacts (user ownership of generated content)
@@ -149,13 +198,13 @@ export const teacherAssistantSchema = i.schema({
       forward: {
         on: 'artifacts',
         has: 'one',
-        label: 'creator'
+        label: 'creator',
       },
       reverse: {
         on: 'users',
         has: 'many',
-        label: 'created_artifacts'
-      }
+        label: 'created_artifacts',
+      },
     },
 
     // User -> Templates (user-created templates)
@@ -163,13 +212,13 @@ export const teacherAssistantSchema = i.schema({
       forward: {
         on: 'templates',
         has: 'one',
-        label: 'creator'
+        label: 'creator',
       },
       reverse: {
         on: 'users',
         has: 'many',
-        label: 'created_templates'
-      }
+        label: 'created_templates',
+      },
     },
 
     // User -> Feedback (feedback provided by users)
@@ -177,13 +226,13 @@ export const teacherAssistantSchema = i.schema({
       forward: {
         on: 'feedback',
         has: 'one',
-        label: 'user'
+        label: 'user',
       },
       reverse: {
         on: 'users',
         has: 'many',
-        label: 'feedback_provided'
-      }
+        label: 'feedback_provided',
+      },
     },
 
     // Message -> Feedback (feedback on specific messages/responses)
@@ -191,13 +240,13 @@ export const teacherAssistantSchema = i.schema({
       forward: {
         on: 'feedback',
         has: 'one',
-        label: 'message'
+        label: 'message',
       },
       reverse: {
         on: 'messages',
         has: 'many',
-        label: 'feedback_received'
-      }
+        label: 'feedback_received',
+      },
     },
 
     // Artifact -> Feedback (feedback on generated educational content)
@@ -205,15 +254,43 @@ export const teacherAssistantSchema = i.schema({
       forward: {
         on: 'feedback',
         has: 'one',
-        label: 'artifact'
+        label: 'artifact',
       },
       reverse: {
         on: 'artifacts',
         has: 'many',
-        label: 'feedback_received'
-      }
+        label: 'feedback_received',
+      },
     },
-  }
+
+    // User -> UserUsage (track user usage of agents)
+    userUsageUser: {
+      forward: {
+        on: 'user_usage',
+        has: 'one',
+        label: 'user',
+      },
+      reverse: {
+        on: 'users',
+        has: 'many',
+        label: 'usage_records',
+      },
+    },
+
+    // User -> AgentExecutions (track user's agent executions)
+    userAgentExecutions: {
+      forward: {
+        on: 'agent_executions',
+        has: 'one',
+        label: 'user',
+      },
+      reverse: {
+        on: 'users',
+        has: 'many',
+        label: 'agent_executions',
+      },
+    },
+  },
 });
 
 /**
@@ -227,52 +304,53 @@ export const teacherAssistantSchema = i.schema({
 export const teacherAssistantPermissions = {
   users: {
     allow: {
-      view: "auth.id == data.id",
-      create: "auth.id == data.id",
-      update: "auth.id == data.id",
-      delete: "auth.id == data.id"
-    }
+      view: 'auth.id == data.id',
+      create: 'auth.id == data.id',
+      update: 'auth.id == data.id',
+      delete: 'auth.id == data.id',
+    },
   },
   chat_sessions: {
     allow: {
       view: "auth.id == data.ref('owner.id')",
       create: "auth.id == data.ref('owner.id')",
       update: "auth.id == data.ref('owner.id')",
-      delete: "auth.id == data.ref('owner.id')"
-    }
+      delete: "auth.id == data.ref('owner.id')",
+    },
   },
   messages: {
     allow: {
       view: "auth.id == data.ref('session.owner.id')",
-      create: "auth.id == data.ref('session.owner.id') && size(data.ref('author.authored_messages.id')) <= 10000", // Rate limiting
+      create:
+        "auth.id == data.ref('session.owner.id') && size(data.ref('author.authored_messages.id')) <= 10000", // Rate limiting
       update: "auth.id == data.ref('author.id') && data.role == 'user'", // Only users can edit their own messages
-      delete: "auth.id == data.ref('author.id')"
-    }
+      delete: "auth.id == data.ref('author.id')",
+    },
   },
   artifacts: {
     allow: {
       view: "auth.id == data.ref('creator.id')",
       create: "auth.id == data.ref('creator.id')",
       update: "auth.id == data.ref('creator.id')",
-      delete: "auth.id == data.ref('creator.id')"
-    }
+      delete: "auth.id == data.ref('creator.id')",
+    },
   },
   templates: {
     allow: {
       view: "data.is_public == true || auth.id == data.ref('creator.id')",
       create: "auth.id == data.ref('creator.id')",
       update: "auth.id == data.ref('creator.id')",
-      delete: "auth.id == data.ref('creator.id')"
-    }
+      delete: "auth.id == data.ref('creator.id')",
+    },
   },
   feedback: {
     allow: {
       view: "auth.id == data.ref('user.id')",
       create: "auth.id == data.ref('user.id')",
       update: "auth.id == data.ref('user.id')",
-      delete: "auth.id == data.ref('user.id')"
-    }
-  }
+      delete: "auth.id == data.ref('user.id')",
+    },
+  },
 };
 
 /**
@@ -286,9 +364,13 @@ export type User = {
   name: string;
   role: 'teacher' | 'admin' | 'student';
   school?: string;
+  german_state?: string; // German state/Bundesland
   grade_levels?: string[]; // Parsed from JSON
   subjects?: string[]; // Parsed from JSON
+  teaching_preferences?: string[]; // Parsed from JSON
   preferences?: Record<string, any>; // Parsed from JSON
+  onboarding_completed?: boolean; // Onboarding completion flag
+  onboarding_completed_at?: number; // Onboarding completion timestamp
   created_at: number;
   last_active: number;
   is_active: boolean;
@@ -327,8 +409,16 @@ export type Message = {
 export type Artifact = {
   id: string;
   title: string;
-  type: 'lesson_plan' | 'quiz' | 'worksheet' | 'template' | 'resource' | 'image';
+  type:
+    | 'lesson_plan'
+    | 'quiz'
+    | 'worksheet'
+    | 'template'
+    | 'resource'
+    | 'image';
   content: string;
+  artifact_data?: string; // Additional data for artifacts (JSON stringified)
+  metadata?: string; // Metadata for artifacts (JSON stringified)
   grade_level?: string;
   subject?: string;
   created_at: number;
@@ -378,12 +468,47 @@ export type ProfileCharacteristic = {
   updated_at: number;
 };
 
+// Agent-related types
+export type UserUsage = {
+  id: string;
+  user_id: string;
+  agent_id: string;
+  month: string; // Format: "YYYY-MM"
+  usage_count: number;
+  total_cost: number; // USD cents
+  last_used: number;
+  created_at: number;
+  updated_at: number;
+  user?: User;
+  agent?: any;
+};
+
+export type AgentExecution = {
+  id: string;
+  agent_id: string;
+  user_id: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  input_params: string; // JSON stringified
+  output_data?: string; // JSON stringified
+  error_message?: string;
+  started_at: number;
+  completed_at?: number;
+  updated_at: number;
+  processing_time?: number;
+  cost?: number; // USD cents
+  user?: User;
+};
+
 /**
  * Helper functions for common InstantDB operations
  */
 export const dbHelpers = {
   // Create a new chat session
-  createChatSession: (userId: string, title?: string, sessionType: string = 'general') => ({
+  createChatSession: (
+    userId: string,
+    title?: string,
+    sessionType: string = 'general'
+  ) => ({
     title: title || 'New Chat',
     created_at: Date.now(),
     updated_at: Date.now(),
@@ -393,7 +518,13 @@ export const dbHelpers = {
   }),
 
   // Create a new message in a session
-  createMessage: (sessionId: string, userId: string, content: string, role: 'user' | 'assistant' = 'user', messageIndex: number) => ({
+  createMessage: (
+    sessionId: string,
+    userId: string,
+    content: string,
+    role: 'user' | 'assistant' = 'user',
+    messageIndex: number
+  ) => ({
     content,
     role,
     timestamp: Date.now(),
@@ -404,7 +535,13 @@ export const dbHelpers = {
   }),
 
   // Create an artifact from a chat session
-  createArtifact: (sessionId: string, userId: string, title: string, type: string, content: string) => ({
+  createArtifact: (
+    sessionId: string,
+    userId: string,
+    title: string,
+    type: string,
+    content: string
+  ) => ({
     title,
     type,
     content,
@@ -420,6 +557,47 @@ export const dbHelpers = {
   updateSessionTimestamp: (sessionId: string) => ({
     updated_at: Date.now(),
   }),
+};
+
+// Additional types for context and data management
+export type ManualContext = {
+  id: string;
+  user_id: string;
+  role: string;
+  school?: string;
+  bundesland?: string;
+  schulform?: string;
+  teaching_subjects?: string[];
+  student_count?: number;
+  classes_info?: string;
+  has_created_material?: boolean;
+  tech_comfort_level?: string;
+  primary_use_cases?: string[];
+  biggest_challenges?: string[];
+  additional_info?: string;
+  timestamp: number;
+  active: boolean;
+};
+
+export type GermanState = {
+  id: string;
+  name: string;
+  abbreviation: string;
+  category?: string;
+};
+
+export type TeachingSubject = {
+  id: string;
+  name: string;
+  category: string;
+  level?: string;
+  grade_levels?: string[]; // Array of grade levels (parsed from JSON)
+};
+
+export type TeachingPreference = {
+  id: string;
+  preference: string;
+  category: string;
 };
 
 export default teacherAssistantSchema;

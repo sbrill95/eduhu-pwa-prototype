@@ -55,9 +55,8 @@ export class TeacherProfileService {
       }
 
       // Create the extraction prompt
-      const extractionPrompt = TeacherProfileService.createExtractionPrompt(
-        conversationMessages
-      );
+      const extractionPrompt =
+        TeacherProfileService.createExtractionPrompt(conversationMessages);
 
       // Prepare OpenAI request
       const openaiRequest: OpenAI.Chat.ChatCompletionCreateParams = {
@@ -83,7 +82,8 @@ export class TeacherProfileService {
       });
 
       // Call OpenAI API for knowledge extraction
-      const completion = await openaiClient.chat.completions.create(openaiRequest);
+      const completion =
+        await openaiClient.chat.completions.create(openaiRequest);
 
       // Validate OpenAI response
       if (!completion.choices || completion.choices.length === 0) {
@@ -109,12 +109,12 @@ export class TeacherProfileService {
 
       try {
         const parsedResponse = JSON.parse(choice.message.content);
-        extractedKnowledge = TeacherProfileService.validateAndNormalizeKnowledge(
-          parsedResponse
-        );
+        extractedKnowledge =
+          TeacherProfileService.validateAndNormalizeKnowledge(parsedResponse);
 
         // Calculate confidence based on amount of extracted data
-        confidence = TeacherProfileService.calculateConfidence(extractedKnowledge);
+        confidence =
+          TeacherProfileService.calculateConfidence(extractedKnowledge);
 
         logInfo('Successfully extracted teacher knowledge', {
           subjects: extractedKnowledge.subjects.length,
@@ -148,7 +148,9 @@ export class TeacherProfileService {
 
       return response;
     } catch (error) {
-      logError('Knowledge extraction error occurred', error as Error, { request });
+      logError('Knowledge extraction error occurred', error as Error, {
+        request,
+      });
       return TeacherProfileService.handleExtractionError(error);
     }
   }
@@ -196,7 +198,10 @@ Antworte AUSSCHLIESSLICH im JSON-Format:
 Wenn in einem Bereich keine Informationen gefunden werden, verwende ein leeres Array [] oder null für schoolType.`;
 
     const conversationText = messages
-      .map((msg, index) => `${index + 1}. ${msg.role.toUpperCase()}: ${msg.content}`)
+      .map(
+        (msg, index) =>
+          `${index + 1}. ${msg.role.toUpperCase()}: ${msg.content}`
+      )
       .join('\n\n');
 
     const userPrompt = `Analysiere die folgende Lehrkraft-Unterhaltung und extrahiere die relevanten Profildaten:
@@ -238,7 +243,10 @@ Extrahiere die Informationen gemäß den definierten Bereichen und Regeln. Antwo
     }
 
     // Validate school type
-    if (typeof data.schoolType === 'string' && data.schoolType.trim().length > 0) {
+    if (
+      typeof data.schoolType === 'string' &&
+      data.schoolType.trim().length > 0
+    ) {
       knowledge.schoolType = data.schoolType.trim();
     }
 
@@ -419,10 +427,14 @@ Extrahiere die Informationen gemäß den definierten Bereichen und Regeln. Antwo
         ],
       };
 
-      const response = await TeacherProfileService.extractKnowledge(testRequest);
+      const response =
+        await TeacherProfileService.extractKnowledge(testRequest);
       return response.success;
     } catch (error) {
-      logError('Teacher profile extraction service test failed', error as Error);
+      logError(
+        'Teacher profile extraction service test failed',
+        error as Error
+      );
       return false;
     }
   }

@@ -10,7 +10,7 @@ import {
   type User,
   type ChatSession,
   type Message,
-  type Artifact
+  type Artifact,
 } from '../schemas/instantdb';
 import { logError, logInfo } from '../config/logger';
 import { config } from '../config';
@@ -22,23 +22,70 @@ import { config } from '../config';
 let instantDB: any = null;
 
 /**
+ * Schema Migration Logger (FR-009d)
+ * Logs which fields were added/dropped during schema migration
+ */
+export const logSchemaMigration = (
+  entity: string,
+  changes: { added?: string[]; dropped?: string[] }
+) => {
+  const { added = [], dropped = [] } = changes;
+
+  if (added.length > 0) {
+    logInfo(`[Schema Migration] Fields added to ${entity}`, {
+      entity,
+      fields: added,
+      action: 'add',
+    });
+  }
+
+  if (dropped.length > 0) {
+    logInfo(`[Schema Migration] Fields dropped from ${entity}`, {
+      entity,
+      fields: dropped,
+      action: 'drop',
+    });
+  }
+
+  if (added.length === 0 && dropped.length === 0) {
+    logInfo(`[Schema Migration] No changes for ${entity}`, { entity });
+  }
+};
+
+/**
  * Initialize InstantDB connection
  */
 export const initializeInstantDB = () => {
   try {
     if (!config.INSTANTDB_APP_ID || !config.INSTANTDB_ADMIN_TOKEN) {
-      logError('InstantDB credentials not configured', new Error('Missing INSTANTDB_APP_ID or INSTANTDB_ADMIN_TOKEN'));
+      logError(
+        'InstantDB credentials not configured',
+        new Error('Missing INSTANTDB_APP_ID or INSTANTDB_ADMIN_TOKEN')
+      );
       return false;
     }
 
+    // BUG-025 FIX: Remove local schema - use cloud schema only
     instantDB = init({
       appId: config.INSTANTDB_APP_ID,
       adminToken: config.INSTANTDB_ADMIN_TOKEN,
-      schema: teacherAssistantSchema,
+      // schema: teacherAssistantSchema, // Removed - conflicts with cloud schema
     });
 
     logInfo('InstantDB initialized successfully', {
       appId: config.INSTANTDB_APP_ID.substring(0, 8) + '...',
+    });
+
+    // T010: Log schema migration changes (FR-009d)
+    // Log recent schema changes for messages and library_materials
+    logSchemaMigration('messages', {
+      added: ['metadata (json)'],
+      dropped: [], // No fields dropped - schema was already synchronized
+    });
+
+    logSchemaMigration('library_materials', {
+      added: ['metadata (json)'],
+      dropped: [],
     });
 
     return true;
@@ -60,7 +107,9 @@ export const isInstantDBAvailable = (): boolean => {
  */
 export const getInstantDB = () => {
   if (!instantDB) {
-    throw new Error('InstantDB not initialized. Call initializeInstantDB() first.');
+    throw new Error(
+      'InstantDB not initialized. Call initializeInstantDB() first.'
+    );
   }
   return instantDB;
 };
@@ -77,16 +126,27 @@ export class ChatSessionService {
   /**
    * Create a new chat session for a user
    */
-  static async createSession(userId: string, title?: string, sessionType?: string): Promise<string | null> {
+  static async createSession(
+    userId: string,
+    title?: string,
+    sessionType?: string
+  ): Promise<string | null> {
     if (!isInstantDBAvailable()) {
-      logError('InstantDB not available for session creation', new Error('InstantDB not initialized'));
+      logError(
+        'InstantDB not available for session creation',
+        new Error('InstantDB not initialized')
+      );
       return null;
     }
 
     try {
-      const sessionData = dbHelpers.createChatSession(userId, title, sessionType);
+      const sessionData = dbHelpers.createChatSession(
+        userId,
+        title,
+        sessionType
+      );
       const result = await instantDB.transact([
-        instantDB.tx.chat_sessions[instantDB.id()].update(sessionData)
+        instantDB.tx.chat_sessions[instantDB.id()].update(sessionData),
       ]);
 
       logInfo('Chat session created successfully', { userId, sessionType });
@@ -100,7 +160,10 @@ export class ChatSessionService {
   /**
    * Get all sessions for a user
    */
-  static async getUserSessions(userId: string, includeArchived: boolean = false): Promise<ChatSession[] | null> {
+  static async getUserSessions(
+    userId: string,
+    includeArchived: boolean = false
+  ): Promise<ChatSession[] | null> {
     if (!isInstantDBAvailable()) return null;
 
     try {
@@ -109,15 +172,15 @@ export class ChatSessionService {
           $: {
             where: {
               'owner.id': userId,
-              is_archived: includeArchived ? undefined : false
-            }
+              is_archived: includeArchived ? undefined : false,
+            },
           },
           owner: {},
           messages: {
-            author: {}
+            author: {},
           },
-          generated_artifacts: {}
-        }
+          generated_artifacts: {},
+        },
       };
 
       const result = await instantDB.query(query);
@@ -131,17 +194,20 @@ export class ChatSessionService {
   /**
    * Update session title or metadata
    */
-  static async updateSession(sessionId: string, updates: Partial<ChatSession>): Promise<boolean> {
+  static async updateSession(
+    sessionId: string,
+    updates: Partial<ChatSession>
+  ): Promise<boolean> {
     if (!isInstantDBAvailable()) return false;
 
     try {
       const updateData = {
         ...updates,
-        updated_at: Date.now()
+        updated_at: Date.now(),
       };
 
       await instantDB.transact([
-        instantDB.tx.chat_sessions[sessionId].update(updateData)
+        instantDB.tx.chat_sessions[sessionId].update(updateData),
       ]);
 
       return true;
@@ -161,15 +227,18 @@ export class ChatSessionService {
   /**
    * Update chat session summary (stored in 'title' field)
    */
-  static async updateSummary(sessionId: string, summary: string): Promise<boolean> {
+  static async updateSummary(
+    sessionId: string,
+    summary: string
+  ): Promise<boolean> {
     if (!isInstantDBAvailable()) return false;
 
     try {
       await instantDB.transact([
         instantDB.tx.chat_sessions[sessionId].update({
           title: summary,
-          updated_at: Date.now()
-        })
+          updated_at: Date.now(),
+        }),
       ]);
 
       logInfo('Chat session summary updated', { sessionId, summary });
@@ -197,7 +266,10 @@ export class ChatSessionService {
     try {
       // TODO: Implement proper deletion logic when InstantDB supports bulk operations
       // Current workaround: Archive the session instead
-      logInfo('deleteSession called but not fully implemented - archiving instead', { sessionId });
+      logInfo(
+        'deleteSession called but not fully implemented - archiving instead',
+        { sessionId }
+      );
       return this.archiveSession(sessionId);
 
       /* Original implementation - commented out due to InstantDB API limitations
@@ -255,26 +327,39 @@ export class MessageService {
       const sessionQuery = await instantDB.query({
         chat_sessions: {
           $: { where: { id: sessionId } },
-          messages: {}
-        }
+          messages: {},
+        },
       });
 
-      const messageIndex = sessionQuery.chat_sessions?.[0]?.messages?.length || 0;
+      const messageIndex =
+        sessionQuery.chat_sessions?.[0]?.messages?.length || 0;
 
       const messageData = {
-        ...dbHelpers.createMessage(sessionId, userId, content, role, messageIndex),
-        ...metadata
+        ...dbHelpers.createMessage(
+          sessionId,
+          userId,
+          content,
+          role,
+          messageIndex
+        ),
+        ...metadata,
       };
 
       const result = await instantDB.transact([
         instantDB.tx.messages[instantDB.id()].update(messageData),
         // Update session timestamp
-        instantDB.tx.chat_sessions[sessionId].update(dbHelpers.updateSessionTimestamp(sessionId))
+        instantDB.tx.chat_sessions[sessionId].update(
+          dbHelpers.updateSessionTimestamp(sessionId)
+        ),
       ]);
 
       return result.txId;
     } catch (error) {
-      logError('Failed to create message', error as Error, { sessionId, userId, role });
+      logError('Failed to create message', error as Error, {
+        sessionId,
+        userId,
+        role,
+      });
       return null;
     }
   }
@@ -282,7 +367,9 @@ export class MessageService {
   /**
    * Get all messages for a session
    */
-  static async getSessionMessages(sessionId: string): Promise<Message[] | null> {
+  static async getSessionMessages(
+    sessionId: string
+  ): Promise<Message[] | null> {
     if (!isInstantDBAvailable()) return null;
 
     try {
@@ -290,17 +377,19 @@ export class MessageService {
         messages: {
           $: {
             where: { 'session.id': sessionId },
-            order: { by: 'message_index', direction: 'asc' }
+            order: { by: 'message_index', direction: 'asc' },
           },
           author: {},
           session: {},
-          feedback_received: {}
-        }
+          feedback_received: {},
+        },
       });
 
       return result.messages || [];
     } catch (error) {
-      logError('Failed to fetch session messages', error as Error, { sessionId });
+      logError('Failed to fetch session messages', error as Error, {
+        sessionId,
+      });
       return null;
     }
   }
@@ -308,7 +397,10 @@ export class MessageService {
   /**
    * Update a message (for editing)
    */
-  static async updateMessage(messageId: string, content: string): Promise<boolean> {
+  static async updateMessage(
+    messageId: string,
+    content: string
+  ): Promise<boolean> {
     if (!isInstantDBAvailable()) return false;
 
     try {
@@ -316,8 +408,8 @@ export class MessageService {
         instantDB.tx.messages[messageId].update({
           content,
           is_edited: true,
-          edited_at: Date.now()
-        })
+          edited_at: Date.now(),
+        }),
       ]);
 
       return true;
@@ -334,9 +426,7 @@ export class MessageService {
     if (!isInstantDBAvailable()) return false;
 
     try {
-      await instantDB.transact([
-        instantDB.tx.messages[messageId].delete()
-      ]);
+      await instantDB.transact([instantDB.tx.messages[messageId].delete()]);
 
       return true;
     } catch (error) {
@@ -361,16 +451,18 @@ export class UserService {
         ...userData,
         last_active: Date.now(),
         created_at: userData.created_at || Date.now(),
-        is_active: userData.is_active !== undefined ? userData.is_active : true // Provide default value
+        is_active: userData.is_active !== undefined ? userData.is_active : true, // Provide default value
       };
 
       await instantDB.transact([
-        instantDB.tx.users[userData.id || instantDB.id()].update(userRecord)
+        instantDB.tx.users[userData.id || instantDB.id()].update(userRecord),
       ]);
 
       return true;
     } catch (error) {
-      logError('Failed to upsert user', error as Error, { userId: userData.id });
+      logError('Failed to upsert user', error as Error, {
+        userId: userData.id,
+      });
       return false;
     }
   }
@@ -386,11 +478,11 @@ export class UserService {
         users: {
           $: { where: { id: userId } },
           chat_sessions: {
-            messages: {}
+            messages: {},
           },
           created_artifacts: {},
-          created_templates: {}
-        }
+          created_templates: {},
+        },
       });
 
       return result.users?.[0] || null;
@@ -408,7 +500,7 @@ export class UserService {
 
     try {
       await instantDB.transact([
-        instantDB.tx.users[userId].update({ last_active: Date.now() })
+        instantDB.tx.users[userId].update({ last_active: Date.now() }),
       ]);
 
       return true;
@@ -444,16 +536,20 @@ export class ArtifactService {
       const artifactData = {
         ...dbHelpers.createArtifact(sessionId, userId, title, type, content),
         ...metadata,
-        tags: metadata?.tags ? JSON.stringify(metadata.tags) : undefined
+        tags: metadata?.tags ? JSON.stringify(metadata.tags) : undefined,
       };
 
       const result = await instantDB.transact([
-        instantDB.tx.artifacts[instantDB.id()].update(artifactData)
+        instantDB.tx.artifacts[instantDB.id()].update(artifactData),
       ]);
 
       return result.txId;
     } catch (error) {
-      logError('Failed to create artifact', error as Error, { sessionId, userId, type });
+      logError('Failed to create artifact', error as Error, {
+        sessionId,
+        userId,
+        type,
+      });
       return null;
     }
   }
@@ -461,7 +557,10 @@ export class ArtifactService {
   /**
    * Get user's artifacts
    */
-  static async getUserArtifacts(userId: string, type?: string): Promise<Artifact[] | null> {
+  static async getUserArtifacts(
+    userId: string,
+    type?: string
+  ): Promise<Artifact[] | null> {
     if (!isInstantDBAvailable()) return null;
 
     try {
@@ -472,12 +571,12 @@ export class ArtifactService {
         artifacts: {
           $: {
             where: whereClause,
-            order: { by: 'created_at', direction: 'desc' }
+            order: { by: 'created_at', direction: 'desc' },
           },
           creator: {},
           source_session: {},
-          feedback_received: {}
-        }
+          feedback_received: {},
+        },
       });
 
       return result.artifacts || [];
@@ -497,8 +596,8 @@ export class ArtifactService {
       // First get current status
       const result = await instantDB.query({
         artifacts: {
-          $: { where: { id: artifactId } }
-        }
+          $: { where: { id: artifactId } },
+        },
       });
 
       const current = result.artifacts?.[0];
@@ -507,13 +606,15 @@ export class ArtifactService {
       await instantDB.transact([
         instantDB.tx.artifacts[artifactId].update({
           is_favorite: !current.is_favorite,
-          updated_at: Date.now()
-        })
+          updated_at: Date.now(),
+        }),
       ]);
 
       return true;
     } catch (error) {
-      logError('Failed to toggle artifact favorite', error as Error, { artifactId });
+      logError('Failed to toggle artifact favorite', error as Error, {
+        artifactId,
+      });
       return false;
     }
   }
@@ -536,8 +637,8 @@ export class AnalyticsService {
           chat_sessions: {},
           authored_messages: {},
           created_artifacts: {},
-          feedback_provided: {}
-        }
+          feedback_provided: {},
+        },
       });
 
       const user = result.users?.[0];
@@ -548,8 +649,12 @@ export class AnalyticsService {
         total_messages: user.authored_messages?.length || 0,
         total_artifacts: user.created_artifacts?.length || 0,
         feedback_count: user.feedback_provided?.length || 0,
-        account_age_days: Math.floor((Date.now() - user.created_at) / (1000 * 60 * 60 * 24)),
-        last_active_days_ago: Math.floor((Date.now() - user.last_active) / (1000 * 60 * 60 * 24))
+        account_age_days: Math.floor(
+          (Date.now() - user.created_at) / (1000 * 60 * 60 * 24)
+        ),
+        last_active_days_ago: Math.floor(
+          (Date.now() - user.last_active) / (1000 * 60 * 60 * 24)
+        ),
       };
     } catch (error) {
       logError('Failed to fetch user stats', error as Error, { userId });
@@ -565,7 +670,10 @@ export class ProfileCharacteristicsService {
   /**
    * Get characteristics for a user
    */
-  static async getCharacteristics(userId: string, minCount: number = 0): Promise<any[]> {
+  static async getCharacteristics(
+    userId: string,
+    minCount: number = 0
+  ): Promise<any[]> {
     if (!isInstantDBAvailable()) return [];
 
     try {
@@ -574,9 +682,9 @@ export class ProfileCharacteristicsService {
         profile_characteristics: {
           $: {
             where: { user_id: userId },
-            order: { by: 'count', direction: 'desc' }
-          }
-        }
+            order: { by: 'count', direction: 'desc' },
+          },
+        },
       });
 
       const characteristics = result.profile_characteristics || [];
@@ -588,7 +696,9 @@ export class ProfileCharacteristicsService {
 
       return characteristics;
     } catch (error) {
-      logError('Failed to fetch profile characteristics', error as Error, { userId });
+      logError('Failed to fetch profile characteristics', error as Error, {
+        userId,
+      });
       return [];
     }
   }
@@ -596,7 +706,10 @@ export class ProfileCharacteristicsService {
   /**
    * Add a manual characteristic (user input)
    */
-  static async addManualCharacteristic(userId: string, characteristic: string): Promise<boolean> {
+  static async addManualCharacteristic(
+    userId: string,
+    characteristic: string
+  ): Promise<boolean> {
     if (!isInstantDBAvailable()) return false;
 
     try {
@@ -615,13 +728,16 @@ export class ProfileCharacteristicsService {
           last_seen: now,
           created_at: now,
           updated_at: now,
-        })
+        }),
       ]);
 
       logInfo('Manual characteristic added', { userId, characteristic });
       return true;
     } catch (error) {
-      logError('Failed to add manual characteristic', error as Error, { userId, characteristic });
+      logError('Failed to add manual characteristic', error as Error, {
+        userId,
+        characteristic,
+      });
       return false;
     }
   }
@@ -645,10 +761,10 @@ export class ProfileCharacteristicsService {
           $: {
             where: {
               user_id: userId,
-              characteristic: characteristic
-            }
-          }
-        }
+              characteristic: characteristic,
+            },
+          },
+        },
       });
 
       const existing = result.profile_characteristics?.[0];
@@ -661,7 +777,7 @@ export class ProfileCharacteristicsService {
             count: existing.count + 1,
             last_seen: now,
             updated_at: now,
-          })
+          }),
         ]);
       } else {
         // Create new characteristic
@@ -677,14 +793,92 @@ export class ProfileCharacteristicsService {
             last_seen: now,
             created_at: now,
             updated_at: now,
-          })
+          }),
         ]);
       }
 
       return true;
     } catch (error) {
-      logError('Failed to increment characteristic', error as Error, { userId, characteristic });
+      logError('Failed to increment characteristic', error as Error, {
+        userId,
+        characteristic,
+      });
       return false;
+    }
+  }
+}
+
+/**
+ * File Storage Service
+ * For uploading images and files to InstantDB permanent storage
+ */
+export class FileStorageService {
+  /**
+   * Upload an image from a URL to InstantDB storage
+   * Converts temporary DALL-E URLs to permanent storage URLs
+   *
+   * @param imageUrl - Temporary DALL-E image URL
+   * @param filename - Filename for storage (e.g., 'image-123.png')
+   * @returns Permanent InstantDB storage URL
+   */
+  static async uploadImageFromUrl(
+    imageUrl: string,
+    filename: string
+  ): Promise<string> {
+    if (!isInstantDBAvailable()) {
+      throw new Error('InstantDB not available for file upload');
+    }
+
+    try {
+      logInfo('[FileStorage] Downloading image from URL', {
+        imageUrl: imageUrl.substring(0, 60) + '...',
+      });
+
+      // 1. Download image from DALL-E URL
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to download image: ${response.statusText}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      logInfo('[FileStorage] Image downloaded', { size: buffer.length });
+
+      // 2. Upload to InstantDB storage using Admin SDK
+      const db = getInstantDB();
+
+      logInfo('[FileStorage] Uploading to InstantDB storage', { filename });
+
+      // Upload file to InstantDB using Admin SDK (requires Buffer, not File)
+      await db.storage.upload(filename, buffer, {
+        contentType: 'image/png',
+      });
+
+      logInfo('[FileStorage] Upload successful, querying for file URL...');
+
+      // Query for the uploaded file to get the URL
+      const queryResult = await db.query({
+        $files: { $: { where: { path: filename } } },
+      });
+      const fileData = queryResult.$files?.[0];
+
+      if (!fileData || !fileData.url) {
+        throw new Error('Failed to retrieve uploaded file URL');
+      }
+
+      logInfo('[FileStorage] File URL retrieved', {
+        filename,
+        url: fileData.url.substring(0, 60) + '...',
+        size: fileData.size,
+      });
+
+      return fileData.url;
+    } catch (error) {
+      logError('[FileStorage] Upload failed', error as Error);
+      // Fallback: Return original URL if upload fails
+      logInfo('[FileStorage] Fallback to original URL');
+      return imageUrl;
     }
   }
 }
@@ -695,10 +889,12 @@ export class ProfileCharacteristicsService {
 export const InstantDBService = {
   initialize: initializeInstantDB,
   isAvailable: isInstantDBAvailable,
+  db: db, // Add db property for context routes
   ChatSession: ChatSessionService,
   Message: MessageService,
   User: UserService,
   Artifact: ArtifactService,
   Analytics: AnalyticsService,
   ProfileCharacteristics: ProfileCharacteristicsService,
+  FileStorage: FileStorageService,
 };

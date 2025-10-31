@@ -1,0 +1,13 @@
+{
+    "success": true,
+    "data": {
+        "intent": "create_image",
+        "confidence": 1,
+        "entities": {
+            "subject": "ein Elefant"
+        },
+        "reasoning": "The prompt explicitly asks to create a new image ('Erstelle ein Bild von') of an elephant, which clearly indicates the intent to generate a new image from scratch.",
+        "overridden": false
+    },
+    "timestamp": 1761041182186
+}

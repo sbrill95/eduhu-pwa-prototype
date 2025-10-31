@@ -1,0 +1,1171 @@
+🚀 Starting Teacher Assistant E2E Test Suite
+📋 Test Configuration:
+   - Base URL: http://localhost:5174
+   - Workers: 1
+   - Retries: undefined
+   - Timeout: undefinedms
+🔍 Verifying application accessibility...
+✅ Application is accessible
+🧪 Test environment ready
+📊 Performance monitoring enabled
+📹 Video recording configured for failures
+📸 Screenshot capture enabled
+🔊 Console debugging active
+
+Running 32 tests using 1 worker
+
+🚀 Setting up TEST data (creating REAL images in InstantDB)...
+  ✅ Test image created in InstantDB: test-image-1761188677946-m0f6p
+  ✅ Test image created in InstantDB: test-image-1761188678378-0vcvd
+  ✅ Test image created in InstantDB: test-image-1761188678636-333xku
+✅ Test data setup complete: 3 images
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-1: Testing original preservation...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+[info] api: => page.$$ started []
+[info] api: <= page.$$ succeeded []
+  📊 Images before edit: 3
+[info] api: => elementHandle.$eval started []
+[info] api: <= elementHandle.$eval succeeded []
+  🖼️ Original image URL: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEA...
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+  ⏳ Waiting for Gemini API processing...
+[info] api: => page.waitForSelector started []
+❌ [FIXTURE] CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ [FIXTURE] CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:04:52.212Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+❌ CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:04:52.212Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: <= page.waitForSelector failed []
+
+❌ Test completed with 2 console errors:
+  1. Failed to load resource: the server responded with a status of 404 (Not Found)
+  2. [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:04:52.212Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+🧹 Cleaning up test data from InstantDB...
+  ⚠️ Could not delete test image test-image-1761188677946-m0f6p (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188678378-0vcvd (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188678636-333xku (may not exist or endpoint unavailable)
+✅ Test data cleanup complete
+
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘   1 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:336:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-1] CRITICAL: Original image preserved after edit (Scenario 7.1) (34.2s)
+🚀 Setting up TEST data (creating REAL images in InstantDB)...
+  ✅ Test image created in InstantDB: test-image-1761188719943-rl8w7
+  ✅ Test image created in InstantDB: test-image-1761188720257-rm4whw
+  ✅ Test image created in InstantDB: test-image-1761188720536-bq5qth
+✅ Test data setup complete: 3 images
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-1: Testing original preservation...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+[info] api: => page.$$ started []
+[info] api: <= page.$$ succeeded []
+  📊 Images before edit: 3
+[info] api: => elementHandle.$eval started []
+[info] api: <= elementHandle.$eval succeeded []
+  🖼️ Original image URL: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEA...
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+  ⏳ Waiting for Gemini API processing...
+[info] api: => page.waitForSelector started []
+❌ [FIXTURE] CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ [FIXTURE] CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:05:33.258Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+❌ CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:05:33.258Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: <= page.waitForSelector failed []
+
+❌ Test completed with 2 console errors:
+  1. Failed to load resource: the server responded with a status of 404 (Not Found)
+  2. [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:05:33.258Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+🧹 Cleaning up test data from InstantDB...
+  ⚠️ Could not delete test image test-image-1761188719943-rl8w7 (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188720257-rm4whw (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188720536-bq5qth (may not exist or endpoint unavailable)
+✅ Test data cleanup complete
+
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘   2 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:336:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-1] CRITICAL: Original image preserved after edit (Scenario 7.1) (retry #1) (34.0s)
+🚀 Setting up TEST data (creating REAL images in InstantDB)...
+  ✅ Test image created in InstantDB: test-image-1761188762311-kmpf8
+  ✅ Test image created in InstantDB: test-image-1761188762675-46h6yq
+  ✅ Test image created in InstantDB: test-image-1761188762936-o5bdje
+✅ Test data setup complete: 3 images
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-2: Testing Epic 3.0 regression (image creation)...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+  ⚠️ Chat input not found - chat interface may have changed
+  ℹ️ This is not a regression - just UI structure change
+✅ P0-2 COMPLETE: No console errors (chat UI structure may have changed)
+✅ [FIXTURE] Test completed with ZERO console errors
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+  ✓   3 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:445:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-2] Epic 3.0 Regression: Image creation still works (Scenario R1) (9.0s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-3: Testing edit modal opens...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.isVisible started []
+[info] api: <= page.isVisible succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => page.$$ started []
+[info] api: <= page.$$ succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+✅ P0-3 COMPLETE: Edit modal structure verified
+✅ [FIXTURE] Test completed with ZERO console errors
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+  ✓   4 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:558:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-3] Edit modal opens correctly (Scenario 1.1) (12.5s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-4: Testing usage limit display...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.textContent started []
+[info] api: <= page.textContent succeeded []
+  📊 Modal content: Bild bearbeiten20 Bearbeitungen heute verfügbarOriginalA simple red apple on white backgroundErstellt: 23.10.2025SchnellaktionenText hinzufügenStil ändernHintergrund ändernObjekt entfernenFarben anpas
+  ✅ Usage information displayed in modal
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+✅ P0-4 COMPLETE: Usage limit display checked
+✅ [FIXTURE] Test completed with ZERO console errors
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+  ✓   5 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:592:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-4] Usage limit: 20/day combined (Scenario 6.1, 6.4) (11.7s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-5: Testing user isolation (security)...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$$ started []
+[info] api: <= page.$$ succeeded []
+  🔒 Current user has 3 images
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+  ✅ Security: All visible images belong to authenticated user
+  ℹ️ Backend enforces userId filtering via InstantDB auth
+✅ P0-5 COMPLETE: User isolation verified
+✅ [FIXTURE] Test completed with ZERO console errors
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+  ✓   6 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:627:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-5] Security: User cannot access other users images (Scenario S1) (9.2s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-6: Testing performance SLA (P90 < 10s)...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill succeeded []
+  ⏱️ Timer started...
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForSelector started []
+❌ [FIXTURE] CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ [FIXTURE] CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:06:57.277Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+❌ CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:06:57.277Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: <= page.waitForSelector failed []
+
+❌ Test completed with 2 console errors:
+  1. Failed to load resource: the server responded with a status of 404 (Not Found)
+  2. [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:06:57.277Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+🧹 Cleaning up test data from InstantDB...
+  ⚠️ Could not delete test image test-image-1761188762311-kmpf8 (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188762675-46h6yq (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188762936-o5bdje (may not exist or endpoint unavailable)
+✅ Test data cleanup complete
+
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘   7 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:655:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-6] Performance: Edit completes in <10 seconds (Scenario P1) (27.7s)
+🚀 Setting up TEST data (creating REAL images in InstantDB)...
+  ✅ Test image created in InstantDB: test-image-1761188839990-i6qd7r
+  ✅ Test image created in InstantDB: test-image-1761188840379-awysvl
+  ✅ Test image created in InstantDB: test-image-1761188840538-gyugzn
+✅ Test data setup complete: 3 images
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-6: Testing performance SLA (P90 < 10s)...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill succeeded []
+  ⏱️ Timer started...
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForSelector started []
+❌ [FIXTURE] CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ [FIXTURE] CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:07:32.233Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+❌ CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:07:32.233Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: <= page.waitForSelector failed []
+
+❌ Test completed with 2 console errors:
+  1. Failed to load resource: the server responded with a status of 404 (Not Found)
+  2. [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:07:32.233Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+🧹 Cleaning up test data from InstantDB...
+  ⚠️ Could not delete test image test-image-1761188839990-i6qd7r (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188840379-awysvl (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188840538-gyugzn (may not exist or endpoint unavailable)
+✅ Test data cleanup complete
+
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘   8 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:655:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-6] Performance: Edit completes in <10 seconds (Scenario P1) (retry #1) (26.4s)
+🚀 Setting up TEST data (creating REAL images in InstantDB)...
+  ✅ Test image created in InstantDB: test-image-1761188878940-lpiqfk
+  ✅ Test image created in InstantDB: test-image-1761188879369-f7y62i
+  ✅ Test image created in InstantDB: test-image-1761188879566-houf1i
+✅ Test data setup complete: 3 images
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-7: Testing modal close without save...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$$ started []
+[info] api: <= page.$$ succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click failed []
+✅ [FIXTURE] Test completed with ZERO console errors
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+🧹 Cleaning up test data from InstantDB...
+  ⚠️ Could not delete test image test-image-1761188878940-lpiqfk (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188879369-f7y62i (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188879566-houf1i (may not exist or endpoint unavailable)
+✅ Test data cleanup complete
+
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘   9 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:707:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-7] Modal closes without saving (Scenario 1.3) (29.6s)
+🚀 Setting up TEST data (creating REAL images in InstantDB)...
+  ✅ Test image created in InstantDB: test-image-1761188917769-p88iku
+  ✅ Test image created in InstantDB: test-image-1761188918223-lad067
+  ✅ Test image created in InstantDB: test-image-1761188918484-dx9yk
+✅ Test data setup complete: 3 images
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-7: Testing modal close without save...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$$ started []
+[info] api: <= page.$$ succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill succeeded []
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click failed []
+✅ [FIXTURE] Test completed with ZERO console errors
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+🧹 Cleaning up test data from InstantDB...
+  ⚠️ Could not delete test image test-image-1761188917769-p88iku (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188918223-lad067 (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188918484-dx9yk (may not exist or endpoint unavailable)
+✅ Test data cleanup complete
+
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  10 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:707:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-7] Modal closes without saving (Scenario 1.3) (retry #1) (26.7s)
+🚀 Setting up TEST data (creating REAL images in InstantDB)...
+  ✅ Test image created in InstantDB: test-image-1761188954755-boqesq
+  ✅ Test image created in InstantDB: test-image-1761188955131-26rtu8
+  ✅ Test image created in InstantDB: test-image-1761188955380-n88d566
+✅ Test data setup complete: 3 images
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-8: Testing preset button functionality...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.$$ started []
+[info] api: <= page.$$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.inputValue started []
+[info] api: <= page.inputValue succeeded []
+  ✅ Preset filled instruction: "Füge Text hinzu: "
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+✅ P0-8 COMPLETE: Preset buttons working
+✅ [FIXTURE] Test completed with ZERO console errors
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+  ✓  11 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:756:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-8] Preset buttons fill instruction (Scenario T6) (13.2s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-9: Testing empty instruction validation...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.isDisabled started []
+[info] api: <= elementHandle.isDisabled succeeded []
+  ✅ Process button correctly disabled when instruction empty
+[info] api: => page.screenshot started []
+[info] api: <= page.screenshot succeeded []
+✅ P0-9 COMPLETE: Empty instruction validation working
+✅ [FIXTURE] Test completed with ZERO console errors
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+  ✓  12 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:787:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-9] Error handling: Empty instruction blocked (Scenario 8.2) (10.6s)
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-10: Testing save to library...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$$ started []
+[info] api: <= page.$$ succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForSelector started []
+❌ [FIXTURE] CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ [FIXTURE] CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:09:50.777Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+❌ CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:09:50.777Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: <= page.waitForSelector failed []
+
+❌ Test completed with 2 console errors:
+  1. Failed to load resource: the server responded with a status of 404 (Not Found)
+  2. [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:09:50.777Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+🧹 Cleaning up test data from InstantDB...
+  ⚠️ Could not delete test image test-image-1761188954755-boqesq (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188955131-26rtu8 (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761188955380-n88d566 (may not exist or endpoint unavailable)
+✅ Test data cleanup complete
+
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  13 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:827:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-10] Save button adds image to library (Scenario 5.1) (33.3s)
+🚀 Setting up TEST data (creating REAL images in InstantDB)...
+  ✅ Test image created in InstantDB: test-image-1761189020631-trpcz
+  ✅ Test image created in InstantDB: test-image-1761189021013-br1uoi
+  ✅ Test image created in InstantDB: test-image-1761189021272-yjg2o
+✅ Test data setup complete: 3 images
+
+[info] api: => browser.newContext started []
+[info] api: <= browser.newContext succeeded []
+[info] api: => browserContext.newPage started []
+[info] api: <= browserContext.newPage succeeded []
+[info] api: => page.addInitScript started []
+[info] api: <= page.addInitScript succeeded []
+🧪 P0-10: Testing save to library...
+[info] api: => page.goto started []
+[info] api: <= page.goto succeeded []
+[info] api: => page.waitForLoadState started []
+[info] api: <= page.waitForLoadState succeeded []
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  ✅ Injected 3 test images BEFORE library navigation
+[info] api: => page.title started []
+[info] api: <= page.title succeeded []
+  🐛 [DEBUG] Page title: "Teacher Assistant"
+[info] api: => locator.textContent started []
+[info] api: <= locator.textContent succeeded []
+  🐛 [DEBUG] Body text (first 200 chars): "
+    
+    
+    
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefi"
+[info] api: => page.evaluate started []
+[info] api: <= page.evaluate succeeded []
+  🐛 [DEBUG] window.__VITE_TEST_MODE__ = true
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+  🐛 [DEBUG] Bottom nav exists: true
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Bibliothek tab in bottom nav
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.isVisible started []
+[info] api: <= locator.isVisible succeeded []
+[info] api: => locator.click started []
+[info] api: <= locator.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+  ✅ Clicked Materialien tab in Library page
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+  ✅ Material cards loaded
+[info] api: => page.$$ started []
+[info] api: <= page.$$ succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForTimeout started []
+[info] api: <= page.waitForTimeout succeeded []
+[info] api: => page.waitForSelector started []
+[info] api: <= page.waitForSelector succeeded []
+[info] api: => locator.fill started []
+[info] api: <= locator.fill succeeded []
+[info] api: => page.$ started []
+[info] api: <= page.$ succeeded []
+[info] api: => elementHandle.click started []
+[info] api: <= elementHandle.click succeeded []
+[info] api: => page.waitForSelector started []
+❌ [FIXTURE] CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ CONSOLE ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+❌ [FIXTURE] CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:10:33.240Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+❌ CONSOLE ERROR: [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:10:33.240Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: <= page.waitForSelector failed []
+
+❌ Test completed with 2 console errors:
+  1. Failed to load resource: the server responded with a status of 404 (Not Found)
+  2. [ApiClient] ❌ editImage ERROR {timestamp: 2025-10-23T03:10:33.240Z, errorType: Error, errorMessage: Original image not found, errorStatus: 404}
+[info] api: => browserContext.close started []
+[info] api: <= browserContext.close succeeded []
+🧹 Cleaning up test data from InstantDB...
+  ⚠️ Could not delete test image test-image-1761189020631-trpcz (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761189021013-br1uoi (may not exist or endpoint unavailable)
+  ⚠️ Could not delete test image test-image-1761189021272-yjg2o (may not exist or endpoint unavailable)
+✅ Test data cleanup complete
+
+[info] api: => browser.close started []
+[info] api: <= browser.close succeeded []
+  ✘  14 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:827:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-10] Save button adds image to library (Scenario 5.1) (retry #1) (33.8s)
+  ✘  15 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:877:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-11] Version metadata stored correctly (Scenario 7.2) (0ms)
+  -  16 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:922:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-12] Edit button exists on all images (Scenario 1.1)
+  -  17 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:962:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-13] Modal shows loading state during processing (Scenario 3.2)
+  -  18 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1002:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-14] Error recovery: Retry after API failure (Scenario 8.3)
+  -  19 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1068:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-1] Edit operation: Add text (Scenario 2.1)
+  -  20 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1096:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-2] Edit operation: Add object (Scenario 2.2)
+  -  21 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1124:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-3] Edit operation: Remove object (Scenario 2.3)
+  -  22 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1152:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-4] Edit operation: Change style (Scenario 2.4)
+  -  23 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1180:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-5] Edit operation: Adjust colors (Scenario 2.5)
+  -  24 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1208:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-6] Edit operation: Change background (Scenario 2.6)
+  -  25 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1236:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-7] German instruction: "ändere" command (Scenario 3.1)
+  -  26 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1264:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-8] Error handling: API timeout (Scenario 8.1)
+  -  27 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1298:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-9] "Weitere Änderung" button allows additional edits (Scenario 5.2)
+  -  28 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1340:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-10] Unlimited versions per image (Scenario 7.3)
+  -  29 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1407:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-11] Placeholder: Additional P1 tests
+  -  30 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1428:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-1] Modal responsive layout mobile (Scenario 1.2)
+  -  31 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1455:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-2] Preset button: Text addition preset (Scenario T6.1)
+  -  32 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1482:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-3] Image format support: PNG (Scenario AC5.1)
+  -  33 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1505:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-4] Usage warning at 18/20 (Scenario 6.2)
+  -  34 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1529:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-5] SynthID watermark presence (Scenario AC5.2)
+  -  35 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1552:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-6] Placeholder: Additional P2 tests
+  -  36 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1566:3 › Story 3.1.2 - Test Summary › Generate test summary report
+  ✘  37 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:877:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-11] Version metadata stored correctly (Scenario 7.2) (retry #1) (0ms)
+  -  38 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:922:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-12] Edit button exists on all images (Scenario 1.1) (retry #1)
+  -  39 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:962:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-13] Modal shows loading state during processing (Scenario 3.2) (retry #1)
+  -  40 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1002:3 › Story 3.1.2 - Image Editing: P0 Critical Tests › [P0-14] Error recovery: Retry after API failure (Scenario 8.3) (retry #1)
+  -  41 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1068:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-1] Edit operation: Add text (Scenario 2.1) (retry #1)
+  -  42 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1096:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-2] Edit operation: Add object (Scenario 2.2) (retry #1)
+  -  43 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1124:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-3] Edit operation: Remove object (Scenario 2.3) (retry #1)
+  -  44 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1152:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-4] Edit operation: Change style (Scenario 2.4) (retry #1)
+  -  45 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1180:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-5] Edit operation: Adjust colors (Scenario 2.5) (retry #1)
+  -  46 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1208:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-6] Edit operation: Change background (Scenario 2.6) (retry #1)
+  -  47 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1236:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-7] German instruction: "ändere" command (Scenario 3.1) (retry #1)
+  -  48 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1264:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-8] Error handling: API timeout (Scenario 8.1) (retry #1)
+  -  49 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1298:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-9] "Weitere Änderung" button allows additional edits (Scenario 5.2) (retry #1)
+  -  50 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1340:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-10] Unlimited versions per image (Scenario 7.3) (retry #1)
+  -  51 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1407:3 › Story 3.1.2 - Image Editing: P1 Important Tests › [P1-11] Placeholder: Additional P1 tests (retry #1)
+  -  52 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1428:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-1] Modal responsive layout mobile (Scenario 1.2) (retry #1)
+  -  53 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1455:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-2] Preset button: Text addition preset (Scenario T6.1) (retry #1)
+  -  54 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1482:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-3] Image format support: PNG (Scenario AC5.1) (retry #1)
+  -  55 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1505:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-4] Usage warning at 18/20 (Scenario 6.2) (retry #1)
+  -  56 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1529:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-5] SynthID watermark presence (Scenario AC5.2) (retry #1)
+  -  57 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1552:3 › Story 3.1.2 - Image Editing: P2 Nice-to-Have Tests › [P2-6] Placeholder: Additional P2 tests (retry #1)
+  -  58 [Mock Tests (Fast)] › e2e-tests\story-3.1.2-image-editing.spec.ts:1566:3 › Story 3.1.2 - Test Summary › Generate test summary report (retry #1)

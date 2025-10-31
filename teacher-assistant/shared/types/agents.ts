@@ -12,6 +12,7 @@ export interface ImageGenerationPrefillData {
   imageStyle?: 'realistic' | 'cartoon' | 'illustrative' | 'abstract';
   learningGroup?: string;  // Optional: e.g., "Klasse 8a"
   subject?: string;  // Optional: e.g., "Mathematik"
+  [key: string]: unknown;  // Index signature to make compatible with Record<string, unknown>
 }
 
 /**

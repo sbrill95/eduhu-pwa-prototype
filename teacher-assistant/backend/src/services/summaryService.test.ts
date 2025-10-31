@@ -28,9 +28,8 @@ jest.mock('../config/logger', () => ({
 
 describe('SummaryService', () => {
   let summaryService: SummaryService;
-  const mockCreate = openaiClient.chat.completions.create as jest.MockedFunction<
-    typeof openaiClient.chat.completions.create
-  >;
+  const mockCreate = openaiClient.chat.completions
+    .create as jest.MockedFunction<typeof openaiClient.chat.completions.create>;
 
   beforeEach(() => {
     summaryService = new SummaryService();
@@ -58,7 +57,10 @@ describe('SummaryService', () => {
       } as any);
 
       const messages: SummaryMessage[] = [
-        { role: 'user', content: 'Ich brauche ein Arbeitsblatt zur Bruchrechnung' },
+        {
+          role: 'user',
+          content: 'Ich brauche ein Arbeitsblatt zur Bruchrechnung',
+        },
         { role: 'assistant', content: 'Gerne! Für welche Klassenstufe?' },
         { role: 'user', content: 'Klasse 7' },
       ];
@@ -76,7 +78,8 @@ describe('SummaryService', () => {
         choices: [
           {
             message: {
-              content: 'This is a very long summary that exceeds the character limit',
+              content:
+                'This is a very long summary that exceeds the character limit',
               role: 'assistant',
             },
             finish_reason: 'stop',
@@ -95,8 +98,9 @@ describe('SummaryService', () => {
 
       const summary = await summaryService.generateSummary(messages);
 
-      expect(summary.length).toBe(20);
-      expect(summary).toBe('This is a very long ');
+      // Smart truncation cuts at word boundary (last space before 20 chars)
+      expect(summary.length).toBeLessThanOrEqual(20);
+      expect(summary).toBe('This is a very long');
     });
 
     it('should return fallback text on OpenAI API error', async () => {
@@ -164,7 +168,9 @@ describe('SummaryService', () => {
       // Verify the prompt doesn't include messages 5 and 6
       const callArgs = mockCreate.mock.calls[0]?.[0];
       expect(callArgs).toBeDefined();
-      const userMessage = callArgs?.messages.find((m: any) => m.role === 'user');
+      const userMessage = callArgs?.messages.find(
+        (m: any) => m.role === 'user'
+      );
       expect(userMessage).toBeDefined();
       expect(userMessage?.content).not.toContain('Message 5');
       expect(userMessage?.content).not.toContain('Message 6');
@@ -199,15 +205,15 @@ describe('SummaryService', () => {
         messages: expect.arrayContaining([
           expect.objectContaining({
             role: 'system',
-            content: expect.stringContaining('maximal 20 Zeichen'),
+            content: expect.stringContaining('Maximal 20 Zeichen'),
           }),
           expect.objectContaining({
             role: 'user',
-            content: expect.stringContaining('Zusammenfassung (max 20 Zeichen)'),
+            content: expect.stringContaining('Zusammenfassung (≤20 Zeichen)'),
           }),
         ]),
-        max_tokens: 15,
-        temperature: 0.3,
+        max_tokens: 10,
+        temperature: 0.2,
       });
     });
   });
@@ -300,13 +306,21 @@ describe('SummaryService', () => {
       expect(summaryService.validateSummaryLength('Bruchrechnung')).toBe(true);
       expect(summaryService.validateSummaryLength('Quiz Klasse 7')).toBe(true);
       expect(summaryService.validateSummaryLength('A')).toBe(true); // Single char is valid
-      expect(summaryService.validateSummaryLength('12345678901234567890')).toBe(true); // Exactly 20
+      expect(summaryService.validateSummaryLength('12345678901234567890')).toBe(
+        true
+      ); // Exactly 20
     });
 
     it('should return false for invalid summaries', () => {
       expect(summaryService.validateSummaryLength('')).toBe(false); // Empty
-      expect(summaryService.validateSummaryLength('123456789012345678901')).toBe(false); // 21 chars
-      expect(summaryService.validateSummaryLength('This is way too long for a summary')).toBe(false);
+      expect(
+        summaryService.validateSummaryLength('123456789012345678901')
+      ).toBe(false); // 21 chars
+      expect(
+        summaryService.validateSummaryLength(
+          'This is way too long for a summary'
+        )
+      ).toBe(false);
     });
   });
 
@@ -338,7 +352,9 @@ describe('SummaryService', () => {
 
       const callArgs = mockCreate.mock.calls[0]?.[0];
       expect(callArgs).toBeDefined();
-      const userMessage = callArgs?.messages.find((m: any) => m.role === 'user');
+      const userMessage = callArgs?.messages.find(
+        (m: any) => m.role === 'user'
+      );
       expect(userMessage).toBeDefined();
 
       expect(userMessage?.content).toContain('Lehrer: Hallo');

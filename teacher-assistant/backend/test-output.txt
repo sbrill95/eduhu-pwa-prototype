@@ -1,0 +1,60 @@
+
+> teacher-assistant-backend@1.0.0 test
+> jest geminiImageService.test.ts
+
+PASS src/services/geminiImageService.test.ts (22.083 s)
+  GeminiImageService
+    Constructor
+      √ should throw error if GOOGLE_AI_API_KEY is not configured (22 ms)
+      √ should initialize successfully with valid API key (1 ms)
+    editImage - Input Validation
+      √ should reject empty instruction (2 ms)
+      √ should reject whitespace-only instruction (1 ms)
+      √ should reject invalid image format (6 ms)
+      √ should reject unsupported image format (1 ms)
+      √ should reject file that is too large (>20MB) (12 ms)
+      √ should accept all supported formats (1 ms)
+    editImage - Daily Limit
+      √ should enforce daily limit (17 ms)
+      √ should allow editing when under daily limit (1 ms)
+    editImage - Error Handling
+      √ should handle API key error (3010 ms)
+      √ should handle rate limit error (429) (3029 ms)
+      √ should handle network error (3026 ms)
+      √ should handle timeout error (1 ms)
+    editImage - Retry Logic
+      √ should retry on transient failures (3025 ms)
+      √ should not retry on API key errors (2 ms)
+      √ should not retry on rate limit errors (1 ms)
+      √ should fail after max retries (3021 ms)
+    editImage - Success Cases
+      √ should successfully edit an image (1 ms)
+      √ should track usage after successful edit (1 ms)
+      √ should track cost after successful edit (1 ms)
+    checkDailyLimit
+      √ should return usage information
+      √ should calculate reset time as next midnight
+    MIME Type Detection
+      √ should detect PNG format (1 ms)
+      √ should detect JPEG format
+      √ should detect WebP format
+      √ should return unknown for unrecognized formats (1 ms)
+    Edge Cases
+      √ should handle very long instructions (1 ms)
+      √ should handle special characters in instruction
+    Helper Methods
+      √ should build edit prompt correctly (1 ms)
+      √ should create timeout promise that resolves after specified time (113 ms)
+      √ should sleep for specified duration (105 ms)
+    Gemini API Integration (Mocked)
+      √ should handle successful API response (1 ms)
+      √ should handle API response with no candidates (1 ms)
+      √ should handle API errors correctly
+      √ should handle quota errors correctly
+      √ should handle network errors correctly
+
+Test Suites: 1 passed, 1 total
+Tests:       37 passed, 37 total
+Snapshots:   0 total
+Time:        23.113 s
+Ran all test suites matching geminiImageService.test.ts.

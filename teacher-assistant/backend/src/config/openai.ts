@@ -7,8 +7,8 @@ import { logError } from './logger';
  */
 export const openaiClient = new OpenAI({
   apiKey: config.OPENAI_API_KEY,
-  timeout: 30000, // 30 seconds timeout
-  maxRetries: 2, // Retry failed requests up to 2 times
+  timeout: 90000, // 90 seconds timeout for DALL-E 3 (image generation takes 35-60s)
+  maxRetries: 1, // Retry once for transient failures (reduced from 2 to avoid long waits)
 });
 
 /**

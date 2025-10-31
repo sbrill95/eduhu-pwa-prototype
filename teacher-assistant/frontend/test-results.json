@@ -4,15 +4,13 @@
     "rootDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
     "forbidOnly": false,
     "fullyParallel": false,
-    "globalSetup": null,
+    "globalSetup": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\global-setup.ts",
     "globalTeardown": null,
     "globalTimeout": 0,
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {
-      "actualWorkers": 1
-    },
+    "metadata": {},
     "preserveOutput": "always",
     "reporter": [
       [
@@ -43,71 +41,37 @@
         "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
         "repeatEach": 1,
         "retries": 1,
-        "metadata": {
-          "actualWorkers": 1
-        },
-        "id": "Desktop Chrome - Chat Agent Testing",
-        "name": "Desktop Chrome - Chat Agent Testing",
+        "metadata": {},
+        "id": "Mock Tests (Fast)",
+        "name": "Mock Tests (Fast)",
         "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
-        "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        "testIgnore": [
+          "/.*-real-api\\.spec\\.ts$/"
         ],
-        "timeout": 60000
+        "testMatch": [
+          "/.*\\.spec\\.ts$/"
+        ],
+        "timeout": 150000
       },
       {
         "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
         "repeatEach": 1,
         "retries": 1,
-        "metadata": {
-          "actualWorkers": 1
-        },
-        "id": "Mobile Safari - Touch Interface Testing",
-        "name": "Mobile Safari - Touch Interface Testing",
+        "metadata": {},
+        "id": "Real API Tests (Smoke)",
+        "name": "Real API Tests (Smoke)",
         "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
         "testIgnore": [],
         "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+          "/.*-real-api\\.spec\\.ts$/"
         ],
-        "timeout": 60000
-      },
-      {
-        "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
-        "repeatEach": 1,
-        "retries": 1,
-        "metadata": {
-          "actualWorkers": 1
-        },
-        "id": "Desktop Firefox - Cross-browser Validation",
-        "name": "Desktop Firefox - Cross-browser Validation",
-        "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
-        "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
-        "timeout": 60000
-      },
-      {
-        "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
-        "repeatEach": 1,
-        "retries": 1,
-        "metadata": {
-          "actualWorkers": 1
-        },
-        "id": "Mobile Chrome - Android Testing",
-        "name": "Mobile Chrome - Android Testing",
-        "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
-        "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
-        "timeout": 60000
+        "timeout": 150000
       }
     ],
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.55.1",
+    "version": "1.56.0",
     "workers": 1,
     "webServer": {
       "command": "npm run dev -- --mode test",
@@ -118,244 +82,210 @@
   },
   "suites": [
     {
-      "title": "test-auth-check.spec.ts",
-      "file": "test-auth-check.spec.ts",
+      "title": "router-classification.spec.ts",
+      "file": "router-classification.spec.ts",
       "column": 0,
       "line": 0,
-      "specs": [
+      "specs": [],
+      "suites": [
         {
-          "title": "Check if test mode is enabled",
-          "ok": false,
-          "tags": [],
-          "tests": [
+          "title": "Story 3.1.3 - Router Classification",
+          "file": "router-classification.spec.ts",
+          "line": 18,
+          "column": 6,
+          "specs": [
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "Desktop Chrome - Chat Agent Testing",
-              "projectName": "Desktop Chrome - Chat Agent Testing",
-              "results": [
+              "title": "AC1: High confidence creation - auto-routes without confirmation",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 1825,
-                  "error": {
-                    "message": "Error: page.evaluate: Passed function is not well-serializable!",
-                    "stack": "Error: page.evaluate: Passed function is not well-serializable!\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts:11:31",
-                    "location": {
-                      "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts",
-                      "column": 31,
-                      "line": 11
-                    },
-                    "snippet": "\u001b[0m \u001b[90m  9 |\u001b[39m\n \u001b[90m 10 |\u001b[39m   \u001b[90m// Check if VITE_TEST_MODE is available in the browser\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 11 |\u001b[39m   \u001b[36mconst\u001b[39m testMode \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m {\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mreturn\u001b[39m {\n \u001b[90m 13 |\u001b[39m       viteTestMode\u001b[33m:\u001b[39m (\u001b[36mimport\u001b[39m\u001b[33m.\u001b[39mmeta \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39menv\u001b[33m?\u001b[39m\u001b[33m.\u001b[39m\u001b[33mVITE_TEST_MODE\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 14 |\u001b[39m       viteNodeEnv\u001b[33m:\u001b[39m (\u001b[36mimport\u001b[39m\u001b[33m.\u001b[39mmeta \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39menv\u001b[33m?\u001b[39m\u001b[33m.\u001b[39m\u001b[33mVITE_NODE_ENV\u001b[39m\u001b[33m,\u001b[39m\u001b[0m"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts",
-                        "column": 31,
-                        "line": 11
-                      },
-                      "message": "Error: page.evaluate: Passed function is not well-serializable!\n\n   9 |\n  10 |   // Check if VITE_TEST_MODE is available in the browser\n> 11 |   const testMode = await page.evaluate(() => {\n     |                               ^\n  12 |     return {\n  13 |       viteTestMode: (import.meta as any).env?.VITE_TEST_MODE,\n  14 |       viteNodeEnv: (import.meta as any).env?.VITE_NODE_ENV,\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts:11:31"
-                    }
-                  ],
-                  "stdout": [
-                    {
-                      "text": "[info] api: => browser.newContext started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= browser.newContext succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => browserContext.newPage started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => page.goto started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= page.goto succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => page.screenshot started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= page.screenshot succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => page.evaluate started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= page.evaluate failed []\n"
-                    },
-                    {
-                      "text": "[info] api: => browserContext.close started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= browserContext.close succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => browser.close started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= browser.close succeeded []\n"
-                    }
-                  ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-10-05T22:30:06.383Z",
+                  "timeout": 150000,
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\test-auth-check-Check-if-test-mode-is-enabled-Desktop-Chrome---Chat-Agent-Testing\\test-failed-1.png"
-                    },
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\test-auth-check-Check-if-test-mode-is-enabled-Desktop-Chrome---Chat-Agent-Testing\\video.webm"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\test-auth-check-Check-if-test-mode-is-enabled-Desktop-Chrome---Chat-Agent-Testing\\error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\test-auth-check-Check-if-test-mode-is-enabled-Desktop-Chrome---Chat-Agent-Testing\\trace.zip"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts",
-                    "column": 31,
-                    "line": 11
-                  }
-                },
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 1965,
-                  "error": {
-                    "message": "Error: page.evaluate: Passed function is not well-serializable!",
-                    "stack": "Error: page.evaluate: Passed function is not well-serializable!\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts:11:31",
-                    "location": {
-                      "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts",
-                      "column": 31,
-                      "line": 11
-                    },
-                    "snippet": "\u001b[0m \u001b[90m  9 |\u001b[39m\n \u001b[90m 10 |\u001b[39m   \u001b[90m// Check if VITE_TEST_MODE is available in the browser\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 11 |\u001b[39m   \u001b[36mconst\u001b[39m testMode \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m {\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mreturn\u001b[39m {\n \u001b[90m 13 |\u001b[39m       viteTestMode\u001b[33m:\u001b[39m (\u001b[36mimport\u001b[39m\u001b[33m.\u001b[39mmeta \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39menv\u001b[33m?\u001b[39m\u001b[33m.\u001b[39m\u001b[33mVITE_TEST_MODE\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 14 |\u001b[39m       viteNodeEnv\u001b[33m:\u001b[39m (\u001b[36mimport\u001b[39m\u001b[33m.\u001b[39mmeta \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39menv\u001b[33m?\u001b[39m\u001b[33m.\u001b[39m\u001b[33mVITE_NODE_ENV\u001b[39m\u001b[33m,\u001b[39m\u001b[0m"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts",
-                        "column": 31,
-                        "line": 11
-                      },
-                      "message": "Error: page.evaluate: Passed function is not well-serializable!\n\n   9 |\n  10 |   // Check if VITE_TEST_MODE is available in the browser\n> 11 |   const testMode = await page.evaluate(() => {\n     |                               ^\n  12 |     return {\n  13 |       viteTestMode: (import.meta as any).env?.VITE_TEST_MODE,\n  14 |       viteNodeEnv: (import.meta as any).env?.VITE_NODE_ENV,\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts:11:31"
-                    }
-                  ],
-                  "stdout": [
-                    {
-                      "text": "[info] api: => browser.newContext started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= browser.newContext succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => browserContext.newPage started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= browserContext.newPage succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => page.goto started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= page.goto succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => page.screenshot started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= page.screenshot succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => page.evaluate started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= page.evaluate failed []\n"
-                    },
-                    {
-                      "text": "[info] api: => browserContext.close started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= browserContext.close succeeded []\n"
-                    },
-                    {
-                      "text": "[info] api: => browser.close started []\n"
-                    },
-                    {
-                      "text": "[info] api: <= browser.close succeeded []\n"
-                    }
-                  ],
-                  "stderr": [],
-                  "retry": 1,
-                  "startTime": "2025-10-05T22:30:10.939Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\test-auth-check-Check-if-test-mode-is-enabled-Desktop-Chrome---Chat-Agent-Testing-retry1\\test-failed-1.png"
-                    },
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\test-auth-check-Check-if-test-mode-is-enabled-Desktop-Chrome---Chat-Agent-Testing-retry1\\video.webm"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\test-auth-check-Check-if-test-mode-is-enabled-Desktop-Chrome---Chat-Agent-Testing-retry1\\error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\test-auth-check-Check-if-test-mode-is-enabled-Desktop-Chrome---Chat-Agent-Testing-retry1\\trace.zip"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\test-auth-check.spec.ts",
-                    "column": 31,
-                    "line": 11
-                  }
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
-              "status": "unexpected"
+              "id": "f6b36b0de3ce4ca9fbbd-812a55a07a1812d5bf09",
+              "file": "router-classification.spec.ts",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "AC2: High confidence editing - auto-routes without confirmation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-7e4d6b8ef0b4d9a8863d",
+              "file": "router-classification.spec.ts",
+              "line": 79,
+              "column": 3
+            },
+            {
+              "title": "AC3: Low confidence - shows manual override UI",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-0f145839e2c3f67f57b6",
+              "file": "router-classification.spec.ts",
+              "line": 108,
+              "column": 3
+            },
+            {
+              "title": "AC4: Manual override - user selects creation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-803452752df3c02a0066",
+              "file": "router-classification.spec.ts",
+              "line": 145,
+              "column": 3
+            },
+            {
+              "title": "AC5: Manual override - user selects editing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-1fc4d13ed6c2cdf995f2",
+              "file": "router-classification.spec.ts",
+              "line": 189,
+              "column": 3
+            },
+            {
+              "title": "AC6: Image reference detection - latest image",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-5b357028e33550fb45cf",
+              "file": "router-classification.spec.ts",
+              "line": 233,
+              "column": 3
+            },
+            {
+              "title": "AC7: Context-aware classification - dative article",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-11b211958fa3fdd72b22",
+              "file": "router-classification.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "Performance: Classification completes in <500ms",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-85614259b1e9e7e237a1",
+              "file": "router-classification.spec.ts",
+              "line": 264,
+              "column": 3
+            },
+            {
+              "title": "Error: Zero console errors during classification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mock Tests (Fast)",
+                  "projectName": "Mock Tests (Fast)",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6b36b0de3ce4ca9fbbd-5ac536ef92c3e9841098",
+              "file": "router-classification.spec.ts",
+              "line": 289,
+              "column": 3
             }
-          ],
-          "id": "e60ab3ceb06063165cc2-0b315c7c4715a3de5d73",
-          "file": "test-auth-check.spec.ts",
-          "line": 3,
-          "column": 1
+          ]
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-10-05T22:30:04.244Z",
-    "duration": 9559.871,
+    "startTime": "2025-10-31T08:57:11.835Z",
+    "duration": 51.25700000000006,
     "expected": 0,
-    "skipped": 0,
-    "unexpected": 1,
+    "skipped": 9,
+    "unexpected": 0,
     "flaky": 0
   }
 }

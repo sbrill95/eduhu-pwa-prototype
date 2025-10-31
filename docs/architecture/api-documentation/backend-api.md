@@ -642,7 +642,149 @@ npm run test:coverage
 
 ---
 
+## Storage Proxy Endpoints
+
+### GET /api/storage-proxy
+
+Proxies InstantDB S3 image requests through the backend to bypass CORS restrictions.
+
+**HTTP Method**: `GET`
+**Endpoint**: `/api/storage-proxy`
+**Rate Limit**: General (100/15min)
+**Added**: 2025-10-13 (BUG-042 fix)
+
+#### Purpose
+
+InstantDB S3 storage URLs return CORS errors when accessed directly from the browser. This endpoint fetches images server-side and returns them with proper CORS headers, solving the browser CORS policy restrictions.
+
+#### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | string | Yes | The InstantDB S3 URL to proxy (must contain `instant-storage.s3.amazonaws.com`) |
+
+#### Validation Rules
+
+- **url**: Required, must be non-empty string
+- **url**: Must contain `instant-storage.s3.amazonaws.com` (security measure)
+- Only InstantDB S3 URLs are accepted, other URLs return 400
+
+#### Response
+
+**Success Response (200 OK)**:
+- Returns the image file as binary data
+- Headers:
+  ```
+  Content-Type: image/png (or original content type)
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400
+  ```
+
+**Validation Error (400 Bad Request)**:
+```json
+{
+  "success": false,
+  "error": "Missing url parameter",
+  "timestamp": "2025-10-13T09:00:00.000Z"
+}
+```
+
+```json
+{
+  "success": false,
+  "error": "Invalid storage URL - must be InstantDB S3 URL",
+  "timestamp": "2025-10-13T09:00:00.000Z"
+}
+```
+
+**Fetch Error (500 Internal Server Error)**:
+```json
+{
+  "success": false,
+  "error": "Failed to fetch image from storage",
+  "timestamp": "2025-10-13T09:00:00.000Z"
+}
+```
+
+#### Example Usage
+
+**Direct URL (for images)**:
+```html
+<!-- Frontend HTML - Image tag -->
+<img src="/api/storage-proxy?url=https%3A%2F%2Finstant-storage.s3.amazonaws.com%2Fabc123%2Fimage.png" alt="Image" />
+```
+
+**JavaScript fetch**:
+```javascript
+// Frontend JavaScript
+const s3Url = 'https://instant-storage.s3.amazonaws.com/abc123/image.png';
+const proxiedUrl = `/api/storage-proxy?url=${encodeURIComponent(s3Url)}`;
+
+const response = await fetch(proxiedUrl);
+if (response.ok) {
+  const imageBlob = await response.blob();
+  const imageUrl = URL.createObjectURL(imageBlob);
+  document.querySelector('img').src = imageUrl;
+}
+```
+
+**Using the imageProxy utility (recommended)**:
+```javascript
+// Frontend - Recommended approach
+import { getProxiedImageUrl } from '../lib/imageProxy';
+
+const s3Url = 'https://instant-storage.s3.amazonaws.com/abc123/image.png';
+const proxiedUrl = getProxiedImageUrl(s3Url);
+
+// Use proxiedUrl in img src
+<img src={proxiedUrl} alt="Image" />
+```
+
+#### Testing
+
+```bash
+# Test with valid InstantDB S3 URL
+curl -X GET "http://localhost:3006/api/storage-proxy?url=https%3A%2F%2Finstant-storage.s3.amazonaws.com%2Ftest%2Fimage.png"
+
+# Test missing URL parameter (should return 400)
+curl -X GET "http://localhost:3006/api/storage-proxy"
+
+# Test invalid URL (should return 400)
+curl -X GET "http://localhost:3006/api/storage-proxy?url=https%3A%2F%2Fexample.com%2Fimage.png"
+```
+
+#### Technical Notes
+
+**Performance**:
+- 24-hour cache headers improve performance for repeated requests
+- Server-side fetch adds ~50-100ms latency
+- Browser caches images normally after first load
+
+**Security**:
+- Only InstantDB S3 URLs are accepted (validation enforced)
+- Other URL types are rejected with 400 error
+- No credentials or API keys exposed
+
+**Limitations**:
+- Expired S3 URLs (>7 days old) cannot be recovered
+- Proxy only works for InstantDB storage URLs
+- Production deployment needs proper CORS or CDN configuration
+
+**Related**:
+- Frontend utility: `teacher-assistant/frontend/src/lib/imageProxy.ts`
+- Used by: `AgentResultView`, `ChatView`, `Library`, `MaterialPreviewModal`
+- Bug fix: BUG-042 (2025-10-13)
+
+---
+
 ## Changelog
+
+### Version 1.0.1 (2025-10-13)
+- **Added**: Storage proxy endpoint (`GET /api/storage-proxy`)
+  - Proxies InstantDB S3 images to bypass CORS restrictions
+  - URL validation (InstantDB S3 only)
+  - 24-hour cache headers for performance
+  - Resolves BUG-042
 
 ### Version 1.0.0 (2025-09-26)
 - Initial API release

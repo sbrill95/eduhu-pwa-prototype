@@ -15,6 +15,7 @@ export interface LibraryMaterial {
   updated_at: number;
   is_favorite: boolean;
   source_session_id?: string;
+  metadata?: any; // JSON metadata field for originalParams, imageStyle, etc. (stored as JSON in InstantDB)
 }
 
 export interface CreateMaterialData {
@@ -44,6 +45,7 @@ export const useLibraryMaterials = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Query all user materials
+  // US4 FIX: Explicitly request metadata field from InstantDB
   const { data: materialsData, error: queryError } = db.useQuery(
     user ? {
       library_materials: {
@@ -55,19 +57,59 @@ export const useLibraryMaterials = () => {
     } : null
   );
 
-  const materials: LibraryMaterial[] = materialsData?.library_materials?.map(material => ({
-    id: material.id,
-    user_id: material.user_id,
-    title: material.title,
-    type: material.type as LibraryMaterial['type'],
-    content: material.content,
-    description: material.description,
-    tags: typeof material.tags === 'string' ? JSON.parse(material.tags) : material.tags || [],
-    created_at: material.created_at,
-    updated_at: material.updated_at,
-    is_favorite: material.is_favorite,
-    source_session_id: material.source_session_id,
-  })) || [];
+  // DEBUG: Log query execution
+  console.log('🔍 [LIBRARY DEBUG] useLibraryMaterials query:', {
+    hasUser: !!user,
+    userId: user?.id,
+    hasData: !!materialsData,
+    rawMaterialsCount: materialsData?.library_materials?.length || 0
+  });
+
+  const materials: LibraryMaterial[] = materialsData?.library_materials?.map((material: any) => {
+    // T041: Parse metadata JSON string from InstantDB for MaterialPreviewModal
+    // US4 DEBUG: Log raw material data from InstantDB
+    console.log('🔍 [DEBUG US4] Raw material from InstantDB:', {
+      id: material.id,
+      title: material.title,
+      hasMetadata: !!material.metadata,
+      metadataType: typeof material.metadata,
+      metadataValue: material.metadata
+    });
+
+    let parsedMetadata = undefined;
+    if (material.metadata) {
+      try {
+        parsedMetadata = typeof material.metadata === 'string' ? JSON.parse(material.metadata) : material.metadata;
+      } catch (err) {
+        console.error('Error parsing material metadata:', err, { materialId: material.id });
+        parsedMetadata = undefined;
+      }
+    }
+
+    return {
+      id: material.id,
+      user_id: material.user_id,
+      title: material.title,
+      type: material.type as LibraryMaterial['type'],
+      content: material.content,
+      description: material.description,
+      tags: typeof material.tags === 'string' ? JSON.parse(material.tags) : material.tags || [],
+      created_at: material.created_at,
+      updated_at: material.updated_at,
+      is_favorite: material.is_favorite,
+      source_session_id: material.source_session_id,
+      metadata: parsedMetadata,
+    };
+  }) || [];
+
+  // BUG-020 FIX: Debug logging for library display issues
+  console.log('[useLibraryMaterials] Materials loaded:', {
+    count: materials.length,
+    hasData: !!materialsData,
+    hasLibraryMaterials: !!materialsData?.library_materials,
+    rawCount: materialsData?.library_materials?.length || 0,
+    imageCount: materials.filter(m => m.type === 'image').length
+  });
 
   // Create a new material
   const createMaterial = useCallback(async (data: CreateMaterialData): Promise<string> => {
@@ -188,12 +230,35 @@ export const useLibraryMaterials = () => {
   // Search materials
   const searchMaterials = useCallback((query: string) => {
     const lowercaseQuery = query.toLowerCase();
-    return materials.filter(material =>
-      material.title.toLowerCase().includes(lowercaseQuery) ||
-      material.description?.toLowerCase().includes(lowercaseQuery) ||
-      material.content.toLowerCase().includes(lowercaseQuery) ||
-      material.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
-    );
+    return materials.filter(material => {
+      // Parse metadata to extract tags (FR-028: Tags must be searchable)
+      let metadataTags: string[] = [];
+      if (material.metadata) {
+        try {
+          const metadata = typeof material.metadata === 'string'
+            ? JSON.parse(material.metadata)
+            : material.metadata;
+          metadataTags = metadata.tags || [];
+        } catch (e) {
+          // Ignore parse errors, use empty array
+          metadataTags = [];
+        }
+      }
+
+      // Check if any metadata tags match the search query
+      const matchesMetadataTags = metadataTags.some((tag: string) =>
+        tag.toLowerCase().includes(lowercaseQuery)
+      );
+
+      // Match title, description, content, material.tags, OR metadata.tags
+      return (
+        material.title.toLowerCase().includes(lowercaseQuery) ||
+        material.description?.toLowerCase().includes(lowercaseQuery) ||
+        material.content.toLowerCase().includes(lowercaseQuery) ||
+        material.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery)) ||
+        matchesMetadataTags
+      );
+    });
   }, [materials]);
 
   // Get all unique tags

@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, type ReactNode, useEffect } from 'react';
 import db from './instantdb';
 import {
   isTestMode,
@@ -27,22 +27,54 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  // Check if test mode is active and warn
-  useEffect(() => {
-    warnIfTestMode();
-  }, []);
+  // FIX: Make test mode detection REACTIVE, not static
+  // Check flag on every render to ensure Playwright's addInitScript() has run
+  const [useTestAuth, setUseTestAuth] = useState(() => isTestMode());
 
-  // SECURITY CHECK: Use test auth ONLY if VITE_TEST_MODE is explicitly "true"
-  const useTestAuth = isTestMode();
+  // Re-check test mode flag reactively (handles late Playwright injection)
+  useEffect(() => {
+    const checkTestMode = () => {
+      const currentTestMode = isTestMode();
+      if (currentTestMode !== useTestAuth) {
+        console.log(`🔧 [AuthContext] Test mode changed: ${useTestAuth} → ${currentTestMode}`);
+        setUseTestAuth(currentTestMode);
+      }
+    };
+
+    // Check immediately
+    checkTestMode();
+
+    // Poll for flag changes (handles race condition where Playwright sets flag after React loads)
+    const interval = setInterval(checkTestMode, 100);
+
+    // Stop polling after 2 seconds (by then Playwright will have injected the flag)
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+      console.log('🔧 [AuthContext] Test mode polling stopped');
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [useTestAuth]);
+
+  // Warn if test mode is active
+  useEffect(() => {
+    if (useTestAuth) {
+      warnIfTestMode();
+    }
+  }, [useTestAuth]);
 
   // Use test auth if in test mode, otherwise use real InstantDB auth
-  const realAuth = db.useAuth();
+  // IMPORTANT: Only call db.useAuth() if NOT in test mode (to avoid InstantDB errors)
+  const realAuth = useTestAuth ? null : db.useAuth();
   const testAuthState = createTestAuthState();
 
   // Select auth based on test mode flag
   const { isLoading, user, error } = useTestAuth
     ? testAuthState
-    : realAuth;
+    : (realAuth || { isLoading: true, user: null, error: null });
 
   const signOut = async () => {
     // Use test auth methods in test mode

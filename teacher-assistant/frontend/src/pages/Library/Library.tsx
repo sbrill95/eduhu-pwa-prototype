@@ -3,6 +3,10 @@ import { useAuth } from '../../lib/auth-context';
 import db from '../../lib/instantdb';
 import useLibraryMaterials from '../../hooks/useLibraryMaterials';
 import { formatRelativeDate } from '../../lib/formatRelativeDate';
+import { logger } from '../../lib/logger';
+import { MaterialPreviewModal, UnifiedMaterial } from '../../components/MaterialPreviewModal';
+import { convertArtifactToUnifiedMaterial, ArtifactItem as MappedArtifactItem } from '../../lib/materialMappers';
+import ImageEditModal from '../../components/ImageEditModal';
 
 interface ChatHistoryItem {
   id: string;
@@ -23,6 +27,8 @@ interface ArtifactItem {
   source: 'chat_generated' | 'uploaded' | 'manual';
   chatId?: string;
   size?: string;
+  metadata?: any; // T007: Metadata for MaterialPreviewModal regeneration support
+  is_favorite?: boolean; // T007: Favorite status
 }
 
 type LibraryItem = ChatHistoryItem | ArtifactItem;
@@ -38,6 +44,14 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
   const [selectedTab, setSelectedTab] = useState<'chats' | 'artifacts'>('chats');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'document' | 'image' | 'worksheet' | 'quiz' | 'lesson_plan'>('all');
 
+  // T003: Modal state for MaterialPreviewModal integration
+  const [selectedMaterial, setSelectedMaterial] = useState<UnifiedMaterial | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  // Story 3.1.2: Modal state for ImageEditModal integration
+  const [selectedImageForEdit, setSelectedImageForEdit] = useState<ArtifactItem | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+
   // Get chat sessions from InstantDB with messages for lastMessage display
   const { data: chatData } = db.useQuery(
     user ? {
@@ -52,7 +66,17 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
   );
 
   // Get library materials
-  const { materials } = useLibraryMaterials();
+  const { materials, error: materialsError } = useLibraryMaterials();
+
+  // T042: Log InstantDB query errors per FR-011
+  useEffect(() => {
+    if (materialsError) {
+      logger.error('Failed to fetch library materials from InstantDB', materialsError, {
+        userId: user?.id,
+        component: 'Library.tsx'
+      });
+    }
+  }, [materialsError, user?.id]);
 
   // Track which chats are currently extracting tags to prevent duplicate requests
   const [extractingTags, setExtractingTags] = useState<Set<string>>(new Set());
@@ -91,24 +115,6 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
       });
     }
   }, [extractingTags]);
-
-  // Listen for navigation events from Homepage
-  useEffect(() => {
-    const handleLibraryNav = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      console.log('[Library] Received navigate-library-tab event:', customEvent.detail);
-
-      if (customEvent.detail?.tab === 'materials') {
-        setSelectedTab('artifacts'); // 'artifacts' is the materials tab
-      }
-    };
-
-    window.addEventListener('navigate-library-tab', handleLibraryNav);
-
-    return () => {
-      window.removeEventListener('navigate-library-tab', handleLibraryNav);
-    };
-  }, []);
 
   // DISABLED BUG-009: Auto-tag extraction - backend routes not registered
   // This feature requires /api/chat/:chatId/tags route to be registered in Express app.ts
@@ -176,6 +182,7 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
   });
 
   // Map materials to ArtifactItem format
+  // T007: Include metadata and is_favorite for MaterialPreviewModal regeneration support
   const artifacts: ArtifactItem[] = materials.map((material: any) => ({
     id: material.id,
     title: material.title,
@@ -184,8 +191,57 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
     dateCreated: new Date(material.created_at),
     source: 'chat_generated' as const,
     chatId: material.chat_session_id,
-    size: undefined
+    size: undefined,
+    metadata: material.metadata,          // T007: Pass through parsed metadata
+    is_favorite: material.is_favorite     // T007: Pass through favorite status
   }));
+
+  // T015: Listen for navigation events from Homepage and AgentResultView (US2)
+  // MUST be placed after artifacts declaration to avoid "used before declaration" error
+  useEffect(() => {
+    const handleLibraryNav = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      console.log('[Library] Received navigate-library-tab event:', customEvent.detail);
+
+      // Switch to materials tab
+      if (customEvent.detail?.tab === 'materials') {
+        setSelectedTab('artifacts'); // 'artifacts' is the materials tab
+      }
+
+      // T015: Auto-open modal if materialId is provided (US2)
+      const materialId = customEvent.detail?.materialId;
+      if (materialId) {
+        console.log('[Library] materialId provided, looking for material:', materialId);
+
+        // Find material in artifacts array
+        const artifact = artifacts.find(a => a.id === materialId);
+
+        if (artifact) {
+          console.log('[Library] Material found, converting and opening modal:', artifact.title);
+
+          // Convert to UnifiedMaterial using mapper
+          const unifiedMaterial = convertArtifactToUnifiedMaterial(artifact);
+
+          // Open modal with the material
+          setSelectedMaterial(unifiedMaterial);
+          setIsModalOpen(true);
+
+          console.log('[Library] ✅ Modal opened with material:', materialId);
+        } else {
+          console.warn('[Library] ⚠️ Material not found in artifacts array:', materialId, {
+            totalArtifacts: artifacts.length,
+            artifactIds: artifacts.map(a => a.id).slice(0, 5) // Show first 5 IDs for debugging
+          });
+        }
+      }
+    };
+
+    window.addEventListener('navigate-library-tab', handleLibraryNav);
+
+    return () => {
+      window.removeEventListener('navigate-library-tab', handleLibraryNav);
+    };
+  }, [artifacts]); // T015: Add artifacts as dependency to ensure we can find the material
 
   const artifactTypes = [
     { key: 'all', label: 'Alle', icon: '📁' },
@@ -239,6 +295,72 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
       onTabChange('chat');
     }
   }, [onChatSelect, onTabChange]);
+
+  // T003: Handle material card click - open modal with selected material
+  const handleMaterialClick = useCallback((artifact: ArtifactItem) => {
+    console.log('[Library] Material clicked:', artifact.id);
+
+    // DEBUG: Log raw artifact data to identify US4 issue
+    console.log('🐛 [DEBUG US4] Raw artifact data:', {
+      id: artifact.id,
+      title: artifact.title,
+      type: artifact.type,
+      description: artifact.description?.substring(0, 100), // First 100 chars
+      source: artifact.source,
+      metadata: artifact.metadata,
+      is_favorite: artifact.is_favorite
+    });
+
+    // Convert ArtifactItem to UnifiedMaterial using mapper
+    const unifiedMaterial = convertArtifactToUnifiedMaterial(artifact);
+
+    // DEBUG: Log transformed UnifiedMaterial to see what modal receives
+    console.log('🐛 [DEBUG US4] Converted UnifiedMaterial:', {
+      id: unifiedMaterial.id,
+      title: unifiedMaterial.title,
+      type: unifiedMaterial.type,
+      source: unifiedMaterial.source,
+      'metadata.artifact_data': unifiedMaterial.metadata.artifact_data,
+      'metadata.image_data': unifiedMaterial.metadata.image_data,
+      'metadata.agent_name': unifiedMaterial.metadata.agent_name,
+      is_favorite: unifiedMaterial.is_favorite
+    });
+
+    // Set selected material and open modal
+    setSelectedMaterial(unifiedMaterial);
+    setIsModalOpen(true);
+  }, []);
+
+  // T003: Handle modal close - clear state
+  const handleModalClose = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedMaterial(null);
+  }, []);
+
+  // Story 3.1.2: Handle "Bearbeiten" button click - open ImageEditModal
+  const handleEditClick = useCallback((artifact: ArtifactItem, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    console.log('[Library] Edit button clicked:', artifact.id);
+
+    setSelectedImageForEdit(artifact);
+    setIsEditModalOpen(true);
+  }, []);
+
+  // Story 3.1.2: Handle edit modal close
+  const handleEditModalClose = useCallback(() => {
+    setIsEditModalOpen(false);
+    setSelectedImageForEdit(null);
+  }, []);
+
+  // Story 3.1.2: Handle edited image save
+  const handleEditedImageSave = useCallback((editedImage: any) => {
+    console.log('[Library] Edited image saved:', editedImage);
+
+    // TODO: Save editedImage to InstantDB library_materials
+    // This will be implemented in Phase 3
+
+    handleEditModalClose();
+  }, [handleEditModalClose]);
 
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto">
@@ -378,25 +500,65 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
               );
             })
           ) : (
-            /* Material Items */
+            /* Material Items - T039: Show image thumbnails for image-type materials */
             filteredItems.map((item) => {
               const artifact = item as ArtifactItem;
+              // For images, content field contains the InstantDB storage URL
+              const isImage = artifact.type === 'image';
+              const imageUrl = isImage ? artifact.description : null;
+
               return (
                 <div
                   key={artifact.id}
+                  data-testid="material-card"
+                  onClick={() => handleMaterialClick(artifact)}
                   className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="text-3xl">{getArtifactIcon(artifact.type)}</div>
+                    {/* T039: Display thumbnail for images, icon for other types */}
+                    {isImage && imageUrl ? (
+                      <div className="w-16 h-16 flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
+                        <img
+                          src={imageUrl}
+                          alt={artifact.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            // Fallback to icon if image fails to load
+                            logger.warn('Failed to load image thumbnail', {
+                              materialId: artifact.id,
+                              imageUrl: imageUrl
+                            });
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="text-3xl">{getArtifactIcon(artifact.type)}</div>
+                    )}
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-900 mb-1">{artifact.title}</h3>
-                      <p className="text-sm text-gray-600 line-clamp-2">{artifact.description}</p>
+                      {!isImage && <p className="text-sm text-gray-600 line-clamp-2">{artifact.description}</p>}
                       <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
                         <span>{artifact.dateCreated.toLocaleDateString('de-DE')}</span>
                         <span>•</span>
                         <span>{artifact.type}</span>
                       </div>
                     </div>
+                    {/* Story 3.1.2: "Bearbeiten" button for images */}
+                    {isImage && (
+                      <button
+                        onClick={(e) => handleEditClick(artifact, e)}
+                        className="px-3 py-1.5 text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
+                        data-testid="edit-image-button"
+                      >
+                        <span className="flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                          Bearbeiten
+                        </span>
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -434,6 +596,28 @@ const Library: React.FC<LibraryProps> = ({ onChatSelect, onTabChange }) => {
             </button>
           )}
         </div>
+      )}
+
+      {/* T003: MaterialPreviewModal integration */}
+      <MaterialPreviewModal
+        material={selectedMaterial}
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+      />
+
+      {/* Story 3.1.2: ImageEditModal integration */}
+      {selectedImageForEdit && (
+        <ImageEditModal
+          image={{
+            ...selectedImageForEdit,
+            imageUrl: selectedImageForEdit.description,
+            url: selectedImageForEdit.description,
+            createdAt: selectedImageForEdit.dateCreated,
+          }}
+          isOpen={isEditModalOpen}
+          onClose={handleEditModalClose}
+          onSave={handleEditedImageSave}
+        />
       )}
     </div>
   );

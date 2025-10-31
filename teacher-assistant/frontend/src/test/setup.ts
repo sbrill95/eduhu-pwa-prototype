@@ -68,3 +68,27 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   unobserve: vi.fn(),
   disconnect: vi.fn(),
 }))
+
+// Mock AgentContext
+vi.mock('../lib/AgentContext', () => ({
+  AgentProvider: ({ children }: { children: React.ReactNode }) => children,
+  useAgent: vi.fn(() => ({
+    state: {
+      isOpen: false,
+      phase: null,
+      agentType: null,
+      formData: {},
+      executionId: null,
+      sessionId: null,
+      progress: { percentage: 0, message: '', currentStep: '' },
+      result: null,
+      error: null
+    },
+    openModal: vi.fn(),
+    closeModal: vi.fn(),
+    submitForm: vi.fn(),
+    cancelExecution: vi.fn(),
+    saveToLibrary: vi.fn(),
+    navigateToTab: vi.fn(),
+  }))
+}))

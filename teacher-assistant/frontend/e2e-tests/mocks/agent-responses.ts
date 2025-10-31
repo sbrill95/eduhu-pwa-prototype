@@ -70,14 +70,20 @@ export async function setupMockAgentAPI(page: any) {
     const postData = request.postDataJSON();
 
     // Check if message contains trigger word for agent suggestion
-    if (postData.message?.toLowerCase().includes('bild') ||
-        postData.message?.toLowerCase().includes('material')) {
+    if (postData.messages?.some((msg: any) =>
+        msg.content?.toLowerCase().includes('bild') ||
+        msg.content?.toLowerCase().includes('material'))) {
 
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          message: mockAgentSuggestion
+          success: true,
+          data: {
+            message: mockAgentSuggestion.content,
+            agentSuggestion: mockAgentSuggestion.agentSuggestion
+          },
+          timestamp: new Date().toISOString()
         })
       });
     } else {
@@ -86,10 +92,11 @@ export async function setupMockAgentAPI(page: any) {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          message: {
-            role: 'assistant',
-            content: 'Wie kann ich dir helfen?'
-          }
+          success: true,
+          data: {
+            message: 'Wie kann ich dir helfen?'
+          },
+          timestamp: new Date().toISOString()
         })
       });
     }

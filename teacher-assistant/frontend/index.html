@@ -9,6 +9,21 @@
     <title>Teacher Assistant</title>
   </head>
   <body>
+    <!-- CRITICAL: Playwright test mode injection point (runs BEFORE React loads) -->
+    <!-- This script tag ensures __VITE_TEST_MODE__ is set before any React code executes -->
+    <script id="test-mode-init">
+      // This will be set by Playwright's addInitScript() or page.evaluate()
+      // Having this placeholder ensures the flag can be set very early
+      if (typeof window !== 'undefined') {
+        // Check if Vite injected test mode at build time
+        if (typeof __VITE_TEST_MODE__ !== 'undefined' && __VITE_TEST_MODE__) {
+          window.__VITE_TEST_MODE__ = true;
+          console.log('🔧 [index.html] Test mode enabled via Vite build-time injection');
+        }
+        // Playwright will override this via addInitScript() if needed
+      }
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

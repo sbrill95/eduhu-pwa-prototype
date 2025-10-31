@@ -2,7 +2,6 @@
  * Unit Tests for Chat Tag Service
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   extractChatTags,
   extractTagsFromText,
@@ -15,11 +14,11 @@ import {
 import { openaiClient } from '../config/openai';
 
 // Mock OpenAI client
-vi.mock('../config/openai', () => ({
+jest.mock('../config/openai', () => ({
   openaiClient: {
     chat: {
       completions: {
-        create: vi.fn(),
+        create: jest.fn(),
       },
     },
   },
@@ -29,18 +28,21 @@ vi.mock('../config/openai', () => ({
 }));
 
 // Mock logger
-vi.mock('../config/logger', () => ({
-  logError: vi.fn(),
-  logInfo: vi.fn(),
+jest.mock('../config/logger', () => ({
+  logError: jest.fn(),
+  logInfo: jest.fn(),
 }));
 
 describe('ChatTagService', () => {
+  const mockCreate = openaiClient.chat.completions
+    .create as jest.MockedFunction<typeof openaiClient.chat.completions.create>;
+
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('extractChatTags', () => {
@@ -53,7 +55,8 @@ describe('ChatTagService', () => {
         },
         {
           role: 'assistant',
-          content: 'Gerne helfe ich Ihnen bei der Erstellung eines Arbeitsblatts...',
+          content:
+            'Gerne helfe ich Ihnen bei der Erstellung eines Arbeitsblatts...',
         },
       ];
 
@@ -64,7 +67,7 @@ describe('ChatTagService', () => {
         { label: 'Arbeitsblatt', category: 'material_type' },
       ];
 
-      vi.mocked(openaiClient.chat.completions.create).mockResolvedValue({
+      mockCreate.mockResolvedValue({
         choices: [
           {
             message: {
@@ -80,7 +83,7 @@ describe('ChatTagService', () => {
       const result = await extractChatTags('test-chat-id', mockMessages);
 
       expect(result).toEqual(mockTags);
-      expect(openaiClient.chat.completions.create).toHaveBeenCalledWith(
+      expect(mockCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           model: 'gpt-4o-mini',
           temperature: 0.3,
@@ -91,7 +94,7 @@ describe('ChatTagService', () => {
     it('should return empty array for empty messages', async () => {
       const result = await extractChatTags('test-chat-id', []);
       expect(result).toEqual([]);
-      expect(openaiClient.chat.completions.create).not.toHaveBeenCalled();
+      expect(mockCreate).not.toHaveBeenCalled();
     });
 
     it('should handle OpenAI API errors gracefully', async () => {
@@ -99,9 +102,7 @@ describe('ChatTagService', () => {
         { role: 'user', content: 'Test message' },
       ];
 
-      vi.mocked(openaiClient.chat.completions.create).mockRejectedValue(
-        new Error('API Error')
-      );
+      mockCreate.mockRejectedValue(new Error('API Error'));
 
       const result = await extractChatTags('test-chat-id', mockMessages);
 
@@ -113,7 +114,7 @@ describe('ChatTagService', () => {
         { role: 'user', content: 'Test message' },
       ];
 
-      vi.mocked(openaiClient.chat.completions.create).mockResolvedValue({
+      mockCreate.mockResolvedValue({
         choices: [
           {
             message: {
@@ -143,7 +144,7 @@ describe('ChatTagService', () => {
         { label: 'Arbeitsblatt', category: 'material_type' }, // Valid
       ];
 
-      vi.mocked(openaiClient.chat.completions.create).mockResolvedValue({
+      mockCreate.mockResolvedValue({
         choices: [
           {
             message: {
@@ -179,7 +180,7 @@ describe('ChatTagService', () => {
         { label: 'Tag6', category: 'general' }, // Should be excluded
       ];
 
-      vi.mocked(openaiClient.chat.completions.create).mockResolvedValue({
+      mockCreate.mockResolvedValue({
         choices: [
           {
             message: {
@@ -210,7 +211,7 @@ describe('ChatTagService', () => {
         { label: 'Mathematik', category: 'subject' },
       ];
 
-      vi.mocked(openaiClient.chat.completions.create).mockResolvedValue({
+      mockCreate.mockResolvedValue({
         choices: [
           {
             message: {
@@ -225,11 +226,13 @@ describe('ChatTagService', () => {
 
       await extractChatTags('test-chat-id', mockMessages);
 
-      const callArgs = vi.mocked(openaiClient.chat.completions.create).mock.calls[0][0];
-      const userMessage = callArgs.messages.find((m: any) => m.role === 'user');
+      const callArgs = mockCreate.mock.calls[0]?.[0];
+      const userMessage = callArgs?.messages.find(
+        (m: any) => m.role === 'user'
+      );
 
       // Should only include 10 messages in the analysis
-      expect(userMessage.content).not.toContain('Message 11');
+      expect(userMessage?.content).not.toContain('Message 11');
     });
   });
 
@@ -240,7 +243,7 @@ describe('ChatTagService', () => {
         { label: 'Klasse 5', category: 'grade_level' },
       ];
 
-      vi.mocked(openaiClient.chat.completions.create).mockResolvedValue({
+      mockCreate.mockResolvedValue({
         choices: [
           {
             message: {
@@ -261,7 +264,7 @@ describe('ChatTagService', () => {
     it('should return empty array for empty text', async () => {
       const result = await extractTagsFromText('');
       expect(result).toEqual([]);
-      expect(openaiClient.chat.completions.create).not.toHaveBeenCalled();
+      expect(mockCreate).not.toHaveBeenCalled();
     });
   });
 

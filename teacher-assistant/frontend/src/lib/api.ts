@@ -449,14 +449,51 @@ class ApiClient {
   }
 
   async executeAgent(request: AgentExecutionRequest): Promise<AgentExecutionResponse> {
-    const response = await this.request<{
-      success: boolean;
-      data: AgentExecutionResponse;
-    }>('/langgraph/agents/execute', {
-      method: 'POST',
-      body: JSON.stringify(request),
+    const endpoint = '/langgraph/agents/execute';
+    const fullUrl = `${this.baseUrl}${endpoint}`;
+
+    console.log('[ApiClient] 🚀 executeAgent REQUEST', {
+      timestamp: new Date().toISOString(),
+      endpoint,
+      fullUrl,
+      agentId: request.agentId,
+      hasInput: !!request.input,
+      inputType: typeof request.input,
+      inputKeys: request.input && typeof request.input === 'object' ? Object.keys(request.input) : [],
+      userId: request.userId,
+      sessionId: request.sessionId,
+      confirmExecution: request.confirmExecution
     });
-    return response.data;
+
+    try {
+      const response = await this.request<{
+        success: boolean;
+        data: AgentExecutionResponse;
+      }>(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(request),
+      });
+
+      console.log('[ApiClient] ✅ executeAgent RESPONSE', {
+        timestamp: new Date().toISOString(),
+        success: !!response.data,
+        hasImageUrl: !!(response.data as any)?.image_url,
+        responseKeys: response.data ? Object.keys(response.data) : [],
+        dataType: typeof response.data
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('[ApiClient] ❌ executeAgent ERROR', {
+        timestamp: new Date().toISOString(),
+        errorType: error?.constructor?.name,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStatus: (error as any)?.status,
+        errorCode: (error as any)?.errorCode,
+        stack: error instanceof Error ? error.stack?.split('\n').slice(0, 3).join('\n') : undefined
+      });
+      throw error;
+    }
   }
 
   async getAgentStatus(executionId: string): Promise<AgentStatus> {
@@ -503,6 +540,233 @@ class ApiClient {
     } else {
       // Still running or unknown status - return partial result
       throw new Error(`Agent execution not completed. Status: ${statusData.status || 'unknown'}`);
+    }
+  }
+
+  /**
+   * Execute image generation using OpenAI Agents SDK
+   * @param params - Image generation parameters
+   * @returns Image generation response
+   */
+  async executeImageGenerationSdk(params: {
+    prompt?: string;
+    description?: string;
+    size?: '1024x1024' | '1024x1792' | '1792x1024';
+    quality?: 'standard' | 'hd';
+    style?: 'vivid' | 'natural';
+    imageStyle?: 'realistic' | 'cartoon' | 'illustrative' | 'abstract';
+    learningGroup?: string;
+    educationalContext?: string;
+    targetAgeGroup?: string;
+    subject?: string;
+    enhancePrompt?: boolean;
+  }): Promise<{
+    image_url: string;
+    revised_prompt: string;
+    enhanced_prompt?: string;
+    educational_optimized: boolean;
+    title: string;
+    tags: string[];
+    library_id?: string;
+    originalParams: any;
+  }> {
+    const endpoint = '/agents-sdk/image/generate';
+
+    console.log('[ApiClient] 🚀 executeImageGenerationSdk REQUEST', {
+      timestamp: new Date().toISOString(),
+      endpoint,
+      hasPrompt: !!params.prompt,
+      hasDescription: !!params.description,
+      params
+    });
+
+    try {
+      const response = await this.request<{
+        success: boolean;
+        data: any;
+        cost: number;
+        metadata: any;
+        artifacts: any[];
+        timestamp: number;
+      }>(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      console.log('[ApiClient] ✅ executeImageGenerationSdk RESPONSE', {
+        timestamp: new Date().toISOString(),
+        success: response.success,
+        hasImageUrl: !!response.data?.image_url,
+        cost: response.cost
+      });
+
+      console.log('[ApiClient] 🔍 DEBUG: Full backend response structure:', {
+        responseKeys: Object.keys(response),
+        dataKeys: response.data ? Object.keys(response.data) : [],
+        hasLibraryIdInData: 'library_id' in (response.data || {}),
+        libraryIdValue: response.data?.library_id
+      });
+
+      console.log('[ApiClient] 🔍 DEBUG: response.data object:', response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error('[ApiClient] ❌ executeImageGenerationSdk ERROR', {
+        timestamp: new Date().toISOString(),
+        errorType: error?.constructor?.name,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStatus: (error as any)?.status
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Classify user intent for router agent (Story 3.1.3)
+   * @param prompt - User's prompt to classify
+   * @param override - Optional manual override ('create_image' | 'edit_image' | 'unknown')
+   * @returns Classification result with intent, confidence, and entities
+   */
+  async classifyIntent(params: {
+    prompt: string;
+    override?: 'create_image' | 'edit_image' | 'unknown';
+  }): Promise<{
+    intent: 'create_image' | 'edit_image' | 'unknown';
+    confidence: number;
+    needsManualSelection: boolean;
+    entities: {
+      subject?: string;
+      gradeLevel?: string;
+      topic?: string;
+      style?: string;
+    };
+    reasoning?: string;
+    overridden: boolean;
+  }> {
+    const endpoint = '/agents-sdk/router/classify';
+
+    console.log('[ApiClient] 🔀 classifyIntent REQUEST', {
+      timestamp: new Date().toISOString(),
+      endpoint,
+      promptLength: params.prompt.length,
+      hasOverride: !!params.override,
+    });
+
+    try {
+      const response = await this.request<{
+        success: boolean;
+        data: {
+          intent: 'create_image' | 'edit_image' | 'unknown';
+          confidence: number;
+          needsManualSelection: boolean;
+          entities: {
+            subject?: string;
+            gradeLevel?: string;
+            topic?: string;
+            style?: string;
+          };
+          reasoning?: string;
+          overridden: boolean;
+        };
+      }>(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      console.log('[ApiClient] ✅ classifyIntent SUCCESS', {
+        timestamp: new Date().toISOString(),
+        intent: response.data?.intent,
+        confidence: response.data?.confidence,
+        needsManualSelection: response.data?.needsManualSelection,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('[ApiClient] ❌ classifyIntent ERROR', {
+        timestamp: new Date().toISOString(),
+        errorType: error?.constructor?.name,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStatus: (error as any)?.status,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Edit an existing image using Gemini 2.5 Flash Image model
+   * @param imageId - Original image ID
+   * @param instruction - German instruction (e.g., "Füge 'Klasse 5b' oben rechts hinzu")
+   * @param userId - User ID
+   * @returns Edited image data with usage information
+   */
+  async editImage(params: {
+    imageId: string;
+    instruction: string;
+    userId: string;
+  }): Promise<{
+    editedImage: {
+      id: string;
+      url: string;
+      originalImageId: string;
+      editInstruction: string;
+      version: number;
+      createdAt: Date;
+    };
+    usage: {
+      used: number;
+      limit: number;
+      remaining: number;
+    };
+  }> {
+    const endpoint = '/images/edit';
+
+    console.log('[ApiClient] 🎨 editImage REQUEST', {
+      timestamp: new Date().toISOString(),
+      endpoint,
+      imageId: params.imageId,
+      instructionLength: params.instruction.length,
+      userId: params.userId,
+    });
+
+    try {
+      const response = await this.request<{
+        success: boolean;
+        data: {
+          editedImage: {
+            id: string;
+            url: string;
+            originalImageId: string;
+            editInstruction: string;
+            version: number;
+            createdAt: Date;
+          };
+          usage: {
+            used: number;
+            limit: number;
+            remaining: number;
+          };
+        };
+      }>(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      console.log('[ApiClient] ✅ editImage SUCCESS', {
+        timestamp: new Date().toISOString(),
+        editedImageId: response.data?.editedImage?.id,
+        version: response.data?.editedImage?.version,
+        usageRemaining: response.data?.usage?.remaining,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('[ApiClient] ❌ editImage ERROR', {
+        timestamp: new Date().toISOString(),
+        errorType: error?.constructor?.name,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStatus: (error as any)?.status,
+      });
+      throw error;
     }
   }
 }

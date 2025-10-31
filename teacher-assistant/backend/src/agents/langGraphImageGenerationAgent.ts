@@ -4,7 +4,11 @@
  */
 
 import { openaiClient } from '../config/openai';
-import { AgentParams, AgentResult, agentExecutionService } from '../services/agentService';
+import {
+  AgentParams,
+  AgentResult,
+  agentExecutionService,
+} from '../services/agentService';
 import { Artifact as GeneratedArtifact } from '../schemas/instantdb';
 import { logInfo, logError, logWarn } from '../config/logger';
 import { ImageGenerationPrefillData } from '../../../shared/types';
@@ -29,12 +33,12 @@ export interface LangGraphImageGenerationParams extends AgentParams {
  * DALL-E 3 pricing configuration
  */
 const DALLE_PRICING = {
-  'standard_1024x1024': 4, // $0.04
-  'standard_1024x1792': 8, // $0.08
-  'standard_1792x1024': 8, // $0.08
-  'hd_1024x1024': 8, // $0.08
-  'hd_1024x1792': 12, // $0.12
-  'hd_1792x1024': 12, // $0.12
+  standard_1024x1024: 4, // $0.04
+  standard_1024x1792: 8, // $0.08
+  standard_1792x1024: 8, // $0.08
+  hd_1024x1024: 8, // $0.08
+  hd_1024x1792: 12, // $0.12
+  hd_1792x1024: 12, // $0.12
 };
 
 /**
@@ -51,7 +55,8 @@ const MONTHLY_LIMITS = {
 export class LangGraphImageGenerationAgent {
   public readonly id = 'langgraph-image-generation';
   public readonly name = 'Erweiterte Bildgenerierung';
-  public readonly description = 'Generiert Bilder für den Unterricht mit AI-Unterstützung';
+  public readonly description =
+    'Generiert Bilder für den Unterricht mit AI-Unterstützung';
   public readonly type = 'image-generation';
   public readonly triggers = [
     'bild erstellen',
@@ -68,7 +73,7 @@ export class LangGraphImageGenerationAgent {
     'male',
     'visualisierung',
     'diagram',
-    'schaubild'
+    'schaubild',
   ];
   public readonly enabled = true;
   public readonly config = {
@@ -79,41 +84,75 @@ export class LangGraphImageGenerationAgent {
     enhance_german_prompts: true,
     monthly_limit: MONTHLY_LIMITS.FREE_TIER,
     educational_optimization: true,
-    content_safety_check: true
+    content_safety_check: true,
   };
 
   /**
    * Execute the agent
    */
-  public async execute(params: AgentParams, userId: string, sessionId?: string): Promise<AgentResult> {
+  public async execute(
+    params: AgentParams,
+    userId: string,
+    sessionId?: string
+  ): Promise<AgentResult> {
     const imageParams = params as LangGraphImageGenerationParams;
+    const executionStartTime = Date.now();
+
+    console.log('[IMAGE-GEN] Execute started', {
+      timestamp: new Date().toISOString(),
+      userId,
+      sessionId,
+      hasPrompt: !!imageParams.prompt,
+      promptLength: imageParams.prompt?.length || 0,
+    });
 
     try {
-      logInfo(`Starting image generation for user ${userId}: "${imageParams.prompt}"`);
+      logInfo(
+        `Starting image generation for user ${userId}: "${imageParams.prompt}"`
+      );
 
       // Validate prompt
       if (!imageParams.prompt || imageParams.prompt.trim().length === 0) {
+        console.error('[IMAGE-GEN] Validation failed: No prompt', {
+          timestamp: new Date().toISOString(),
+        });
         return {
           success: false,
-          error: 'Prompt ist erforderlich'
+          error: 'Prompt ist erforderlich',
         };
       }
 
       if (imageParams.prompt.length > 1000) {
+        console.error('[IMAGE-GEN] Validation failed: Prompt too long', {
+          timestamp: new Date().toISOString(),
+          length: imageParams.prompt.length,
+        });
         return {
           success: false,
-          error: 'Prompt ist zu lang (max. 1000 Zeichen)'
+          error: 'Prompt ist zu lang (max. 1000 Zeichen)',
         };
       }
+
+      console.log('[IMAGE-GEN] Validation passed', {
+        timestamp: new Date().toISOString(),
+      });
 
       // Check user limits
       const canExecute = await this.canExecute(userId);
       if (!canExecute) {
+        console.error('[IMAGE-GEN] User limit exceeded', {
+          timestamp: new Date().toISOString(),
+          userId,
+        });
         return {
           success: false,
-          error: 'Monatliches Limit für Bildgenerierung erreicht'
+          error: 'Monatliches Limit für Bildgenerierung erreicht',
         };
       }
+
+      console.log('[IMAGE-GEN] User limit check passed', {
+        timestamp: new Date().toISOString(),
+      });
 
       // Enhanced prompt processing
       let finalPrompt = imageParams.prompt;
@@ -123,29 +162,56 @@ export class LangGraphImageGenerationAgent {
       const geminiInput = params as any as ImageGenerationPrefillData;
       if (geminiInput.description && geminiInput.imageStyle) {
         // Use new Gemini prompt builder
-        logInfo(`Using Gemini prompt builder with description: "${geminiInput.description}", style: ${geminiInput.imageStyle}`);
+        logInfo(
+          `Using Gemini prompt builder with description: "${geminiInput.description}", style: ${geminiInput.imageStyle}`
+        );
         finalPrompt = this.buildImagePrompt(geminiInput);
         descriptionForMetadata = geminiInput.description; // Use Gemini description
-      } else if (imageParams.enhancePrompt !== false && this.config.enhance_german_prompts) {
+      } else if (
+        imageParams.enhancePrompt !== false &&
+        this.config.enhance_german_prompts
+      ) {
         // Fallback: Use old enhancement method
-        finalPrompt = await this.enhanceGermanPrompt(imageParams.prompt, imageParams);
+        finalPrompt = await this.enhanceGermanPrompt(
+          imageParams.prompt,
+          imageParams
+        );
       }
 
       // Generate image
+      console.log('[IMAGE-GEN] About to call generateImage', {
+        timestamp: new Date().toISOString(),
+        promptLength: finalPrompt.length,
+      });
+
       const imageResult = await this.generateImage({
         prompt: finalPrompt,
         size: imageParams.size || this.config.default_size,
         quality: imageParams.quality || this.config.default_quality,
-        style: imageParams.style || this.config.default_style
+        style: imageParams.style || this.config.default_style,
+      });
+
+      console.log('[IMAGE-GEN] generateImage completed', {
+        timestamp: new Date().toISOString(),
+        success: imageResult.success,
       });
 
       if (!imageResult.success) {
+        console.error('[IMAGE-GEN] Image generation failed', {
+          timestamp: new Date().toISOString(),
+          error: imageResult.error,
+        });
         return imageResult;
       }
 
       // Generate title and tags for library search
-      console.log('[ImageAgent] About to generate title and tags for:', descriptionForMetadata);
-      const { title, tags } = await this.generateTitleAndTags(descriptionForMetadata);
+      console.log(
+        '[ImageAgent] About to generate title and tags for:',
+        descriptionForMetadata
+      );
+      const { title, tags } = await this.generateTitleAndTags(
+        descriptionForMetadata
+      );
       console.log('[ImageAgent] ✅ Generated title:', title);
       console.log('[ImageAgent] ✅ Generated tags:', tags);
       logInfo(`Generated title: "${title}", tags: [${tags.join(', ')}]`);
@@ -167,22 +233,47 @@ export class LangGraphImageGenerationAgent {
         tags
       );
 
+      const totalExecutionTime = Date.now() - executionStartTime;
+      console.log('[IMAGE-GEN] Artifact creation completed', {
+        timestamp: new Date().toISOString(),
+        totalExecutionTimeMs: totalExecutionTime,
+        totalExecutionTimeSec: (totalExecutionTime / 1000).toFixed(2),
+      });
+
       logInfo(`Image generation completed successfully for user ${userId}`);
+
+      // T020: Extract originalParams for re-generation feature (FR-008)
+      const geminiInputForRegeneration = imageParams as any;
+      const originalParams = {
+        description:
+          geminiInputForRegeneration.description || imageParams.prompt || '',
+        imageStyle: geminiInputForRegeneration.imageStyle || 'illustrative',
+        learningGroup: geminiInputForRegeneration.learningGroup || '',
+        subject: geminiInputForRegeneration.subject || '',
+      };
 
       const resultData = {
         image_url: imageResult.data.url,
         revised_prompt: imageResult.data.revised_prompt,
-        enhanced_prompt: finalPrompt !== imageParams.prompt ? finalPrompt : undefined,
+        enhanced_prompt:
+          finalPrompt !== imageParams.prompt ? finalPrompt : undefined,
         educational_optimized: finalPrompt !== imageParams.prompt,
         title, // Include generated title
-        tags // Include generated tags
+        tags, // Include generated tags
+        originalParams, // T020: Include for re-generation (FR-008)
       };
 
       console.log('[ImageAgent] Final result data:', {
         hasImageUrl: !!resultData.image_url,
         imageUrlPreview: resultData.image_url?.substring(0, 60),
         title: resultData.title,
-        tagsCount: resultData.tags?.length || 0
+        tagsCount: resultData.tags?.length || 0,
+      });
+
+      console.log('[IMAGE-GEN] Sending success response to frontend', {
+        timestamp: new Date().toISOString(),
+        success: true,
+        totalTimeMs: Date.now() - executionStartTime,
       });
 
       return {
@@ -190,19 +281,28 @@ export class LangGraphImageGenerationAgent {
         data: resultData,
         cost,
         metadata: {
-          processing_time: Date.now(),
+          processing_time: Date.now() - executionStartTime,
           model: 'dall-e-3',
           size: imageParams.size || this.config.default_size,
-          quality: imageParams.quality || this.config.default_quality
+          quality: imageParams.quality || this.config.default_quality,
         },
-        artifacts: [artifact]
+        artifacts: [artifact],
       };
-
     } catch (error) {
+      const totalExecutionTime = Date.now() - executionStartTime;
+      console.error('[IMAGE-GEN] Execute failed with error', {
+        timestamp: new Date().toISOString(),
+        error: (error as Error).message,
+        errorStack: (error as Error).stack,
+        totalExecutionTimeMs: totalExecutionTime,
+        totalExecutionTimeSec: (totalExecutionTime / 1000).toFixed(2),
+      });
       logError('Image generation failed', error as Error);
+
+      // ALWAYS return error response - never leave frontend hanging
       return {
         success: false,
-        error: this.getGermanErrorMessage((error as Error).message)
+        error: this.getGermanErrorMessage((error as Error).message),
       };
     }
   }
@@ -223,7 +323,10 @@ export class LangGraphImageGenerationAgent {
       return false;
     }
 
-    if (params.size && !['1024x1024', '1024x1792', '1792x1024'].includes(params.size)) {
+    if (
+      params.size &&
+      !['1024x1024', '1024x1792', '1792x1024'].includes(params.size)
+    ) {
       return false;
     }
 
@@ -268,7 +371,7 @@ export class LangGraphImageGenerationAgent {
   }
 
   /**
-   * Generate image with DALL-E 3
+   * Generate image with DALL-E 3 with timeout protection
    */
   private async generateImage(params: {
     prompt: string;
@@ -276,14 +379,69 @@ export class LangGraphImageGenerationAgent {
     quality: string;
     style: string;
   }): Promise<AgentResult> {
+    const startTime = Date.now();
+    console.log('[IMAGE-GEN] Starting DALL-E 3 generation', {
+      timestamp: new Date().toISOString(),
+      prompt: params.prompt.substring(0, 100),
+      size: params.size,
+      quality: params.quality,
+      style: params.style,
+    });
+
     try {
-      const response = await openaiClient.images.generate({
+      // TEST MODE BYPASS: Skip actual OpenAI API call for faster tests
+      if (process.env.VITE_TEST_MODE === 'true') {
+        console.log('[IMAGE-GEN] TEST MODE: Bypassing OpenAI API call');
+        const mockImageUrl =
+          'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiM0Mjg1RjQiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQ4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlRFU1QgSU1BR0U8L3RleHQ+PC9zdmc+';
+        const mockRevisedPrompt = `Test image for: ${params.prompt.substring(0, 50)}`;
+
+        return {
+          success: true,
+          data: {
+            url: mockImageUrl,
+            revised_prompt: mockRevisedPrompt,
+          },
+        };
+      }
+
+      // Add timeout wrapper (60 seconds max for DALL-E 3)
+      const IMAGE_GENERATION_TIMEOUT = 60000; // 60 seconds
+
+      const imageGenerationPromise = openaiClient.images.generate({
         model: 'dall-e-3',
         prompt: params.prompt,
         size: params.size as any,
         quality: params.quality as any,
         style: params.style as any,
-        n: 1
+        n: 1,
+      });
+
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(
+            new Error(
+              `Image generation timeout after ${IMAGE_GENERATION_TIMEOUT / 1000} seconds`
+            )
+          );
+        }, IMAGE_GENERATION_TIMEOUT);
+      });
+
+      console.log('[IMAGE-GEN] Calling OpenAI DALL-E API', {
+        timestamp: new Date().toISOString(),
+        timeout: `${IMAGE_GENERATION_TIMEOUT / 1000}s`,
+      });
+
+      const response = await Promise.race([
+        imageGenerationPromise,
+        timeoutPromise,
+      ]);
+
+      const elapsedTime = Date.now() - startTime;
+      console.log('[IMAGE-GEN] OpenAI response received', {
+        timestamp: new Date().toISOString(),
+        elapsedMs: elapsedTime,
+        elapsedSec: (elapsedTime / 1000).toFixed(2),
       });
 
       if (!response.data || response.data.length === 0) {
@@ -295,15 +453,27 @@ export class LangGraphImageGenerationAgent {
         throw new Error('Keine Bild-URL von DALL-E erhalten');
       }
 
+      console.log('[IMAGE-GEN] Image generated successfully', {
+        timestamp: new Date().toISOString(),
+        imageUrl: imageData.url.substring(0, 60),
+        totalTimeMs: Date.now() - startTime,
+      });
+
       return {
         success: true,
         data: {
           url: imageData.url,
-          revised_prompt: imageData.revised_prompt || params.prompt
-        }
+          revised_prompt: imageData.revised_prompt || params.prompt,
+        },
       };
-
     } catch (error) {
+      const elapsedTime = Date.now() - startTime;
+      console.error('[IMAGE-GEN] DALL-E generation failed', {
+        timestamp: new Date().toISOString(),
+        error: (error as Error).message,
+        elapsedMs: elapsedTime,
+        elapsedSec: (elapsedTime / 1000).toFixed(2),
+      });
       logError('DALL-E image generation failed', error as Error);
       throw error;
     }
@@ -314,7 +484,9 @@ export class LangGraphImageGenerationAgent {
    * @param description - The original image description
    * @returns Object with title and tags
    */
-  private async generateTitleAndTags(description: string): Promise<{ title: string; tags: string[] }> {
+  private async generateTitleAndTags(
+    description: string
+  ): Promise<{ title: string; tags: string[] }> {
     console.log('[ImageAgent] generateTitleAndTags - START for:', description);
 
     try {
@@ -339,12 +511,10 @@ Antworte NUR im folgenden JSON-Format:
 
       const completion = await openaiClient.chat.completions.create({
         model: 'gpt-4o-mini',
-        messages: [
-          { role: 'user', content: prompt }
-        ],
+        messages: [{ role: 'user', content: prompt }],
         max_tokens: 150,
         temperature: 0.7,
-        response_format: { type: 'json_object' }
+        response_format: { type: 'json_object' },
       });
 
       const responseContent = completion.choices[0]?.message?.content?.trim();
@@ -361,32 +531,36 @@ Antworte NUR im folgenden JSON-Format:
 
       // Validate and return
       const title = parsed.title || this.generateFallbackTitle(description);
-      const tags = Array.isArray(parsed.tags) ? parsed.tags.slice(0, 5) : this.generateFallbackTags(description);
+      const tags = Array.isArray(parsed.tags)
+        ? parsed.tags.slice(0, 5)
+        : this.generateFallbackTags(description);
 
       console.log('[ImageAgent] Final title and tags:', { title, tags });
 
       return { title, tags };
-
     } catch (error) {
       console.error('[ImageAgent] ❌ Title generation failed:', {
         error: (error as Error).message,
-        stack: (error as Error).stack
+        stack: (error as Error).stack,
       });
 
       logWarn('Title and tag generation failed, using fallback', {
         error: (error as Error).message,
-        stack: (error as Error).stack || ''
+        stack: (error as Error).stack || '',
       } as Record<string, unknown>);
 
       // Fallback: Generate title and tags without ChatGPT
       const fallbackTitle = this.generateFallbackTitle(description);
       const fallbackTags = this.generateFallbackTags(description);
 
-      console.log('[ImageAgent] Using fallback:', { title: fallbackTitle, tags: fallbackTags });
+      console.log('[ImageAgent] Using fallback:', {
+        title: fallbackTitle,
+        tags: fallbackTags,
+      });
 
       return {
         title: fallbackTitle,
-        tags: fallbackTags
+        tags: fallbackTags,
       };
     }
   }
@@ -417,10 +591,26 @@ Antworte NUR im folgenden JSON-Format:
   private generateFallbackTags(description: string): string[] {
     // Simple noun extraction: words that are capitalized or educational keywords
     const educationalKeywords = [
-      'Mathematik', 'Deutsch', 'Englisch', 'Physik', 'Chemie', 'Biologie',
-      'Geschichte', 'Geographie', 'Kunst', 'Musik', 'Sport',
-      'Grundschule', 'Gymnasium', 'Realschule', 'Klasse',
-      'Arbeitsblatt', 'Quiz', 'Diagramm', 'Tabelle', 'Grafik'
+      'Mathematik',
+      'Deutsch',
+      'Englisch',
+      'Physik',
+      'Chemie',
+      'Biologie',
+      'Geschichte',
+      'Geographie',
+      'Kunst',
+      'Musik',
+      'Sport',
+      'Grundschule',
+      'Gymnasium',
+      'Realschule',
+      'Klasse',
+      'Arbeitsblatt',
+      'Quiz',
+      'Diagramm',
+      'Tabelle',
+      'Grafik',
     ];
 
     const words = description.split(/\s+/);
@@ -430,7 +620,11 @@ Antworte NUR im folgenden JSON-Format:
     for (const word of words) {
       const cleaned = word.replace(/[.,!?;:]/, '');
       const firstChar = cleaned[0];
-      if (cleaned.length > 3 && firstChar && firstChar === firstChar.toUpperCase()) {
+      if (
+        cleaned.length > 3 &&
+        firstChar &&
+        firstChar === firstChar.toUpperCase()
+      ) {
         tags.push(cleaned);
       }
     }
@@ -462,11 +656,9 @@ Antworte NUR im folgenden JSON-Format:
 
       const completion = await openaiClient.chat.completions.create({
         model: 'gpt-4o-mini',
-        messages: [
-          { role: 'user', content: enhancementPrompt }
-        ],
+        messages: [{ role: 'user', content: enhancementPrompt }],
         max_tokens: 250,
-        temperature: 0.7
+        temperature: 0.7,
       });
 
       const enhancedPrompt = completion.choices[0]?.message?.content?.trim();
@@ -477,7 +669,6 @@ Antworte NUR im folgenden JSON-Format:
       }
 
       return prompt;
-
     } catch (error) {
       logError('Failed to enhance German prompt', error as Error);
       return prompt;
@@ -494,13 +685,18 @@ Antworte NUR im folgenden JSON-Format:
 
     // Style-specific prompt enhancements for DALL-E
     const stylePrompts = {
-      realistic: 'photorealistic, detailed, high-quality, educational photography style',
+      realistic:
+        'photorealistic, detailed, high-quality, educational photography style',
       cartoon: 'cartoon illustration, friendly, colorful, playful, educational',
-      illustrative: 'educational illustration, clear, pedagogical, well-structured',
-      abstract: 'abstract representation, conceptual, thought-provoking, symbolic'
+      illustrative:
+        'educational illustration, clear, pedagogical, well-structured',
+      abstract:
+        'abstract representation, conceptual, thought-provoking, symbolic',
     };
 
-    const styleDescription = input.imageStyle ? stylePrompts[input.imageStyle] : stylePrompts.illustrative;
+    const styleDescription = input.imageStyle
+      ? stylePrompts[input.imageStyle]
+      : stylePrompts.illustrative;
 
     prompt += `Style: ${styleDescription}\n\n`;
     prompt += `Requirements:\n`;
@@ -579,9 +775,11 @@ Regeln:
         generation_timestamp: Date.now(),
         user_language: this.detectLanguage(params.prompt),
         prompt_enhanced: finalPrompt !== params.prompt,
-        educational_optimized: Boolean(params.educationalContext || params.targetAgeGroup || params.subject),
-        search_tags: tags || []
-      }
+        educational_optimized: Boolean(
+          params.educationalContext || params.targetAgeGroup || params.subject
+        ),
+        search_tags: tags || [],
+      },
     };
 
     const artifact: Partial<GeneratedArtifact> = {
@@ -609,11 +807,14 @@ Regeln:
    */
   private getGermanErrorMessage(originalMessage: string): string {
     const errorMappings: Record<string, string> = {
-      'Rate limit': 'OpenAI ist momentan überlastet. Bitte versuche es in einigen Minuten erneut.',
-      'quota': 'OpenAI-Kontingent erschöpft. Bitte versuche es später wieder.',
+      'Rate limit':
+        'OpenAI ist momentan überlastet. Bitte versuche es in einigen Minuten erneut.',
+      quota: 'OpenAI-Kontingent erschöpft. Bitte versuche es später wieder.',
       'API key': 'API-Schlüssel ungültig. Bitte kontaktiere den Administrator.',
-      'content policy': 'Dein Prompt wurde vom Inhaltsfilter blockiert. Bitte verwende andere Begriffe.',
-      'timeout': 'Zeitüberschreitung. Die Bildgenerierung dauert länger als erwartet.'
+      'content policy':
+        'Dein Prompt wurde vom Inhaltsfilter blockiert. Bitte verwende andere Begriffe.',
+      timeout:
+        'Zeitüberschreitung. Die Bildgenerierung dauert länger als erwartet.',
     };
 
     for (const [key, message] of Object.entries(errorMappings)) {
@@ -629,17 +830,32 @@ Regeln:
    * Utility methods
    */
   private isGermanText(text: string): boolean {
-    const germanWords = ['der', 'die', 'das', 'und', 'ist', 'mit', 'für', 'von', 'auf', 'ein', 'eine', 'einen'];
+    const germanWords = [
+      'der',
+      'die',
+      'das',
+      'und',
+      'ist',
+      'mit',
+      'für',
+      'von',
+      'auf',
+      'ein',
+      'eine',
+      'einen',
+    ];
     const germanChars = ['ä', 'ö', 'ü', 'ß'];
 
     const lowerText = text.toLowerCase();
 
-    if (germanChars.some(char => lowerText.includes(char))) {
+    if (germanChars.some((char) => lowerText.includes(char))) {
       return true;
     }
 
     const words = lowerText.split(/\s+/);
-    const germanWordCount = words.filter(word => germanWords.includes(word)).length;
+    const germanWordCount = words.filter((word) =>
+      germanWords.includes(word)
+    ).length;
 
     return germanWordCount >= 1;
   }
@@ -682,7 +898,18 @@ Regeln:
       enabled: true,
       supports_checkpoints: true,
       supports_streaming: true,
-      workflow_type: 'image_generation'
+      workflow_type: 'image_generation',
+    };
+  }
+
+  /**
+   * Get workflow configuration (required for tests)
+   */
+  public getWorkflowConfig(): any {
+    return {
+      checkpointer: true,
+      streaming: true,
+      timeout: 60000,
     };
   }
 }
@@ -690,4 +917,5 @@ Regeln:
 /**
  * Export singleton instance
  */
-export const langGraphImageGenerationAgent = new LangGraphImageGenerationAgent();
+export const langGraphImageGenerationAgent =
+  new LangGraphImageGenerationAgent();

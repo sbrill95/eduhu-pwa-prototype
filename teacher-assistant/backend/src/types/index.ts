@@ -6,7 +6,7 @@ import type {
   AgentSuggestion,
   ImageGenerationPrefillData,
   AgentParams,
-  AgentResult
+  AgentResult,
 } from '../../../shared/types';
 
 // Re-export all shared types
@@ -18,7 +18,7 @@ export type {
   AgentSuggestion,
   ImageGenerationPrefillData,
   AgentParams,
-  AgentResult
+  AgentResult,
 };
 
 // Environment variables interface
@@ -58,6 +58,10 @@ export interface HealthCheckResponse {
   version: string;
   environment: string;
   uptime: number;
+  // ENHANCED: Version tracking for pre-test validation
+  gitCommit?: string; // Git commit hash (for version verification)
+  startupTimestamp?: number; // Unix timestamp when server started
+  instantdb?: string; // InstantDB connection status
 }
 
 // Request/Response types
@@ -106,4 +110,30 @@ export interface PromptTemplate {
   category: string;
   requiresContext: string[];
   weight: number;
+}
+
+// Teacher Profile Knowledge Extraction Types
+export interface KnowledgeExtractionRequest {
+  messages: ChatMessage[];
+  userId?: string;
+  conversationId?: string;
+}
+
+export interface TeacherKnowledge {
+  subjects: string[];
+  grades: string[];
+  schoolType?: string;
+  teachingMethods: string[];
+  topics: string[];
+  challenges: string[];
+}
+
+export interface KnowledgeExtractionResponse {
+  success: true;
+  data: {
+    extractedKnowledge: TeacherKnowledge;
+    confidence: number;
+    messagesAnalyzed: number;
+  };
+  timestamp: string;
 }

@@ -40,17 +40,24 @@ const isRedisConfigured = (): boolean => {
 const getRedisConfig = (): RedisConfig | null => {
   // If no Redis configuration is provided, return null to indicate fallback mode
   if (!isRedisConfigured()) {
-    logInfo('No Redis configuration found, will use memory fallback for LangGraph');
+    logInfo(
+      'No Redis configuration found, will use memory fallback for LangGraph'
+    );
     return null;
   }
 
   try {
-    const password = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_PASSWORD;
+    const password =
+      process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_PASSWORD;
     const hasTls = !!process.env.UPSTASH_REDIS_REST_URL;
 
     const redisConfig: RedisConfig = {
-      host: process.env.UPSTASH_REDIS_REST_URL ? new URL(process.env.UPSTASH_REDIS_REST_URL).hostname : (process.env.REDIS_HOST || 'localhost'),
-      port: process.env.UPSTASH_REDIS_REST_URL ? parseInt(new URL(process.env.UPSTASH_REDIS_REST_URL).port || '443') : parseInt(process.env.REDIS_PORT || '6379'),
+      host: process.env.UPSTASH_REDIS_REST_URL
+        ? new URL(process.env.UPSTASH_REDIS_REST_URL).hostname
+        : process.env.REDIS_HOST || 'localhost',
+      port: process.env.UPSTASH_REDIS_REST_URL
+        ? parseInt(new URL(process.env.UPSTASH_REDIS_REST_URL).port || '443')
+        : parseInt(process.env.REDIS_PORT || '6379'),
       db: parseInt(process.env.REDIS_DB || '0'),
       maxRetriesPerRequest: 2,
       lazyConnect: true,
@@ -80,7 +87,11 @@ let redisSaver: RedisSaver | null = null;
 /**
  * Initialize Redis connection with graceful fallback
  */
-export async function initializeRedis(): Promise<{ client: Redis | null; saver: RedisSaver | null; memoryMode: boolean }> {
+export async function initializeRedis(): Promise<{
+  client: Redis | null;
+  saver: RedisSaver | null;
+  memoryMode: boolean;
+}> {
   try {
     if (redisClient && redisSaver) {
       return { client: redisClient, saver: redisSaver, memoryMode: false };
@@ -125,11 +136,16 @@ export async function initializeRedis(): Promise<{ client: Redis | null; saver: 
     try {
       await Promise.race([
         redisClient.ping(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timeout')), 3000))
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Connection timeout')), 3000)
+        ),
       ]);
       logInfo('Redis ping successful');
     } catch (pingError) {
-      logError('Redis ping failed, falling back to memory mode', pingError as Error);
+      logError(
+        'Redis ping failed, falling back to memory mode',
+        pingError as Error
+      );
 
       // Clean up failed connection
       if (redisClient) {
@@ -152,20 +168,25 @@ export async function initializeRedis(): Promise<{ client: Redis | null; saver: 
         exists: redisClient.exists.bind(redisClient),
         del: redisClient.del.bind(redisClient),
         scan: redisClient.scan.bind(redisClient),
-        hscan: redisClient.hscan.bind(redisClient)
+        hscan: redisClient.hscan.bind(redisClient),
       } as any;
 
       redisSaver = new RedisSaver(redisClientAdapter);
       logInfo('RedisSaver initialized for LangGraph checkpoints');
     } catch (saverError) {
-      logError('Failed to initialize RedisSaver, using memory mode', saverError as Error);
+      logError(
+        'Failed to initialize RedisSaver, using memory mode',
+        saverError as Error
+      );
       redisSaver = null;
     }
 
     return { client: redisClient, saver: redisSaver, memoryMode: false };
-
   } catch (error) {
-    logError('Redis initialization failed, falling back to memory mode', error as Error);
+    logError(
+      'Redis initialization failed, falling back to memory mode',
+      error as Error
+    );
 
     // Clean up any partial connections
     if (redisClient) {
@@ -210,7 +231,7 @@ export async function checkRedisHealth(): Promise<{
       return {
         status: 'memory_mode',
         mode: 'memory',
-        error: 'Running in memory mode (Redis not configured or unavailable)'
+        error: 'Running in memory mode (Redis not configured or unavailable)',
       };
     }
 
@@ -221,13 +242,13 @@ export async function checkRedisHealth(): Promise<{
     return {
       status: 'healthy',
       latency,
-      mode: 'redis'
+      mode: 'redis',
     };
   } catch (error) {
     return {
       status: 'unhealthy',
       mode: 'redis',
-      error: (error as Error).message
+      error: (error as Error).message,
     };
   }
 }
@@ -254,11 +275,13 @@ export async function closeRedis(): Promise<void> {
 export const RedisKeys = {
   // Checkpoint storage keys
   checkpoint: (threadId: string) => `langgraph:checkpoint:${threadId}`,
-  checkpointMetadata: (threadId: string) => `langgraph:checkpoint:meta:${threadId}`,
+  checkpointMetadata: (threadId: string) =>
+    `langgraph:checkpoint:meta:${threadId}`,
 
   // Agent execution tracking
   agentExecution: (executionId: string) => `agent:execution:${executionId}`,
-  agentUsage: (userId: string, agentId: string, month: string) => `agent:usage:${userId}:${agentId}:${month}`,
+  agentUsage: (userId: string, agentId: string, month: string) =>
+    `agent:usage:${userId}:${agentId}:${month}`,
 
   // Progress streaming
   agentProgress: (executionId: string) => `agent:progress:${executionId}`,
@@ -272,14 +295,15 @@ export const RedisKeys = {
   retryCount: (operationId: string) => `retry:count:${operationId}`,
 
   // Rate limiting for agents
-  rateLimit: (userId: string, agentId: string) => `rate:limit:${userId}:${agentId}`,
+  rateLimit: (userId: string, agentId: string) =>
+    `rate:limit:${userId}:${agentId}`,
 
   // Cache for expensive operations
   cache: (key: string) => `cache:${key}`,
 
   // Health monitoring
   healthCheck: () => 'health:check',
-  metrics: (metric: string) => `metrics:${metric}`
+  metrics: (metric: string) => `metrics:${metric}`,
 };
 
 /**
@@ -289,10 +313,15 @@ export const RedisUtils = {
   /**
    * Set data with expiration
    */
-  async setWithExpiry(key: string, value: any, expirySeconds: number): Promise<void> {
+  async setWithExpiry(
+    key: string,
+    value: any,
+    expirySeconds: number
+  ): Promise<void> {
     if (!redisClient) throw new Error('Redis client not initialized');
 
-    const serializedValue = typeof value === 'string' ? value : JSON.stringify(value);
+    const serializedValue =
+      typeof value === 'string' ? value : JSON.stringify(value);
     await redisClient.setex(key, expirySeconds, serializedValue);
   },
 
@@ -315,7 +344,10 @@ export const RedisUtils = {
   /**
    * Increment counter with expiry
    */
-  async incrementWithExpiry(key: string, expirySeconds: number): Promise<number> {
+  async incrementWithExpiry(
+    key: string,
+    expirySeconds: number
+  ): Promise<number> {
     if (!redisClient) throw new Error('Redis client not initialized');
 
     const multi = redisClient.multi();
@@ -323,7 +355,7 @@ export const RedisUtils = {
     multi.expire(key, expirySeconds);
     const results = await multi.exec();
 
-    return results?.[0]?.[1] as number || 0;
+    return (results?.[0]?.[1] as number) || 0;
   },
 
   /**
@@ -348,5 +380,5 @@ export const RedisUtils = {
   async getTTL(key: string): Promise<number> {
     if (!redisClient) return -1;
     return await redisClient.ttl(key);
-  }
+  },
 };

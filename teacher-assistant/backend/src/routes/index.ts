@@ -3,13 +3,19 @@ import healthRouter from './health';
 import chatRouter from './chat';
 import chatTagsRouter from './chatTags';
 import imageGenerationRouter from './imageGeneration';
+import imageEditRouter from './imageEdit';
 import chatSummaryRouter from './chat-summary';
 import profileRouter from './profile';
 import filesRouter from './files';
+import storageProxyRouter from './storageProxy';
+import visionTaggingRouter from './visionTagging';
+import agentsSdkRouter from './agentsSdk';
+import langGraphAgentsRouter from './langGraphAgents';
+import libraryRouter from './library';
+import testHelpersRouter from './testHelpers';
+import adminRouter from './admin';
 // import promptsRouter from './prompts'; // Disabled - prompts.ts.disabled
-// TODO: Fix TypeScript errors in these routes before enabling
-// import langGraphAgentsRouter from './langGraphAgents';
-// import teacherProfileRouter from './teacher-profile';
+// import teacherProfileRouter from './teacher-profile'; // TODO: Fix TypeScript errors
 
 const router = Router();
 
@@ -22,8 +28,10 @@ router.use('/', chatRouter);
 // Mount chat tags routes
 router.use('/chat', chatTagsRouter);
 
-// Mount image generation routes (simple fallback for broken langGraphAgents)
+// Mount LangGraph image generation routes (includes timeout fix)
 router.use('/langgraph', imageGenerationRouter);
+// Mount image editing routes
+router.use('/images', imageEditRouter);
 
 // Mount chat summary routes
 router.use('/chat', chatSummaryRouter);
@@ -34,11 +42,29 @@ router.use('/profile', profileRouter);
 // Mount file upload routes
 router.use('/files', filesRouter);
 
+// Mount storage proxy routes
+router.use('/', storageProxyRouter);
+
+// Mount vision tagging routes (for automatic image tagging)
+router.use('/vision', visionTaggingRouter);
+
+// Mount OpenAI Agents SDK routes
+router.use('/agents-sdk', agentsSdkRouter);
+
+// Mount LangGraph agents routes
+router.use('/langgraph-agents', langGraphAgentsRouter);
+
+// Mount library routes (test mode support)
+router.use('/library', libraryRouter);
+
+// Mount test helper routes (dev/test mode only)
+router.use('/test', testHelpersRouter);
+
+// Mount admin routes (usage and cost dashboards)
+router.use('/admin', adminRouter);
+
 // Mount prompts routes
 // router.use('/prompts', promptsRouter); // Disabled - prompts.ts.disabled
-
-// TODO: Fix TypeScript errors in langGraphAgents before enabling
-// router.use('/langgraph', langGraphAgentsRouter);
 
 // TODO: Enable these routes after fixing TypeScript errors
 // router.use('/teacher-profile', teacherProfileRouter);

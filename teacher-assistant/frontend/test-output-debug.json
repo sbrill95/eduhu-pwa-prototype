@@ -1,0 +1,2102 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\playwright.config.ts",
+    "rootDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Desktop Chrome - Chat Agent Testing",
+        "name": "Desktop Chrome - Chat Agent Testing",
+        "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Safari - Touch Interface Testing",
+        "name": "Mobile Safari - Touch Interface Testing",
+        "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Desktop Firefox - Cross-browser Validation",
+        "name": "Desktop Firefox - Cross-browser Validation",
+        "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Chrome - Android Testing",
+        "name": "Mobile Chrome - Android Testing",
+        "testDir": "C:/Users/steff/Desktop/eduhu-pwa-prototype/teacher-assistant/frontend/e2e-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.1",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev -- --mode test",
+      "url": "http://localhost:5173",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "image-generation-complete-workflow.spec.ts",
+      "file": "image-generation-complete-workflow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Complete Image Generation Workflow - 10 Steps",
+          "file": "image-generation-complete-workflow.spec.ts",
+          "line": 88,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Complete User Journey - Image Generation E2E",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome - Chat Agent Testing",
+                  "projectName": "Desktop Chrome - Chat Agent Testing",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 72350,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m0.7\u001b[39m\nReceived:    \u001b[31m0.45454545454545453\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m0.7\u001b[39m\nReceived:    \u001b[31m0.45454545454545453\u001b[39m\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts:735:22",
+                        "location": {
+                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts",
+                          "column": 22,
+                          "line": 735
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 733 |\u001b[39m     \u001b[90m// Final assertion: Test passes if at least 70% steps pass (7/10)\u001b[39m\n \u001b[90m 734 |\u001b[39m     \u001b[36mconst\u001b[39m passRate \u001b[33m=\u001b[39m passCount \u001b[33m/\u001b[39m \u001b[33mObject\u001b[39m\u001b[33m.\u001b[39mkeys(testResults)\u001b[33m.\u001b[39mlength\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 735 |\u001b[39m     expect(passRate)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m0.7\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 736 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 737 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 738 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts",
+                            "column": 22,
+                            "line": 735
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m0.7\u001b[39m\nReceived:    \u001b[31m0.45454545454545453\u001b[39m\n\n  733 |     // Final assertion: Test passes if at least 70% steps pass (7/10)\n  734 |     const passRate = passCount / Object.keys(testResults).length;\n> 735 |     expect(passRate).toBeGreaterThanOrEqual(0.7);\n      |                      ^\n  736 |   });\n  737 | });\n  738 |\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts:735:22"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "[info] api: => browser.newContext started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= browser.newContext succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => browserContext.newPage started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
+                        },
+                        {
+                          "text": "\n========================================\n"
+                        },
+                        {
+                          "text": "   COMPLETE IMAGE GENERATION WORKFLOW   \n"
+                        },
+                        {
+                          "text": "   10-Step E2E Test from TESTING-STRATEGY.md\n"
+                        },
+                        {
+                          "text": "========================================\n\n"
+                        },
+                        {
+                          "text": "START: Fresh Browser Session\n"
+                        },
+                        {
+                          "text": "1. Browser öffnen: http://localhost:5173\n"
+                        },
+                        {
+                          "text": "2. DevTools Console öffnen\n"
+                        },
+                        {
+                          "text": "3. Prüfen: KEINE Errors\n\n"
+                        },
+                        {
+                          "text": "[info] api: => page.addInitScript started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.addInitScript succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.addInitScript started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.addInitScript succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.goto started []\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.goto succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "❌ Console Error: Mutation failed {status: 400, eventId: 19553313-11f6-4d6b-8d59-6413feeff1d5, op: error, client-event-id: 19553313-11f6-4d6b-8d59-6413feeff1d5, original-event: Object}\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Test auth successful\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "❌ 1 console errors on page load\n"
+                        },
+                        {
+                          "text": "\n--- STEP 1: Chat Message ---\n"
+                        },
+                        {
+                          "text": "1. Chat Tab öffnen\n"
+                        },
+                        {
+                          "text": "2. Eingabe: \"Erstelle ein Bild vom Satz des Pythagoras\"\n"
+                        },
+                        {
+                          "text": "3. Send Button klicken\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => expect.toBeVisible started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= expect.toBeVisible succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.fill started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.fill succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 01-chat-message.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 2: Backend Response ---\n"
+                        },
+                        {
+                          "text": "1. Console prüfen: NO \"Failed to fetch\" ✅\n"
+                        },
+                        {
+                          "text": "2. Agent Confirmation erscheint ✅\n"
+                        },
+                        {
+                          "text": "3. Orange Card (NICHT grün) ✅\n"
+                        },
+                        {
+                          "text": "⏳ Waiting for OpenAI response (up to 20 seconds)...\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "✅ No \"Failed to fetch\" errors\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Agent Confirmation Card erschienen\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Orange gradient card detected (NOT green button)\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 02-confirmation-card.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 3: Form Opens ---\n"
+                        },
+                        {
+                          "text": "1. \"Bild-Generierung starten\" klicken\n"
+                        },
+                        {
+                          "text": "2. Fullscreen Form öffnet ✅\n"
+                        },
+                        {
+                          "text": "3. Description vorausgefüllt: \"Satz des Pythagoras\" ✅\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.all started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.all succeeded []\n"
+                        },
+                        {
+                          "text": "Found 1 \"Bild-Generierung starten\" buttons\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.isVisible started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.isVisible succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.textContent started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.textContent succeeded []\n"
+                        },
+                        {
+                          "text": "  Button 1: visible=true, text=\"Bild-Generierung starten ✨\"\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] Opening modal {agentType: image-generation, prefillData: Object, sessionId: 12e6457a-3e79-4665-b518-cdb0ff3481ad}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Fullscreen Form opened\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.inputValue started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.inputValue succeeded []\n"
+                        },
+                        {
+                          "text": "📝 Description field value: \"vom Satz des Pythagoras\"\n"
+                        },
+                        {
+                          "text": "✅ Description field IS prefilled\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 03-form-prefilled.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 4: Generate ---\n"
+                        },
+                        {
+                          "text": "1. \"Generieren\" Button klicken\n"
+                        },
+                        {
+                          "text": "2. NUR EINE Progress Animation (mittig) ✅\n"
+                        },
+                        {
+                          "text": "3. Warten (<30s)\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "Generate button count: 1\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.isVisible started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.isVisible succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.isEnabled started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.isEnabled succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.textContent started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.textContent succeeded []\n"
+                        },
+                        {
+                          "text": "Generate button state: { visible: \u001b[33mtrue\u001b[39m, enabled: \u001b[33mtrue\u001b[39m, text: \u001b[32m'Bild generieren'\u001b[39m }\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.scrollIntoViewIfNeeded started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.scrollIntoViewIfNeeded succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "🖱️  Clicking generate button...\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-09T22:00:44.605Z, isValidForm: true, submitting: false, formData: Object, agentType: image-generation}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-09T22:00:44.606Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-09T22:00:44.606Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Button click completed\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 04-progress-animation.png\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "Progress animations found: 0\n"
+                        },
+                        {
+                          "text": "⚠️  Unexpected loader count: 0\n"
+                        },
+                        {
+                          "text": "\n--- STEP 5: Preview Opens ---\n"
+                        },
+                        {
+                          "text": "1. Bild erscheint in Fullscreen ✅\n"
+                        },
+                        {
+                          "text": "2. 3 Buttons sichtbar ✅\n"
+                        },
+                        {
+                          "text": "⏳ Waiting for image generation (up to 70 seconds for DALL-E 3)...\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.waitFor started []\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [ApiClient] ✅ executeAgent RESPONSE {timestamp: 2025-10-09T22:01:19.162Z, success: true, hasImageUrl: true, responseKeys: Array(12), dataType: object}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 📨 API response received: {hasResponse: true, responseKeys: Array(12)}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Agent execution response received {hasImageUrl: true, hasRevisedPrompt: true, hasTitle: true, responseKeys: Array(12), imageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-...}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] Extracted executionId: exec-1760047279159\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 🔍 Checking if response has image_url... {hasImageUrl: true, responseImageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-…ontrol=public%2C%20max-age%3D86400%2C%20immutable}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase {executionId: exec-1760047279159, hasImageUrl: true, imageUrlPreview: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-..., title: vom Satz des Pythagoras, revisedPromptLength: 511}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 🚀 Setting state to result phase NOW...\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: edebe69f-33d6-401c-9e35-27cd27cd2ad6}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] 🎉 submitForm completed successfully\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: edebe69f-33d6-401c-9e35-27cd27cd2ad6}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760047279159, libraryId: edebe69f-33d6-401c-9e35-27cd27cd2ad6, userId: test-user-playwright-id-12345}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Library save confirmed (backend already completed)\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760047279159, libraryId: edebe69f-33d6-401c-9e35-27cd27cd2ad6, userId: test-user-playwright-id-12345}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Library save confirmed (backend already completed)\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.waitFor succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.isVisible started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.isVisible succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Result view opened\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Generated image visible\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "Buttons found: 13\n"
+                        },
+                        {
+                          "text": "✅ 3+ Buttons visible\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 05-preview-result.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 6: Continue in Chat ---\n"
+                        },
+                        {
+                          "text": "1. \"Weiter im Chat 💬\" klicken\n"
+                        },
+                        {
+                          "text": "2. Chat Tab öffnet ✅\n"
+                        },
+                        {
+                          "text": "3. Bild als Thumbnail sichtbar (max 200px) ✅\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 🔍 navigateToTab CALLED {tab: chat, queryParams: undefined, hasCallback: true, callbackType: function, timestamp: 2025-10-09T22:01:20.243Z}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ➡️  Calling onNavigateToTab callback with tab: \"chat\"\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ onNavigateToTab(\"chat\") callback completed\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] Closing modal\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] Closing modal\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Navigated to Chat\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "❌ No images in chat\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 06-chat-thumbnail.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 7: Thumbnail Clickable ---\n"
+                        },
+                        {
+                          "text": "1. Thumbnail klicken\n"
+                        },
+                        {
+                          "text": "2. Preview Modal öffnet ✅\n"
+                        },
+                        {
+                          "text": "3. \"Neu generieren\" Button sichtbar ✅\n"
+                        },
+                        {
+                          "text": "⏭️  Skipping STEP-7: No chat thumbnail\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 07-preview-from-chat.png\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "\n--- STEP 8: Library Auto-Save ---\n"
+                        },
+                        {
+                          "text": "1. Library Tab öffnen\n"
+                        },
+                        {
+                          "text": "2. Filter \"Bilder\" klicken\n"
+                        },
+                        {
+                          "text": "3. Generiertes Bild sichtbar ✅\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "❌ \"Bilder\" filter NOT found\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 08-library-image.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 9: Library Preview ---\n"
+                        },
+                        {
+                          "text": "1. Bild in Library klicken\n"
+                        },
+                        {
+                          "text": "2. Preview öffnet ✅\n"
+                        },
+                        {
+                          "text": "3. \"Neu generieren\" Button sichtbar ✅\n"
+                        },
+                        {
+                          "text": "⏭️  Skipping STEP-9: No library materials\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 09-library-preview.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 10: Regenerate from Library ---\n"
+                        },
+                        {
+                          "text": "1. \"Neu generieren\" klicken\n"
+                        },
+                        {
+                          "text": "2. Form öffnet mit Original-Params ✅\n"
+                        },
+                        {
+                          "text": "3. Description field hat \"Satz des Pythagoras\" ✅\n"
+                        },
+                        {
+                          "text": "⏭️  Skipping STEP-10: No regenerate button\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 10-regenerate-form.png\n"
+                        },
+                        {
+                          "text": "\n========================================\n"
+                        },
+                        {
+                          "text": "   TEST RESULTS SUMMARY\n"
+                        },
+                        {
+                          "text": "========================================\n\n"
+                        },
+                        {
+                          "text": "❌ INIT: Console errors: Mutation failed {status: 400, eventId: 19553313-11f6-4d6b-8d59-6413feeff1d5, op: error, client-event-id: 19553313-11f6-4d6b-8d59-6413feeff1d5, original-event: Object}\n"
+                        },
+                        {
+                          "text": "✅ STEP-1: Chat message sent successfully\n"
+                        },
+                        {
+                          "text": "✅ STEP-2: Agent confirmation with orange card\n"
+                        },
+                        {
+                          "text": "✅ STEP-3: Form opened with prefilled data\n"
+                        },
+                        {
+                          "text": "✅ STEP-4: 0 loaders found\n"
+                        },
+                        {
+                          "text": "✅ STEP-5: Preview with image and buttons\n"
+                        },
+                        {
+                          "text": "❌ STEP-6: No image thumbnail in chat\n"
+                        },
+                        {
+                          "text": "❌ STEP-7: Skipped - no chat thumbnail\n"
+                        },
+                        {
+                          "text": "❌ STEP-8: No \"Bilder\" filter\n"
+                        },
+                        {
+                          "text": "❌ STEP-9: Skipped - no library materials\n"
+                        },
+                        {
+                          "text": "❌ STEP-10: Skipped - no regenerate button\n"
+                        },
+                        {
+                          "text": "\n========================================\n"
+                        },
+                        {
+                          "text": "TOTAL: 5 PASS / 6 FAIL\n"
+                        },
+                        {
+                          "text": "Console Errors: 1\n"
+                        },
+                        {
+                          "text": "Console Logs Captured: 35\n"
+                        },
+                        {
+                          "text": "Network Failures: 0\n"
+                        },
+                        {
+                          "text": "Screenshots: 13 captured\n"
+                        },
+                        {
+                          "text": "========================================\n\n"
+                        },
+                        {
+                          "text": "\n📝 Component Logs (AgentFormView, AgentContext, ApiClient):\n"
+                        },
+                        {
+                          "text": "  [AgentContext] Opening modal {agentType: image-generation, prefillData: Object, sessionId: 12e6457a-3e79-4665-b518-cdb0ff3481ad}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-09T22:00:44.605Z, isValidForm: true, submitting: false, formData: Object, agentType: image-generation}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-09T22:00:44.606Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}\n"
+                        },
+                        {
+                          "text": "  [ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-09T22:00:44.606Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}\n"
+                        },
+                        {
+                          "text": "  [ApiClient] ✅ executeAgent RESPONSE {timestamp: 2025-10-09T22:01:19.162Z, success: true, hasImageUrl: true, responseKeys: Array(12), dataType: object}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 📨 API response received: {hasResponse: true, responseKeys: Array(12)}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Agent execution response received {hasImageUrl: true, hasRevisedPrompt: true, hasTitle: true, responseKeys: Array(12), imageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-...}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] Extracted executionId: exec-1760047279159\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 🔍 Checking if response has image_url... {hasImageUrl: true, responseImageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-…ontrol=public%2C%20max-age%3D86400%2C%20immutable}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase {executionId: exec-1760047279159, hasImageUrl: true, imageUrlPreview: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-..., title: vom Satz des Pythagoras, revisedPromptLength: 511}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 🚀 Setting state to result phase NOW...\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: edebe69f-33d6-401c-9e35-27cd27cd2ad6}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] 🎉 submitForm completed successfully\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: edebe69f-33d6-401c-9e35-27cd27cd2ad6}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760047279159, libraryId: edebe69f-33d6-401c-9e35-27cd27cd2ad6, userId: test-user-playwright-id-12345}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Library save confirmed (backend already completed)\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760047279159, libraryId: edebe69f-33d6-401c-9e35-27cd27cd2ad6, userId: test-user-playwright-id-12345}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Library save confirmed (backend already completed)\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 🔍 navigateToTab CALLED {tab: chat, queryParams: undefined, hasCallback: true, callbackType: function, timestamp: 2025-10-09T22:01:20.243Z}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ➡️  Calling onNavigateToTab callback with tab: \"chat\"\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ onNavigateToTab(\"chat\") callback completed\n"
+                        },
+                        {
+                          "text": "  [AgentContext] Closing modal\n"
+                        },
+                        {
+                          "text": "  [AgentContext] Closing modal\n"
+                        },
+                        {
+                          "text": "📄 Report saved: C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\docs\\testing\\test-reports\\2025-10-07\\e2e-complete-workflow-report.json\n\n"
+                        },
+                        {
+                          "text": "[info] api: => browserContext.close started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= browserContext.close succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => browser.close started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= browser.close succeeded []\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-09T22:00:12.435Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\image-generation-complete--f4e2f-rney---Image-Generation-E2E-Desktop-Chrome---Chat-Agent-Testing\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\image-generation-complete--f4e2f-rney---Image-Generation-E2E-Desktop-Chrome---Chat-Agent-Testing\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\image-generation-complete--f4e2f-rney---Image-Generation-E2E-Desktop-Chrome---Chat-Agent-Testing\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\image-generation-complete--f4e2f-rney---Image-Generation-E2E-Desktop-Chrome---Chat-Agent-Testing\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts",
+                        "column": 22,
+                        "line": 735
+                      }
+                    },
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 79551,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m0.7\u001b[39m\nReceived:    \u001b[31m0.45454545454545453\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m0.7\u001b[39m\nReceived:    \u001b[31m0.45454545454545453\u001b[39m\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts:735:22",
+                        "location": {
+                          "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts",
+                          "column": 22,
+                          "line": 735
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 733 |\u001b[39m     \u001b[90m// Final assertion: Test passes if at least 70% steps pass (7/10)\u001b[39m\n \u001b[90m 734 |\u001b[39m     \u001b[36mconst\u001b[39m passRate \u001b[33m=\u001b[39m passCount \u001b[33m/\u001b[39m \u001b[33mObject\u001b[39m\u001b[33m.\u001b[39mkeys(testResults)\u001b[33m.\u001b[39mlength\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 735 |\u001b[39m     expect(passRate)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m0.7\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 736 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 737 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 738 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts",
+                            "column": 22,
+                            "line": 735
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m0.7\u001b[39m\nReceived:    \u001b[31m0.45454545454545453\u001b[39m\n\n  733 |     // Final assertion: Test passes if at least 70% steps pass (7/10)\n  734 |     const passRate = passCount / Object.keys(testResults).length;\n> 735 |     expect(passRate).toBeGreaterThanOrEqual(0.7);\n      |                      ^\n  736 |   });\n  737 | });\n  738 |\n    at C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts:735:22"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "[info] api: => browser.newContext started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= browser.newContext succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => browserContext.newPage started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= browserContext.newPage succeeded []\n"
+                        },
+                        {
+                          "text": "\n========================================\n"
+                        },
+                        {
+                          "text": "   COMPLETE IMAGE GENERATION WORKFLOW   \n"
+                        },
+                        {
+                          "text": "   10-Step E2E Test from TESTING-STRATEGY.md\n"
+                        },
+                        {
+                          "text": "========================================\n\n"
+                        },
+                        {
+                          "text": "START: Fresh Browser Session\n"
+                        },
+                        {
+                          "text": "1. Browser öffnen: http://localhost:5173\n"
+                        },
+                        {
+                          "text": "2. DevTools Console öffnen\n"
+                        },
+                        {
+                          "text": "3. Prüfen: KEINE Errors\n\n"
+                        },
+                        {
+                          "text": "[info] api: => page.addInitScript started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.addInitScript succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.addInitScript started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.addInitScript succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.goto started []\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %c🚨 TEST MODE ACTIVE 🚨 background: #ff0000; color: #ffffff; font-size: 20px; font-weight: bold; padding: 10px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %cAuthentication is bypassed with test user: s.brill@eduhu.de background: #ff9800; color: #000000; font-size: 14px; padding: 5px;\n"
+                        },
+                        {
+                          "text": "⚠️  Console Warning: %cThis should NEVER be enabled in production! background: #ff0000; color: #ffffff; font-size: 14px; font-weight: bold; padding: 5px;\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.goto succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "❌ Console Error: Mutation failed {status: 400, eventId: 01844ada-0d34-4aba-b34e-7767f8dfa869, op: error, client-event-id: 01844ada-0d34-4aba-b34e-7767f8dfa869, original-event: Object}\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Test auth successful\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "❌ 1 console errors on page load\n"
+                        },
+                        {
+                          "text": "\n--- STEP 1: Chat Message ---\n"
+                        },
+                        {
+                          "text": "1. Chat Tab öffnen\n"
+                        },
+                        {
+                          "text": "2. Eingabe: \"Erstelle ein Bild vom Satz des Pythagoras\"\n"
+                        },
+                        {
+                          "text": "3. Send Button klicken\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => expect.toBeVisible started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= expect.toBeVisible succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.fill started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.fill succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 01-chat-message.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 2: Backend Response ---\n"
+                        },
+                        {
+                          "text": "1. Console prüfen: NO \"Failed to fetch\" ✅\n"
+                        },
+                        {
+                          "text": "2. Agent Confirmation erscheint ✅\n"
+                        },
+                        {
+                          "text": "3. Orange Card (NICHT grün) ✅\n"
+                        },
+                        {
+                          "text": "⏳ Waiting for OpenAI response (up to 20 seconds)...\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "✅ No \"Failed to fetch\" errors\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Agent Confirmation Card erschienen\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Orange gradient card detected (NOT green button)\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 02-confirmation-card.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 3: Form Opens ---\n"
+                        },
+                        {
+                          "text": "1. \"Bild-Generierung starten\" klicken\n"
+                        },
+                        {
+                          "text": "2. Fullscreen Form öffnet ✅\n"
+                        },
+                        {
+                          "text": "3. Description vorausgefüllt: \"Satz des Pythagoras\" ✅\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.all started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.all succeeded []\n"
+                        },
+                        {
+                          "text": "Found 1 \"Bild-Generierung starten\" buttons\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.isVisible started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.isVisible succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.textContent started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.textContent succeeded []\n"
+                        },
+                        {
+                          "text": "  Button 1: visible=true, text=\"Bild-Generierung starten ✨\"\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] Opening modal {agentType: image-generation, prefillData: Object, sessionId: 157c724e-0ed2-4c4f-a4b4-d9d2df879a13}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Fullscreen Form opened\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.inputValue started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.inputValue succeeded []\n"
+                        },
+                        {
+                          "text": "📝 Description field value: \"vom Satz des Pythagoras\"\n"
+                        },
+                        {
+                          "text": "✅ Description field IS prefilled\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 03-form-prefilled.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 4: Generate ---\n"
+                        },
+                        {
+                          "text": "1. \"Generieren\" Button klicken\n"
+                        },
+                        {
+                          "text": "2. NUR EINE Progress Animation (mittig) ✅\n"
+                        },
+                        {
+                          "text": "3. Warten (<30s)\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "Generate button count: 1\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.isVisible started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.isVisible succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.isEnabled started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.isEnabled succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.textContent started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.textContent succeeded []\n"
+                        },
+                        {
+                          "text": "Generate button state: { visible: \u001b[33mtrue\u001b[39m, enabled: \u001b[33mtrue\u001b[39m, text: \u001b[32m'Bild generieren'\u001b[39m }\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.scrollIntoViewIfNeeded started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.scrollIntoViewIfNeeded succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "🖱️  Clicking generate button...\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-09T22:01:59.262Z, isValidForm: true, submitting: false, formData: Object, agentType: image-generation}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-09T22:01:59.263Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-09T22:01:59.263Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Button click completed\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 04-progress-animation.png\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "Progress animations found: 0\n"
+                        },
+                        {
+                          "text": "⚠️  Unexpected loader count: 0\n"
+                        },
+                        {
+                          "text": "\n--- STEP 5: Preview Opens ---\n"
+                        },
+                        {
+                          "text": "1. Bild erscheint in Fullscreen ✅\n"
+                        },
+                        {
+                          "text": "2. 3 Buttons sichtbar ✅\n"
+                        },
+                        {
+                          "text": "⏳ Waiting for image generation (up to 70 seconds for DALL-E 3)...\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.waitFor started []\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [ApiClient] ✅ executeAgent RESPONSE {timestamp: 2025-10-09T22:02:41.008Z, success: true, hasImageUrl: true, responseKeys: Array(12), dataType: object}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 📨 API response received: {hasResponse: true, responseKeys: Array(12)}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Agent execution response received {hasImageUrl: true, hasRevisedPrompt: true, hasTitle: true, responseKeys: Array(12), imageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-...}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] Extracted executionId: exec-1760047361005\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 🔍 Checking if response has image_url... {hasImageUrl: true, responseImageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-…ontrol=public%2C%20max-age%3D86400%2C%20immutable}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase {executionId: exec-1760047361005, hasImageUrl: true, imageUrlPreview: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-..., title: vom Satz des Pythagoras, revisedPromptLength: 498}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 🚀 Setting state to result phase NOW...\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: 3fd2c4bc-ecc2-485b-b85e-fc87f12cc07e}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentFormView] 🎉 submitForm completed successfully\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: 3fd2c4bc-ecc2-485b-b85e-fc87f12cc07e}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760047361005, libraryId: 3fd2c4bc-ecc2-485b-b85e-fc87f12cc07e, userId: test-user-playwright-id-12345}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Library save confirmed (backend already completed)\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760047361005, libraryId: 3fd2c4bc-ecc2-485b-b85e-fc87f12cc07e, userId: test-user-playwright-id-12345}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ Library save confirmed (backend already completed)\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.waitFor succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.isVisible started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.isVisible succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Result view opened\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Generated image visible\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "Buttons found: 13\n"
+                        },
+                        {
+                          "text": "✅ 3+ Buttons visible\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 05-preview-result.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 6: Continue in Chat ---\n"
+                        },
+                        {
+                          "text": "1. \"Weiter im Chat 💬\" klicken\n"
+                        },
+                        {
+                          "text": "2. Chat Tab öffnet ✅\n"
+                        },
+                        {
+                          "text": "3. Bild als Thumbnail sichtbar (max 200px) ✅\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] 🔍 navigateToTab CALLED {tab: chat, queryParams: undefined, hasCallback: true, callbackType: function, timestamp: 2025-10-09T22:02:42.044Z}\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ➡️  Calling onNavigateToTab callback with tab: \"chat\"\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] ✅ onNavigateToTab(\"chat\") callback completed\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] Closing modal\n"
+                        },
+                        {
+                          "text": "📝 [Browser Console] [AgentContext] Closing modal\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "✅ Navigated to Chat\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "❌ No images in chat\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 06-chat-thumbnail.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 7: Thumbnail Clickable ---\n"
+                        },
+                        {
+                          "text": "1. Thumbnail klicken\n"
+                        },
+                        {
+                          "text": "2. Preview Modal öffnet ✅\n"
+                        },
+                        {
+                          "text": "3. \"Neu generieren\" Button sichtbar ✅\n"
+                        },
+                        {
+                          "text": "⏭️  Skipping STEP-7: No chat thumbnail\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 07-preview-from-chat.png\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "\n--- STEP 8: Library Auto-Save ---\n"
+                        },
+                        {
+                          "text": "1. Library Tab öffnen\n"
+                        },
+                        {
+                          "text": "2. Filter \"Bilder\" klicken\n"
+                        },
+                        {
+                          "text": "3. Generiertes Bild sichtbar ✅\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.click started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.click succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => page.waitForTimeout started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.waitForTimeout succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => locator.count started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= locator.count succeeded []\n"
+                        },
+                        {
+                          "text": "❌ \"Bilder\" filter NOT found\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 08-library-image.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 9: Library Preview ---\n"
+                        },
+                        {
+                          "text": "1. Bild in Library klicken\n"
+                        },
+                        {
+                          "text": "2. Preview öffnet ✅\n"
+                        },
+                        {
+                          "text": "3. \"Neu generieren\" Button sichtbar ✅\n"
+                        },
+                        {
+                          "text": "⏭️  Skipping STEP-9: No library materials\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 09-library-preview.png\n"
+                        },
+                        {
+                          "text": "\n--- STEP 10: Regenerate from Library ---\n"
+                        },
+                        {
+                          "text": "1. \"Neu generieren\" klicken\n"
+                        },
+                        {
+                          "text": "2. Form öffnet mit Original-Params ✅\n"
+                        },
+                        {
+                          "text": "3. Description field hat \"Satz des Pythagoras\" ✅\n"
+                        },
+                        {
+                          "text": "⏭️  Skipping STEP-10: No regenerate button\n"
+                        },
+                        {
+                          "text": "[info] api: => page.screenshot started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= page.screenshot succeeded []\n"
+                        },
+                        {
+                          "text": "📸 Screenshot: 10-regenerate-form.png\n"
+                        },
+                        {
+                          "text": "\n========================================\n"
+                        },
+                        {
+                          "text": "   TEST RESULTS SUMMARY\n"
+                        },
+                        {
+                          "text": "========================================\n\n"
+                        },
+                        {
+                          "text": "❌ INIT: Console errors: Mutation failed {status: 400, eventId: 01844ada-0d34-4aba-b34e-7767f8dfa869, op: error, client-event-id: 01844ada-0d34-4aba-b34e-7767f8dfa869, original-event: Object}\n"
+                        },
+                        {
+                          "text": "✅ STEP-1: Chat message sent successfully\n"
+                        },
+                        {
+                          "text": "✅ STEP-2: Agent confirmation with orange card\n"
+                        },
+                        {
+                          "text": "✅ STEP-3: Form opened with prefilled data\n"
+                        },
+                        {
+                          "text": "✅ STEP-4: 0 loaders found\n"
+                        },
+                        {
+                          "text": "✅ STEP-5: Preview with image and buttons\n"
+                        },
+                        {
+                          "text": "❌ STEP-6: No image thumbnail in chat\n"
+                        },
+                        {
+                          "text": "❌ STEP-7: Skipped - no chat thumbnail\n"
+                        },
+                        {
+                          "text": "❌ STEP-8: No \"Bilder\" filter\n"
+                        },
+                        {
+                          "text": "❌ STEP-9: Skipped - no library materials\n"
+                        },
+                        {
+                          "text": "❌ STEP-10: Skipped - no regenerate button\n"
+                        },
+                        {
+                          "text": "\n========================================\n"
+                        },
+                        {
+                          "text": "TOTAL: 5 PASS / 6 FAIL\n"
+                        },
+                        {
+                          "text": "Console Errors: 1\n"
+                        },
+                        {
+                          "text": "Console Logs Captured: 35\n"
+                        },
+                        {
+                          "text": "Network Failures: 0\n"
+                        },
+                        {
+                          "text": "Screenshots: 13 captured\n"
+                        },
+                        {
+                          "text": "========================================\n\n"
+                        },
+                        {
+                          "text": "\n📝 Component Logs (AgentFormView, AgentContext, ApiClient):\n"
+                        },
+                        {
+                          "text": "  [AgentContext] Opening modal {agentType: image-generation, prefillData: Object, sessionId: 157c724e-0ed2-4c4f-a4b4-d9d2df879a13}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Initializing form with state.formData: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Mapped to form data: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] state.formData changed: {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] Updating form with mapped data: {finalDescription: vom Satz des Pythagoras}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] 🚀 SUBMIT TRIGGERED {timestamp: 2025-10-09T22:01:59.262Z, isValidForm: true, submitting: false, formData: Object, agentType: image-generation}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] ✅ Validation passed, submitting form {description: vom Satz des Pythagoras, imageStyle: realistic}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] 📤 Calling submitForm with: {description: vom Satz des Pythagoras, imageStyle: realistic, learningGroup: , subject: }\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 🚀 submitForm CALLED {timestamp: 2025-10-09T22:01:59.263Z, hasUser: true, userId: test-user-playwright-id-12345, agentType: image-generation, formData: Object}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Auth check passed, proceeding with submission {formData: Object, agentType: image-generation}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 📡 Making API request to executeAgent: {url: /api/langgraph/agents/execute, payload: Object}\n"
+                        },
+                        {
+                          "text": "  [ApiClient] 🚀 executeAgent REQUEST {timestamp: 2025-10-09T22:01:59.263Z, endpoint: /langgraph/agents/execute, fullUrl: http://localhost:3006/api/langgraph/agents/execute, agentId: image-generation, hasInput: true}\n"
+                        },
+                        {
+                          "text": "  [ApiClient] ✅ executeAgent RESPONSE {timestamp: 2025-10-09T22:02:41.008Z, success: true, hasImageUrl: true, responseKeys: Array(12), dataType: object}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 📨 API response received: {hasResponse: true, responseKeys: Array(12)}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Agent execution response received {hasImageUrl: true, hasRevisedPrompt: true, hasTitle: true, responseKeys: Array(12), imageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-...}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] Extracted executionId: exec-1760047361005\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 🔍 Checking if response has image_url... {hasImageUrl: true, responseImageUrl: https://instant-storage.s3.amazonaws.com/39f14e13-…ontrol=public%2C%20max-age%3D86400%2C%20immutable}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ SYNCHRONOUS EXECUTION COMPLETED - Setting state to RESULT phase {executionId: exec-1760047361005, hasImageUrl: true, imageUrlPreview: https://instant-storage.s3.amazonaws.com/39f14e13-9afb-4222-..., title: vom Satz des Pythagoras, revisedPromptLength: 498}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 🚀 Setting state to result phase NOW...\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: 3fd2c4bc-ecc2-485b-b85e-fc87f12cc07e}\n"
+                        },
+                        {
+                          "text": "  [AgentFormView] 🎉 submitForm completed successfully\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ STATE UPDATED TO RESULT PHASE {phase: result, hasResult: true, resultData: Object, isOpen: true, libraryId: 3fd2c4bc-ecc2-485b-b85e-fc87f12cc07e}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760047361005, libraryId: 3fd2c4bc-ecc2-485b-b85e-fc87f12cc07e, userId: test-user-playwright-id-12345}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Library save confirmed (backend already completed)\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Image already saved to library by backend {artifactId: exec-1760047361005, libraryId: 3fd2c4bc-ecc2-485b-b85e-fc87f12cc07e, userId: test-user-playwright-id-12345}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ Library save confirmed (backend already completed)\n"
+                        },
+                        {
+                          "text": "  [AgentContext] 🔍 navigateToTab CALLED {tab: chat, queryParams: undefined, hasCallback: true, callbackType: function, timestamp: 2025-10-09T22:02:42.044Z}\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ➡️  Calling onNavigateToTab callback with tab: \"chat\"\n"
+                        },
+                        {
+                          "text": "  [AgentContext] ✅ onNavigateToTab(\"chat\") callback completed\n"
+                        },
+                        {
+                          "text": "  [AgentContext] Closing modal\n"
+                        },
+                        {
+                          "text": "  [AgentContext] Closing modal\n"
+                        },
+                        {
+                          "text": "📄 Report saved: C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\docs\\testing\\test-reports\\2025-10-07\\e2e-complete-workflow-report.json\n\n"
+                        },
+                        {
+                          "text": "[info] api: => browserContext.close started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= browserContext.close succeeded []\n"
+                        },
+                        {
+                          "text": "[info] api: => browser.close started []\n"
+                        },
+                        {
+                          "text": "[info] api: <= browser.close succeeded []\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2025-10-09T22:01:27.077Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\image-generation-complete--f4e2f-rney---Image-Generation-E2E-Desktop-Chrome---Chat-Agent-Testing-retry1\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\image-generation-complete--f4e2f-rney---Image-Generation-E2E-Desktop-Chrome---Chat-Agent-Testing-retry1\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\image-generation-complete--f4e2f-rney---Image-Generation-E2E-Desktop-Chrome---Chat-Agent-Testing-retry1\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\test-results\\image-generation-complete--f4e2f-rney---Image-Generation-E2E-Desktop-Chrome---Chat-Agent-Testing-retry1\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\steff\\Desktop\\eduhu-pwa-prototype\\teacher-assistant\\frontend\\e2e-tests\\image-generation-complete-workflow.spec.ts",
+                        "column": 22,
+                        "line": 735
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "fea41c7e3792aee79b8f-09857db98b6474de629a",
+              "file": "image-generation-complete-workflow.spec.ts",
+              "line": 90,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-10-09T22:00:11.287Z",
+    "duration": 156588.32400000002,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

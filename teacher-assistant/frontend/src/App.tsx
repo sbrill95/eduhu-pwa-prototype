@@ -113,12 +113,24 @@ const AppContent: React.FC = () => {
     setAutoLoadChecked(true);
   }, []);
 
-  const handleTabChange = useCallback((tab: ActiveTab) => {
-    console.log(`🔄 [handleTabChange] BEFORE: activeTab = ${activeTab}`);
-    console.log(`🔄 [handleTabChange] Setting to: ${tab}`);
+  const handleTabChange = useCallback((tab: ActiveTab, options?: { sessionId?: string }) => {
+    console.log(`🔄 [App.handleTabChange] Setting activeTab to: "${tab}"`, {
+      timestamp: new Date().toISOString(),
+      newTab: tab,
+      sessionId: options?.sessionId
+    });
+    console.trace('[App.handleTabChange] Call stack');
+
+    // CHAT-MESSAGE-FIX: If navigating to chat with a sessionId, set it
+    if (tab === 'chat' && options?.sessionId) {
+      console.log(`📌 [App.handleTabChange] Setting currentChatSessionId to: "${options.sessionId}"`);
+      setCurrentChatSessionId(options.sessionId);
+      setAutoLoadChecked(true); // Prevent auto-load from overriding
+    }
+
     setActiveTab(tab);
-    console.log(`🔄 [handleTabChange] AFTER setActiveTab called`);
-  }, [activeTab]); // Add activeTab to dependencies to log current value
+    console.log(`✅ [App.handleTabChange] setActiveTab("${tab}") called`);
+  }, []); // No dependencies - setActiveTab/setCurrentChatSessionId are stable
 
   const handleNavigateToChat = useCallback((prompt?: string) => {
     // Navigate to chat tab with pre-filled prompt
@@ -387,13 +399,15 @@ const AppContent: React.FC = () => {
       case 'chat':
         // Original ChatView with WhatsApp-style bubbles and prompt tiles
         return (
-          <ChatView
-            sessionId={currentChatSessionId ?? undefined}
-            onSessionChange={handleSessionChange}
-            onNewChat={handleNewChat}
-            prefilledPrompt={prefilledChatPrompt}
-            onClearPrefill={() => setPrefilledChatPrompt(null)}
-          />
+          <div className="chat-view-wrapper" data-testid="chat-view">
+            <ChatView
+              sessionId={currentChatSessionId ?? undefined}
+              onSessionChange={handleSessionChange}
+              onNewChat={handleNewChat}
+              prefilledPrompt={prefilledChatPrompt}
+              onClearPrefill={() => setPrefilledChatPrompt(null)}
+            />
+          </div>
         );
       case 'library':
         // Library page
@@ -443,13 +457,13 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <AgentProvider>
+    <AgentProvider onNavigateToTab={handleTabChange}>
       <IonApp>
         {/* Render AgentModal globally (only if feature is enabled) */}
         {featureFlags.ENABLE_AGENT_UI && <AgentModal />}
 
         {/* Main Content */}
-        <IonContent key={activeTab} className="content-with-tabs">
+        <IonContent key={activeTab} className="content-with-tabs" data-testid={`tab-content-${activeTab}`}>
           {renderActiveContent}
         </IonContent>
 

@@ -1,0 +1,40 @@
+gate:
+  story_id: epic-3.1.story-2
+  story_title: Image Editing Sub-Agent with Gemini
+  decision: FAIL
+  date: 2025-10-22
+  test_execution_date: 2025-10-22T20:34:00Z
+  reviewer: Quinn (BMad Test Architect)
+
+summary:
+  overall: "QUALITY GATE: FAIL - E2E tests revealed critical backend integration failure (404 errors). Feature non-functional."
+
+test_results:
+  total_tests: 32
+  passed: 7
+  failed: 25
+  pass_rate: "21.9%"
+  
+  by_priority:
+    p0:
+      total: 14
+      passed: 3
+      failed: 11
+      pass_rate: "21.4%"
+      target: "100%"
+      status: FAIL
+
+  console_errors:
+    count: "25+"
+    target: 0
+    status: FAIL
+
+decision_criteria:
+  overall_score: "2/6 criteria passing = 33%"
+
+required_actions:
+  - "❌ DO NOT COMMIT Story 3.1.2 changes"
+  - "❌ DO NOT PROCEED to Story 3.1.3"
+  - "🔧 FIX backend image lookup in tests (2-4 hours)"
+
+test_execution_log: "docs/development-logs/sessions/2025-10-22/story-3.1.2-e2e-test-results.md"

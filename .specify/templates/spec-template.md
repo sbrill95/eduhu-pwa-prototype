@@ -1,217 +1,115 @@
-# [Feature Name] - Specification
+# Feature Specification: [FEATURE NAME]
 
-**Status**: `draft` | `review` | `approved`
-**Created**: YYYY-MM-DD
-**Author**: [Agent Name]
-**Stakeholders**: [List of stakeholders]
+**Feature Branch**: `[###-feature-name]`  
+**Created**: [DATE]  
+**Status**: Draft  
+**Input**: User description: "$ARGUMENTS"
 
----
+## User Scenarios & Testing *(mandatory)*
 
-## 1. Problem Statement
+<!--
+  IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
+  Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
+  you should still have a viable MVP (Minimum Viable Product) that delivers value.
+  
+  Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
+  Think of each story as a standalone slice of functionality that can be:
+  - Developed independently
+  - Tested independently
+  - Deployed independently
+  - Demonstrated to users independently
+-->
 
-### Current Situation
-[Beschreibe die aktuelle Situation oder das Problem, das gelöst werden soll]
+### User Story 1 - [Brief Title] (Priority: P1)
 
-### Pain Points
-- [Pain Point 1]
-- [Pain Point 2]
-- [Pain Point 3]
+[Describe this user journey in plain language]
 
-### Opportunity
-[Welche Chance/Verbesserung bietet die Lösung dieses Problems?]
+**Why this priority**: [Explain the value and why it has this priority level]
 
----
+**Independent Test**: [Describe how this can be tested independently - e.g., "Can be fully tested by [specific action] and delivers [specific value]"]
 
-## 2. Goals & Objectives
+**Acceptance Scenarios**:
 
-### Primary Goal
-[Hauptziel des Features]
-
-### Secondary Goals
-- [Sekundäres Ziel 1]
-- [Sekundäres Ziel 2]
-
-### Success Metrics
-| Metric | Target | Measurement Method |
-|--------|--------|-------------------|
-| [Metric 1] | [Target Value] | [Wie messen?] |
-| [Metric 2] | [Target Value] | [Wie messen?] |
+1. **Given** [initial state], **When** [action], **Then** [expected outcome]
+2. **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
-## 3. User Stories
+### User Story 2 - [Brief Title] (Priority: P2)
 
-### Primary User Stories
+[Describe this user journey in plain language]
 
-#### Story 1
-**Als** [Benutzerrolle]
-**möchte ich** [Aktion/Feature]
-**damit** [Nutzen/Ziel]
+**Why this priority**: [Explain the value and why it has this priority level]
 
-**Acceptance Criteria**:
-- [ ] Kriterium 1
-- [ ] Kriterium 2
-- [ ] Kriterium 3
+**Independent Test**: [Describe how this can be tested independently]
 
-#### Story 2
-**Als** [Benutzerrolle]
-**möchte ich** [Aktion/Feature]
-**damit** [Nutzen/Ziel]
+**Acceptance Scenarios**:
 
-**Acceptance Criteria**:
-- [ ] Kriterium 1
-- [ ] Kriterium 2
-
-### Secondary User Stories
-[Weitere, weniger kritische User Stories]
+1. **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
-## 4. Functional Requirements
+### User Story 3 - [Brief Title] (Priority: P3)
 
-### Must Have (P0)
-- [ ] **REQ-001**: [Beschreibung der Anforderung]
-- [ ] **REQ-002**: [Beschreibung der Anforderung]
-- [ ] **REQ-003**: [Beschreibung der Anforderung]
+[Describe this user journey in plain language]
 
-### Should Have (P1)
-- [ ] **REQ-004**: [Beschreibung der Anforderung]
-- [ ] **REQ-005**: [Beschreibung der Anforderung]
+**Why this priority**: [Explain the value and why it has this priority level]
 
-### Nice to Have (P2)
-- [ ] **REQ-006**: [Beschreibung der Anforderung]
+**Independent Test**: [Describe how this can be tested independently]
+
+**Acceptance Scenarios**:
+
+1. **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
-## 5. Non-Functional Requirements
+[Add more user stories as needed, each with an assigned priority]
 
-### Performance
-- [ ] [Performance Requirement 1]
-- [ ] [Performance Requirement 2]
+### Edge Cases
 
-### Security
-- [ ] [Security Requirement 1]
-- [ ] [Security Requirement 2]
+<!--
+  ACTION REQUIRED: The content in this section represents placeholders.
+  Fill them out with the right edge cases.
+-->
 
-### Usability
-- [ ] [Usability Requirement 1]
-- [ ] [Usability Requirement 2]
+- What happens when [boundary condition]?
+- How does system handle [error scenario]?
 
-### Accessibility
-- [ ] [Accessibility Requirement 1]
-- [ ] [Accessibility Requirement 2]
+## Requirements *(mandatory)*
 
-### Compatibility
-- [ ] [Compatibility Requirement 1]
+<!--
+  ACTION REQUIRED: The content in this section represents placeholders.
+  Fill them out with the right functional requirements.
+-->
 
----
+### Functional Requirements
 
-## 6. User Experience
+- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
+- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
+- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
+- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
+- **FR-005**: System MUST [behavior, e.g., "log all security events"]
 
-### User Flows
-[Beschreibe die wichtigsten User Flows]
+*Example of marking unclear requirements:*
 
-```
-Flow 1: [Flow Name]
-1. User action 1
-2. System response 1
-3. User action 2
-4. System response 2
-```
+- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
+- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
-### UI/UX Considerations
-- [Consideration 1]
-- [Consideration 2]
+### Key Entities *(include if feature involves data)*
 
-### Wireframes/Mockups
-[Link zu Designs oder inline sketches]
+- **[Entity 1]**: [What it represents, key attributes without implementation]
+- **[Entity 2]**: [What it represents, relationships to other entities]
 
----
+## Success Criteria *(mandatory)*
 
-## 7. Scope & Boundaries
+<!--
+  ACTION REQUIRED: Define measurable success criteria.
+  These must be technology-agnostic and measurable.
+-->
 
-### In Scope
-- [Was ist Teil dieses Features]
-- [Was wird definitiv umgesetzt]
+### Measurable Outcomes
 
-### Out of Scope
-- [Was ist explizit NICHT Teil dieses Features]
-- [Was wird zu einem späteren Zeitpunkt umgesetzt]
-
-### Dependencies
-- [Abhängigkeit 1: Beschreibung]
-- [Abhängigkeit 2: Beschreibung]
-
----
-
-## 8. Risks & Assumptions
-
-### Risks
-| Risk | Probability | Impact | Mitigation Strategy |
-|------|-------------|--------|-------------------|
-| [Risk 1] | Low/Med/High | Low/Med/High | [Strategie] |
-| [Risk 2] | Low/Med/High | Low/Med/High | [Strategie] |
-
-### Assumptions
-- [Annahme 1]
-- [Annahme 2]
-
-### Open Questions
-- [ ] [Offene Frage 1]
-- [ ] [Offene Frage 2]
-
----
-
-## 9. Timeline & Resources
-
-### Estimated Timeline
-- **Spec Review**: [Zeitrahmen]
-- **Planning**: [Zeitrahmen]
-- **Implementation**: [Zeitrahmen]
-- **Testing & QA**: [Zeitrahmen]
-- **Deployment**: [Zeitrahmen]
-
-### Required Resources
-- **Agents**: [Welche Agents werden benötigt]
-- **External Services**: [APIs, Services, etc.]
-- **Infrastructure**: [Neue Server, Datenbanken, etc.]
-
----
-
-## 10. Success Criteria
-
-### Launch Criteria
-- [ ] Alle Must-Have Requirements implementiert
-- [ ] Alle Tests passing (Unit, Integration, E2E)
-- [ ] Performance Requirements erfüllt
-- [ ] Security Review abgeschlossen
-- [ ] Documentation vollständig
-
-### Post-Launch Monitoring
-- [Metric 1 zu überwachen]
-- [Metric 2 zu überwachen]
-
----
-
-## Approval
-
-### Reviewers
-- [ ] Product Owner
-- [ ] Tech Lead
-- [ ] UX Designer
-
-### Approval Date
-[Date when spec was approved]
-
-### Change Log
-| Date | Author | Changes |
-|------|--------|---------|
-| YYYY-MM-DD | [Name] | Initial draft |
-
----
-
-## Next Steps
-1. [ ] Spec Review durchführen
-2. [ ] Feedback einarbeiten
-3. [ ] Approval einholen
-4. [ ] `plan.md` erstellen
+- **SC-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
+- **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
+- **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
+- **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]

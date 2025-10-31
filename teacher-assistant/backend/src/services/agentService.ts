@@ -5,7 +5,18 @@
 
 import { InstantDBService } from './instantdbService';
 import { logInfo, logError, logWarn } from '../config/logger';
-import { GeneratedArtifact, UserUsage, AgentExecution } from '../schemas/instantdb';
+import {
+  Artifact,
+  User,
+  UserUsage,
+  AgentExecution,
+} from '../schemas/instantdb';
+
+/**
+ * Type definitions for agent-specific data structures
+ * These types extend or alias the InstantDB schema types
+ */
+export type GeneratedArtifact = Artifact;
 
 /**
  * Standard interface that all agents must implement
@@ -26,7 +37,11 @@ export interface IAgent {
    * @param sessionId - Optional chat session ID for context
    * @returns Promise with agent execution result
    */
-  execute(params: AgentParams, userId: string, sessionId?: string): Promise<AgentResult>;
+  execute(
+    params: AgentParams,
+    userId: string,
+    sessionId?: string
+  ): Promise<AgentResult>;
 
   /**
    * Validate input parameters before execution
@@ -96,7 +111,10 @@ export class AgentRegistry {
    */
   public register(agent: IAgent): void {
     if (this.agents.has(agent.id)) {
-      logError(`Agent with ID ${agent.id} is already registered`, new Error('Duplicate agent ID'));
+      logError(
+        `Agent with ID ${agent.id} is already registered`,
+        new Error('Duplicate agent ID')
+      );
       return;
     }
 
@@ -122,7 +140,7 @@ export class AgentRegistry {
    * Get enabled agents only
    */
   public getEnabledAgents(): IAgent[] {
-    return Array.from(this.agents.values()).filter(agent => agent.enabled);
+    return Array.from(this.agents.values()).filter((agent) => agent.enabled);
   }
 
   /**
@@ -130,8 +148,10 @@ export class AgentRegistry {
    */
   public findAgentsByTrigger(text: string): IAgent[] {
     const lowerText = text.toLowerCase();
-    return this.getEnabledAgents().filter(agent =>
-      agent.triggers.some(trigger => lowerText.includes(trigger.toLowerCase()))
+    return this.getEnabledAgents().filter((agent) =>
+      agent.triggers.some((trigger) =>
+        lowerText.includes(trigger.toLowerCase())
+      )
     );
   }
 
@@ -182,14 +202,14 @@ export class AgentExecutionService {
     if (!agent) {
       return {
         success: false,
-        error: `Agent not found: ${agentId}`
+        error: `Agent not found: ${agentId}`,
       };
     }
 
     if (!agent.enabled) {
       return {
         success: false,
-        error: `Agent is disabled: ${agentId}`
+        error: `Agent is disabled: ${agentId}`,
       };
     }
 
@@ -198,7 +218,7 @@ export class AgentExecutionService {
     if (!executionId) {
       return {
         success: false,
-        error: 'Failed to create execution record'
+        error: 'Failed to create execution record',
       };
     }
 
@@ -209,10 +229,14 @@ export class AgentExecutionService {
 
       // Validate parameters
       if (!agent.validateParams(params)) {
-        await this.updateExecutionStatus(executionId, 'failed', 'Invalid parameters');
+        await this.updateExecutionStatus(
+          executionId,
+          'failed',
+          'Invalid parameters'
+        );
         return {
           success: false,
-          error: 'Invalid parameters provided'
+          error: 'Invalid parameters provided',
         };
       }
 
@@ -220,10 +244,14 @@ export class AgentExecutionService {
       progressCallback?.('Checking user limits...', 20);
       const canExecute = await agent.canExecute(userId);
       if (!canExecute) {
-        await this.updateExecutionStatus(executionId, 'failed', 'User limit exceeded');
+        await this.updateExecutionStatus(
+          executionId,
+          'failed',
+          'User limit exceeded'
+        );
         return {
           success: false,
-          error: 'User limit exceeded for this agent'
+          error: 'User limit exceeded for this agent',
         };
       }
 
@@ -238,7 +266,7 @@ export class AgentExecutionService {
         await this.updateExecutionStatus(executionId, 'completed', undefined, {
           output_data: result.data || {},
           processing_time: processingTime,
-          cost: result.cost || 0
+          cost: result.cost || 0,
         });
 
         // Update user usage
@@ -258,14 +286,17 @@ export class AgentExecutionService {
       }
 
       return result;
-
     } catch (error) {
       logError(`Agent execution failed: ${agentId}`, error as Error);
-      await this.updateExecutionStatus(executionId, 'failed', (error as Error).message);
+      await this.updateExecutionStatus(
+        executionId,
+        'failed',
+        (error as Error).message
+      );
 
       return {
         success: false,
-        error: `Execution failed: ${(error as Error).message}`
+        error: `Execution failed: ${(error as Error).message}`,
       };
     }
   }
@@ -273,7 +304,10 @@ export class AgentExecutionService {
   /**
    * Get user's usage for an agent in current month (with InstantDB bypass)
    */
-  public async getUserUsage(userId: string, agentId: string): Promise<UserUsage | null> {
+  public async getUserUsage(
+    userId: string,
+    agentId: string
+  ): Promise<UserUsage | null> {
     if (this.bypassInstantDB) {
       // For bypass mode, return minimal usage to allow execution
       logInfo(`Bypassing usage check for user ${userId} and agent ${agentId}`);
@@ -288,14 +322,14 @@ export class AgentExecutionService {
         created_at: Date.now(),
         updated_at: Date.now(),
         user: {} as any,
-        agent: {} as any
+        agent: {} as any,
       };
     }
 
     try {
       const currentMonth = new Date().toISOString().slice(0, 7); // "2024-09"
 
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logWarn('InstantDB not available for usage check, allowing execution');
         return null; // Allows execution when InstantDB is unavailable
@@ -307,10 +341,10 @@ export class AgentExecutionService {
             where: {
               user_id: userId,
               agent_id: agentId,
-              month: currentMonth
-            }
-          }
-        }
+              month: currentMonth,
+            },
+          },
+        },
       });
 
       return query.user_usage?.[0] || null;
@@ -323,14 +357,17 @@ export class AgentExecutionService {
   /**
    * Get user's artifacts for an agent (with InstantDB bypass)
    */
-  public async getUserArtifacts(userId: string, agentId?: string): Promise<GeneratedArtifact[]> {
+  public async getUserArtifacts(
+    userId: string,
+    agentId?: string
+  ): Promise<GeneratedArtifact[]> {
     if (this.bypassInstantDB) {
       logInfo(`Bypassing artifact retrieval for user ${userId}`);
       return [];
     }
 
     try {
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logWarn('InstantDB not available for artifact retrieval');
         return [];
@@ -345,9 +382,9 @@ export class AgentExecutionService {
         generated_artifacts: {
           $: {
             where: whereClause,
-            order: { created_at: 'desc' }
-          }
-        }
+            order: { created_at: 'desc' },
+          },
+        },
       });
 
       return query.generated_artifacts || [];
@@ -376,16 +413,18 @@ export class AgentExecutionService {
         input_params: JSON.stringify(params),
         started_at: Date.now(),
         user_id: userId,
-        agent_name: agent.name
+        agent_name: agent.name,
       };
 
       this.inMemoryExecutions.set(executionId, executionData);
-      logInfo(`Created in-memory execution record: ${executionId} for agent ${agent.id}`);
+      logInfo(
+        `Created in-memory execution record: ${executionId} for agent ${agent.id}`
+      );
       return executionId;
     }
 
     try {
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logWarn('InstantDB not available, falling back to in-memory storage');
         return this.createInMemoryExecution(executionId, agent, params, userId);
@@ -398,16 +437,19 @@ export class AgentExecutionService {
         input_params: JSON.stringify(params),
         started_at: Date.now(),
         user: userId,
-        agent: agent.id
+        agent: agent.id,
       };
 
       await db.transact([
-        db.tx.agent_executions[executionId].update(executionData)
+        db.tx.agent_executions[executionId].update(executionData),
       ]);
 
       return executionId;
     } catch (error) {
-      logError('Failed to create execution record in InstantDB, using in-memory fallback', error as Error);
+      logError(
+        'Failed to create execution record in InstantDB, using in-memory fallback',
+        error as Error
+      );
       return this.createInMemoryExecution(executionId, agent, params, userId);
     }
   }
@@ -428,11 +470,13 @@ export class AgentExecutionService {
       input_params: JSON.stringify(params),
       started_at: Date.now(),
       user_id: userId,
-      agent_name: agent.name
+      agent_name: agent.name,
     };
 
     this.inMemoryExecutions.set(executionId, executionData);
-    logInfo(`Created in-memory execution record: ${executionId} for agent ${agent.id}`);
+    logInfo(
+      `Created in-memory execution record: ${executionId} for agent ${agent.id}`
+    );
     return executionId;
   }
 
@@ -455,16 +499,18 @@ export class AgentExecutionService {
           updated_at: Date.now(),
           ...(errorMessage && { error_message: errorMessage }),
           ...(status === 'completed' && { completed_at: Date.now() }),
-          ...additionalData
+          ...additionalData,
         };
         this.inMemoryExecutions.set(executionId, updateData);
-        logInfo(`Updated in-memory execution ${executionId} status to: ${status}`);
+        logInfo(
+          `Updated in-memory execution ${executionId} status to: ${status}`
+        );
       }
       return;
     }
 
     try {
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logWarn('InstantDB not available for status update');
         return;
@@ -475,11 +521,11 @@ export class AgentExecutionService {
         updated_at: Date.now(),
         ...(errorMessage && { error_message: errorMessage }),
         ...(status === 'completed' && { completed_at: Date.now() }),
-        ...additionalData
+        ...additionalData,
       };
 
       await db.transact([
-        db.tx.agent_executions[executionId].update(updateData)
+        db.tx.agent_executions[executionId].update(updateData),
       ]);
     } catch (error) {
       logError('Failed to update execution status', error as Error);
@@ -489,9 +535,15 @@ export class AgentExecutionService {
   /**
    * Update user usage tracking (with InstantDB bypass)
    */
-  private async updateUserUsage(userId: string, agentId: string, cost: number): Promise<void> {
+  private async updateUserUsage(
+    userId: string,
+    agentId: string,
+    cost: number
+  ): Promise<void> {
     if (this.bypassInstantDB) {
-      logInfo(`Bypassing usage tracking for user ${userId}, agent ${agentId}, cost ${cost} cents`);
+      logInfo(
+        `Bypassing usage tracking for user ${userId}, agent ${agentId}, cost ${cost} cents`
+      );
       return;
     }
 
@@ -499,7 +551,7 @@ export class AgentExecutionService {
       const currentMonth = new Date().toISOString().slice(0, 7);
       const existingUsage = await this.getUserUsage(userId, agentId);
 
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logWarn('InstantDB not available for usage tracking');
         return;
@@ -512,8 +564,8 @@ export class AgentExecutionService {
             usage_count: existingUsage.usage_count + 1,
             total_cost: existingUsage.total_cost + cost,
             last_used: Date.now(),
-            updated_at: Date.now()
-          })
+            updated_at: Date.now(),
+          }),
         ]);
       } else {
         // Create new usage record
@@ -527,11 +579,11 @@ export class AgentExecutionService {
           created_at: Date.now(),
           updated_at: Date.now(),
           user: userId,
-          agent: agentId
+          agent: agentId,
         };
 
         await db.transact([
-          db.tx.user_usage[crypto.randomUUID()].update(usageData)
+          db.tx.user_usage[crypto.randomUUID()].update(usageData),
         ]);
       }
     } catch (error) {
@@ -549,27 +601,29 @@ export class AgentExecutionService {
   ): Promise<void> {
     if (this.bypassInstantDB) {
       logInfo(`Bypassing artifact storage for ${artifacts.length} artifacts`);
-      artifacts.forEach(artifact => {
+      artifacts.forEach((artifact) => {
         logInfo(`Generated artifact: ${artifact.title} (${artifact.type})`);
       });
       return;
     }
 
     try {
-      const db = InstantDBService.getDB();
+      const db = InstantDBService.db();
       if (!db) {
         logWarn('InstantDB not available for artifact storage');
         return;
       }
 
-      const transactions = artifacts.map(artifact => {
+      const transactions = artifacts.map((artifact) => {
         const artifactData = {
           ...artifact,
           creator: userId,
-          ...(sessionId && { session: sessionId })
+          ...(sessionId && { session: sessionId }),
         };
 
-        return db.tx.generated_artifacts[artifact.id || crypto.randomUUID()].update(artifactData);
+        return db.tx.generated_artifacts[
+          artifact.id || crypto.randomUUID()
+        ].update(artifactData);
       });
 
       await db.transact(transactions);

@@ -14,7 +14,9 @@ const app = express();
 // Initialize InstantDB on startup
 const instantDBInitialized = initializeInstantDB();
 if (!instantDBInitialized) {
-  logWarn('InstantDB initialization failed - features requiring database will be unavailable');
+  logWarn(
+    'InstantDB initialization failed - features requiring database will be unavailable'
+  );
 } else {
   logInfo('InstantDB initialized successfully');
 }
@@ -31,7 +33,10 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) => {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
 

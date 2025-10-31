@@ -1,4 +1,3 @@
-
 import request from 'supertest';
 import app from '../app';
 import path from 'path';
@@ -14,12 +13,13 @@ describe('POST /api/files/upload', () => {
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.data.id).toBeDefined();
-    expect(response.body.data.object).toBe('file');
+    expect(response.body.data.filename).toBeDefined();
+    expect(response.body.data.size).toBeDefined();
+    expect(response.body.data.type).toBeDefined();
   });
 
   it('should return an error if no file is uploaded', async () => {
-    const response = await request(app)
-      .post('/api/files/upload');
+    const response = await request(app).post('/api/files/upload');
 
     expect(response.status).toBe(400);
     expect(response.body.success).toBe(false);

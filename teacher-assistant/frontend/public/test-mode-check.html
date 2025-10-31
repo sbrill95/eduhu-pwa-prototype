@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Mode Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .check { color: green; font-weight: bold; }
+    .cross { color: red; font-weight: bold; }
+    pre { background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>Test Mode Verification</h1>
+  <p>This page checks if test mode flags are properly injected by Vite.</p>
+
+  <div id="results"></div>
+
+  <script type="module">
+    const results = [];
+
+    // Check 1: import.meta.env.VITE_TEST_MODE
+    const envTestMode = import.meta.env.VITE_TEST_MODE;
+    results.push({
+      name: 'import.meta.env.VITE_TEST_MODE',
+      value: envTestMode,
+      expected: 'true',
+      pass: envTestMode === 'true'
+    });
+
+    // Check 2: __VITE_TEST_MODE__ global
+    let globalTestMode = 'undefined';
+    try {
+      globalTestMode = typeof __VITE_TEST_MODE__ !== 'undefined' ? __VITE_TEST_MODE__ : 'undefined';
+    } catch (e) {
+      globalTestMode = 'error: ' + e.message;
+    }
+    results.push({
+      name: '__VITE_TEST_MODE__ (global constant)',
+      value: globalTestMode,
+      expected: true,
+      pass: globalTestMode === true
+    });
+
+    // Check 3: window.__VITE_TEST_MODE__
+    const windowTestMode = (window).__VITE_TEST_MODE__;
+    results.push({
+      name: 'window.__VITE_TEST_MODE__ (Playwright)',
+      value: windowTestMode,
+      expected: true,
+      pass: windowTestMode === true
+    });
+
+    // Check 4: import.meta.env.MODE
+    const mode = import.meta.env.MODE;
+    results.push({
+      name: 'import.meta.env.MODE',
+      value: mode,
+      expected: 'test',
+      pass: mode === 'test'
+    });
+
+    // Render results
+    const container = document.getElementById('results');
+    let html = '<table border="1" cellpadding="10" style="width:100%; border-collapse: collapse;">';
+    html += '<tr><th>Check</th><th>Value</th><th>Expected</th><th>Status</th></tr>';
+
+    results.forEach(r => {
+      const icon = r.pass ? '<span class="check">✓ PASS</span>' : '<span class="cross">✗ FAIL</span>';
+      html += `<tr>
+        <td>${r.name}</td>
+        <td><code>${JSON.stringify(r.value)}</code></td>
+        <td><code>${JSON.stringify(r.expected)}</code></td>
+        <td>${icon}</td>
+      </tr>`;
+    });
+
+    html += '</table>';
+
+    const passing = results.filter(r => r.pass).length;
+    const total = results.length;
+
+    html += `<h2 style="margin-top: 20px;">Summary: ${passing}/${total} checks passing</h2>`;
+
+    if (passing === total) {
+      html += '<p style="color: green; font-weight: bold;">✓ All checks passed! Test mode is properly configured.</p>';
+    } else {
+      html += '<p style="color: red; font-weight: bold;">✗ Some checks failed. Test mode may not work correctly.</p>';
+    }
+
+    html += '<h3>Full Environment:</h3><pre>' + JSON.stringify(import.meta.env, null, 2) + '</pre>';
+
+    container.innerHTML = html;
+
+    // Log to console for Playwright capture
+    console.error('=== TEST MODE VERIFICATION ===');
+    results.forEach(r => {
+      console.error(`${r.name}: ${JSON.stringify(r.value)} (expected: ${JSON.stringify(r.expected)}) - ${r.pass ? 'PASS' : 'FAIL'}`);
+    });
+    console.error(`Summary: ${passing}/${total} checks passing`);
+  </script>
+</body>
+</html>

@@ -4,8 +4,16 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { extractChatTags, ChatTag, ChatMessageForTagging } from '../services/chatTagService';
-import { ChatSessionService, MessageService, isInstantDBAvailable } from '../services/instantdbService';
+import {
+  extractChatTags,
+  ChatTag,
+  ChatMessageForTagging,
+} from '../services/chatTagService';
+import {
+  ChatSessionService,
+  MessageService,
+  isInstantDBAvailable,
+} from '../services/instantdbService';
 import { logError, logInfo } from '../config/logger';
 
 const router = Router();
@@ -98,7 +106,10 @@ router.post('/:chatId/tags', async (req: Request, res: Response) => {
       });
     }
 
-    logInfo('Successfully saved tags to chat session', { chatId, tagCount: tags.length });
+    logInfo('Successfully saved tags to chat session', {
+      chatId,
+      tagCount: tags.length,
+    });
 
     return res.status(200).json({
       success: true,
@@ -156,7 +167,8 @@ router.get('/:chatId/tags', async (req: Request, res: Response) => {
       data: {
         tags: [],
         chatId,
-        message: 'Tag retrieval will be implemented with session-specific query',
+        message:
+          'Tag retrieval will be implemented with session-specific query',
       },
     });
   } catch (error) {
@@ -260,19 +272,27 @@ router.put('/:chatId/tags', async (req: Request, res: Response) => {
         tag &&
         typeof tag.label === 'string' &&
         typeof tag.category === 'string' &&
-        ['subject', 'topic', 'grade_level', 'material_type', 'general'].includes(
-          tag.category
-        )
+        [
+          'subject',
+          'topic',
+          'grade_level',
+          'material_type',
+          'general',
+        ].includes(tag.category)
     );
 
     if (!validTags) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid tag structure. Each tag must have label and category fields',
+        error:
+          'Invalid tag structure. Each tag must have label and category fields',
       });
     }
 
-    logInfo('Manually updating tags for chat session', { chatId, tagCount: tags.length });
+    logInfo('Manually updating tags for chat session', {
+      chatId,
+      tagCount: tags.length,
+    });
 
     // Check if InstantDB is available
     if (!isInstantDBAvailable()) {
