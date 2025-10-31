@@ -622,6 +622,77 @@ class ApiClient {
   }
 
   /**
+   * Classify user intent for router agent (Story 3.1.3)
+   * @param prompt - User's prompt to classify
+   * @param override - Optional manual override ('create_image' | 'edit_image' | 'unknown')
+   * @returns Classification result with intent, confidence, and entities
+   */
+  async classifyIntent(params: {
+    prompt: string;
+    override?: 'create_image' | 'edit_image' | 'unknown';
+  }): Promise<{
+    intent: 'create_image' | 'edit_image' | 'unknown';
+    confidence: number;
+    needsManualSelection: boolean;
+    entities: {
+      subject?: string;
+      gradeLevel?: string;
+      topic?: string;
+      style?: string;
+    };
+    reasoning?: string;
+    overridden: boolean;
+  }> {
+    const endpoint = '/agents-sdk/router/classify';
+
+    console.log('[ApiClient] 🔀 classifyIntent REQUEST', {
+      timestamp: new Date().toISOString(),
+      endpoint,
+      promptLength: params.prompt.length,
+      hasOverride: !!params.override,
+    });
+
+    try {
+      const response = await this.request<{
+        success: boolean;
+        data: {
+          intent: 'create_image' | 'edit_image' | 'unknown';
+          confidence: number;
+          needsManualSelection: boolean;
+          entities: {
+            subject?: string;
+            gradeLevel?: string;
+            topic?: string;
+            style?: string;
+          };
+          reasoning?: string;
+          overridden: boolean;
+        };
+      }>(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      console.log('[ApiClient] ✅ classifyIntent SUCCESS', {
+        timestamp: new Date().toISOString(),
+        intent: response.data?.intent,
+        confidence: response.data?.confidence,
+        needsManualSelection: response.data?.needsManualSelection,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('[ApiClient] ❌ classifyIntent ERROR', {
+        timestamp: new Date().toISOString(),
+        errorType: error?.constructor?.name,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStatus: (error as any)?.status,
+      });
+      throw error;
+    }
+  }
+
+  /**
    * Edit an existing image using Gemini 2.5 Flash Image model
    * @param imageId - Original image ID
    * @param instruction - German instruction (e.g., "Füge 'Klasse 5b' oben rechts hinzu")

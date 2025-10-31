@@ -7,7 +7,26 @@
 #   bash scripts/restart-backend.sh           # Start with TEST_MODE (default)
 #   bash scripts/restart-backend.sh --prod    # Start without TEST_MODE
 
-set -e  # Exit on any error
+# Don't use 'set -e' on Windows - causes crashes with command failures
+# set -e  # Exit on any error
+
+# Detect OS
+OS="$(uname -s)"
+case "$OS" in
+  MINGW*|MSYS*|CYGWIN*|Windows_NT)
+    IS_WINDOWS=true
+    ;;
+  *)
+    IS_WINDOWS=false
+    ;;
+esac
+
+# Disable emojis on Windows by default (can cause encoding issues)
+if [ "$IS_WINDOWS" = true ]; then
+  USE_EMOJIS=false
+else
+  USE_EMOJIS=true
+fi
 
 # Parse arguments
 TEST_MODE=true
@@ -24,9 +43,17 @@ NC='\033[0m' # No Color
 
 echo ""
 if [ "$TEST_MODE" = true ]; then
-  echo -e "${BLUE}🧪 Restarting backend with TEST_MODE enabled...${NC}"
+  if [ "$USE_EMOJIS" = true ]; then
+    echo -e "${BLUE}🧪 Restarting backend with TEST_MODE enabled...${NC}"
+  else
+    echo -e "${BLUE}[TEST] Restarting backend with TEST_MODE enabled...${NC}"
+  fi
 else
-  echo -e "${BLUE}🔄 Restarting backend in PRODUCTION mode...${NC}"
+  if [ "$USE_EMOJIS" = true ]; then
+    echo -e "${BLUE}🔄 Restarting backend in PRODUCTION mode...${NC}"
+  else
+    echo -e "${BLUE}[PROD] Restarting backend in PRODUCTION mode...${NC}"
+  fi
 fi
 echo ""
 
@@ -172,8 +199,23 @@ READY=0
 while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
   ATTEMPT=$((ATTEMPT + 1))
 
-  # Check if process is still running
-  if ! ps -p $BACKEND_PID > /dev/null 2>&1; then
+  # Check if process is still running (OS-specific)
+  PROCESS_ALIVE=false
+  if [ "$IS_WINDOWS" = true ]; then
+    # Windows: Use tasklist to check if PID exists
+    # CRITICAL: Use //FI not /FI to prevent Git Bash path translation
+    TASKLIST_OUTPUT=$(tasklist //FI "PID eq $BACKEND_PID" 2>&1 || true)
+    if echo "$TASKLIST_OUTPUT" | grep -q "$BACKEND_PID"; then
+      PROCESS_ALIVE=true
+    fi
+  else
+    # Unix: Use ps command
+    if ps -p $BACKEND_PID > /dev/null 2>&1; then
+      PROCESS_ALIVE=true
+    fi
+  fi
+
+  if [ "$PROCESS_ALIVE" = false ]; then
     echo -e "${RED}❌ Backend process died${NC}"
     echo ""
     echo "Last 20 lines of logs:"
@@ -182,49 +224,70 @@ while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
   fi
 
   # Check if backend health endpoint responds
+  HEALTH_CHECK_SUCCESS=false
+
   if command -v curl &> /dev/null; then
-    HEALTH_RESPONSE=$(curl -f -s http://localhost:3006/api/health 2>&1)
+    HEALTH_RESPONSE=$(curl -f -s http://localhost:3006/api/health 2>&1 || true)
     CURL_EXIT=$?
-
     if [ $CURL_EXIT -eq 0 ]; then
-      echo -e "${GREEN}✅ Backend is responding!${NC}"
-      echo ""
+      HEALTH_CHECK_SUCCESS=true
+    fi
+  elif [ "$IS_WINDOWS" = true ]; then
+    # Windows fallback: Use simpler PowerShell command
+    # Split into parts to avoid nested quote issues
+    PS_COMMAND='try { $r = Invoke-WebRequest -Uri "http://localhost:3006/api/health" -UseBasicParsing -TimeoutSec 2 -ErrorAction Stop; $r.Content } catch { "" }'
+    HEALTH_RESPONSE=$(powershell.exe -NoProfile -NonInteractive -Command "$PS_COMMAND" 2>/dev/null || echo "")
+    if [ -n "$HEALTH_RESPONSE" ] && [ "$HEALTH_RESPONSE" != '""' ]; then
+      HEALTH_CHECK_SUCCESS=true
+    fi
+  fi
 
-      # Parse and display health check info
-      echo "Backend Info:"
+  if [ "$HEALTH_CHECK_SUCCESS" = true ]; then
+    echo -e "${GREEN}✅ Backend is responding!${NC}"
+    echo ""
 
-      # Extract git commit
-      GIT_COMMIT=$(echo "$HEALTH_RESPONSE" | grep -o '"gitCommit":"[^"]*"' | cut -d'"' -f4)
-      CURRENT_COMMIT=$(git rev-parse HEAD 2>/dev/null | cut -c1-7)
+    # Parse and display health check info
+    echo "Backend Info:"
 
-      if [ -n "$GIT_COMMIT" ]; then
-        GIT_COMMIT_SHORT="${GIT_COMMIT:0:7}"
-        echo "  Git commit: $GIT_COMMIT_SHORT"
+    # Extract git commit (use || true to prevent crashes)
+    GIT_COMMIT=$(echo "$HEALTH_RESPONSE" | grep -o '"gitCommit":"[^"]*"' | cut -d'"' -f4 || true)
+    CURRENT_COMMIT=$(git rev-parse HEAD 2>/dev/null | cut -c1-7 || true)
 
-        # Verify commit matches current HEAD
-        if [ "$GIT_COMMIT_SHORT" == "$CURRENT_COMMIT" ]; then
+    if [ -n "$GIT_COMMIT" ]; then
+      GIT_COMMIT_SHORT="${GIT_COMMIT:0:7}"
+      echo "  Git commit: $GIT_COMMIT_SHORT"
+
+      # Verify commit matches current HEAD
+      if [ "$GIT_COMMIT_SHORT" == "$CURRENT_COMMIT" ]; then
+        if [ "$USE_EMOJIS" = true ]; then
           echo -e "  ${GREEN}✅ Commit matches current HEAD${NC}"
         else
+          echo -e "  ${GREEN}[OK] Commit matches current HEAD${NC}"
+        fi
+      else
+        if [ "$USE_EMOJIS" = true ]; then
           echo -e "  ${YELLOW}⚠️  Warning: Commit mismatch (HEAD: $CURRENT_COMMIT)${NC}"
+        else
+          echo -e "  ${YELLOW}[WARN] Commit mismatch (HEAD: $CURRENT_COMMIT)${NC}"
         fi
       fi
-
-      # Extract InstantDB status
-      INSTANTDB_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"instantdb":"[^"]*"' | cut -d'"' -f4)
-      if [ -n "$INSTANTDB_STATUS" ]; then
-        echo "  InstantDB: $INSTANTDB_STATUS"
-      fi
-
-      # Extract environment
-      ENVIRONMENT=$(echo "$HEALTH_RESPONSE" | grep -o '"environment":"[^"]*"' | cut -d'"' -f4)
-      if [ -n "$ENVIRONMENT" ]; then
-        echo "  Environment: $ENVIRONMENT"
-      fi
-
-      echo ""
-      READY=1
-      break
     fi
+
+    # Extract InstantDB status (use || true to prevent crashes)
+    INSTANTDB_STATUS=$(echo "$HEALTH_RESPONSE" | grep -o '"instantdb":"[^"]*"' | cut -d'"' -f4 || true)
+    if [ -n "$INSTANTDB_STATUS" ]; then
+      echo "  InstantDB: $INSTANTDB_STATUS"
+    fi
+
+    # Extract environment (use || true to prevent crashes)
+    ENVIRONMENT=$(echo "$HEALTH_RESPONSE" | grep -o '"environment":"[^"]*"' | cut -d'"' -f4 || true)
+    if [ -n "$ENVIRONMENT" ]; then
+      echo "  Environment: $ENVIRONMENT"
+    fi
+
+    echo ""
+    READY=1
+    break
   fi
 
   # Show progress every 5 seconds
@@ -259,16 +322,31 @@ if [ "$TEST_MODE" = true ]; then
   # Wait for logs to flush
   sleep 2
 
-  # Check logs for TEST_MODE indicators
-  if grep -q "TEST MODE" "$LOG_FILE" 2>/dev/null; then
-    echo -e "${GREEN}✅ TEST_MODE is active (confirmed in logs)${NC}"
+  # Check logs for TEST_MODE indicators (use || true to prevent crashes)
+  TEST_MODE_IN_LOGS=$(grep "TEST MODE" "$LOG_FILE" 2>/dev/null || true)
+  VITE_TEST_MODE_IN_LOGS=$(grep "VITE_TEST_MODE" "$LOG_FILE" 2>/dev/null || true)
+
+  if [ -n "$TEST_MODE_IN_LOGS" ]; then
+    if [ "$USE_EMOJIS" = true ]; then
+      echo -e "${GREEN}✅ TEST_MODE is active (confirmed in logs)${NC}"
+    else
+      echo -e "${GREEN}[OK] TEST_MODE is active (confirmed in logs)${NC}"
+    fi
     echo ""
     echo "Test Mode Indicators:"
-    grep "TEST MODE\|🧪\|bypassed\|mock" "$LOG_FILE" 2>/dev/null | tail -n 5 | sed 's/^/  /'
-  elif grep -q "VITE_TEST_MODE" "$LOG_FILE" 2>/dev/null; then
-    echo -e "${GREEN}✅ TEST_MODE environment variable detected${NC}"
+    echo "$TEST_MODE_IN_LOGS" | tail -n 5 | sed 's/^/  /'
+  elif [ -n "$VITE_TEST_MODE_IN_LOGS" ]; then
+    if [ "$USE_EMOJIS" = true ]; then
+      echo -e "${GREEN}✅ TEST_MODE environment variable detected${NC}"
+    else
+      echo -e "${GREEN}[OK] TEST_MODE environment variable detected${NC}"
+    fi
   else
-    echo -e "${YELLOW}⚠️  Warning: Cannot confirm TEST_MODE in logs${NC}"
+    if [ "$USE_EMOJIS" = true ]; then
+      echo -e "${YELLOW}⚠️  Warning: Cannot confirm TEST_MODE in logs${NC}"
+    else
+      echo -e "${YELLOW}[WARN] Cannot confirm TEST_MODE in logs${NC}"
+    fi
     echo "  The backend may not be in test mode"
     echo "  Gemini API calls may hit real API (rate limits!)"
     echo ""
@@ -283,9 +361,17 @@ fi
 # ==============================================================================
 echo "========================================"
 if [ "$TEST_MODE" = true ]; then
-  echo -e "${GREEN}✅ Backend restart with TEST_MODE complete!${NC}"
+  if [ "$USE_EMOJIS" = true ]; then
+    echo -e "${GREEN}✅ Backend restart with TEST_MODE complete!${NC}"
+  else
+    echo -e "${GREEN}[SUCCESS] Backend restart with TEST_MODE complete!${NC}"
+  fi
 else
-  echo -e "${GREEN}✅ Backend restart complete!${NC}"
+  if [ "$USE_EMOJIS" = true ]; then
+    echo -e "${GREEN}✅ Backend restart complete!${NC}"
+  else
+    echo -e "${GREEN}[SUCCESS] Backend restart complete!${NC}"
+  fi
 fi
 echo ""
 echo "Summary:"
@@ -302,7 +388,11 @@ echo "  • Logs: $LOG_FILE"
 echo ""
 
 if [ "$TEST_MODE" = true ]; then
-  echo -e "${GREEN}Ready to run E2E tests!${NC}"
+  if [ "$USE_EMOJIS" = true ]; then
+    echo -e "${GREEN}Ready to run E2E tests!${NC}"
+  else
+    echo -e "${GREEN}Ready to run E2E tests!${NC}"
+  fi
   echo ""
   echo "Next steps:"
   echo "  cd teacher-assistant/frontend"

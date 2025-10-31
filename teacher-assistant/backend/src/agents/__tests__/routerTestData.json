@@ -599,6 +599,146 @@
       "prompt": "Erhöhe die Sättigung des vorhandenen Fotos",
       "expectedIntent": "edit_image",
       "language": "de"
+    },
+    {
+      "id": 101,
+      "prompt": "Ändere das letzte Bild",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 102,
+      "prompt": "Bearbeite das Bild von gestern",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 103,
+      "prompt": "Füge dem Dinosaurier-Bild einen Vulkan hinzu",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 104,
+      "prompt": "Mache es bunter",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "ambiguous"
+    },
+    {
+      "id": 105,
+      "prompt": "Füge einen Dinosaurier hinzu",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "ambiguous"
+    },
+    {
+      "id": 106,
+      "prompt": "Ändere dem Hintergrund zu einem Klassenzimmer",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "edit_context"
+    },
+    {
+      "id": 107,
+      "prompt": "Entferne den Text oben rechts",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "edit_context"
+    },
+    {
+      "id": 108,
+      "prompt": "Mache die Person links größer",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "edit_context"
+    },
+    {
+      "id": 109,
+      "prompt": "Erstelle ein neues Bild von einem Dinosaurier",
+      "expectedIntent": "create_image",
+      "language": "de",
+      "category": "clear_creation"
+    },
+    {
+      "id": 110,
+      "prompt": "Edit the last image I generated",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "image_reference"
+    },
+    {
+      "id": 111,
+      "prompt": "Change the dinosaur image background",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "image_reference"
+    },
+    {
+      "id": 112,
+      "prompt": "Make it more colorful",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "ambiguous"
+    },
+    {
+      "id": 113,
+      "prompt": "Add a volcano",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "ambiguous"
+    },
+    {
+      "id": 114,
+      "prompt": "Change the background to a classroom",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "edit_context"
+    },
+    {
+      "id": 115,
+      "prompt": "Remove the text at the top",
+      "expectedIntent": "edit_image",
+      "language": "en",
+      "category": "edit_context"
+    },
+    {
+      "id": 116,
+      "prompt": "Ein Dinosaurier",
+      "expectedIntent": "unknown",
+      "language": "de",
+      "category": "ambiguous"
+    },
+    {
+      "id": 117,
+      "prompt": "Bunter",
+      "expectedIntent": "unknown",
+      "language": "de",
+      "category": "ambiguous"
+    },
+    {
+      "id": 118,
+      "prompt": "Mein letztes Bild bunter machen",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 119,
+      "prompt": "Das erste Bild ändern",
+      "expectedIntent": "edit_image",
+      "language": "de",
+      "category": "image_reference"
+    },
+    {
+      "id": 120,
+      "prompt": "Create ein Bild with ein dinosaur",
+      "expectedIntent": "create_image",
+      "language": "mixed",
+      "category": "multilingual"
     }
   ]
 }

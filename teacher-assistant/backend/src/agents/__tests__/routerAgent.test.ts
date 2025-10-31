@@ -10,12 +10,10 @@ import { RouterAgent, RouterAgentParams, ImageIntent } from '../routerAgent';
 // Mock OpenAI Agents SDK
 jest.mock('@openai/agents', () => ({
   Agent: jest.fn().mockImplementation(() => ({})),
-  run: jest
-    .fn()
-    .mockResolvedValue({
-      finalOutput:
-        '{"intent": "create_image", "confidence": 0.95, "reasoning": "Test"}',
-    }),
+  run: jest.fn().mockResolvedValue({
+    finalOutput:
+      '{"intent": "create_image", "confidence": 0.95, "reasoning": "Test"}',
+  }),
 }));
 
 describe('RouterAgent Unit Tests', () => {
@@ -457,6 +455,183 @@ describe('RouterAgent Unit Tests', () => {
 
       expect(result.success).toBe(true);
       expect(result.data?.intent).toBe('create_image');
+    });
+  });
+
+  describe('Image Reference Detection (AC6)', () => {
+    test('should detect latest image reference (German)', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Ändere das letzte Bild',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.intent).toBe('edit_image');
+      expect(result.data?.imageReference).toBeDefined();
+      expect(result.data?.imageReference?.type).toBe('latest');
+      expect(result.data?.confidence).toBeGreaterThanOrEqual(0.95);
+    });
+
+    test('should detect latest image reference (English)', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Edit the last image I generated',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.intent).toBe('edit_image');
+      expect(result.data?.imageReference?.type).toBe('latest');
+      expect(result.data?.confidence).toBeGreaterThanOrEqual(0.95);
+    });
+
+    test('should detect date-based image reference', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Bearbeite das Bild von gestern',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.intent).toBe('edit_image');
+      expect(result.data?.imageReference?.type).toBe('date');
+      expect(result.data?.confidence).toBeGreaterThanOrEqual(0.9);
+    });
+
+    test('should detect description-based image reference', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Füge dem Dinosaurier-Bild einen Vulkan hinzu',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.intent).toBe('edit_image');
+      expect(result.data?.imageReference?.type).toBe('description');
+      expect(result.data?.imageReference?.query).toContain('dinosaurier');
+    });
+
+    test('should return no reference for creation prompts', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Erstelle ein neues Bild von einem Dinosaurier',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.intent).toBe('create_image');
+      expect(result.data?.imageReference?.type).toBe('none');
+    });
+  });
+
+  describe('Context-Aware Classification (AC2)', () => {
+    test('should detect edit-specific context (background)', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Ändere dem Hintergrund zu einem Klassenzimmer',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.intent).toBe('edit_image');
+      expect(result.data?.confidence).toBeGreaterThanOrEqual(0.9);
+      expect(result.data?.reasoning).toContain('context');
+    });
+
+    test('should detect edit-specific context (text)', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Entferne den Text oben rechts',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.intent).toBe('edit_image');
+      expect(result.data?.confidence).toBeGreaterThanOrEqual(0.9);
+    });
+
+    test('should detect edit-specific context (person)', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Mache die Person links größer',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.intent).toBe('edit_image');
+      expect(result.data?.confidence).toBeGreaterThanOrEqual(0.9);
+    });
+  });
+
+  describe('Manual Selection Flag (AC4 & AC5)', () => {
+    test('should set needsManualSelection=false for high confidence (≥0.9)', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Erstelle ein Bild von einem Hund',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.confidence).toBeGreaterThanOrEqual(0.8);
+      expect(result.data?.needsManualSelection).toBeDefined();
+      // needsManualSelection should be false if confidence >= 0.9
+      if (result.data && result.data.confidence >= 0.9) {
+        expect(result.data.needsManualSelection).toBe(false);
+      }
+    });
+
+    test('should set needsManualSelection=true for low confidence (<0.9)', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Help me with math', // Ambiguous, not image-related
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.needsManualSelection).toBeDefined();
+      // Low confidence prompts should trigger manual selection
+      if (result.data && result.data.confidence < 0.9) {
+        expect(result.data.needsManualSelection).toBe(true);
+      }
+    });
+
+    test('should set needsManualSelection=false with manual override', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Edit the image',
+        override: 'create_image',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.needsManualSelection).toBe(false);
+      expect(result.data?.overridden).toBe(true);
+    });
+
+    test('should set needsManualSelection=true for ambiguous prompt "Mache das bunter"', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Mache das bunter',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.confidence).toBeLessThan(0.7); // BUG-002 fix: Should be low confidence
+      expect(result.data?.needsManualSelection).toBe(true); // Should show RouterOverride UI
+    });
+
+    test('should set needsManualSelection=true for ambiguous prompt "Füge einen Dinosaurier hinzu"', async () => {
+      const params: RouterAgentParams = {
+        prompt: 'Füge einen Dinosaurier hinzu',
+      };
+
+      const result = await routerAgent.execute(params);
+
+      expect(result.success).toBe(true);
+      // This is ambiguous - could be create new image WITH dinosaur, or add TO existing image
+      expect(result.data?.confidence).toBeLessThan(0.9); // Should trigger manual selection
+      expect(result.data?.needsManualSelection).toBe(true);
     });
   });
 });

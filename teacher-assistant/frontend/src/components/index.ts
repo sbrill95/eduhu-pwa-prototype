@@ -17,3 +17,4 @@ export { default as AgentProgressMessage } from './AgentProgressMessage';
 export { AgentResultMessage } from './AgentResultMessage'; // Named export
 export { default as ProgressiveMessage } from './ProgressiveMessage';
 export { MaterialPreviewModal } from './MaterialPreviewModal'; // Named export
+export { RouterOverride } from './RouterOverride'; // Named export - Story 3.1.3

@@ -38,7 +38,8 @@ import {
   AgentConfirmationMessage,
   AgentProgressMessage,
   AgentResultMessage,
-  MaterialPreviewModal
+  MaterialPreviewModal,
+  RouterOverride
 } from './index';
 // Legacy modal components - no longer used in chat-integrated flow
 // import AgentConfirmationModal from './AgentConfirmationModal';
@@ -148,6 +149,15 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
   // TASK-009: State for image preview modal
   const [showImagePreviewModal, setShowImagePreviewModal] = useState(false);
   const [selectedImageMaterial, setSelectedImageMaterial] = useState<any>(null);
+
+  // Story 3.1.3: Router classification state
+  const [routerClassification, setRouterClassification] = useState<{
+    intent: 'create_image' | 'edit_image' | 'unknown';
+    confidence: number;
+    needsManualSelection: boolean;
+    originalPrompt: string;
+  } | null>(null);
+  const [isClassifying, setIsClassifying] = useState(false);
 
   // Auth context
   const { user } = useAuth();
@@ -450,6 +460,93 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
     };
   }, [currentSessionId, user?.id, messages]);
 
+  // Story 3.1.3: Helper to check if prompt is image-related
+  const isImageRelatedPrompt = (prompt: string): boolean => {
+    const imageKeywords = [
+      'bild',
+      'foto',
+      'grafik',
+      'illustration',
+      'erstell',
+      'generier',
+      'zeichn',
+      'mach',
+      'zeig',
+      'visualisier',
+      'änder',
+      'bearbeit',
+      'modifizier',
+      'anpass',
+      'füge.*hinzu',
+      'entfern',
+    ];
+    const lowerPrompt = prompt.toLowerCase();
+    return imageKeywords.some((keyword) =>
+      new RegExp(`\\b${keyword}`, 'i').test(lowerPrompt)
+    );
+  };
+
+  // Story 3.1.3: Handle router classification and proceed with intent
+  const proceedWithIntent = async (
+    intent: 'create_image' | 'edit_image' | 'unknown',
+    prompt: string,
+    imageData?: string
+  ) => {
+    console.log('[ChatView] proceedWithIntent', { intent, prompt });
+
+    // Clear router classification state
+    setRouterClassification(null);
+
+    try {
+      let messageContent = prompt;
+
+      // Prepare API messages
+      const apiMessages: ApiChatMessage[] = [
+        {
+          role: 'user' as const,
+          content: messageContent,
+        },
+      ];
+
+      // Send message (useChat will handle routing)
+      await sendMessage(apiMessages, imageData);
+
+      // Reset upload state after successful send
+      console.log('Clearing uploadedFiles after successful send');
+      setUploadedFiles([]);
+      setUploadError(null);
+      setIsUploading(false);
+
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+
+      // Clear prefilled prompt
+      if (onClearPrefill) {
+        onClearPrefill();
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error);
+
+      // Provide specific error messages
+      let errorMessage = 'Nachricht konnte nicht gesendet werden.';
+      if (error instanceof Error) {
+        if (error.message.includes('network')) {
+          errorMessage = 'Netzwerkfehler. Bitte überprüfe deine Internetverbindung.';
+        } else if (error.message.includes('timeout')) {
+          errorMessage = 'Zeitüberschreitung. Der Server antwortet nicht. Bitte versuche es erneut.';
+        } else if (error.message.includes('rate limit')) {
+          errorMessage = 'Zu viele Anfragen. Bitte warte einen Moment und versuche es erneut.';
+        } else {
+          errorMessage = `Fehler: ${error.message}`;
+        }
+      }
+
+      setInputError(errorMessage);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -476,6 +573,54 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
     const currentMessage = trimmedInput;
     setInputValue('');
 
+    // Story 3.1.3: Check if prompt is image-related
+    if (isImageRelatedPrompt(currentMessage)) {
+      console.log('[ChatView] Image-related prompt detected, classifying intent');
+      setIsClassifying(true);
+
+      try {
+        // Call router classification API
+        const classification = await apiClient.classifyIntent({
+          prompt: currentMessage,
+        });
+
+        console.log('[ChatView] Classification result:', classification);
+
+        // If manual selection needed (confidence < 0.9)
+        if (classification.needsManualSelection) {
+          setRouterClassification({
+            intent: classification.intent,
+            confidence: classification.confidence,
+            needsManualSelection: true,
+            originalPrompt: currentMessage,
+          });
+          setIsClassifying(false);
+          return; // Wait for user decision
+        }
+
+        // Auto-route with high confidence
+        setIsClassifying(false);
+        let imageData: string | undefined;
+        if (uploadedFiles.length > 0) {
+          const imageFiles = uploadedFiles.filter((f) =>
+            f.type.startsWith('image/')
+          );
+          if (imageFiles.length > 0) {
+            imageData = imageFiles[0].url;
+          }
+        }
+        await proceedWithIntent(classification.intent, currentMessage, imageData);
+      } catch (error) {
+        console.error('[ChatView] Classification failed:', error);
+        setIsClassifying(false);
+        setInputError(
+          'Fehler bei der Intent-Klassifizierung. Bitte versuche es erneut.'
+        );
+      }
+      return;
+    }
+
+    // Non-image prompts: proceed normally
     try {
       let messageContent = currentMessage;
       let imageData: string | undefined;
@@ -611,6 +756,61 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
               </div>
             </IonCardContent>
           </IonCard>
+        )}
+
+        {/* Story 3.1.3: Router Override UI - Manual Intent Selection */}
+        {routerClassification && routerClassification.needsManualSelection && (
+          <div style={{ margin: '16px 0' }}>
+            <RouterOverride
+              detectedIntent={routerClassification.intent === 'create_image' ? 'create' : 'edit'}
+              confidence={routerClassification.confidence}
+              onConfirm={async () => {
+                // User confirms detected intent
+                let imageData: string | undefined;
+                if (uploadedFiles.length > 0) {
+                  const imageFiles = uploadedFiles.filter((f) =>
+                    f.type.startsWith('image/')
+                  );
+                  if (imageFiles.length > 0) {
+                    imageData = imageFiles[0].url;
+                  }
+                }
+                await proceedWithIntent(
+                  routerClassification.intent,
+                  routerClassification.originalPrompt,
+                  imageData
+                );
+              }}
+              onSelect={async (intent: 'create' | 'edit') => {
+                // User manually selects different intent
+                const mappedIntent = intent === 'create' ? 'create_image' : 'edit_image';
+                let imageData: string | undefined;
+                if (uploadedFiles.length > 0) {
+                  const imageFiles = uploadedFiles.filter((f) =>
+                    f.type.startsWith('image/')
+                  );
+                  if (imageFiles.length > 0) {
+                    imageData = imageFiles[0].url;
+                  }
+                }
+                await proceedWithIntent(
+                  mappedIntent,
+                  routerClassification.originalPrompt,
+                  imageData
+                );
+              }}
+            />
+          </div>
+        )}
+
+        {/* Classifying Indicator */}
+        {isClassifying && (
+          <div style={{ margin: '16px 0', textAlign: 'center' }}>
+            <IonSpinner name="dots" color="primary" />
+            <p style={{ marginTop: '8px', color: 'var(--ion-color-medium)', fontSize: '14px' }}>
+              Analysiere Anfrage...
+            </p>
+          </div>
         )}
 
         {/* Legacy modal components removed - now using chat-integrated agent messages */}
@@ -1355,6 +1555,7 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
                 minWidth: 0
               }}>
                 <IonInput
+                  data-testid="chat-input"
                   value={inputValue}
                   onIonInput={(e) => {
                     const newValue = e.detail.value!;
@@ -1378,6 +1579,7 @@ const ChatView: React.FC<ChatViewProps> = React.memo(({
 
               {/* Send Button - Gemini Style Orange */}
               <button
+                data-testid="send-button"
                 type="submit"
                 disabled={!inputValue.trim() || loading || inputValue.trim().length > MAX_CHAR_LIMIT}
                 className="min-w-[44px] min-h-[44px] w-14 h-12 flex items-center justify-center rounded-xl border-none shadow-sm transition-all flex-shrink-0"

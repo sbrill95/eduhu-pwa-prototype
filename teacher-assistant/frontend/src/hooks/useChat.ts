@@ -238,17 +238,44 @@ export const useChat = () => {
   const { data: sessionsData, error: sessionsError } = db.useQuery(sessionsQuery);
 
   // Create a new chat session - stable dependencies
+  // BUG-001 FIX: Added comprehensive null checks and error handling
   const createSession = useCallback(async (title?: string) => {
-    if (!user) {
-      throw new Error('User must be authenticated to create a session');
+    // Validate user authentication
+    if (!user || !user.id) {
+      const error = new Error('User must be authenticated to create a session');
+      console.error('[createSession] Authentication check failed:', { hasUser: !!user, userId: user?.id });
+      throw error;
+    }
+
+    // Validate db object exists
+    if (!db || !db.transact || !db.tx) {
+      const error = new Error('InstantDB is not initialized');
+      console.error('[createSession] InstantDB validation failed:', { hasDb: !!db, hasTransact: !!db?.transact, hasTx: !!db?.tx });
+      throw error;
     }
 
     const sessionId = id();
     const now = Date.now();
 
+    console.log('[createSession] Creating session:', { sessionId, userId: user.id, title: title || 'New Chat' });
+
     try {
+      // BUG-001 FIX: Wrap transaction in try-catch with detailed error logging
+      const transaction = db.tx.chat_sessions[sessionId];
+
+      // Validate transaction object before proceeding
+      if (!transaction || !transaction.update) {
+        const error = new Error(`InstantDB transaction creation failed for session ${sessionId}`);
+        console.error('[createSession] Transaction validation failed:', {
+          hasTransaction: !!transaction,
+          hasUpdate: !!transaction?.update,
+          sessionId
+        });
+        throw error;
+      }
+
       await db.transact([
-        db.tx.chat_sessions[sessionId].update({
+        transaction.update({
           title: title || 'New Chat',
           user_id: user.id,
           created_at: now,
@@ -258,32 +285,93 @@ export const useChat = () => {
         })
       ]);
 
+      console.log('[createSession] Session created successfully:', sessionId);
+
       setCurrentSessionId(sessionId);
       setLocalMessages([]);
       return sessionId;
     } catch (error) {
-      console.error('Failed to create chat session:', error);
+      // BUG-001 FIX: Enhanced error logging with context
+      console.error('[createSession] Failed to create chat session:', {
+        error,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        sessionId,
+        userId: user.id,
+        dbAvailable: !!db,
+        timestamp: now
+      });
+
+      // Provide fallback behavior - continue with local-only session
+      console.warn('[createSession] Falling back to local-only session (not persisted to database)');
+      setCurrentSessionId(sessionId);
+      setLocalMessages([]);
+
+      // Re-throw to let caller handle the error
       throw error;
     }
   }, [user?.id]);
 
   // Save a message to the current session - stable dependencies
+  // BUG-001 FIX: Added comprehensive null checks and error handling
   const saveMessage = useCallback(async (
     content: string,
     role: 'user' | 'assistant',
     messageIndex: number
   ) => {
-    if (!user || !currentSessionId) {
-      throw new Error('Session must be active to save messages');
+    // Validate inputs
+    if (!user || !user.id) {
+      const error = new Error('User must be authenticated to save messages');
+      console.error('[saveMessage] Authentication check failed:', { hasUser: !!user, userId: user?.id });
+      throw error;
+    }
+
+    if (!currentSessionId) {
+      const error = new Error('Session must be active to save messages');
+      console.error('[saveMessage] Session check failed:', { currentSessionId });
+      throw error;
+    }
+
+    // Validate db object
+    if (!db || !db.transact || !db.tx) {
+      const error = new Error('InstantDB is not initialized');
+      console.error('[saveMessage] InstantDB validation failed:', { hasDb: !!db, hasTransact: !!db?.transact, hasTx: !!db?.tx });
+      throw error;
     }
 
     const messageId = id();
     const now = Date.now();
 
+    console.log('[saveMessage] Saving message:', { messageId, sessionId: currentSessionId, role, messageIndex });
+
     try {
+      // BUG-001 FIX: Validate transaction objects before proceeding
+      const messageTransaction = db.tx.messages[messageId];
+      const sessionTransaction = db.tx.chat_sessions[currentSessionId];
+
+      if (!messageTransaction || !messageTransaction.update) {
+        const error = new Error(`InstantDB message transaction failed for message ${messageId}`);
+        console.error('[saveMessage] Message transaction validation failed:', {
+          hasTransaction: !!messageTransaction,
+          hasUpdate: !!messageTransaction?.update,
+          messageId
+        });
+        throw error;
+      }
+
+      if (!sessionTransaction || !sessionTransaction.update) {
+        const error = new Error(`InstantDB session transaction failed for session ${currentSessionId}`);
+        console.error('[saveMessage] Session transaction validation failed:', {
+          hasTransaction: !!sessionTransaction,
+          hasUpdate: !!sessionTransaction?.update,
+          currentSessionId
+        });
+        throw error;
+      }
+
       await db.transact([
         // Add the message
-        db.tx.messages[messageId].update({
+        messageTransaction.update({
           session_id: currentSessionId,
           user_id: user.id,
           content,
@@ -292,20 +380,37 @@ export const useChat = () => {
           message_index: messageIndex,
         }),
         // Update session timestamp and message count
-        db.tx.chat_sessions[currentSessionId].update({
+        sessionTransaction.update({
           updated_at: now,
           message_count: messageIndex + 1,
         })
       ]);
 
+      console.log('[saveMessage] Message saved successfully:', messageId);
+
       return messageId;
     } catch (error) {
-      console.error('Failed to save message:', error);
+      // BUG-001 FIX: Enhanced error logging
+      console.error('[saveMessage] Failed to save message:', {
+        error,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        messageId,
+        sessionId: currentSessionId,
+        userId: user.id,
+        role,
+        messageIndex,
+        contentLength: content.length
+      });
+
+      // Don't re-throw - allow graceful degradation (message stays in local state only)
+      console.warn('[saveMessage] Message not persisted to database, but will remain in local state');
       throw error;
     }
   }, [user?.id, currentSessionId]);
 
   // Save a message to a specific session (with session ID parameter) - stable dependencies
+  // BUG-001 FIX: Added comprehensive null checks and error handling
   const saveMessageToSession = useCallback(async (
     sessionId: string,
     content: string,
@@ -313,17 +418,59 @@ export const useChat = () => {
     messageIndex: number,
     metadata?: string // Optional metadata parameter for agentSuggestion, image info, etc.
   ) => {
-    if (!user || !sessionId) {
-      throw new Error('User and session must be active to save messages');
+    // Validate inputs
+    if (!user || !user.id) {
+      const error = new Error('User must be authenticated to save messages');
+      console.error('[saveMessageToSession] Authentication check failed:', { hasUser: !!user, userId: user?.id });
+      throw error;
+    }
+
+    if (!sessionId) {
+      const error = new Error('Session must be active to save messages');
+      console.error('[saveMessageToSession] Session check failed:', { sessionId });
+      throw error;
+    }
+
+    // Validate db object
+    if (!db || !db.transact || !db.tx) {
+      const error = new Error('InstantDB is not initialized');
+      console.error('[saveMessageToSession] InstantDB validation failed:', { hasDb: !!db, hasTransact: !!db?.transact, hasTx: !!db?.tx });
+      throw error;
     }
 
     const messageId = id();
     const now = Date.now();
 
+    console.log('[saveMessageToSession] Saving message:', { messageId, sessionId, role, messageIndex, hasMetadata: !!metadata });
+
     try {
+      // BUG-001 FIX: Validate transaction objects before proceeding
+      const messageTransaction = db.tx.messages[messageId];
+      const sessionTransaction = db.tx.chat_sessions[sessionId];
+
+      if (!messageTransaction || !messageTransaction.update) {
+        const error = new Error(`InstantDB message transaction failed for message ${messageId}`);
+        console.error('[saveMessageToSession] Message transaction validation failed:', {
+          hasTransaction: !!messageTransaction,
+          hasUpdate: !!messageTransaction?.update,
+          messageId
+        });
+        throw error;
+      }
+
+      if (!sessionTransaction || !sessionTransaction.update) {
+        const error = new Error(`InstantDB session transaction failed for session ${sessionId}`);
+        console.error('[saveMessageToSession] Session transaction validation failed:', {
+          hasTransaction: !!sessionTransaction,
+          hasUpdate: !!sessionTransaction?.update,
+          sessionId
+        });
+        throw error;
+      }
+
       await db.transact([
         // Add the message
-        db.tx.messages[messageId].update({
+        messageTransaction.update({
           session_id: sessionId,
           user_id: user.id,
           content,
@@ -333,15 +480,32 @@ export const useChat = () => {
           ...(metadata && { metadata }) // Include metadata if provided (e.g., agentSuggestion, image info)
         }),
         // Update session timestamp and message count
-        db.tx.chat_sessions[sessionId].update({
+        sessionTransaction.update({
           updated_at: now,
           message_count: messageIndex + 1,
         })
       ]);
 
+      console.log('[saveMessageToSession] Message saved successfully:', messageId);
+
       return messageId;
     } catch (error) {
-      console.error('Failed to save message to session:', error);
+      // BUG-001 FIX: Enhanced error logging
+      console.error('[saveMessageToSession] Failed to save message to session:', {
+        error,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        messageId,
+        sessionId,
+        userId: user.id,
+        role,
+        messageIndex,
+        hasMetadata: !!metadata,
+        contentLength: content.length
+      });
+
+      // Don't re-throw - allow graceful degradation
+      console.warn('[saveMessageToSession] Message not persisted to database, but will remain in local state');
       throw error;
     }
   }, [user?.id]);
